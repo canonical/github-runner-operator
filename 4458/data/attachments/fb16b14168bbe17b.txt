@@ -1,0 +1,1624 @@
+06:22:10 WARNING unexpected facade SSHServer received from the controller
+06:22:10 INFO Adding model github-pr-279b3-lxd:test-charm-fork-repo-zkso on cloud localhost
+06:22:11 WARNING unexpected facade SSHServer received from the controller
+06:22:11 WARNING unexpected facade SSHSession received from the controller
+06:22:11 WARNING unexpected facade SSHTunneler received from the controller
+06:22:11 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:22:13 INFO Deploying ch:amd64/noble/any-charm-124
+06:22:26 INFO Deploying local:jammy/github-runner-0
+06:22:26 INFO Waiting for model:
+  test-oq3m7kay/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oq3m7kay/0 [allocating] waiting: waiting for machine
+06:22:56 INFO Waiting for model:
+  test-oq3m7kay/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oq3m7kay/0 [allocating] waiting: waiting for machine
+06:23:26 INFO Waiting for model:
+  test-oq3m7kay/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oq3m7kay/0 [idle] active: 
+06:23:57 INFO Waiting for model:
+  test-oq3m7kay/0 [allocating] waiting: waiting for machine
+06:24:27 INFO Waiting for model:
+  test-oq3m7kay/0 [executing] maintenance: installing charm software
+06:24:57 INFO Waiting for model:
+  test-oq3m7kay/0 [executing] maintenance: installing charm software
+06:25:28 INFO Waiting for model:
+  test-oq3m7kay/0 [executing] maintenance: Update image for runners
+06:25:50 INFO GitHub token rate limit: Rate(reset=2025-12-19 06:28:20+00:00, remaining=2422, limit=5000)
+06:26:44 INFO Waiting for model:
+  test-oq3m7kay/0 [idle] active: 
+06:27:14 INFO Waiting for model:
+  test-oq3m7kay/0 [idle] active: 
+06:27:17 INFO Current reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:27:17 INFO Waiting for reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:28:18 INFO Current reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:28:18 INFO Current reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4, expected reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:28:18 INFO Waiting for reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:29:19 INFO Current reconcile ID: 9de9e39a-67ea-401c-9b8a-069bfa13938a
+06:29:19 INFO Current reconcile ID: 9de9e39a-67ea-401c-9b8a-069bfa13938a, expected reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+06:34:00 INFO [TEST SETUP] Exposing port 8080 on test-oq3m7kay-0-n-efd3d062d4f1
+06:34:00 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4c:51:7d'}]])
+06:34:01 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-oq3m7kay-0-n-efd3d062d4f1.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.202 &
+06:34:02 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.202' (ED25519) to the list of known hosts.
+
+06:34:06 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-oq3m7kay-0-n-efd3d062d4f1
+06:34:06 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4c:51:7d'}]])
+06:34:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-oq3m7kay-0-n-efd3d062d4f1.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.202 nc -z localhost 8080'
+06:34:08 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:34:09 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-oq3m7kay-0-n-efd3d062d4f1
+06:34:09 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4c:51:7d'}]])
+06:34:10 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-oq3m7kay-0-n-efd3d062d4f1.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.202 curl http://localhost:8080'
+06:34:11 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  90196      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:34:16 INFO Application log: 
+2025-12-19 06:25:12,066 - INFO - root - Starting GitHub runner manager service version: 0.10.1
+2025-12-19 06:25:12,072 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-19 06:25:12,073 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-19 06:25:12,073 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-19 06:25:12,073 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-19 06:25:12,073 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:25:12,073 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 2860cd68-0549-4a28-ba0b-91b4f872c34b
+2025-12-19 06:25:12,092 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-19 06:25:12,092 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:25:12,092 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:25:12,447 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:25:14,664 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:25:15,503 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:25:17,268 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:25:17,268 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:25:17,268 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:25:17,309 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:25:19,049 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:25:19,978 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:25:19,978 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-19 06:25:19,978 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-19 06:25:19,978 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:25:21,604 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-19 06:25:22,656 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:25:26,716 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:25:26] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:25:26,722 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:25:26] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:25:26,728 - INFO - github_runner_manager.http_server - Attempting to acquire the lock: unlocked
+2025-12-19 06:25:26,728 - INFO - github_runner_manager.http_server - Flushing runners...
+2025-12-19 06:25:26,746 - INFO - github_runner_manager.http_server - Flushing busy: False
+2025-12-19 06:25:26,746 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:25:26,746 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:25:27,122 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:25:28,728 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:25:29,563 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:25:31,193 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:25:31,193 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:25:31,193 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-19 06:25:31,233 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:25:32,763 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-19 06:25:33,580 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-19 06:25:33,581 - INFO - github_runner_manager.http_server - Flushed 0 runners
+2025-12-19 06:25:33,581 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:25:33] "[35m[1mPOST /runner/flush?flush-busy=False HTTP/1.1[0m" 204 -
+2025-12-19 06:26:02,275 - INFO - root - Starting GitHub runner manager service version: 0.10.1
+2025-12-19 06:26:02,280 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-19 06:26:02,281 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-19 06:26:02,281 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-19 06:26:02,281 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-19 06:26:02,281 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:26:02,281 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 2d6d9b4a-854c-4b9b-86dc-7233d9f2591a
+2025-12-19 06:26:02,299 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-19 06:26:02,299 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:26:02,299 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:02,655 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:26:04,883 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:26:05,726 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:07,370 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:26:07,370 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:26:07,370 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:26:07,408 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:09,307 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:26:10,095 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:10,095 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-19 06:26:10,095 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-19 06:26:10,095 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:11,785 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-19 06:26:12,573 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:26:12,574 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:26:12,574 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-19 06:26:12,574 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:26:16,940 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:26:16] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:26:16,948 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:26:16] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:26:16,954 - INFO - github_runner_manager.http_server - Attempting to acquire the lock: unlocked
+2025-12-19 06:26:16,954 - INFO - github_runner_manager.http_server - Flushing runners...
+2025-12-19 06:26:16,995 - INFO - github_runner_manager.http_server - Flushing busy: False
+2025-12-19 06:26:16,995 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:26:16,995 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:17,352 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:26:19,794 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:26:20,563 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:22,340 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:26:22,341 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:26:22,341 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-19 06:26:22,378 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:24,269 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-19 06:26:25,161 - INFO - github_runner_manager.http_server - Flushed 0 runners
+2025-12-19 06:26:25,162 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:26:25] "[35m[1mPOST /runner/flush?flush-busy=False HTTP/1.1[0m" 204 -
+2025-12-19 06:26:44,861 - INFO - root - Starting GitHub runner manager service version: 0.10.1
+2025-12-19 06:26:44,891 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-19 06:26:44,892 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-19 06:26:44,892 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-19 06:26:44,892 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-19 06:26:44,892 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:26:44,892 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 7907a014-a48c-4f37-9525-1c4ef04c429d
+2025-12-19 06:26:44,911 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-19 06:26:44,911 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:26:44,911 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:45,258 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:26:47,580 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:26:48,365 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:50,446 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:26:50,446 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:26:50,446 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:26:50,489 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:52,236 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:26:53,026 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:53,026 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-19 06:26:53,026 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-19 06:26:53,453 - WARNING - github_runner_manager.repo_policy_compliance_client - Repo policy compliance service is marked for deprecation. Consider using `allow_external_contributor` option instead.
+2025-12-19 06:26:53,463 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-oq3m7kay-0-n-35bdb6266bf5'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='1806', url=None))
+2025-12-19 06:26:54,810 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-oq3m7kay-0-n-35bdb6266bf5
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 293, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Quota exceeded for cores, instances: Requested 2, 1, but already used 40, 20 of 40, 20 cores, instances
+2025-12-19 06:26:54,811 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-oq3m7kay-0-n-35bdb6266bf5
+2025-12-19 06:26:54,851 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-oq3m7kay-0-n-35bdb6266bf5
+2025-12-19 06:26:54,851 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-oq3m7kay-0-n-35bdb6266bf5 from platform after creation failed
+2025-12-19 06:26:54,851 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['1806']
+2025-12-19 06:26:55,239 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 293, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Quota exceeded for cores, instances: Requested 2, 1, but already used 40, 20 of 40, 20 cores, instances
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 183, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 330, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-oq3m7kay-0-n-35bdb6266bf5
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-oq3m7kay-0-n-35bdb6266bf5'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='1806', url=None)) openstack runner
+2025-12-19 06:26:55,239 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:26:57,276 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-19 06:26:58,188 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:26:58,189 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:26:58,189 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-19 06:26:58,189 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:26:59,534 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:26:59] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:28:58,197 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:28:58,197 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 1441940f-ecb4-4278-b08d-38a8e487b1a4
+2025-12-19 06:28:58,216 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-19 06:28:58,216 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:28:58,216 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:28:58,567 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:29:00,287 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:29:01,209 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:29:02,801 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:29:02,801 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:29:02,801 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:29:02,841 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:29:02,841 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:29:02,841 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:29:02,841 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:29:02,841 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:29:02,842 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:29:02,842 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:29:05,047 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:29:05,800 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:29:05,800 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-19 06:29:05,800 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-19 06:29:06,274 - WARNING - github_runner_manager.repo_policy_compliance_client - Repo policy compliance service is marked for deprecation. Consider using `allow_external_contributor` option instead.
+2025-12-19 06:29:06,282 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-oq3m7kay-0-n-46e852da432c'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='1809', url=None))
+2025-12-19 06:29:08,225 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-oq3m7kay-0-n-46e852da432c
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 293, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Quota exceeded for cores, instances: Requested 2, 1, but already used 40, 20 of 40, 20 cores, instances
+2025-12-19 06:29:08,225 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-oq3m7kay-0-n-46e852da432c
+2025-12-19 06:29:08,260 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-oq3m7kay-0-n-46e852da432c
+2025-12-19 06:29:08,260 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-oq3m7kay-0-n-46e852da432c from platform after creation failed
+2025-12-19 06:29:08,260 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['1809']
+2025-12-19 06:29:08,642 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 293, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Quota exceeded for cores, instances: Requested 2, 1, but already used 40, 20 of 40, 20 cores, instances
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 183, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 330, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-oq3m7kay-0-n-46e852da432c
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-oq3m7kay-0-n-46e852da432c'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='1809', url=None)) openstack runner
+2025-12-19 06:29:08,643 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:29:10,447 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-19 06:29:11,156 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:29:11,157 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:29:11,157 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-19 06:29:11,157 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:29:19,177 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:29:19] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:29:19,183 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:29:19,201 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:29:19,532 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:29:21,516 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:29:22,237 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:29:22,237 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:29:22] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:29:53,209 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:29:53] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:29:53,214 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:29:53,232 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:29:53,583 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:29:56,081 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:29:57,029 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:29:57,029 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:29:57] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:30:28,256 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:30:28] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:30:28,261 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:30:28,280 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:30:28,643 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:30:30,712 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:30:31,441 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:30:31,441 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:30:31] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:31:02,316 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:31:02] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:31:02,322 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:31:02,340 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:31:02,704 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:31:04,516 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:31:05,266 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:31:05,266 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:31:05] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:31:11,224 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:31:11,224 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 9de9e39a-67ea-401c-9b8a-069bfa13938a
+2025-12-19 06:31:11,246 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-19 06:31:11,246 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:31:11,246 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:31:11,593 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:31:13,310 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-19 06:31:14,098 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:31:15,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:31:15,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-19 06:31:15,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:31:16,033 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:31:17,810 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-19 06:31:18,627 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:31:18,627 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-19 06:31:18,627 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-19 06:31:19,077 - WARNING - github_runner_manager.repo_policy_compliance_client - Repo policy compliance service is marked for deprecation. Consider using `allow_external_contributor` option instead.
+2025-12-19 06:31:19,085 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='1810', url=None))
+2025-12-19 06:31:20,611 - INFO - github_runner_manager.openstack_cloud.openstack_runner_manager - Runner test-oq3m7kay-0-n-efd3d062d4f1 created successfully
+2025-12-19 06:31:20,611 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:31:22,415 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Runner test-oq3m7kay-0-n-efd3d062d4f1: state=PlatformRunnerState.OFFLINE, health=HealthState.UNKNOWN
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Found 1 unhealthy runners: [RunnerInstance(name='test-oq3m7kay-0-n-efd3d062d4f1', instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.CREATED: '1'>)]
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-19 06:31:23,334 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:31:23,335 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:31:23,335 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-19 06:31:23,335 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:31:36,334 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:31:36] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:31:36,340 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:31:36,358 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:31:36,735 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:31:39,162 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:31:40,353 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:31:40,354 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:31:40] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:32:11,360 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:32:11] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:32:11,366 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:32:11,388 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:32:11,758 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:32:13,669 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:32:14,422 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:32:14,423 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:32:14] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:32:45,399 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:32:45] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:32:45,404 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:32:45,426 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:32:45,785 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:32:47,571 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:32:48,357 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:32:48,358 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:32:48] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:33:19,462 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:33:19] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:33:19,467 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:33:19,534 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:33:19,927 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:33:21,709 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:33:22,610 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:33:22,610 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:33:22] "GET /runner/check HTTP/1.1" 200 -
+2025-12-19 06:33:23,352 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-19 06:33:23,352 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 1d35d230-3920-49eb-9485-23e574df8069
+2025-12-19 06:33:23,375 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-19 06:33:23,375 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-19 06:33:23,375 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:33:23,722 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:33:25,462 - INFO - github_runner_manager.manager.runner_manager - VMs: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:33:26,325 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:33:28,951 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-19 06:33:28,951 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 1 key files, clean up 0 key files
+2025-12-19 06:33:28,951 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-19 06:33:28,992 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:33:30,872 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:33:31,653 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:33:31,653 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 1 to 1
+2025-12-19 06:33:31,653 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-19 06:33:31,653 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:33:33,701 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:33:34,441 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:33:34,441 - INFO - github_runner_manager.manager.runner_scaler - Runner test-oq3m7kay-0-n-efd3d062d4f1: state=PlatformRunnerState.IDLE, health=HealthState.HEALTHY
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Found 1 idle runners: [RunnerInstance(name='test-oq3m7kay-0-n-efd3d062d4f1', instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), platform_state=<PlatformRunnerState.IDLE: '2'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.ACTIVE: '2'>)]
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): {'test-oq3m7kay-0-n-efd3d062d4f1'}
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-19 06:33:34,442 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-19 06:33:53,496 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:33:53] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-19 06:33:53,502 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-19 06:33:53,520 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-19 06:33:53,867 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-19 06:33:56,011 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc))]
+2025-12-19 06:33:56,770 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-oq3m7kay-0-n-efd3d062d4f1'), metadata=RunnerMetadata(platform_name='github', runner_id='1810', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 19, 6, 31, 21, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-19 06:33:56,770 - INFO - werkzeug - 127.0.0.1 - - [19/Dec/2025 06:33:56] "GET /runner/check HTTP/1.1" 200 -
+
+06:34:17 INFO Reactive log: 
+cat: '/var/log/reactive_runner/*.log': No such file or directory
+
+06:34:18 INFO Metrics log: 
+{"timestamp": 1766125522.656611, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.563756227493286}
+{"timestamp": 1766125572.5739458, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.273781061172485}
+{"timestamp": 1766125618.1888585, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 13.277282238006592}
+{"timestamp": 1766125751.1567693, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.940401315689087}
+{"timestamp": 1766125883.3348188, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.08812952041626}
+{"timestamp": 1766126014.4422185, "event": "reconciliation", "flavor": "test-oq3m7kay", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.066827058792114}
+
+06:34:18 INFO OpenStack servers: [openstack.compute.v2.server.Server(id=79bb4f3d-b902-49ef-8c96-fe9b4b36bc81, name=test-oq3m7kay-0-n-efd3d062d4f1, status=ACTIVE, tenant_id=5094adb2b2594752ba2421a5dd2905cf, user_id=1f7600bcec3d44c093c20673d7647848, metadata={'platform_name': 'github', 'runner_id': '1810', 'prefix': 'test-oq3m7kay-0'}, hostId=2a51c43b039aff4a4fe5147992615a5dae4ed8f32de95b7d868ceae4, image={'id': '1ad6e456-fa35-47ef-988f-1e793a60f258', 'links': [{'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/images/1ad6e456-fa35-47ef-988f-1e793a60f258'}]}, flavor={'vcpus': 2, 'ram': 4096, 'disk': 50, 'ephemeral': 0, 'swap': 0, 'original_name': 'shared.xsmall', 'extra_specs': {'aggregate_instance_extra_specs:commit': 'amd64', 'hw:cpu_policy': 'shared', 'hw:mem_page_size': 'large', 'hw:pci_numa_affinity_policy': 'preferred'}}, created=2025-12-19T06:31:21Z, updated=2025-12-19T06:32:58Z, addresses={'net_stg-ps7-github-runner-test-amd64': [{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4c:51:7d'}]}, accessIPv4=, accessIPv6=, links=[{'rel': 'self', 'href': 'https://nova.ps7.canonical.com:8774/v2.1/servers/79bb4f3d-b902-49ef-8c96-fe9b4b36bc81'}, {'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/servers/79bb4f3d-b902-49ef-8c96-fe9b4b36bc81'}], OS-DCF:diskConfig=MANUAL, progress=0, OS-EXT-AZ:availability_zone=AZ1, pinned_availability_zone=None, config_drive=True, key_name=test-oq3m7kay-0-n-efd3d062d4f1, OS-SRV-USG:launched_at=2025-12-19T06:32:57.000000, OS-SRV-USG:terminated_at=None, OS-EXT-SRV-ATTR:host=ps7-ra2-n3.ps7.canonical.com, OS-EXT-SRV-ATTR:instance_name=instance-002cc28d, OS-EXT-SRV-ATTR:hypervisor_hostname=ps7-ra2-n3.ps7.canonical.com, OS-EXT-SRV-ATTR:reservation_id=r-cr831d4m, OS-EXT-SRV-ATTR:launch_index=0, OS-EXT-SRV-ATTR:hostname=test-oq3m7kay-0-n-efd3d062d4f1, OS-EXT-SRV-ATTR:kernel_id=, OS-EXT-SRV-ATTR:ramdisk_id=, OS-EXT-SRV-ATTR:root_device_name=/dev/vda, OS-EXT-SRV-ATTR:user_data=IyEvYmluL3NoCgpzZXQgLWUKCmhvc3RuYW1lY3RsIHNldC1ob3N0bmFtZSBnaXRodWItcnVubmVyCgojIFdyaXRlIC5lbnYgY29udGVudHMKc3UgLSB1YnVudHUgLWMgJ2NkIH4vYWN0aW9ucy1ydW5uZXIgJiYgZWNobyAiUEFUSD0vaG9tZS91YnVudHUvLmxvY2FsL2JpbjovdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW46L3NuYXAvYmluCgpET0NLRVJIVUJfTUlSUk9SPWh0dHBzOi8vZ2l0aHViLXJ1bm5lci1kb2NrZXJodWItY2FjaGUuY2Fub25pY2FsLmNvbTo1MDAwCkNPTlRBSU5FUl9SRUdJU1RSWV9VUkw9aHR0cHM6Ly9naXRodWItcnVubmVyLWRvY2tlcmh1Yi1jYWNoZS5jYW5vbmljYWwuY29tOjUwMDAKCkxBTkc9Qy5VVEYtOApBQ1RJT05TX1JVTk5FUl9IT09LX0pPQl9TVEFSVEVEPS9ob21lL3VidW50dS9hY3Rpb25zLXJ1bm5lci9wcmUtam9iLnNoCiIgPiAuZW52JwoKc25hcCByZWZyZXNoIC0taG9sZD00OGgKc25hcCB3YXRjaCAtLWxhc3Q9YXV0by1yZWZyZXNoPwoKCnNuYXAgaW5zdGFsbCBhcHJveHkgLS1lZGdlCnNuYXAgc2V0IGFwcm94eSBwcm94eT1lZ3Jlc3MucHM3LmludGVybmFsOjMxMjggbGlzdGVuPTo1NDk2OQpjYXQgPDwgRU9GID4gL2V0Yy9uZnRhYmxlcy5jb25mCmRlZmluZSBkZWZhdWx0LWlwdjQgPSAkKGlwIHJvdXRlIGdldCAkKGlwIHJvdXRlIHNob3cgMC4wLjAuMC8wIHwgZ3JlcCAtb1AgJ3ZpYSBcS1xTKycpIHwgZ3JlcCAtb1AgJ3NyYyBcS1xTKycpCnRhYmxlIGlwIGFwcm94eQpmbHVzaCB0YWJsZSBpcCBhcHJveHkKdGFibGUgaXAgYXByb3h5IHsKICAgICAgc2V0IGV4Y2x1ZGUgewogICAgICAgICAgdHlwZSBpcHY0X2FkZHI7CiAgICAgICAgICBmbGFncyBpbnRlcnZhbDsgYXV0by1tZXJnZTsKICAgICAgICAgIGVsZW1lbnRzID0geyAxMjcuMC4wLjAvOCwgMTAuMC4wLjAvOCwgMTcyLjE2LjAuMC8xMiwgMTkyLjE2OC4wLjAvMTYgfQogICAgICB9CiAgICAgIGNoYWluIHByZXJvdXRpbmcgewogICAgICAgICAgICAgIHR5cGUgbmF0IGhvb2sgcHJlcm91dGluZyBwcmlvcml0eSBkc3RuYXQ7IHBvbGljeSBhY2NlcHQ7CiAgICAgICAgICAgICAgaXAgZGFkZHIgIT0gQGV4Y2x1ZGUgdGNwIGRwb3J0IHsgMS0zMTI3LCAzMTI5LTY1NTM1IH0gY291bnRlciBkbmF0IHRvIFwkZGVmYXVsdC1pcHY0OjU0OTY5CiAgICAgIH0KICAgICAgY2hhaW4gb3V0cHV0IHsKICAgICAgICAgICAgICB0eXBlIG5hdCBob29rIG91dHB1dCBwcmlvcml0eSAtMTAwOyBwb2xpY3kgYWNjZXB0OwogICAgICAgICAgICAgIGlwIGRhZGRyICE9IEBleGNsdWRlIHRjcCBkcG9ydCB7IDEtMzEyNywgMzEyOS02NTUzNSB9IGNvdW50ZXIgZG5hdCB0byBcJGRlZmF1bHQtaXB2NDo1NDk2OQogICAgICB9Cn0KRU9GCnN5c3RlbWN0bCBlbmFibGUgbmZ0YWJsZXMuc2VydmljZQpuZnQgLWYgL2V0Yy9uZnRhYmxlcy5jb25mCgoKCgphZGR1c2VyIHVidW50dSBseGQKYWRkdXNlciB1YnVudHUgYWRtCgoKZWNobyAie1wicmVnaXN0cnktbWlycm9yc1wiOiBbXCJodHRwczovL2dpdGh1Yi1ydW5uZXItZG9ja2VyaHViLWNhY2hlLmNhbm9uaWNhbC5jb206NTAwMFwiXX0iID4gL2V0Yy9kb2NrZXIvZGFlbW9uLmpzb24Kc3lzdGVtY3RsIGRhZW1vbi1yZWxvYWQKc3lzdGVtY3RsIHJlc3RhcnQgZG9ja2VyCgoKIyBQcmVwYXJlIG1ldHJpY3MKc3UgLSB1YnVudHUgLWMgJ21rZGlyICIvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZSInCgojIEluc2VydCBwcmUtam9iIHNjcmlwdCwgd2UgdXNlIGEgc3BlY2lhbCBlbmQgbWFya2VyIGFuZCBub3QgRU9GIG9yIEVPVCB0byBhdm9pZCB0aGF0IHRoZSBzYW1lIGlzIHJldXNlZCBpbnNpZGUgdGhlIHNjcmlwdApjYXQgPDwgJzM1YzY4MWQ3LWUwYjEtNDNhYS1hZmRjLWZmN2QxYzQ4MTBjYScgfCBzdSAtIHVidW50dSAtYyAndGVlIC9ob21lL3VidW50dS9hY3Rpb25zLXJ1bm5lci9wcmUtam9iLnNoJwojIS91c3IvYmluL2VudiBiYXNoCgp0aW1lc3RhbXA9JChkYXRlICslcykKCiMgRGlzYWJsZSBleGl0LW9uLWVycm9yLCBkdWUgdGhlIG5lZWQgZm9yIGVycm9yIGhhbmRsaW5nLgpzZXQgK2UKCgpqcSAtbiBcCiAgLS1hcmcgd29ya2Zsb3cgIiRHSVRIVUJfV09SS0ZMT1ciIFwKICAtLWFyZyByZXBvc2l0b3J5ICIkR0lUSFVCX1JFUE9TSVRPUlkiIFwKICAtLWFyZyBldmVudCAiJEdJVEhVQl9FVkVOVF9OQU1FIiBcCiAgLS1hcmdqc29uIHRpbWVzdGFtcCAiJHRpbWVzdGFtcCIgXAogIC0tYXJnIHdvcmtmbG93X3J1bl9pZCAiJEdJVEhVQl9SVU5fSUQiIFwKICAnewogICAgIndvcmtmbG93IjogJHdvcmtmbG93LAogICAgInJlcG9zaXRvcnkiOiAkcmVwb3NpdG9yeSwKICAgICJldmVudCI6ICRldmVudCwKICAgICJ0aW1lc3RhbXAiOiAkdGltZXN0YW1wLAogICAgIndvcmtmbG93X3J1bl9pZCI6ICR3b3JrZmxvd19ydW5faWQKICB9JyA+ICIvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9wcmUtam9iLW1ldHJpY3MuanNvbiIgfHwgdHJ1ZQoKCgogIGxvZ2dlciAtcyAiUmVwbyBwb2xpY3kgY2hlY2sgaXMgbWFya2VkIGZvciBkZXByZWNhdGlvbi4gQ29uc2lkZXIgdXNpbmcgJ2FsbG93X2V4dGVybmFsX2NvbnRyaWJ1dG9yJyBpbnN0ZWFkIgoKICAgICMgTG9nIGNvbW1vbiBlbnYgdmFyaWFibGVzLgogICAgbG9nZ2VyIC1zICJHSVRIVUJfRVZFTlRfTkFNRTogJHtHSVRIVUJfRVZFTlRfTkFNRX0sIFwKICAgICAgR0lUSFVCX1JFUE9TSVRPUlk6ICR7R0lUSFVCX1JFUE9TSVRPUll9LCBcCiAgICAgIEdJVEhVQl9TSEE6ICR7R0lUSFVCX1NIQX0iCgogICAgIyBQcmVwYXJlIGN1cmwgYXJndW1lbnRzCiAgICBDVVJMX0FSR1M9KAogICAgICAtLXNpbGVudAogICAgICAtLXNob3ctZXJyb3IKICAgICAgLS1tYXgtdGltZSA2MAogICAgICAtLW5vcHJveHkgJyonCiAgICAgIC0tZmFpbC13aXRoLWJvZHkKICAgICAgLW8gcmVwb19jaGVja19vdXRwdXQudHh0CiAgICAgIC0tc3RkZXJyIHJlcG9fY2hlY2tfZXJyb3IudHh0CiAgICAgIC0td3JpdGUtb3V0ICIle2h0dHBfY29kZX0iCiAgICAgIC1IICdBdXRob3JpemF0aW9uOiBCZWFyZXIgNTA5NjAxNjBhOTNiN2UyYWExZmUzODkxZmY2N2JjMzBjMDEyMDNiYmM2MmI2NDA4YWM4YTkyY2RlYjM5OTczNicKICAgICAgLUggJ0NvbnRlbnQtVHlwZTogYXBwbGljYXRpb24vanNvbicKICAgICkKCiAgICAjIFNldCBSRVBPX0NIRUNLIHRvIGEgZmFpbHVyZSBjb2RlIGFzIGEgc2FmZSBndWFyZC4KICAgIFJFUE9fQ0hFQ0s9MQoKICAgICMgU3BlY2lhbCBXb3JrZmxvdyBkaXNwYXRjaCByZXBvLXBvbGljeS1jb21wbGlhbmNlIHNlcnZpY2UgY2hlY2sgZGVzaWduZWQgdG8gZmFpbDoKICAgIGlmIFtbICIke0dJVEhVQl9XT1JLRkxPV30iID09ICJXb3JrZmxvdyBEaXNwYXRjaCBGYWlsdXJlIFRlc3RzIDJhMzRmOGIxLTQxZTQtNGJjYi05YmJmLTdhNzRlNmM0ODJmNyIgXV07IHRoZW4KICAgICAgbG9nZ2VyIC1zICJSdW5uaW5nIHRoZSB0ZXN0IHdvcmtmbG93IGZvciBpbnRlZ3JhdGlvbiB0ZXN0cywgdGhpcyB0ZXN0IGlzIGNvbmZpZ3VyZWQgdG8gZmFpbCIKCiAgICAgIFJFUE9fQ0hFQ0tfSFRUUF9DT0RFPSQoY3VybCAiJHtDVVJMX0FSR1NbQF19IiBcCiAgICAgICAgICAtWCBQT1NUIFwKICAgICAgICAgIGh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hbHdheXMtZmFpbC9jaGVjay1ydW4pCiAgICAgIFJFUE9fQ0hFQ0s9JD8KCiAgICAjIFB1bGwgcmVxdWVzdCAtIFJlcXVlc3QgcmVwby1wb2xpY3ktY29tcGxpYW5jZSBzZXJ2aWNlIGNoZWNrOgogICAgZWxpZiBbWyAiJHtHSVRIVUJfRVZFTlRfTkFNRX0iID09ICAicHVsbF9yZXF1ZXN0IiBdXTsgdGhlbgoKICAgICAgR0lUSFVCX1NPVVJDRV9SRVBPU0lUT1JZPSQoY2F0ICIke0dJVEhVQl9FVkVOVF9QQVRIfSIgfCBqcSAtciAnLnB1bGxfcmVxdWVzdC5oZWFkLnJlcG8uZnVsbF9uYW1lJykKICAgICAgQ09NTUlUX1NIQT0kKGNhdCAiJHtHSVRIVUJfRVZFTlRfUEFUSH0iIHwganEgLXIgJy5wdWxsX3JlcXVlc3QuaGVhZC5zaGEnKQoKICAgICAgbG9nZ2VyIC1zICIgXAogICAgICBHSVRIVUJfU09VUkNFX1JFUE9TSVRPUlk6ICR7R0lUSFVCX1NPVVJDRV9SRVBPU0lUT1JZfSBcCiAgICAgIEdJVEhVQl9CQVNFX1JFRjogJHtHSVRIVUJfQkFTRV9SRUZ9LCBcCiAgICAgIEdJVEhVQl9IRUFEX1JFRjogJHtHSVRIVUJfSEVBRF9SRUZ9LCBcCiAgICAgIENPTU1JVF9TSEE6ICR7Q09NTUlUX1NIQX0iCgogICAgICBSRVBPX0NIRUNLX0hUVFBfQ09ERT0kKGN1cmwgIiR7Q1VSTF9BUkdTW0BdfSIgXAogICAgICAgICAgLWQgIntcInJlcG9zaXRvcnlfbmFtZVwiOiBcIiR7R0lUSFVCX1JFUE9TSVRPUll9XCIsIFwic291cmNlX3JlcG9zaXRvcnlfbmFtZVwiOiBcIiR7R0lUSFVCX1NPVVJDRV9SRVBPU0lUT1JZfVwiLCBcInRhcmdldF9icmFuY2hfbmFtZVwiOiBcIiR7R0lUSFVCX0JBU0VfUkVGfVwiLCBcInNvdXJjZV9icmFuY2hfbmFtZVwiOiBcIiR7R0lUSFVCX0hFQURfUkVGfVwiLCBcImNvbW1pdF9zaGFcIjogXCIke0NPTU1JVF9TSEF9XCJ9IiBcCiAgICAgICAgICBodHRwOi8vbG9jYWxob3N0OjgwODAvcHVsbF9yZXF1ZXN0L2NoZWNrLXJ1bikKICAgICAgUkVQT19DSEVDSz0kPwoKICAgIGVsc2UKICAgICAgIyBXb3JrZmxvdyBkaXNwYXRjaCwgUHVzaCBhbmQgU2NoZWR1bGUgdXNlIHRoZWlyIHJlc3BlY3RpdmUgZW5kcG9pbnRzLCBhbGwgb3RoZXIgZXZlbnRzIHVzZSBkZWZhdWx0IGJ5IGRlZmF1bHQuCiAgICAgIENIRUNLX05BTUU9ImRlZmF1bHQiCiAgICAgIGlmIFtbICIke0dJVEhVQl9FVkVOVF9OQU1FfSIgPT0gIndvcmtmbG93X2Rpc3BhdGNoIiBdXSB8fCBbWyAiJHtHSVRIVUJfRVZFTlRfTkFNRX0iID09ICJwdXNoIiBdXSB8fCBbWyAiJHtHSVRIVUJfRVZFTlRfTkFNRX0iID09ICJzY2hlZHVsZSIgXV07IHRoZW4KICAgICAgICBDSEVDS19OQU1FPSIke0dJVEhVQl9FVkVOVF9OQU1FfSIKICAgICAgZmkKCiAgICAgIGxvZ2dlciAtcyAiR0lUSFVCX1JFRl9OQU1FOiAke0dJVEhVQl9SRUZfTkFNRX0iCgogICAgICBSRVBPX0NIRUNLX0hUVFBfQ09ERT0kKGN1cmwgIiR7Q1VSTF9BUkdTW0BdfSIgXAogICAgICAgICAgLWQgIntcInJlcG9zaXRvcnlfbmFtZVwiOiBcIiR7R0lUSFVCX1JFUE9TSVRPUll9XCJ9IiBcCiAgICAgICAgICBodHRwOi8vbG9jYWxob3N0OjgwODAvJHtDSEVDS19OQU1FfS9jaGVjay1ydW4pCiAgICAgIFJFUE9fQ0hFQ0s9JD8KCiAgICBmaQoKICAgIGlmIFtbICRSRVBPX0NIRUNLIC1uZSAwIF1dOyB0aGVuCiAgICAgICAgaWYgW1sgLXMgcmVwb19jaGVja19vdXRwdXQudHh0IF1dOyB0aGVuCiAgICAgICAgICAgIGxvZ2dlciAtcCB1c2VyLmVycm9yIC1zIC1mIHJlcG9fY2hlY2tfb3V0cHV0LnR4dAogICAgICAgIGZpCiAgICAgICAgaWYgW1sgLXMgcmVwb19jaGVja19lcnJvci50eHQgXV07IHRoZW4KICAgICAgICAgICAgbG9nZ2VyIC1wIHVzZXIuZXJyb3IgLXMgLWYgcmVwb19jaGVja19lcnJvci50eHQKICAgICAgICBmaQogICAgICAgIGlmIFtbICRSRVBPX0NIRUNLX0hUVFBfQ09ERSAtZ2UgNTAwIF1dICYmIFtbICRSRVBPX0NIRUNLX0hUVFBfQ09ERSAtbHQgNjAwIF1dOyB0aGVuCiAgICAgICAgICAgIGxvZ2dlciAtcCB1c2VyLmVycm9yIC1zICJUaGUgcmVwb3NpdG9yeSBzZXR1cCBjaGVjayBmYWlsZWQgd2l0aCBIVFRQIGNvZGUgJHtSRVBPX0NIRUNLX0hUVFBfQ09ERX0uIgogICAgICAgICAgICBsb2dnZXIgLXAgdXNlci5lcnJvciAtcyAiVGhpcyBydW5uZXIgd2lsbCBiZSBzdG9wcGVkIG9yIGxvc3QsIHBsZWFzZSBjb250YWN0IHRoZSByZXBvLXBvbGljeS1jb21wbGlhbmNlIHNlcnZlciBvcGVyYXRvcnMgb3IgdHJ5IGFnYWluIGxhdGVyLiIKICAgICAgICBlbHNlCiAgICAgICAgICAgIGxvZ2dlciAtcCB1c2VyLmVycm9yIC1zICJTdG9wcGluZyBleGVjdXRpb24gb2Ygam9icyBkdWUgdG8gcmVwb3NpdG9yeSBzZXR1cCBpcyBub3QgY29tcGxpYW50IHdpdGggcG9saWNpZXMuIgogICAgICAgICAgICBsb2dnZXIgLXAgdXNlci5lcnJvciAtcyAiVGhpcyBydW5uZXIgd2lsbCBiZSBzdG9wcGVkIG9yIGxvc3QsIHBsZWFzZSBmaXggdGhlIHNldHVwIG9mIHRoZSByZXBvc2l0b3J5LCB0aGVuIHJlcnVuIHRoaXMgam9iLiIKICAgICAgICBmaQoKICAgICAgICAjIEtpbGxpbmcgdGhlIHJ1bm5lci5MaXN0ZW5lciBwcm9jZXNzIHRvIHN0b3AgdGhlIHJ1bm5lciBhcHBsaWNhdGlvbi4gVGhpcyB3aWxsIHByZXZlbnQgam9icyBmcm9tIGJlaW5nIGV4ZWN1dGVkLgogICAgICAgIHBraWxsIC0yIFJ1bm5lci5MaXN0ZW5lcgoKCiAgICAgICAgCiAgICAgICAgICAgICMgV3JpdGUgUG9zdCBKb2IgbWV0cmljcyB3aXRoIHN0YXR1cyAicmVwby1wb2xpY3ktY2hlY2stZmFpbHVyZSIgLgogICAgICAgICAgICAjIFdlIHdyaXRlIGl0IGhlcmUsIHJhdGhlciB0aGFuIHJlbHlpbmcgb24gdGhlIHBvc3Qtam9iIHNjcmlwdCwKICAgICAgICAgICAgIyBhcyBpdCBtYXkgbm90IHJ1biBkdWUgdG8gdGhlIHBvd2Vyb2ZmIGNvbW1hbmQgYmVsb3cuCiAgICAgICAgICAgIHBvc3Rfam9iX3RpbWVzdGFtcD0kKGRhdGUgKyVzKQoKICAgICAgICAgICAganEgLW4gXAogICAgICAgICAgICAgIC0tYXJnanNvbiB0aW1lc3RhbXAgIiRwb3N0X2pvYl90aW1lc3RhbXAiIFwKICAgICAgICAgICAgICAtLWFyZ2pzb24gaHR0cF9jb2RlICIkUkVQT19DSEVDS19IVFRQX0NPREUiIFwKICAgICAgICAgICAgICAnewogICAgICAgICAgICAgICAgInRpbWVzdGFtcCI6ICR0aW1lc3RhbXAsCiAgICAgICAgICAgICAgICAic3RhdHVzIjogInJlcG8tcG9saWN5LWNoZWNrLWZhaWx1cmUiLAogICAgICAgICAgICAgICAgInN0YXR1c19pbmZvIjoge2NvZGU6ICRodHRwX2NvZGV9CiAgICAgICAgICAgICAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcG9zdC1qb2ItbWV0cmljcy5qc29uIiB8fCB0cnVlCiAgICAgICAgCgogICAgICAjIFNodXRkb3duIHRoZSBpbnN0YW5jZSBhcyBhIHNhZmUgZ3VhcmQuIFRoZSB0aW1lIGRlbGF5IGlzIG5lZWRlZCBmb3IgdGhlIHJ1bm5lciBhcHBsaWNhdGlvbiB0byB1cGxvYWQgdGhlIGxvZ3MuCiAgICAgIGJhc2ggLWMgInNsZWVwIDEwOyBzdWRvIHN5c3RlbWN0bCBwb3dlcm9mZiAtaSIgJgoKICAgICAgZXhpdCAxCgogICAgZmkKCiAgICBsb2dnZXIgLXMgIlRoZSByZXBvc2l0b3J5IHNldHVwIGNoZWNrIGhhcyBwYXNzZWQsIHByb2NlZWRpbmcgdG8gZXhlY3V0ZSBqb2JzIgoKCgoKaWYgW1sgLW4gIiRET0NLRVJIVUJfTUlSUk9SIiBdXTsgdGhlbgogIGxvZ2dlciAtcyAiQSBwcml2YXRlIGRvY2tlciByZWdpc3RyeSBpcyBzZXR1cCBhcyBhIGRvY2tlcmh1YiBtaXJyb3IgZm9yIHRoaXMgc2VsZi1ob3N0ZWQgcnVubmVyLiIKICBsb2dnZXIgLXMgIlRoZSBkb2NrZXIgZGFlbW9uIG9uIHRoaXMgc2VsZi1ob3N0ZWQgcnVubmVyIGlzIGNvbmZpZ3VyZWQgdG8gdXNlIHRoZSBkb2NrZXJodWIgbWlycm9yLiIKICBsb2dnZXIgLXMgIlRoZSBVUkwgdG8gdGhlIHByaXZhdGUgZG9ja2VyIHJlZ2lzdHJ5IGlzIGluIHRoZSBET0NLRVJIVUJfTUlSUk9SIGVudmlyb25tZW50IHZhcmlhYmxlLiIKICBsb2dnZXIgLXMgIkZvciBtaWNyb2s4cywgc2VlIGluc3RydWN0aW9ucyBoZXJlOiBodHRwczovL21pY3JvazhzLmlvL2RvY3MvZG9ja2VyaHViLWxpbWl0cyIKZmkKCgozNWM2ODFkNy1lMGIxLTQzYWEtYWZkYy1mZjdkMWM0ODEwY2EKCgp3cml0ZV9wb3N0X21ldHJpY3MoKXsKICAgICMgRXhwZWN0cyB0aGUgZXhpdCBjb2RlIG9mIHRoZSBydW4uc2ggc2NyaXB0IGFzIHRoZSBmaXJzdCBhcmd1bWVudC4KCiAgICAjIE9ubHkgd3JpdGUgdGhlIHBvc3Qtam9iIG1ldHJpY3MgaWYgdGhlIGZpbGUgZG9lcyBub3QgYWxyZWFkeSBleGlzdCAtIHdoaWNoIG1heSBpbmRpY2F0ZQogICAgIyB0aGF0IHRoZSBqb2IgaGFzIGZhaWxlZCBpbnNpZGUgcHJlLWpvYi4KCiAgICBpZiBbIC1mIC9ob21lL3VidW50dS9tZXRyaWNzLWV4Y2hhbmdlL3Bvc3Qtam9iLW1ldHJpY3MuanNvbiBdOyB0aGVuCiAgICAgICAgcmV0dXJuCiAgICBmaQoKICAgIHRpbWVzdGFtcD0kKGRhdGUgKyVzKQoKICAgICMgV3JpdGUgdGhlIHBvc3Qtam9iIG1ldHJpY3MgdXNpbmcgc3RhdHVzIGFibm9ybWFsIGFuZCBleGl0IGNvZGUgaWYgZXhpdCBjb2RlIGlzIG5vbi16ZXJvCiAgICBpZiBbICIkMSIgIT0gIjAiIF07IHRoZW4KICAgICAgICBzdWRvIC1nIHVidW50dSAtdSB1YnVudHUganEgLW4gXAogICAgICAgICAgLS1hcmdqc29uIHRpbWVzdGFtcCAiJHRpbWVzdGFtcCIgXAogICAgICAgICAgLS1hcmcgc3RhdHVzICJhYm5vcm1hbCIgXAogICAgICAgICAgLS1hcmdqc29uIGV4aXRfY29kZSAiJDEiIFwKICAgICAgICAgICd7CiAgICAgICAgICAgICJ0aW1lc3RhbXAiOiAkdGltZXN0YW1wLAogICAgICAgICAgICAic3RhdHVzIjogJHN0YXR1cywKICAgICAgICAgICAgInN0YXR1c19pbmZvIjoge2NvZGU6ICRleGl0X2NvZGV9CiAgICAgICAgICB9JyA+ICIvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9wb3N0LWpvYi1tZXRyaWNzLmpzb24iCiAgICAgICAgcmV0dXJuCiAgICBlbHNlCiAgICAgICAgIyBJZiBleGl0IGNvZGUgaXMgemVybywgd3JpdGUgdGhlIHBvc3Qtam9iIG1ldHJpY3MgdXNpbmcgc3RhdHVzIG5vcm1hbAogICAgICAgIHN1ZG8gLWcgdWJ1bnR1IC11IHVidW50dSBqcSAtbiBcCiAgICAgICAgICAtLWFyZ2pzb24gdGltZXN0YW1wICIkdGltZXN0YW1wIiBcCiAgICAgICAgICAnewogICAgICAgICAgICAidGltZXN0YW1wIjogJHRpbWVzdGFtcCwKICAgICAgICAgICAgInN0YXR1cyI6ICJub3JtYWwiCiAgICAgICAgICB9JyA+ICIvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9wb3N0LWpvYi1tZXRyaWNzLmpzb24iCiAgICBmaQp9CgpkYXRlICslcyA+ICAvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9ydW5uZXItaW5zdGFsbGVkLnRpbWVzdGFtcAoKIyBSdW4gcnVubmVyCiMgV2Ugd2FudCB0byBjYXB0dXJlIHRoZSBleGl0IGNvZGUgb2YgdGhlIHJ1biBzY3JpcHQgYW5kIHdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzLgojIElmIHRoZSBhZ2VudCBwcm92aWRlZCBkb2VzIG5vdCBzdG9wLCB0aGUgbWV0cmljcyB3aWxsIG5vdCBiZSB3cml0dGVuIHRvIHRoZSBmaWxlIGFuZAojIHNob3VsZCBiZSB0YWtlbiBmcm9tIHRoZSBwbGF0Zm9ybSBwcm92aWRlci4KCihzZXQgK2U7IHN1IC0gdWJ1bnR1IC1jICJjZCB+L2FjdGlvbnMtcnVubmVyICYmIC9ob21lL3VidW50dS9hY3Rpb25zLXJ1bm5lci9ydW4uc2ggLS1qaXRjb25maWcgZXlJdWNuVnVibVZ5SWpvaVpYbEtRbG95Vm5Wa1JXeHJTV3B2YVUxVVozaE5RMGx6U1d0R2JscFhOVEJVYlVaMFdsTkpOa2x1VW14ak0xRjBZak5GZW1KVVpISlpXR3QwVFVNeGRVeFhWbTFhUkU1clRVUlplVnBFVW0xTlUwbHpTV3RTY0dNeVJtbGlSMVpXWTBkU2FHUkhWV2xQYVVwVlkyNVdiRWxwZDJsU1dFSnZXbGN4YkdOdFJuTkphbTlwVmtoS01WcFRTWE5KYkVKMllqSjRTbHBEU1RaSmFrVnBURU5LVVdJeU9YTlViVVowV2xOSk5tSnVWbk5pUTNkcFZUSldlV1J0Vm5sV1dFcHpTV3B2YVdGSVVqQmpTRTAyVEhrNWQyRllRbXhpUjJ4MVdsaE9ibUZJVm1sYVdGWjZUV3BaZFZsWFRqQmhWemwxWTNrMWJtRllVbTlrVjBveFl6SldlVmt5T1hWa1IxWjFaRU0xYW1JeU1IWmhibVJVVDBWb1JWbHROWFJQVjJ4MVdXNVdVazFHU21sVVJVcE9WbFJLYTJFd1NuVk9ha3B4VDFST1RWZFhPVkpPU0VFeFVWZEtkRko2Vm05Tk1sWjJZVWRuZGtscGQybFdNamw1WVRCYWRtSkhVbXhqYVVrMlNXdzVNMkl6U25KSmFYZHBVakpzTUZOSVZtbFdXRXB6U1dwdmFXRklVakJqU0UwMlRIazVibUZZVW05a1YwbDFXVEk1ZEV3emJHaGliWFI2WlZjNWRtSnBPVEJhV0U0d1RGZGtjR1JIYURGWmFURjVaRmMxZFZwWVNYUmlNMEpzWTIxR01HSXpTV2xNUTBwVVdsaEtNbHBZU2xaamJYaFhUV2xKTmtsdGFEQmtTRUo2VDJrNGRsbHVTblpoTWxaNVRHMUdhbVJIYkhaaWJrMTFXakpzTUdGSVZtbGtXRTVzWTIxT2RtSnVVbXhpYmxGMVdUSTVkRXg1U1hOSmJGWjZXbFpaZVZKdGVIWmtlVWsyU1c1U2VXUlhWV2xtVVQwOUlpd2lMbU55WldSbGJuUnBZV3h6SWpvaVpYbEtWRmt5YUd4aVYxVnBUMmxLVUZGWVZqQmhRMGx6U1d0U2FHUkhSV2xQYm5OcFVUSjRjRnBYTlRCVFYxRnBUMmxKTlUxSFNYbE9Na1UxVGtNeGFFNXRWbWxNVkZFeVRtcFZkRmx0V1RCYWFUQXpUVVJPYWxwVWF6Rk5WRlpwV1ZSRmFVeERTa0prV0ZKdllqTktjR1Z0UmpCaFZ6bDFWbGhLYzBscWIybGhTRkl3WTBoTk5reDVPWGRoV0VKc1lrZHNkVnBZVG01aFNGWnBXbGhXZWsxcVdYVlpWMDR3WVZjNWRXTjVOVzVoV0ZKdlpGZEtNV015Vm5sWk1qbDFaRWRXZFdSRE5XcGlNakIyWVc1a1ZFOUZhRVZaYlRWMFQxZHNkVmx1VmxKTlJrcHBWRVZLVGxaVVNtdGhNRXAxVG1wS2NVOVVUazFYVnpsU1RraEJNVkZYU25SU2VsWnZUVEpXZG1GSFozWllNa1ozWVZoTmRtSXlSakZrUjJkNVRETlNkbUV5Vm5WSmJqRTVJaXdpTG1OeVpXUmxiblJwWVd4elgzSnpZWEJoY21GdGN5STZJbVY1U210SmFtOXBaRE5DVlZOVWJHMVZibXhPWVVkb2VVNURkREprUkU0MlZWUk9SVlJGVlhwYVdGSlVVVlpXVDJWVVNteFNSVVpXV1RGS2NWTkVhRVZXVkVZellsUm9jbE15T1ZaYVJrSTJUVVpPTUZKdFNUQlNSRlp5WVZSS2QyUnVaelJSTURWWVZqSlpOR0ZyVmpaVGFtdzBTekp6TVdSVVJqWmhSR3hvV2taQmVsRXdiRVJXTVZac1pHMXJlRnByYkdoTGVUbHdWREJTZUdGSGFFSmpSa1Y0VXpGS1lWVXphSEZTTUhRMFZtNUNjVkZ0VWtSTlIwNDFaRlpPUW1SSVpGWlZTRXB2WkZkME1HSlZkR3hYVnpReFRqTmtTMkpHV2tsV2JuQjFaRmM1YTFSVmQzaFhTRVkxV2pKR2FGVllTbGRVU0VaVlkxZG9NVTFWVmtWWmJXUnBVMVZhVTJOdVRrbFJiRkpRVFROT1VsSklhRXhVUlZKV1QwUldVbEV3V2tsWlZFNTFWWHBvVmxGVWJIZGlWa1Y1VWpKbmVWZElSbGxTYTFaSVZrWlNSRTB3ZEV4VFZWWkpWbGM1V2xJeVZYcGpNbTh3VW1zMVRsZFZhREZoTW5CclkyeG9kR016V2xsT1JrSkVaRE5hYmsxVldYbGhSazUwV21wV1YyUkVUbGRTYWtWMlZWZEZNV05XY0dGV01EbHBZMWRLVEZsV2NGcFRNa1V6Vld4YVVsWklSVEJOVm5Cb1QxZGtOVll3Y0RSa01sWnVUMVZTUldORE9UTmFWMnhJVW0xa1VXTlliRlZUTVVaU1VGUXdhVXhEU210alEwazJTV3RWZW1GVmVGRmFSMlJDWTIxS1ZsbFlXVFJoTW5ScllXbHpNVmR1UW5KU1NFRXlTek5aZUZWVk5ESldhemg2Vld0d2RscHFRa1ZPUnpGdFdrWnNORTR3T0ROalJUQTFWMnhTU0V0NlpESmpWVEZKVldwRk1sRXlNVmRYYTJ4MlRsTTVVV0pyY0hGYVZGbHlXV3N4UjFFeVpFSk9SV3cxVjFaRmVtVnJPV2xOVnpSNlRESnNSazR3T0hoTmJURklXa1JLUTFaR2F6VmlWV1JzWVcxR1UxcEZjRVpYVnpGMlVucFplbUo2U2pGUk1tOTZZbFpHZVdReVNubGliV1JNWWtjeFJGSklTa2RqUjFaTlRteGFlRk5VVWtkYVdHZzJZbGhvYUdFelJtNVJNVnB6VmxRd2FVeERTbXRqVTBrMlNXMVZOR1JzWnpCTlJUbFZWbTFrY0ZWR1dsTlVSVTVTVXpOYVIxUXdhREpQUkdoUVYwWk9VVmRHYkVoWlZWSjBVMWM1ZUZwRmNGQlBTSEJ0WlVWamVXVnNaR3hUVjNoMlZsWkdiRlJWTVVKTlJrWnVUVE5rTlU0emJHeGhNREIyVWtVNWJGUldWa1pTTUVseVVsWlZkbU5JYUhwV2ExRTBWakIzTUdSclNqUk9WVkpoVFRORk1tUkhhRFJXYlZwRVRqQjBlV05IY0ROVVZtdDVVMVpDY1dGWGVGaFdWRkpzVjFjNWNtUlVhSGRrUnpGR1ZFVkthVlZyTlROaGJtdDRUbnBKTWxFeldrZGxhMngyWkdwak1HSXpVbXhqUjNSclpHdE5kMlJxYkV0VGJVcHFZWG93YVV4RFNteGxTRUoyWW0xV2RXUkRTVFpKYTBaU1VWVkphVXhEU25CaWJscHNZMjVPYkZWVFNUWkphM0J0VFc1U1QxUkliR3hqVkZwcll6QlNibFp0VVhaU2Ftd3dVbTFzVEZwdVpFTlZSM0J0VkVaRk5VOVhSblprUlRGc1lUSm9NVkZYYzNkVlYyOTZZbTFhUW1KRldqRlVSMHBYVTFjeE1sUnFUalZrVjFvelRtcG5kbFpIVWpOa2EwWlNWMFZHVjFSWE1VUmpWMmg1WkVWMGFXRXdielJqYm5CTVRWZHdNbHBIT1dwYVZWWXlaRmM1VDJKWWJIaFdNSEJJWTJ4a2VsRXpSWGRXTUVwVFZqRmFiVTB4Wkc5Tk1IaDBaREJhZWxwdVZYSlhTRVphV210amVtUXdaRzVSYVRsS1VrVnNhVnBYU1hoU00xWjZUVWQ0TkZaV2NIbGFSMmhhV2toS01GWldSbXhVVkRCcFRFTktkR0l5VWpGaVNGWjZTV3B2YVdRemNHcE5Wa1l3WVd0U2VGTnJhM3BTVjFwTVpGaGpOV1ZGYkhsVmJWWnBaRlpHUm1Rd2JGVmhWWFJMVFVSb2FGTllVa3BVZVRsWVdXazVVbVF5YUhkaE1VcFhaRWRrTTJOc1l6Sk5iRTVwWkVSU1ZtTXpXazVqTW5RMFlqSXhNMXA2VWt0aVJWSnVWbGhTVWtzd01ERk5SV2hyVVZWVk1XSlZSblphYlZsMlRXNXNNVk5VVWtoU1YzUlBXV3hTU1UweVJrTmhWM1JHWkVaU1VVc3hiRnBhVkdSd1VqQldNVlJVVWpaVFZ6azBWakpWZWs1VmNETk9Sa1pDV1Zoc1YySXhTbWhUUldoVlVXcHJOV0ZzUWxaVlJra3dVME01TWxFeFpFMVVWMnhDVTNwb2JsRnBkSEpUZWtKd1RYcEtTVkZXV1habFJFNHpUVE5TZWxZd1RsbE9Sa1phVTFOMFZXVnFXakpVVjFKTFZXeFdURk50YTNaU01teHVWa1ZvV1dSVVFrbFhiRTVIWkd0S1ZHRXlaSEpYYW1RMFZFVjRVRXd6VG5WVk1FWnJXbFpuZUZRd1JqRmxhekUwWTFoc2Rrd3dXbEJqYm05NFdXNVNWRmRyVGtSalNIQlNXbTVPVjJFd09WWlRNV1I2WlZoc2ExcFZiRWhYVmtwTVRVUlpNVlp0TldsUlYyTjRZVEpHYlZReGNHRmFWR2hMV1ROS2VsSkhhRmRXVlVZelltMDVkRmxVWXpGa2JYUlNTM3BhYm1Nd2QzSlpiRkV4VlZST1UxbHJTWFpNTUU1elUwVkdVbEJVTUdsTVEwcDNTV3B2YVV3eVVtdE1lVGwyWVRKUk1GUnJkSFJUTWtab1pETkthbFZEZEVkVVdHZ3dVVk4wVDFGVWJETk5iRVpVWW5rNVVrOVhPWEJSTVZreFZGaE9WbEpWVlRGV1JrNUVaRWRyY2xFeU9YcFRWRVpGVW0xMGRGUnFTVEZOUmxZeFRsZEdhbVJGTkhaVE1qVnFXbTB4U0dNeFZYSk5hbEpRVm10T1QyVkVVbXBYYlRReFVqRkNlR0ZITlZoWFJGa3lWMVpDYVZScVRUQlhTRTVUWVZWek1HTXhRazFqYlRVeVlrWkNjVTlVUWpSbFdIQnJVek5HUjJRelZuQmlSMnhVVVdsMFQyTldhRkphV0ZVMVdtazVkazB3VW5kaVIzQlZUa1UxTVZwclRtbGpWVGxIVW14dmQxQlRTWE5KYmtWcFQybEtORlF3Um1oT01taHRZMjE0YUdWSFZtdFdNMXB0VDFSU2RsUXlZM2hWZWxwNlZESXhXbEZxWkZOaFdGcEtWMWRyZGxSc1VsVlZhbFYzVmtkV2JrMURkRXRQVlZFelRrZDBlVlZYT1dwTldFWlNWRmhPVmxKR1FsTmpNSGhKV214c1FsVXdhSGhPTURVeFYyMTRiMlJzVWtaVU1sSkRWMnBhV1dOSVpGWmpSa1UwV1ZoT2Mxa3dXa3hqYWxwMFZsWkdlRkpVV1hobFZrWlpWMVpSY2xwcVVrUlphMDVOVDBWT2RFOUZTakZaTVU0elQwZG9RbFJzUmtsU1JWWkZWREEwTVUxRlZtOWxSR3hQV214Q2NXSnNVazFUVkd4WlVUSnNTbE14VmsxaWJrNVVUakZWT1VsdU1EMGlmUT09Ijsgd3JpdGVfcG9zdF9tZXRyaWNzICQ/KQoKc3UgLSB1YnVudHUgLWMgInRvdWNoIC9ob21lL3VidW50dS9ydW4tY29tcGxldGVkIg==, OS-EXT-STS:task_state=None, OS-EXT-STS:vm_state=active, OS-EXT-STS:power_state=1, os-extended-volumes:volumes_attached=[], locked=False, locked_reason=None, description=None, tags=[], trusted_image_certificates=None, security_groups=[{'name': 'github-runner-v1'}], location=Munch({'cloud': 'testcloud', 'region_name': 'prodstack7', 'zone': 'AZ1', 'project': Munch({'id': '5094adb2b2594752ba2421a5dd2905cf', 'name': 'stg-ps7-github-runner-test-amd64_project', 'domain_id': None, 'domain_name': 'Default'})}), public_v4=, public_v6=, private_v4=10.151.122.202, interface_ip=)]
+06:34:21 INFO Server test-oq3m7kay-0-n-efd3d062d4f1 console log:
+[    0.000000] Linux version 6.14.0-37-generic (buildd@lcy02-amd64-031) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #37~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov 20 10:25:38 UTC 2 (Ubuntu 6.14.0-37.37~24.04.1-generic 6.14.11)
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.14.0-37-generic root=UUID=0905329d-4022-4692-bb5d-b614c117dd8c ro console=tty1 console=ttyS0
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdcfff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bffdd000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000013fffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: OpenStack Foundation OpenStack Nova, BIOS 1.16.3-debian-1.16.3-2~backport22.04.202412060920~ubuntu22.04.1 04/01/2014
+[    0.000000] DMI: Memory slots populated: 1/1
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: using sched offset of 2773628392 cycles
+[    0.000003] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000005] tsc: Detected 2396.402 MHz processor
+[    0.000897] last_pfn = 0x140000 max_arch_pfn = 0x400000000
+[    0.000936] MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+[    0.000939] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.000993] last_pfn = 0xbffdd max_arch_pfn = 0x400000000
+[    0.003225] found SMP MP-table at [mem 0x000f53c0-0x000f53cf]
+[    0.003240] Using GB pages for direct mapping
+[    0.003390] RAMDISK: [mem 0x2ed97000-0x336c2fff]
+[    0.003774] ACPI: Early table checksum verification disabled
+[    0.003777] ACPI: RSDP 0x00000000000F5140 000014 (v00 BOCHS )
+[    0.003781] ACPI: RSDT 0x00000000BFFE2334 000034 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003785] ACPI: FACP 0x00000000BFFE2150 000074 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003789] ACPI: DSDT 0x00000000BFFE0040 002110 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003792] ACPI: FACS 0x00000000BFFE0000 000040
+[    0.003793] ACPI: APIC 0x00000000BFFE21C4 000080 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003795] ACPI: SRAT 0x00000000BFFE2244 0000C8 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003797] ACPI: WAET 0x00000000BFFE230C 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003798] ACPI: Reserving FACP table memory at [mem 0xbffe2150-0xbffe21c3]
+[    0.003800] ACPI: Reserving DSDT table memory at [mem 0xbffe0040-0xbffe214f]
+[    0.003800] ACPI: Reserving FACS table memory at [mem 0xbffe0000-0xbffe003f]
+[    0.003801] ACPI: Reserving APIC table memory at [mem 0xbffe21c4-0xbffe2243]
+[    0.003801] ACPI: Reserving SRAT table memory at [mem 0xbffe2244-0xbffe230b]
+[    0.003802] ACPI: Reserving WAET table memory at [mem 0xbffe230c-0xbffe2333]
+[    0.003876] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x0009ffff]
+[    0.003879] ACPI: SRAT: Node 0 PXM 0 [mem 0x00100000-0xbfffffff]
+[    0.003881] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x13fffffff]
+[    0.003883] NUMA: Node 0 [mem 0x00001000-0x0009ffff] + [mem 0x00100000-0xbfffffff] -> [mem 0x00001000-0xbfffffff]
+[    0.003885] NUMA: Node 0 [mem 0x00001000-0xbfffffff] + [mem 0x100000000-0x13fffffff] -> [mem 0x00001000-0x13fffffff]
+[    0.003893] NODE_DATA(0) allocated [mem 0x13ffd3540-0x13fffdfff]
+[    0.004039] Zone ranges:
+[    0.004040]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.004041]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.004042]   Normal   [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004043]   Device   empty
+[    0.004044] Movable zone start for each node
+[    0.004045] Early memory node ranges
+[    0.004046]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.004047]   node   0: [mem 0x0000000000100000-0x00000000bffdcfff]
+[    0.004048]   node   0: [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004049] Initmem setup node 0 [mem 0x0000000000001000-0x000000013fffffff]
+[    0.004053] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.004065] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.006595] On node 0, zone Normal: 35 pages in unavailable ranges
+[    0.007419] ACPI: PM-Timer IO Port: 0x608
+[    0.007432] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.007466] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.007468] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.007470] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.007471] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.007472] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.007473] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.007476] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.007482] CPU topo: Max. logical packages:   2
+[    0.007483] CPU topo: Max. logical dies:       2
+[    0.007484] CPU topo: Max. dies per package:   1
+[    0.007488] CPU topo: Max. threads per core:   1
+[    0.007488] CPU topo: Num. cores per package:     1
+[    0.007489] CPU topo: Num. threads per package:   1
+[    0.007489] CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
+[    0.007507] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.007520] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.007522] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+[    0.007523] PM: hibernation: Registered nosave memory: [mem 0xbffdd000-0xffffffff]
+[    0.007524] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+[    0.007525] Booting paravirtualized kernel on KVM
+[    0.007526] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.007531] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:1
+[    0.007617] percpu: Embedded 88 pages/cpu s237568 r8192 d114688 u1048576
+[    0.007654] kvm-guest: PV spinlocks disabled, no host support
+[    0.007654] Kernel command line: BOOT_IMAGE=/vmlinuz-6.14.0-37-generic root=UUID=0905329d-4022-4692-bb5d-b614c117dd8c ro console=tty1 console=ttyS0
+[    0.007708] Unknown kernel command line parameters "BOOT_IMAGE=/vmlinuz-6.14.0-37-generic", will be passed to user space.
+[    0.007720] random: crng init done
+[    0.007721] printk: log buffer data + meta data: 262144 + 917504 = 1179648 bytes
+[    0.007858] Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.007924] Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.007949] Fallback order for Node 0: 0 
+[    0.007951] Built 1 zonelists, mobility grouping on.  Total pages: 1048443
+[    0.007952] Policy zone: Normal
+[    0.007958] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.007962] software IO TLB: area num 2.
+[    0.018175] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.018203] ftrace: allocating 60485 entries in 237 pages
+[    0.042342] ftrace: allocated 237 pages with 6 groups
+[    0.043186] Dynamic Preempt: voluntary
+[    0.043223] rcu: Preemptible hierarchical RCU implementation.
+[    0.043223] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=2.
+[    0.043225] 	Trampoline variant of Tasks RCU enabled.
+[    0.043225] 	Rude variant of Tasks RCU enabled.
+[    0.043225] 	Tracing variant of Tasks RCU enabled.
+[    0.043226] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.043227] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.043232] RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.043234] RCU Tasks Rude: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.043235] RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.045933] NR_IRQS: 524544, nr_irqs: 440, preallocated irqs: 16
+[    0.046148] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.064166] Console: colour VGA+ 80x25
+[    0.064170] printk: legacy console [tty1] enabled
+[    0.112444] printk: legacy console [ttyS0] enabled
+[    0.305610] ACPI: Core revision 20240827
+[    0.306990] APIC: Switch to symmetric I/O mode setup
+[    0.308735] x2apic enabled
+[    0.310007] APIC: Switched APIC routing to: physical x2apic
+[    0.312860] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.314672] tsc: Marking TSC unstable due to TSCs unsynchronized
+[    0.316469] Calibrating delay loop (skipped) preset value.. 4792.80 BogoMIPS (lpj=2396402)
+[    0.319572] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.321561] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.323468] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    0.325472] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.327470] Spectre V2 : Mitigation: Retpolines
+[    0.329468] Spectre V2 : Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT
+[    0.331469] Spectre V2 : Enabling Speculation Barrier for firmware calls
+[    0.333469] RETBleed: Mitigation: untrained return thunk
+[    0.335471] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.337468] Speculative Store Bypass: Vulnerable
+[    0.339778] Speculative Return Stack Overflow: IBPB-extending microcode not applied!
+[    0.341468] Speculative Return Stack Overflow: WARNING: See https://kernel.org/doc/html/latest/admin-guide/hw-vuln/srso.html for mitigation options.
+[    0.341470] x86/bugs: return thunk changed
+[    0.345468] Speculative Return Stack Overflow: Vulnerable: Safe RET, no microcode
+[    0.349480] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.351468] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.353854] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.355469] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.357468] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+[    0.390832] Freeing SMP alternatives memory: 48K
+[    0.391825] pid_max: default: 32768 minimum: 301
+[    0.393526] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,ima,evm
+[    0.400468] landlock: Up and running.
+[    0.402469] Yama: becoming mindful.
+[    0.403817] AppArmor: AppArmor initialized
+[    0.405533] Mount-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.408469] Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.513415] smpboot: CPU0: AMD EPYC-Rome Processor (family: 0x17, model: 0x31, stepping: 0x0)
+[    0.514324] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
+[    0.514862] ... version:                0
+[    0.516469] ... bit width:              48
+[    0.517798] ... generic registers:      6
+[    0.518797] ... value mask:             0000ffffffffffff
+[    0.519818] ... max period:             00007fffffffffff
+[    0.520814] ... fixed-purpose events:   0
+[    0.521787] ... event mask:             000000000000003f
+[    0.522919] signal: max sigframe size: 1776
+[    0.524521] rcu: Hierarchical SRCU implementation.
+[    0.525800] rcu: 	Max phase no-delay instances is 400.
+[    0.527533] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.532687] smp: Bringing up secondary CPUs ...
+[    0.533955] smpboot: x86: Booting SMP configuration:
+[    0.534811] .... node  #0, CPUs:      #1
+[    0.535495] smp: Brought up 1 node, 2 CPUs
+[    0.537794] smpboot: Total of 2 processors activated (9585.60 BogoMIPS)
+[    0.539079] Memory: 3919088K/4193772K available (21475K kernel code, 4587K rwdata, 15072K rodata, 5140K init, 4412K bss, 267764K reserved, 0K cma-reserved)
+[    0.540551] devtmpfs: initialized
+[    0.541538] x86/mm: Memory block size: 128MB
+[    0.543956] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.545474] futex hash table entries: 512 (order: 3, 32768 bytes, linear)
+[    0.547024] pinctrl core: initialized pinctrl subsystem
+[    0.548079] PM: RTC time: 06:32:37, date: 2025-12-19
+[    0.549542] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.551620] DMA: preallocated 512 KiB GFP_KERNEL pool for atomic allocations
+[    0.552888] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.554488] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.556479] audit: initializing netlink subsys (disabled)
+[    0.558533] audit: type=2000 audit(1766125957.208:1): state=initialized audit_enabled=0 res=1
+[    0.558696] thermal_sys: Registered thermal governor 'fair_share'
+[    0.560055] thermal_sys: Registered thermal governor 'bang_bang'
+[    0.560844] thermal_sys: Registered thermal governor 'step_wise'
+[    0.561840] thermal_sys: Registered thermal governor 'user_space'
+[    0.562830] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.563863] cpuidle: using governor ladder
+[    0.566478] cpuidle: using governor menu
+[    0.568868] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.570061] PCI: Using configuration type 1 for base access
+[    0.570819] PCI: Using configuration type 1 for extended access
+[    0.572627] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.589466] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.590869] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.592857] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.594853] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.598033] ACPI: Added _OSI(Module Device)
+[    0.599793] ACPI: Added _OSI(Processor Device)
+[    0.600800] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.603774] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.607661] ACPI: Interpreter enabled
+[    0.609793] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.610786] ACPI: Using IOAPIC for interrupt routing
+[    0.612020] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.615468] PCI: Using E820 reservations for host bridge windows
+[    0.617621] ACPI: Enabled 2 GPEs in block 00 to 0F
+[    0.622714] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.625473] acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    0.627997] acpiphp: Slot [3] registered
+[    0.629821] acpiphp: Slot [4] registered
+[    0.631502] acpiphp: Slot [5] registered
+[    0.632824] acpiphp: Slot [6] registered
+[    0.633813] acpiphp: Slot [7] registered
+[    0.634503] acpiphp: Slot [8] registered
+[    0.635816] acpiphp: Slot [9] registered
+[    0.637816] acpiphp: Slot [10] registered
+[    0.638500] acpiphp: Slot [11] registered
+[    0.639808] acpiphp: Slot [12] registered
+[    0.641817] acpiphp: Slot [13] registered
+[    0.642498] acpiphp: Slot [14] registered
+[    0.643807] acpiphp: Slot [15] registered
+[    0.645818] acpiphp: Slot [16] registered
+[    0.646498] acpiphp: Slot [17] registered
+[    0.648831] acpiphp: Slot [18] registered
+[    0.650502] acpiphp: Slot [19] registered
+[    0.651818] acpiphp: Slot [20] registered
+[    0.652470] acpiphp: Slot [21] registered
+[    0.654498] acpiphp: Slot [22] registered
+[    0.655814] acpiphp: Slot [23] registered
+[    0.656499] acpiphp: Slot [24] registered
+[    0.658821] acpiphp: Slot [25] registered
+[    0.659810] acpiphp: Slot [26] registered
+[    0.661498] acpiphp: Slot [27] registered
+[    0.662818] acpiphp: Slot [28] registered
+[    0.663817] acpiphp: Slot [29] registered
+[    0.665500] acpiphp: Slot [30] registered
+[    0.666819] acpiphp: Slot [31] registered
+[    0.667827] PCI host bridge to bus 0000:00
+[    0.669475] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.671469] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.673470] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.674948] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.677946] pci_bus 0000:00: root bus resource [mem 0xc000000000-0xc07fffffff window]
+[    0.680971] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.682123] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+[    0.685568] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100 conventional PCI endpoint
+[    0.688953] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180 conventional PCI endpoint
+[    0.693537] pci 0000:00:01.1: BAR 4 [io  0xc180-0xc18f]
+[    0.694887] pci 0000:00:01.1: BAR 0 [io  0x01f0-0x01f7]: legacy IDE quirk
+[    0.696858] pci 0000:00:01.1: BAR 1 [io  0x03f6]: legacy IDE quirk
+[    0.698844] pci 0000:00:01.1: BAR 2 [io  0x0170-0x0177]: legacy IDE quirk
+[    0.700859] pci 0000:00:01.1: BAR 3 [io  0x0376]: legacy IDE quirk
+[    0.702505] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
+[    0.705676] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.708484] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.711847] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000 conventional PCI endpoint
+[    0.717485] pci 0000:00:02.0: BAR 0 [mem 0xf4000000-0xf7ffffff]
+[    0.719852] pci 0000:00:02.0: BAR 1 [mem 0xf8000000-0xfbffffff]
+[    0.721842] pci 0000:00:02.0: BAR 2 [mem 0xfc090000-0xfc091fff]
+[    0.723852] pci 0000:00:02.0: BAR 3 [io  0xc140-0xc15f]
+[    0.725510] pci 0000:00:02.0: ROM [mem 0xfc080000-0xfc08ffff pref]
+[    0.726549] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.729577] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000 conventional PCI endpoint
+[    0.734484] pci 0000:00:03.0: BAR 0 [io  0xc080-0xc0bf]
+[    0.735468] pci 0000:00:03.0: BAR 1 [mem 0xfc092000-0xfc092fff]
+[    0.737889] pci 0000:00:03.0: BAR 4 [mem 0xc000000000-0xc000003fff 64bit pref]
+[    0.740950] pci 0000:00:03.0: ROM [mem 0xfc000000-0xfc07ffff pref]
+[    0.744510] pci 0000:00:04.0: [1af4:1003] type 00 class 0x078000 conventional PCI endpoint
+[    0.748484] pci 0000:00:04.0: BAR 0 [io  0xc0c0-0xc0ff]
+[    0.750845] pci 0000:00:04.0: BAR 1 [mem 0xfc093000-0xfc093fff]
+[    0.752892] pci 0000:00:04.0: BAR 4 [mem 0xc000004000-0xc000007fff 64bit pref]
+[    0.756823] pci 0000:00:05.0: [1af4:1001] type 00 class 0x010000 conventional PCI endpoint
+[    0.761484] pci 0000:00:05.0: BAR 0 [io  0xc000-0xc07f]
+[    0.763484] pci 0000:00:05.0: BAR 1 [mem 0xfc094000-0xfc094fff]
+[    0.764524] pci 0000:00:05.0: BAR 4 [mem 0xc000008000-0xc00000bfff 64bit pref]
+[    0.769666] pci 0000:00:06.0: [1af4:1002] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.773484] pci 0000:00:06.0: BAR 0 [io  0xc100-0xc13f]
+[    0.775835] pci 0000:00:06.0: BAR 1 [mem 0xfc095000-0xfc095fff]
+[    0.777891] pci 0000:00:06.0: BAR 4 [mem 0xc00000c000-0xc00000ffff 64bit pref]
+[    0.781751] pci 0000:00:07.0: [1af4:1005] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.786484] pci 0000:00:07.0: BAR 0 [io  0xc160-0xc17f]
+[    0.787835] pci 0000:00:07.0: BAR 1 [mem 0xfc096000-0xfc096fff]
+[    0.789885] pci 0000:00:07.0: BAR 4 [mem 0xc000010000-0xc000013fff 64bit pref]
+[    0.801504] ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+[    0.803558] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    0.805587] ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+[    0.807587] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    0.809547] ACPI: PCI: Interrupt link LNKS configured for IRQ 9
+[    0.812481] iommu: Default domain type: Translated
+[    0.813810] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.816080] SCSI subsystem initialized
+[    0.817511] ACPI: bus type USB registered
+[    0.818803] usbcore: registered new interface driver usbfs
+[    0.825482] usbcore: registered new interface driver hub
+[    0.827834] usbcore: registered new device driver usb
+[    0.829841] pps_core: LinuxPPS API ver. 1 registered
+[    0.831468] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.834002] PTP clock support registered
+[    0.835520] EDAC MC: Ver: 3.0.0
+[    0.837097] NetLabel: Initializing
+[    0.838469] NetLabel:  domain hash size = 128
+[    0.839796] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.841851] NetLabel:  unlabeled traffic allowed by default
+[    0.843530] mctp: management component transport protocol core
+[    0.844469] NET: Registered PF_MCTP protocol family
+[    0.846832] PCI: Using ACPI for IRQ routing
+[    0.847800] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.848466] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.848466] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.854471] vgaarb: loaded
+[    0.855797] clocksource: Switched to clocksource kvm-clock
+[    0.857417] VFS: Disk quotas dquot_6.6.0
+[    0.860136] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.862449] AppArmor: AppArmor Filesystem Enabled
+[    0.863977] pnp: PnP ACPI init
+[    0.865475] pnp: PnP ACPI: found 5 devices
+[    0.872909] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.875660] NET: Registered PF_INET protocol family
+[    0.877239] IP idents hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.893259] tcp_listen_portaddr_hash hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[    0.895884] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.898270] TCP established hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.900756] TCP bind hash table entries: 32768 (order: 8, 1048576 bytes, linear)
+[    0.903060] TCP: Hash tables configured (established 32768 bind 32768)
+[    0.905091] MPTCP token hash table entries: 4096 (order: 4, 98304 bytes, linear)
+[    0.907388] UDP hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.909463] UDP-Lite hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.911764] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.913520] NET: Registered PF_XDP protocol family
+[    0.915062] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.916955] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.919371] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.921450] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+[    0.923514] pci_bus 0000:00: resource 8 [mem 0xc000000000-0xc07fffffff window]
+[    0.925827] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.927622] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.929590] PCI: CLS 0 bytes, default 64
+[    0.931007] Trying to unpack rootfs image as initramfs...
+[    0.932395] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.934665] software IO TLB: mapped [mem 0x00000000bbfdd000-0x00000000bffdd000] (64MB)
+[    0.956924] Initialise system trusted keyrings
+[    0.958410] Key type blacklist registered
+[    0.959790] workingset: timestamp_bits=36 max_order=20 bucket_order=0
+[    0.961772] zbud: loaded
+[    0.962966] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.964875] fuse: init (API version 7.42)
+[    0.966339] integrity: Platform Keyring initialized
+[    0.967897] integrity: Machine keyring initialized
+[    0.979389] Key type asymmetric registered
+[    0.980728] Asymmetric key parser 'x509' registered
+[    0.982293] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+[    0.984659] io scheduler mq-deadline registered
+[    0.986407] ledtrig-cpu: registered to indicate activity on CPUs
+[    0.988293] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    0.990469] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    0.992862] ACPI: button: Power Button [PWRF]
+[    0.995958] ACPI: \_SB_.LNKC: Enabled at IRQ 11
+[    1.000458] ACPI: \_SB_.LNKD: Enabled at IRQ 10
+[    1.004798] ACPI: \_SB_.LNKA: Enabled at IRQ 10
+[    1.009667] ACPI: \_SB_.LNKB: Enabled at IRQ 11
+[    1.017024] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    1.046491] 00:00: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    1.051718] Freeing initrd memory: 74928K
+[    1.069231] Linux agpgart interface v0.103
+[    1.072154] loop: module loaded
+[    1.073475] virtio_blk virtio2: 2/0/0 default/read/poll queues
+[    1.076535] virtio_blk virtio2: [vda] 104857600 512-byte logical blocks (53.7 GB/50.0 GiB)
+[    1.080729]  vda: vda1 vda14 vda15 vda16
+[    1.083349] scsi host0: ata_piix
+[    1.084624] scsi host1: ata_piix
+[    1.085779] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc180 irq 14 lpm-pol 0
+[    1.088143] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc188 irq 15 lpm-pol 0
+[    1.090607] ACPI: bus type drm_connector registered
+[    1.092499] tun: Universal TUN/TAP device driver, 1.6
+[    1.096911] PPP generic driver version 2.4.2
+[    1.098489] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.102520] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.104114] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.105851] mousedev: PS/2 mouse device common for all mice
+[    1.107755] rtc_cmos 00:04: RTC can wake from S4
+[    1.109972] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+[    1.112815] rtc_cmos 00:04: registered as rtc0
+[    1.114630] rtc_cmos 00:04: setting system clock to 2025-12-19T06:32:37 UTC (1766125957)
+[    1.117207] rtc_cmos 00:04: alarms up to one day, y3k, 242 bytes nvram
+[    1.119222] i2c_dev: i2c /dev entries driver
+[    1.120662] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    1.124235] device-mapper: uevent: version 1.0.3
+[    1.125780] device-mapper: ioctl: 4.49.0-ioctl (2025-01-17) initialised: dm-devel@lists.linux.dev
+[    1.128479] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+[    1.131357] drop_monitor: Initializing network drop monitor service
+[    1.133418] NET: Registered PF_INET6 protocol family
+[    1.140740] Segment Routing with IPv6
+[    1.141999] In-situ OAM (IOAM) with IPv6
+[    1.143347] NET: Registered PF_PACKET protocol family
+[    1.145036] Key type dns_resolver registered
+[    1.146699] IPI shorthand broadcast: enabled
+[    1.150283] sched_clock: Marking stable (886006026, 263312664)->(1179400689, -30081999)
+[    1.152925] registered taskstats version 1
+[    1.154757] Loading compiled-in X.509 certificates
+[    1.156794] Loaded X.509 cert 'Build time autogenerated kernel key: b878835a90265075bf75bb69cfcef4210fdf14ae'
+[    1.160736] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing 2025 Kmod: d541cef61dc7e793b7eb7e899970a2eef0b5dc8c'
+[    1.164265] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing: 14df34d1a87cf37625abec039ef2bf521249b969'
+[    1.167583] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing: 88f752e560a1e0737e31163a466ad7b70a850c19'
+[    1.170574] blacklist: Loading compiled-in revocation X.509 certificates
+[    1.172636] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing: 61482aa2830d0ab2ad5af10b7250da9033ddcef0'
+[    1.175602] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2017): 242ade75ac4a15e50d50c84b0d45ff3eae707a03'
+[    1.178713] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (ESM 2018): 365188c1d374d6b07c3c8f240f8ef722433d6a8b'
+[    1.181929] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2019): c0746fd6c5da3ae827864651ad66ae47fe24b3e8'
+[    1.185051] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v1): a8d54bbb3825cfb94fa13c9f8a594a195c107b8d'
+[    1.188222] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v2): 4cf046892d6fd3c9a5b03f98d845f90851dc6a8c'
+[    1.191943] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v3): 100437bb6de6e469b581e61cd66bce3ef4ed53af'
+[    1.195137] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (Ubuntu Core 2019): c1d57b8f6b743f23ee41f4f7ee292f06eecadfb9'
+[    1.203441] Demotion targets for Node 0: null
+[    1.205054] Key type .fscrypt registered
+[    1.206371] Key type fscrypt-provisioning registered
+[    1.213068] cryptd: max_cpu_qlen set to 1000
+[    1.246896] ata1: found unknown device (class 0)
+[    1.249834] ata1.00: ATAPI: QEMU DVD-ROM, 2.5+, max UDMA/100
+[    1.253143] scsi 0:0:0:0: CD-ROM            QEMU     QEMU DVD-ROM     2.5+ PQ: 0 ANSI: 5
+[    1.265457] sr 0:0:0:0: [sr0] scsi3-mmc drive: 4x/4x cd/rw xa/form2 tray
+[    1.267501] cdrom: Uniform CD-ROM driver Revision: 3.20
+[    1.282611] sr 0:0:0:0: Attached scsi generic sg0 type 5
+[    1.286830] AES CTR mode by8 optimization enabled
+[    1.300115] Key type encrypted registered
+[    1.301513] AppArmor: AppArmor sha256 policy hashing enabled
+[    1.303272] ima: No TPM chip found, activating TPM-bypass!
+[    1.305011] Loading compiled-in module X.509 certificates
+[    1.307071] Loaded X.509 cert 'Build time autogenerated kernel key: b878835a90265075bf75bb69cfcef4210fdf14ae'
+[    1.310502] ima: Allocated hash algorithm: sha256
+[    1.312013] ima: No architecture policies found
+[    1.313513] evm: Initialising EVM extended attributes:
+[    1.315135] evm: security.selinux
+[    1.316262] evm: security.SMACK64
+[    1.317398] evm: security.SMACK64EXEC
+[    1.324206] evm: security.SMACK64TRANSMUTE
+[    1.325558] evm: security.SMACK64MMAP
+[    1.326771] evm: security.apparmor
+[    1.327932] evm: security.ima
+[    1.328972] evm: security.capability
+[    1.330165] evm: HMAC attrs: 0x1
+[    1.331612] PM:   Magic number: 5:577:519
+[    1.335522] RAS: Correctable Errors collector initialized.
+[    1.347599] clk: Disabling unused clocks
+[    1.348906] PM: genpd: Disabling unused power domains
+[    1.352291] Freeing unused decrypted memory: 2028K
+[    1.354170] Freeing unused kernel image (initmem) memory: 5140K
+[    1.355639] Write protecting the kernel read-only data: 38912k
+[    1.357498] Freeing unused kernel image (text/rodata gap) memory: 1052K
+[    1.359252] Freeing unused kernel image (rodata/data gap) memory: 1312K
+[    1.407659] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    1.409203] Run /init as init process
+Loading, please wait...
+Starting systemd-udevd version 255.4-1ubuntu8.11
+[    1.531234] virtio_net virtio0 ens3: renamed from eth0
+[    1.545381] FDC 0 is a S82078B
+[    1.547053] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+[    1.549940] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+Begin: Loading essential drivers ... [    2.740322] raid6: avx2x4   gen() 46453 MB/s
+[    2.758321] raid6: avx2x2   gen() 48581 MB/s
+[    2.776321] raid6: avx2x1   gen() 41153 MB/s
+[    2.777440] raid6: using algorithm avx2x2 gen() 48581 MB/s
+[    2.795320] raid6: .... xor() 34623 MB/s, rmw enabled
+[    2.796587] raid6: using avx2x2 recovery algorithm
+[    2.798640] xor: automatically using best checksumming function   avx       
+[    2.800929] async_tx: api initialized (async)
+done.
+Begin: Running /scripts/init-premount ... done.
+Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+Begin: Running /scripts/local-premount ... [    2.910257] Btrfs loaded, zoned=yes, fsverity=yes
+Scanning for Btrfs filesystems
+done.
+Begin: Will now check root file system ... fsck from util-linux 2.39.3
+[/usr/sbin/fsck.ext4 (1) -- /dev/vda1] fsck.ext4 -a -C0 /dev/vda1 
+cloudimg-rootfs: clean, 189172/6422528 files, 2017007/12844795 blocks
+done.
+[    2.966297] EXT4-fs (vda1): mounted filesystem 0905329d-4022-4692-bb5d-b614c117dd8c ro with ordered data mode. Quota mode: none.
+done.
+Begin: Running /scripts/local-bottom ... done.
+Begin: Running /scripts/init-bottom ... done.
+[    3.120969] systemd[1]: Inserted module 'autofs4'
+[    3.141784] systemd[1]: systemd 255.4-1ubuntu8.11 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    3.148846] systemd[1]: Detected virtualization kvm.
+[    3.150107] systemd[1]: Detected architecture x86-64.
+
+Welcome to [1mUbuntu 24.04.3 LTS[0m!
+
+[    3.154223] systemd[1]: Hostname set to <github-runner>.
+[    3.345331] systemd[1]: Queued start job for default target graphical.target.
+[    3.359852] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-modprobe.slice[0m - Slice /system/modprobe.
+[    3.363996] systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-serial\x2dget���slice[0m - Slice /system/serial-getty.
+[    3.368388] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-systemd\x2dfs���slice[0m - Slice /system/systemd-fsck.
+[    3.372717] systemd[1]: Created slice user.slice - User and Session Slice.
+[[0;32m  OK  [0m] Created slice [0;1;39muser.slice[0m - User and Session Slice.
+[    3.375948] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-wall.���[0md Requests to Wall Directory Watch.
+[    3.380977] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[[0;32m  OK  [0m] Set up automount [0;1;39mproc-sys-fs-binfm���[0mormats File System Automount Point.
+[    3.385720] systemd[1]: Expecting device dev-disk-by\x2dlabel-BOOT.device - /dev/disk/by-label/BOOT...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/BOOT...
+[    3.389639] systemd[1]: Expecting device dev-disk-by\x2dlabel-UEFI.device - /dev/disk/by-label/UEFI...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/UEFI...
+[    3.393523] systemd[1]: Expecting device dev-ttyS0.device - /dev/ttyS0...
+         Expecting device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0...
+[    3.396478] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mintegritysetup.targ���[0m Local Integrity Protected Volumes.
+[    3.400533] systemd[1]: Reached target slices.target - Slice Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mslices.target[0m - Slice Units.
+[    3.403452] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts-pre.target[0m - Mounting snaps.
+[    3.406888] systemd[1]: Reached target swap.target - Swaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mswap.target[0m - Swaps.
+[    3.410079] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mveritysetup.target[0m - Local Verity Protected Volumes.
+[    3.413992] systemd[1]: Listening on dm-event.socket - Device-mapper event daemon FIFOs.
+[[0;32m  OK  [0m] Listening on [0;1;39mdm-event.socket[0m - Device-mapper event daemon FIFOs.
+[    3.417897] systemd[1]: Listening on lvm2-lvmpolld.socket - LVM2 poll daemon socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mlvm2-lvmpolld.socket[0m - LVM2 poll daemon socket.
+[    3.421631] systemd[1]: Listening on multipathd.socket - multipathd control socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mmultipathd.socket[0m - multipathd control socket.
+[    3.425263] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msyslog.socket[0m - Syslog Socket.
+[    3.428262] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-fsckd.socket[0m ���fsck to fsckd communication Socket.
+[    3.432288] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-initctl.socke���[0m- initctl Compatibility Named Pipe.
+[    3.436407] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald-dev-���socket[0m - Journal Socket (/dev/log).
+[    3.441035] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald.socket[0m - Journal Socket.
+[    3.444567] systemd[1]: Listening on systemd-networkd.socket - Network Service Netlink Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-networkd.socket[0m - Network Service Netlink Socket.
+[    3.448719] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.452143] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-control.socket[0m - udev Control Socket.
+[    3.455959] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-kernel.socket[0m - udev Kernel Socket.
+[    3.471398] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+         Mounting [0;1;39mdev-hugepages.mount[0m - Huge Pages File System...
+[    3.475501] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+         Mounting [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System...
+[    3.479640] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+         Mounting [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System...
+[    3.492438] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+         Mounting [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System...
+[    3.497509] systemd[1]: Starting systemd-journald.service - Journal Service...
+         Starting [0;1;39msystemd-journald.service[0m - Journal Service...
+[    3.501997] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+         Starting [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout...
+[    3.515670] systemd-journald[312]: Collecting audit messages is disabled.
+[    3.519638] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+         Starting [0;1;39mkmod-static-nodes.service[0m���eate List of Static Device Nodes...
+[    3.525941] systemd[1]: Starting lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+         Starting [0;1;39mlvm2-monitor.service[0m - Mo���ing dmeventd or progress polling...
+[    3.538475] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+         Starting [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs...
+[    3.543251] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+         Starting [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod...
+[    3.549407] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+         Starting [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm...
+[    3.554445] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+         Starting [0;1;39mmodprobe@efi_pstore.servi���[0m - Load Kernel Module efi_pstore...
+[    3.562723] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+         Starting [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse...
+[    3.574450] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+         Starting [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop...
+[    3.578146] systemd[1]: netplan-ovs-cleanup.service - OpenVSwitch configuration for cleanup was skipped because of an unmet condition check (ConditionFileIsExecutable=/usr/bin/ovs-vsctl).
+[    3.583427] systemd[1]: systemd-fsck-root.service - File System Check on Root Device was skipped because of an unmet condition check (ConditionPathExists=!/run/initramfs/fsck-root).
+[    3.594468] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+         Starting [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules...
+[    3.600351] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.605454] systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+         Starting [0;1;39msystemd-remount-fs.servic���[0munt Root and Kernel File Systems...
+[    3.611120] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.617756] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+         Starting [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices...
+[    3.624598] systemd[1]: Started systemd-journald.service - Journal Service.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-journald.service[0m - Journal Service.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-hugepages.mount[0m - Huge Pages File System.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System.
+[    3.636039] EXT4-fs (vda1): re-mounted 0905329d-4022-4692-bb5d-b614c117dd8c r/w.
+[[0;32m  OK  [0m] Finished [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout.
+[[0;32m  OK  [0m] Finished [0;1;39mkmod-static-nodes.service[0m���Create List of Static Device Nodes.
+[[0;32m  OK  [0m] Finished [0;1;39mlvm2-monitor.service[0m - Mo���using dmeventd or progress polling.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@efi_pstore.service[0m - Load Kernel Module efi_pstore.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-remount-fs.servic���[0mmount Root and Kernel File Systems.
+         Mounting [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System...
+         Mounting [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System...
+         Starting [0;1;39mmultipathd.service[0m - Devi���pper Multipath Device Controller...
+         Starting [0;1;39msystemd-journal-flush.ser���[0msh Journal to Persistent Storage...
+         Starting [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed...
+         Starting [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables...
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0m Device Nodes in /dev gracefully...
+[[0;32m  OK  [0m] Mounted [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System.
+[    3.708668] systemd-journald[312]: Received client request to flush runtime journal.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed.
+[    3.729859] systemd-journald[312]: /var/log/journal/374808eecd1049958adf901b11d677df/system.journal: Journal file uses a different sequence number ID, rotating.
+[    3.734104] systemd-journald[312]: Rotating system journal.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mic Device Nodes in /dev gracefully.
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0meate Static Device Nodes in /dev...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mCreate Static Device Nodes in /dev.
+         Starting [0;1;39msystemd-udevd.service[0m - R���ager for Device Events and Files...
+[[0;32m  OK  [0m] Started [0;1;39mmultipathd.service[0m - Devic���Mapper Multipath Device Controller.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs-pre.target[0m���Preparation for Local File Systems.
+         Mounting [0;1;39msnap-aproxy-70.mount[0m - Mount unit for aproxy, revision 70...
+         Mounting [0;1;39msnap-core22-2163.mount[0m - ���t unit for core22, revision 2163...
+         Mounting [0;1;39msnap-snapd-25577.mount[0m - ���t unit for snapd, revision 25577...
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-aproxy-70.mount[0m - Mount unit for aproxy, revision 70.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-snapd-25577.mount[0m - Mount unit for snapd, revision 25577.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-core22-2163.mount[0m - Mount unit for core22, revision 2163.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts.target[0m - Mounted snaps.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-udevd.service[0m - Ru���anager for Device Events and Files.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-conso���[0mequests to Console Directory Watch.
+[[0;32m  OK  [0m] Reached target [0;1;39mcryptsetup.target[0m - Local Encrypted Volumes.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-journal-flush.ser���[0mlush Journal to Persistent Storage.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���I.device[0m - /dev/disk/by-label/UEFI.
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/UEFI...
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���T.device[0m - /dev/disk/by-label/BOOT.
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/BOOT...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-fsckd.service[0m - Fi���stem Check Daemon to report status.
+Checking in progress on 1 disk (0.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/BOOT.
+Checking in progress on 0 disks (100.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/UEFI.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-rfkill.socket[0m���ll Switch Status /dev/rfkill Watch.
+         Mounting [0;1;39mboot.mount[0m - /boot...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot.mount[0m - /boot.
+         Mounting [0;1;39mboot-efi.mount[0m - /boot/efi...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot-efi.mount[0m - /boot/efi.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs.target[0m - Local File Systems.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-sysext.socket[0m���tension Image Management (Varlink).
+         Starting [0;1;39mapparmor.service[0m - Load AppArmor profiles...
+         Starting [0;1;39mconsole-setup.service[0m - Set console font and keymap...
+         Starting [0;1;39mfinalrd.service[0m - Create ���time dir for shutdown pivot root...
+         Starting [0;1;39mplymouth-read-write.servi���[0mymouth To Write Out Runtime Data...
+         Starting [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats...
+         Starting [0;1;39msystemd-tmpfiles-setup.se���[0me Volatile Files and Directories...
+         Starting [0;1;39mufw.service[0m - Uncomplicated firewall...
+[[0;32m  OK  [0m] Finished [0;1;39mconsole-setup.service[0m - Set console font and keymap.
+[[0;32m  OK  [0m] Finished [0;1;39mfinalrd.service[0m - Create ���untime dir for shutdown pivot root.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-read-write.servi���[0mPlymouth To Write Out Runtime Data.
+         Mounting [0;1;39mproc-sys-fs-binfmt_misc.m���[0mcutable File Formats File System...
+[[0;32m  OK  [0m] Finished [0;1;39mufw.service[0m - Uncomplicated firewall.
+[[0;32m  OK  [0m] Mounted [0;1;39mproc-sys-fs-binfmt_misc.mo���[0mxecutable File Formats File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup.se���[0mate Volatile Files and Directories.
+         Starting [0;1;39msystemd-resolved.service[0m - Network Name Resolution...
+         Starting [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization...
+         Starting [0;1;39msystemd-update-utmp.servi���[0mord System Boot/Shutdown in UTMP...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-utmp.servi���[0mecord System Boot/Shutdown in UTMP.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization.
+[[0;32m  OK  [0m] Reached target [0;1;39mtime-set.target[0m - System Time Set.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-resolved.service[0m - Network Name Resolution.
+[[0;32m  OK  [0m] Reached target [0;1;39mnss-lookup.target[0m - Host and Network Name Lookups.
+[[0;32m  OK  [0m] Finished [0;1;39mapparmor.service[0m - Load AppArmor profiles.
+         Starting [0;1;39msnapd.apparmor.service[0m - ���iles managed internally by snapd...
+         Starting [0;1;39mcloud-init-local.service[0m ���-init: Local Stage (pre-network)...
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.apparmor.service[0m - ���ofiles managed internally by snapd.
+[    5.354126] cloud-init[640]: Cloud-init v. 25.2-0ubuntu1~24.04.1 running 'init-local' at Fri, 19 Dec 2025 06:32:41 +0000. Up 5.34 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init-local.service[0m ���ud-init: Local Stage (pre-network).
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-pre.target[0m - Preparation for Network.
+         Starting [0;1;39msystemd-networkd.service[0m - Network Configuration...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-networkd.service[0m - Network Configuration.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork.target[0m - Network.
+         Starting [0;1;39msystemd-networkd-wait-onl���[0mait for Network to be Configured...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-networkd-wait-onl���[0m Wait for Network to be Configured.
+         Starting [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage...
+[    7.845586] cloud-init[714]: Cloud-init v. 25.2-0ubuntu1~24.04.1 running 'init' at Fri, 19 Dec 2025 06:32:44 +0000. Up 7.83 seconds.
+[    7.854234] cloud-init[714]: ci-info: +++++++++++++++++++++++++++++++++++++++Net device info+++++++++++++++++++++++++++++++++++++++
+[    7.856701] cloud-init[714]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.859140] cloud-init[714]: ci-info: | Device |  Up  |           Address            |      Mask     | Scope  |     Hw-Address    |
+[    7.861634] cloud-init[714]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.864091] cloud-init[714]: ci-info: |  ens3  | True |        10.151.122.202        | 255.255.255.0 | global | fa:16:3e:4c:51:7d |
+[    7.866531] cloud-init[714]: ci-info: |  ens3  | True | fe80::f816:3eff:fe4c:517d/64 |       .       |  link  | fa:16:3e:4c:51:7d |
+[    7.868953] cloud-init[714]: ci-info: |   lo   | True |          127.0.0.1           |   255.0.0.0   |  host  |         .         |
+[    7.871392] cloud-init[714]: ci-info: |   lo   | True |           ::1/128            |       .       |  host  |         .         |
+[    7.873836] cloud-init[714]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.876276] cloud-init[714]: ci-info: ++++++++++++++++++++++++++++++++Route IPv4 info+++++++++++++++++++++++++++++++++
+[    7.878474] cloud-init[714]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.880666] cloud-init[714]: ci-info: | Route |   Destination   |   Gateway    |     Genmask     | Interface | Flags |
+[    7.882877] cloud-init[714]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.885082] cloud-init[714]: ci-info: |   0   |     0.0.0.0     | 10.151.122.1 |     0.0.0.0     |    ens3   |   UG  |
+[    7.887292] cloud-init[714]: ci-info: |   1   |   10.151.11.5   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.889491] cloud-init[714]: ci-info: |   2   |   10.151.11.6   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.891697] cloud-init[714]: ci-info: |   3   |   10.151.11.7   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.893904] cloud-init[714]: ci-info: |   4   |   10.151.122.0  |   0.0.0.0    |  255.255.255.0  |    ens3   |   U   |
+[    7.896110] cloud-init[714]: ci-info: |   5   |   10.151.122.1  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.898324] cloud-init[714]: ci-info: |   6   |   10.151.122.2  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.900530] cloud-init[714]: ci-info: |   7   | 169.254.169.254 | 10.151.122.2 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.902778] cloud-init[714]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.904987] cloud-init[714]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+[    7.906750] cloud-init[714]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.908474] cloud-init[714]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+[    7.910198] cloud-init[714]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.911927] cloud-init[714]: ci-info: |   0   |  fe80::/64  |    ::   |    ens3   |   U   |
+[    7.913657] cloud-init[714]: ci-info: |   2   |    local    |    ::   |    ens3   |   U   |
+[    7.915385] cloud-init[714]: ci-info: |   3   |  multicast  |    ::   |    ens3   |   U   |
+[    7.917115] cloud-init[714]: ci-info: +-------+-------------+---------+-----------+-------+
+[    8.445131] cloud-init[714]: Generating public/private rsa key pair.
+[    8.446676] cloud-init[714]: Your identification has been saved in /etc/ssh/ssh_host_rsa_key
+[    8.448494] cloud-init[714]: Your public key has been saved in /etc/ssh/ssh_host_rsa_key.pub
+[    8.450346] cloud-init[714]: The key fingerprint is:
+[    8.451481] cloud-init[714]: SHA256:SMFh8xaxrA7Mrcegv44mgdRx+OZ9KFo+1uB/ZG/Hm2M root@test-oq3m7kay-0-n-efd3d062d4f1
+[    8.453704] cloud-init[714]: The key's randomart image is:
+[    8.454943] cloud-init[714]: +---[RSA 3072]----+
+[    8.456079] cloud-init[714]: |    ..=.o.       |
+[    8.457154] cloud-init[714]: |   o o.= o       |
+[    8.458280] cloud-init[714]: |  . + . =        |
+[    8.459389] cloud-init[714]: | . + = +         |
+[    8.460468] cloud-init[714]: |o   B = S        |
+[    8.461540] cloud-init[714]: |o  . @ o +       |
+[    8.462609] cloud-init[714]: | .. * B + . .    |
+[    8.463692] cloud-init[714]: |. .+ * . . o E.  |
+[    8.464769] cloud-init[714]: | o..=.o.. . ooo  |
+[    8.465840] cloud-init[714]: +----[SHA256]-----+
+[    8.466914] cloud-init[714]: Generating public/private ecdsa key pair.
+[    8.468379] cloud-init[714]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+[    8.470238] cloud-init[714]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+[    8.472117] cloud-init[714]: The key fingerprint is:
+[    8.473330] cloud-init[714]: SHA256:SZyw+hzL0NLr/OFGjapKz5awKFShCBpCKf2ty9ArnAk root@test-oq3m7kay-0-n-efd3d062d4f1
+[    8.475548] cloud-init[714]: The key's randomart image is:
+[    8.476795] cloud-init[714]: +---[ECDSA 256]---+
+[    8.477976] cloud-init[714]: |.o.   .          |
+[    8.478586] cloud-init[714]: |=...   + .       |
+[    8.478846] cloud-init[714]: |*...... +        |
+[    8.479399] cloud-init[714]: |o. ..+.. .       |
+[    8.479667] cloud-init[714]: |  ..+.+ So       |
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage.
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-config.target[0m - Cloud-config availability.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-online.target[0m - Network is Online.
+[[0;32m  OK  [0m] Reached target [0;1;39msysinit.target[0m - System Initialization.
+[    8.479934] cloud-init[714]: |E.o o* +o .      |
+[    8.490126] cloud-init[714]: |.+.B +*o.        |
+[[0;32m  OK  [0m] Started [0;1;39mdpkg-db-backup.timer[0m - Daily dpkg database backup timer.
+[    8.493883] cloud-init[714]: |o.*o*o....       |
+[[0;32m  OK  [0m] Started [0;1;39me2scrub_all.timer[0m - Period���Metadata Check for All Filesystems.
+[    8.496898] cloud-init[714]: |. .++.ooo        |
+[[0;32m  OK  [0m] Started [0;1;39mfstrim.timer[0m - Discard unused filesystem blocks once a week.
+[    8.499842] cloud-init[714]: +----[SHA256]-----+
+[[0;32m  OK  [0m] Started [0;1;39mfwupd-refresh.timer[0m - Refresh fwupd metadata regularly.
+[    8.502676] cloud-init[714]: Generating public/private ed25519 key pair.
+[[0;32m  OK  [0m] Started [0;1;39mlogrotate.timer[0m - Daily rotation of log files.
+[    8.505711] cloud-init[714]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+[[0;32m  OK  [0m] Started [0;1;39mman-db.timer[0m - Daily man-db regeneration.
+[    8.509150] cloud-init[714]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+[[0;32m  OK  [0m] Started [0;1;39mmotd-news.timer[0m - Message of the Day.
+[    8.512636] cloud-init[714]: The key fingerprint is:
+[[0;32m  OK  [0m] Started [0;1;39msysstat-collect.timer[0m - Ru���y accounting tool every 10 minutes.
+[    8.515803] cloud-init[714]: SHA256:X50rIkAAYnVcd+IxtLuPY7/7DzdwhOdzvc5B/JObtGg root@test-oq3m7kay-0-n-efd3d062d4f1
+[[0;32m  OK  [0m] Started [0;1;39msysstat-summary.timer[0m - Ge��� of yesterday's process accounting.
+[    8.520033] cloud-init[714]: The key's randomart image is:
+[[0;32m  OK  [0m] Started [0;1;39msystemd-tmpfiles-clean.tim���[0my Cleanup of Temporary Directories.
+[    8.523157] cloud-init[714]: +--[ED25519 256]--+
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-download.t���[0mhat failed at package install time.
+[    8.526225] cloud-init[714]: |..ooo....* .     |
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-motd.timer[0m��� a new version of Ubuntu available.
+[    8.529232] cloud-init[714]: |..  .o  o *   .  |
+[[0;32m  OK  [0m] Reached target [0;1;39mpaths.target[0m - Path Units.
+[    8.531665] cloud-init[714]: |      .  o   . o |
+[[0;32m  OK  [0m] Reached target [0;1;39mtimers.target[0m - Timer Units.
+[    8.534173] cloud-init[714]: |     .    .  .=..|
+[[0;32m  OK  [0m] Listening on [0;1;39mcloud-init-hotplugd.s���t[0m - cloud-init hotplug hook socket.
+[    8.537121] cloud-init[714]: |      . S.  ..o*o|
+[    8.538172] cloud-init[714]: |       . ...  +.*|
+[[0;32m  OK  [0m] Listening on [0;1;39mdbus.socket[0m - D-Bus System Message Bus Socket.
+[    8.540892] cloud-init[714]: |        ..o ...O.|
+[    8.541972] cloud-init[714]: |         +o. EB B|
+[    8.543044] cloud-init[714]: |        ..o==o.B |
+         Starting [0;1;39mdocker.socket[0m - Docker Socket for the API...
+[    8.545500] cloud-init[714]: +----[SHA256]-----+
+[[0;32m  OK  [0m] Listening on [0;1;39miscsid.socket[0m - Open-iSCSI iscsid Socket.
+         Starting [0;1;39mlxd-installer.socket[0m - He���er to install lxd snap on demand...
+         Starting [0;1;39msnapd.socket[0m - Socket activation for snappy daemon...
+[[0;32m  OK  [0m] Listening on [0;1;39mssh.socket[0m - OpenBSD Secure Shell server socket.
+[[0;32m  OK  [0m] Listening on [0;1;39muuidd.socket[0m - UUID daemon activation socket.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs-pre.targe���[0mreparation for Remote File Systems.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs.target[0m - Remote File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39mblk-availability.service[0m - Availability of block devices.
+[[0;32m  OK  [0m] Listening on [0;1;39mdocker.socket[0m - Docker Socket for the API.
+[[0;32m  OK  [0m] Listening on [0;1;39mlxd-installer.socket[0m ���lper to install lxd snap on demand.
+[[0;32m  OK  [0m] Listening on [0;1;39msnapd.socket[0m - Socket activation for snappy daemon.
+[[0;32m  OK  [0m] Reached target [0;1;39msockets.target[0m - Socket Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mbasic.target[0m - Basic System.
+         Starting [0;1;39mapport.service[0m - automatic crash report generation...
+         Starting [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage...
+[[0;32m  OK  [0m] Started [0;1;39mcron.service[0m - Regular background program processing daemon.
+         Starting [0;1;39mdbus.service[0m - D-Bus System Message Bus...
+[[0;32m  OK  [0m] Started [0;1;39mdmesg.service[0m - Save initial kernel messages after boot.
+         Starting [0;1;39mdpkg-db-backup.service[0m - ���ily dpkg database backup service...
+         Starting [0;1;39me2scrub_reap.service[0m - Re���ne ext4 Metadata Check Snapshots...
+         Starting [0;1;39mgrub-common.service[0m - Record successful boot for GRUB...
+         Starting [0;1;39mpolkit.service[0m - Authorization Manager...
+         Starting [0;1;39mpollinate.service[0m - Polli���e pseudo random number generator...
+         Starting [0;1;39mrsyslog.service[0m - System Logging Service...
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty-pre.target[0m - Preparation for Logins.
+         Starting [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded...
+         Starting [0;1;39msnapd.service[0m - Snap Daemon...
+         Starting [0;1;39msysstat.service[0m - Resets System Activity Logs...
+         Starting [0;1;39msystemd-logind.service[0m - User Login Management...
+         Starting [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions...
+         Starting [0;1;39mudisks2.service[0m - Disk Manager...
+         Starting [0;1;39mlogrotate.service[0m - Rotate log files...
+[[0;32m  OK  [0m] Started [0;1;39mdbus.service[0m - D-Bus System Message Bus.
+[[0;32m  OK  [0m] Finished [0;1;39msysstat.service[0m - Resets System Activity Logs.
+         Starting [0;1;39mcontainerd.service[0m - containerd container runtime...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions.
+         Starting [0;1;39mplymouth-quit-wait.servic���[0md until boot process finishes up...
+         Starting [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen...
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit-wait.servic���[0mold until boot process finishes up.
+[[0;32m  OK  [0m] Started [0;1;39mserial-getty@ttyS0.service[0m - Serial Getty on ttyS0.
+         Starting [0;1;39msetvtrgb.service[0m - Set console scheme...
+[[0;32m  OK  [0m] Finished [0;1;39me2scrub_reap.service[0m - Re���line ext4 Metadata Check Snapshots.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen.
+[[0;32m  OK  [0m] Finished [0;1;39msetvtrgb.service[0m - Set console scheme.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-getty.slice[0m - Slice /system/getty.
+[[0;32m  OK  [0m] Started [0;1;39mgetty@tty1.service[0m - Getty on tty1.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty.target[0m - Login Prompts.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-common.service[0m - Record successful boot for GRUB.
+         Starting [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection...
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection.
+[[0;32m  OK  [0m] Finished [0;1;39mlogrotate.service[0m - Rotate log files.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-logind.service[0m - User Login Management.
+[[0;32m  OK  [0m] Started [0;1;39mpolkit.service[0m - Authorization Manager.
+         Starting [0;1;39mModemManager.service[0m - Modem Manager...
+[[0;32m  OK  [0m] Finished [0;1;39mdpkg-db-backup.service[0m - Daily dpkg database backup service.
+[[0;32m  OK  [0m] Started [0;1;39mudisks2.service[0m - Disk Manager.
+[[0;32m  OK  [0m] Started [0;1;39mrsyslog.service[0m - System Logging Service.
+[[0;32m  OK  [0m] Started [0;1;39mModemManager.service[0m - Modem Manager.
+[[0;32m  OK  [0m] Started [0;1;39mcontainerd.service[0m - containerd container runtime.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
+[    9.372226] cloud-init[1034]: Cloud-init v. 25.2-0ubuntu1~24.04.1 running 'modules:config' at Fri, 19 Dec 2025 06:32:45 +0000. Up 9.34 seconds.
+[[0;32m  OK  [0m] Started [0;1;39msnapd.service[0m - Snap Daemon.
+         Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage.
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+
+Ubuntu 24.04.3 LTS test-oq3m7kay-0-n-efd3d062d4f1 ttyS0
+
+test-oq3m7kay-0-n-efd3d062d4f1 login: [   19.321518] cloud-init[1331]: Cloud-init v. 25.2-0ubuntu1~24.04.1 running 'modules:final' at Fri, 19 Dec 2025 06:32:55 +0000. Up 19.29 seconds.
+                                                   [   49.723864] cloud-init[1331]: Auto-refresh of all snaps held until 2025-12-21T06:32:56Z
+[   49.802911] cloud-init[1331]: snap "aproxy" is already installed, see 'snap help refresh'
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[   50.465337] cloud-init[1331]: Created symlink /etc/systemd/system/sysinit.target.wants/nftables.service ��� /usr/lib/systemd/system/nftables.service.
+[   50.759312] cloud-init[1331]: info: The user `ubuntu' is already a member of `lxd'.
+[   50.787238] cloud-init[1331]: info: The user `ubuntu' is already a member of `adm'.
+         Stopping [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Stopped [0;1;39mdocker.service[0m - Docker Application Container Engine.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+[[0;32m  OK  [0m] Created slice [0;1;39muser-1000.slice[0m - User Slice of UID 1000.
+         Starting [0;1;39muser-runtime-dir@1000.ser���[0mRuntime Directory /run/user/1000...
+[[0;32m  OK  [0m] Finished [0;1;39muser-runtime-dir@1000.ser���[0mr Runtime Directory /run/user/1000.
+         Starting [0;1;39muser@1000.service[0m - User Manager for UID 1000...
+[[0;32m  OK  [0m] Started [0;1;39muser@1000.service[0m - User Manager for UID 1000.
+[[0;32m  OK  [0m] Started [0;1;39msession-c2.scope[0m - Session c2 of User ubuntu.
+[[0;32m  OK  [0m] Started [0;1;39msession-c3.scope[0m - Session c3 of User ubuntu.
+[   51.718308] cloud-init[1331]: #!/usr/bin/env bash
+[   51.718912] cloud-init[1331]: timestamp=$(date +%s)
+[   51.720411] cloud-init[1331]: # Disable exit-on-error, due the need for error handling.
+[   51.721381] cloud-init[1331]: set +e
+[   51.721635] cloud-init[1331]: jq -n \
+[   51.721935] cloud-init[1331]:   --arg workflow "$GITHUB_WORKFLOW" \
+[   51.722512] cloud-init[1331]:   --arg repository "$GITHUB_REPOSITORY" \
+[   51.722777] cloud-init[1331]:   --arg event "$GITHUB_EVENT_NAME" \
+[   51.723323] cloud-init[1331]:   --argjson timestamp "$timestamp" \
+[   51.723597] cloud-init[1331]:   --arg workflow_run_id "$GITHUB_RUN_ID" \
+[   51.723860] cloud-init[1331]:   '{
+[   51.724410] cloud-init[1331]:     "workflow": $workflow,
+[   51.724682] cloud-init[1331]:     "repository": $repository,
+[   51.724972] cloud-init[1331]:     "event": $event,
+[   51.725524] cloud-init[1331]:     "timestamp": $timestamp,
+[   51.725794] cloud-init[1331]:     "workflow_run_id": $workflow_run_id
+[   51.726341] cloud-init[1331]:   }' > "/home/ubuntu/metrics-exchange/pre-job-metrics.json" || true
+[   51.726611] cloud-init[1331]:   logger -s "Repo policy check is marked for deprecation. Consider using 'allow_external_contributor' instead"
+[   51.726878] cloud-init[1331]:     # Log common env variables.
+[   51.727429] cloud-init[1331]:     logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
+[   51.727715] cloud-init[1331]:       GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, \
+[   51.727991] cloud-init[1331]:       GITHUB_SHA: ${GITHUB_SHA}"
+[   51.728578] cloud-init[1331]:     # Prepare curl arguments
+[   51.728862] cloud-init[1331]:     CURL_ARGS=(
+[   51.729405] cloud-init[1331]:       --silent
+[   51.729678] cloud-init[1331]:       --show-error
+[   51.729991] cloud-init[1331]:       --max-time 60
+[   51.730531] cloud-init[1331]:       --noproxy '*'
+[   51.730820] cloud-init[1331]:       --fail-with-body
+[   51.731396] cloud-init[1331]:       -o repo_check_output.txt
+[   51.731669] cloud-init[1331]:       --stderr repo_check_error.txt
+[   51.731932] cloud-init[1331]:       --write-out "%{http_code}"
+[   51.732488] cloud-init[1331]:       -H 'Authorization: Bearer 50960160a93b7e2aa1fe3891ff67bc30c01203bbc62b6408ac8a92cdeb399736'
+[   51.732746] cloud-init[1331]:       -H 'Content-Type: application/json'
+[   51.733027] cloud-init[1331]:     )
+[   51.733285] cloud-init[1331]:     # Set REPO_CHECK to a failure code as a safe guard.
+[   51.733563] cloud-init[1331]:     REPO_CHECK=1
+[   51.733829] cloud-init[1331]:     # Special Workflow dispatch repo-policy-compliance service check designed to fail:
+[   51.734388] cloud-init[1331]:     if [[ "${GITHUB_WORKFLOW}" == "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7" ]]; then
+[   51.734660] cloud-init[1331]:       logger -s "Running the test workflow for integration tests, this test is configured to fail"
+[   51.734926] cloud-init[1331]:       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+[   51.735469] cloud-init[1331]:           -X POST \
+[   51.735737] cloud-init[1331]:           http://localhost:8080/always-fail/check-run)
+[   51.736013] cloud-init[1331]:       REPO_CHECK=$?
+[   51.736276] cloud-init[1331]:     # Pull request - Request repo-policy-compliance service check:
+[   51.736550] cloud-init[1331]:     elif [[ "${GITHUB_EVENT_NAME}" ==  "pull_request" ]]; then
+[   51.736823] cloud-init[1331]:       GITHUB_SOURCE_REPOSITORY=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.repo.full_name')
+[   51.737416] cloud-init[1331]:       COMMIT_SHA=$(cat "${GITHUB_EVENT_PATH}" | jq -r '.pull_request.head.sha')
+[   51.737721] cloud-init[1331]:       logger -s " \
+[   51.737958] cloud-init[1331]:       GITHUB_SOURCE_REPOSITORY: ${GITHUB_SOURCE_REPOSITORY} \
+[   51.738499] cloud-init[1331]:       GITHUB_BASE_REF: ${GITHUB_BASE_REF}, \
+[   51.738767] cloud-init[1331]:       GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}, \
+[   51.739315] cloud-init[1331]:       COMMIT_SHA: ${COMMIT_SHA}"
+[   51.739586] cloud-init[1331]:       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+[   51.739853] cloud-init[1331]:           -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\", \"source_repository_name\": \"${GITHUB_SOURCE_REPOSITORY}\", \"target_branch_name\": \"${GITHUB_BASE_REF}\", \"source_branch_name\": \"${GITHUB_HEAD_REF}\", \"commit_sha\": \"${COMMIT_SHA}\"}" \
+[   51.740401] cloud-init[1331]:           http://localhost:8080/pull_request/check-run)
+[   51.740670] cloud-init[1331]:       REPO_CHECK=$?
+[   51.740935] cloud-init[1331]:     else
+[   51.741482] cloud-init[1331]:       # Workflow dispatch, Push and Schedule use their respective endpoints, all other events use default by default.
+[   51.741749] cloud-init[1331]:       CHECK_NAME="default"
+[   51.742024] cloud-init[1331]:       if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]] || [[ "${GITHUB_EVENT_NAME}" == "push" ]] || [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+[   51.742299] cloud-init[1331]:         CHECK_NAME="${GITHUB_EVENT_NAME}"
+[   51.742562] cloud-init[1331]:       fi
+[   51.742835] cloud-init[1331]:       logger -s "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+[   51.743371] cloud-init[1331]:       REPO_CHECK_HTTP_CODE=$(curl "${CURL_ARGS[@]}" \
+[   51.743642] cloud-init[1331]:           -d "{\"repository_name\": \"${GITHUB_REPOSITORY}\"}" \
+[   51.743912] cloud-init[1331]:           http://localhost:8080/${CHECK_NAME}/check-run)
+[   51.744451] cloud-init[1331]:       REPO_CHECK=$?
+[   51.744720] cloud-init[1331]:     fi
+[   51.744992] cloud-init[1331]:     if [[ $REPO_CHECK -ne 0 ]]; then
+[   51.811159] cloud-init[1331]:         if [[ -s repo_check_output.txt ]]; then
+[   51.811370] cloud-init[1331]:             logger -p user.error -s -f repo_check_output.txt
+[   51.811634] cloud-init[1331]:         fi
+[   51.811895] cloud-init[1331]:         if [[ -s repo_check_error.txt ]]; then
+[   51.812464] cloud-init[1331]:             logger -p user.error -s -f repo_check_error.txt
+[   51.812732] cloud-init[1331]:         fi
+[   51.813000] cloud-init[1331]:         if [[ $REPO_CHECK_HTTP_CODE -ge 500 ]] && [[ $REPO_CHECK_HTTP_CODE -lt 600 ]]; then
+[   51.813263] cloud-init[1331]:             logger -p user.error -s "The repository setup check failed with HTTP code ${REPO_CHECK_HTTP_CODE}."
+[   51.813551] cloud-init[1331]:             logger -p user.error -s "This runner will be stopped or lost, please contact the repo-policy-compliance server operators or try again later."
+[   51.813804] cloud-init[1331]:         else
+[   51.814352] cloud-init[1331]:             logger -p user.error -s "Stopping execution of jobs due to repository setup is not compliant with policies."
+[   51.814690] cloud-init[1331]:             logger -p user.error -s "This runner will be stopped or lost, please fix the setup of the repository, then rerun this job."
+[   51.814875] cloud-init[1331]:         fi
+[   51.815431] cloud-init[1331]:         # Killing the runner.Listener process to stop the runner application. This will prevent jobs from being executed.
+[   51.815715] cloud-init[1331]:         pkill -2 Runner.Listener
+[   51.816039] cloud-init[1331]:         
+[   51.816275] cloud-init[1331]:             # Write Post Job metrics with status "repo-policy-check-failure" .
+[   51.816543] cloud-init[1331]:             # We write it here, rather than relying on the post-job script,
+[   51.816805] cloud-init[1331]:             # as it may not run due to the poweroff command below.
+[   51.817345] cloud-init[1331]:             post_job_timestamp=$(date +%s)
+[   51.817615] cloud-init[1331]:             jq -n \
+[   51.817885] cloud-init[1331]:               --argjson timestamp "$post_job_timestamp" \
+[   51.818424] cloud-init[1331]:               --argjson http_code "$REPO_CHECK_HTTP_CODE" \
+[   51.818677] cloud-init[1331]:               '{
+[   51.818939] cloud-init[1331]:                 "timestamp": $timestamp,
+[   51.819478] cloud-init[1331]:                 "status": "repo-policy-check-failure",
+[   51.819734] cloud-init[1331]:                 "status_info": {code: $http_code}
+[   51.819993] cloud-init[1331]:               }' > "/home/ubuntu/metrics-exchange/post-job-metrics.json" || true
+[   51.820532] cloud-init[1331]:         
+[   51.820795] cloud-init[1331]:       # Shutdown the instance as a safe guard. The time delay is needed for the runner application to upload the logs.
+[   51.821345] cloud-init[1331]:       bash -c "sleep 10; sudo systemctl poweroff -i" &
+[   51.821602] cloud-init[1331]:       exit 1
+[   51.821865] cloud-init[1331]:     fi
+[   51.822429] cloud-init[1331]:     logger -s "The repository setup check has passed, proceeding to execute jobs"
+[   51.822684] cloud-init[1331]: if [[ -n "$DOCKERHUB_MIRROR" ]]; then
+[   51.822939] cloud-init[1331]:   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
+[   51.823478] cloud-init[1331]:   logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
+[   51.823744] cloud-init[1331]:   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
+[   51.824013] cloud-init[1331]:   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
+[   51.824268] cloud-init[1331]: fi
+[[0;32m  OK  [0m] Started [0;1;39msession-c4.scope[0m - Session c4 of User ubuntu.
+[   54.321317] cloud-init[1331]: ��� Connected to GitHub
+[   55.144898] cloud-init[1331]: Current runner version: '2.330.0'
+[   55.145596] cloud-init[1331]: 2025-12-19 06:33:31Z: Listening for Jobs
+         Starting [0;1;39mssh.service[0m - OpenBSD Secure Shell server...
+[[0;32m  OK  [0m] Started [0;1;39mssh.service[0m - OpenBSD Secure Shell server.
+[[0;32m  OK  [0m] Started [0;1;39msession-3.scope[0m - Session 3 of User ubuntu.
+[[0;32m  OK  [0m] Started [0;1;39msession-4.scope[0m - Session 4 of User ubuntu.
+[[0;32m  OK  [0m] Started [0;1;39msession-5.scope[0m - Session 5 of User ubuntu.
+[   99.997329] cloud-init[1331]: 2025-12-19 06:34:16Z: Running job: workflow-dispatch-tests
+[  100.904925] cloud-init[1331]: Exiting...
+
+06:34:21 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-zkso  github-pr-279b3-lxd  localhost/localhost  3.6.12   unsupported  06:34:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-oq3m7kay           active      1  any-charm      latest/beta  124  no       
+test-oq3m7kay                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-oq3m7kay/0*  active    idle   0        10.211.98.241             
+test-oq3m7kay/0*                         active    idle   1        10.211.98.25    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.211.98.241  juju-496324-0  ubuntu@24.04  github-runner  Running
+1        started  10.211.98.25   juju-496324-1  ubuntu@22.04  github-runner  Running
+
+06:34:22 INFO Juju error logs:
+
+machine-0: 06:23:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:23:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oq3m7kay-0: 06:25:08 ERROR unit.test-oq3m7kay/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oq3m7kay-0: 06:25:09 ERROR unit.test-oq3m7kay/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oq3m7kay-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:34:22 INFO Forgetting model main...
