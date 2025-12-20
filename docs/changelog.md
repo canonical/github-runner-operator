@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-12-19
+
+- Revert deletion of apt-get update due to the impact on existing workflows.
+
 ## 2025-12-17
 
 - Extend contributor check on private-repositories to contributors.
