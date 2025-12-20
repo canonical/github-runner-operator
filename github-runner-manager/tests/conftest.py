@@ -125,3 +125,15 @@ def pytest_addoption(parser):
         help="OpenStack image ID for runner instances.",
         default=os.getenv("OPENSTACK_IMAGE_ID"),
     )
+    parser.addoption(
+        "--tmate-image",
+        action="store",
+        help="Tmate image for SSH server.",
+        default=os.getenv("TMATE_IMAGE", "tmate/tmate-ssh-server:latest"),
+    )
+    parser.addoption(
+        "--debug-log-dir",
+        action="store",
+        help="Directory to store debug logs.",
+        default=os.getenv("DEBUG_LOG_DIR", "/tmp/github-runner-manager-test-logs"),
+    )
