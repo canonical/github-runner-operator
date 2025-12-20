@@ -1,0 +1,94 @@
+06:32:15 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:32:46 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:32:49 INFO Current reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:32:49 INFO Waiting for reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:33:50 INFO Current reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:33:50 INFO Current reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a, expected reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:33:50 INFO Waiting for reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:34:51 INFO Current reconcile ID: 77483d14-c836-462d-9625-1ca22ea3a2c9
+06:34:51 INFO Current reconcile ID: 77483d14-c836-462d-9625-1ca22ea3a2c9, expected reconcile ID: 288d4518-1aa0-4402-9f9d-615509ec534a
+06:34:51 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:35:21 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:35:27 INFO Current reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:35:27 INFO Waiting for reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:36:28 INFO Current reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:36:28 INFO Current reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62, expected reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:36:28 INFO Waiting for reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:37:29 INFO Current reconcile ID: 200c45b7-8212-4fa9-8f51-cd4298de8e72
+06:37:29 INFO Current reconcile ID: 200c45b7-8212-4fa9-8f51-cd4298de8e72, expected reconcile ID: 176b0863-2ec3-4d32-a9d0-9e79afadaf62
+06:37:35 INFO Wait for condition not met, sleeping 30
+06:38:17 INFO [TEST SETUP] Run command pkill -9 run.sh on test-rtjkwsbl-0-n-87c4fd613505
+06:38:17 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.66', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c5:b2:79'}]])
+06:38:18 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rtjkwsbl-0-n-87c4fd613505.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.66 pkill -9 run.sh'
+06:38:19 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.66' (ED25519) to the list of known hosts.
+'
+06:38:21 INFO Runner test-rtjkwsbl-0-n-87c4fd613505 status: online
+06:38:21 INFO Runner still marked as online, waiting for it to be marked offline
+06:39:22 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:39:52 INFO Waiting for model:
+  test-rtjkwsbl/0 [idle] active: 
+06:39:55 INFO Current reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:39:55 INFO Waiting for reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:40:56 INFO Current reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:40:56 INFO Current reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba, expected reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:40:56 INFO Waiting for reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:41:57 INFO Current reconcile ID: bee048c7-6f85-43d4-818d-e515764e90ff
+06:41:57 INFO Current reconcile ID: bee048c7-6f85-43d4-818d-e515764e90ff, expected reconcile ID: d6d6312e-3fe5-4a3e-bd6d-d221413777ba
+06:41:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766212342.1637075, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.320544719696045}
+{"timestamp": 1766212468.5197716, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.258711099624634}
+{"timestamp": 1766212499.983783, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.015257358551025}
+{"timestamp": 1766212626.1738057, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.147366046905518}
+{"timestamp": 1766212577.0, "event": "runner_installed", "flavor": "test-rtjkwsbl", "duration": 78.0}
+{"timestamp": 1766212660.0, "event": "runner_start", "flavor": "test-rtjkwsbl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 83.0, "queue_duration": 2.0}
+{"timestamp": 1766212699.0, "event": "runner_stop", "flavor": "test-rtjkwsbl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 39.0, "job_conclusion": "cancelled"}
+{"timestamp": 1766212755.302156, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.097642421722412}
+{"timestamp": 1766212772.7002091, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.074479103088379}
+{"timestamp": 1766212898.6805673, "event": "reconciliation", "flavor": "test-rtjkwsbl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.8321309089660645}
+06:41:59 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-tv4i  github-pr-279b3-lxd  localhost/localhost  3.6.12   unsupported  06:41:59Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-rtjkwsbl           active      1  any-charm      latest/beta  124  no       
+test-rtjkwsbl                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-rtjkwsbl/0*  active    idle   0        10.75.151.200             
+test-rtjkwsbl/0*                         active    idle   1        10.75.151.180   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.75.151.200  juju-028e01-0  ubuntu@24.04  github-runner  Running
+1        started  10.75.151.180  juju-028e01-1  ubuntu@22.04  github-runner  Running
+
+06:41:59 INFO Juju error logs:
+
+machine-0: 06:19:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rtjkwsbl-0: 06:21:42 ERROR unit.test-rtjkwsbl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-rtjkwsbl-0: 06:21:43 ERROR unit.test-rtjkwsbl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rtjkwsbl-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:41:59 INFO Forgetting model main...
