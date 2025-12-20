@@ -1,0 +1,88 @@
+18:41:42 INFO Waiting for model:
+  test-frhqz1of/0 [idle] active: 
+18:42:12 INFO Waiting for model:
+  test-frhqz1of/0 [idle] active: 
+18:42:15 INFO Current reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:42:15 INFO Waiting for reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:43:16 INFO Current reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:43:16 INFO Current reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03, expected reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:43:16 INFO Waiting for reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:44:17 INFO Current reconcile ID: 6971611e-e745-4a42-b365-74802e8abfed
+18:44:17 INFO Current reconcile ID: 6971611e-e745-4a42-b365-74802e8abfed, expected reconcile ID: a4112f6c-1e16-443a-9716-12c06039da03
+18:44:21 INFO [TEST SETUP] Exposing port 8080 on test-frhqz1of-0-n-aa79a15ba860
+18:44:21 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.3', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:a6:ab'}]])
+18:44:22 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-frhqz1of-0-n-aa79a15ba860.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.3 &
+18:44:23 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.3' (ED25519) to the list of known hosts.
+
+18:44:24 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-frhqz1of-0-n-aa79a15ba860
+18:44:24 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.3', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:a6:ab'}]])
+18:44:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-frhqz1of-0-n-aa79a15ba860.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.3 nc -z localhost 8080'
+18:44:26 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:44:26 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-frhqz1of-0-n-aa79a15ba860
+18:44:26 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.3', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:a6:ab'}]])
+18:44:27 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-frhqz1of-0-n-aa79a15ba860.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.3 curl http://localhost:8080'
+18:44:28 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  88197      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:44:30 INFO Wait for condition not met, sleeping 10
+18:44:41 INFO Waiting for model:
+  test-frhqz1of/0 [idle] active: 
+18:45:11 INFO Waiting for model:
+  test-frhqz1of/0 [idle] active: 
+18:45:14 INFO Current reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:45:14 INFO Waiting for reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:46:15 INFO Current reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:46:15 INFO Current reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce, expected reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:46:15 INFO Waiting for reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:47:16 INFO Current reconcile ID: b85b63c2-162d-4437-861f-6dd522fa4676
+18:47:16 INFO Current reconcile ID: b85b63c2-162d-4437-861f-6dd522fa4676, expected reconcile ID: 722682bb-7f88-4acc-9310-196c587820ce
+18:47:17 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-mwkm  github-pr-e2c5c-lxd  localhost/localhost  3.6.12   unsupported  18:47:17Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-frhqz1of           active      1  any-charm      latest/beta  124  no       
+test-frhqz1of                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-frhqz1of/0*  active    idle   0        10.237.171.51             
+test-frhqz1of/0*                         active    idle   1        10.237.171.177  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.237.171.51   juju-faa6b9-0  ubuntu@24.04  github-runner  Running
+1        started  10.237.171.177  juju-faa6b9-1  ubuntu@22.04  github-runner  Running
+
+18:47:17 INFO Juju error logs:
+
+machine-0: 18:18:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:18:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-frhqz1of-0: 18:20:44 ERROR unit.test-frhqz1of/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-frhqz1of-0: 18:20:45 ERROR unit.test-frhqz1of/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-frhqz1of-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:47:17 INFO Forgetting model main...

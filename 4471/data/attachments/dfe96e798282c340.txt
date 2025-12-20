@@ -1,0 +1,51 @@
+18:17:54 WARNING unexpected facade SSHServer received from the controller
+18:17:54 INFO Adding model github-pr-e2c5c-lxd:test-charm-metrics-success-87l3 on cloud localhost
+18:17:55 WARNING unexpected facade SSHServer received from the controller
+18:17:55 WARNING unexpected facade SSHSession received from the controller
+18:17:55 WARNING unexpected facade SSHTunneler received from the controller
+18:17:55 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:17:56 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:12 INFO Deploying local:jammy/github-runner-0
+18:18:12 INFO Waiting for model:
+  test-l6bpmqnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l6bpmqnb/0 [allocating] waiting: waiting for machine
+18:18:42 INFO Waiting for model:
+  test-l6bpmqnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l6bpmqnb/0 [executing] maintenance: installing charm software
+18:19:12 INFO Waiting for model:
+  test-l6bpmqnb/0 [allocating] waiting: waiting for machine
+18:19:42 INFO Waiting for model:
+  test-l6bpmqnb/0 [allocating] waiting: waiting for machine
+18:20:12 INFO Waiting for model:
+  test-l6bpmqnb/0 [executing] maintenance: installing charm software
+18:20:42 INFO Waiting for model:
+  test-l6bpmqnb/0 [executing] maintenance: installing charm software
+18:21:13 INFO Waiting for model:
+  test-l6bpmqnb/0 [idle] active:
+18:21:26 INFO Waiting for model:
+  test-l6bpmqnb/0 [idle] active: 
+18:21:56 INFO Waiting for model:
+  test-l6bpmqnb/0 [idle] active: 
+18:21:59 INFO Current reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:21:59 INFO Waiting for reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:23:00 INFO Current reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:23:00 INFO Current reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04, expected reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:23:00 INFO Waiting for reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:24:01 INFO Current reconcile ID: ba3ef56e-1066-4ee6-935a-0305363e1786
+18:24:01 INFO Current reconcile ID: ba3ef56e-1066-4ee6-935a-0305363e1786, expected reconcile ID: 1f33d5e8-c0a1-4fab-bd61-155b67323d04
+18:24:04 INFO Waiting for model:
+  test-l6bpmqnb/0 [idle] active: 
+18:24:34 INFO Waiting for model:
+  test-l6bpmqnb/0 [idle] active: 
+18:24:37 INFO Current reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:24:37 INFO Waiting for reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:25:38 INFO Current reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:25:38 INFO Current reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272, expected reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:25:38 INFO Waiting for reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:26:39 INFO Current reconcile ID: 12c31ac0-8be1-4c1c-a43f-4c07e950a355
+18:26:39 INFO Current reconcile ID: 12c31ac0-8be1-4c1c-a43f-4c07e950a355, expected reconcile ID: 4ea58926-3366-455a-ab75-59a1f60fd272
+18:26:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766254894.7555532, "event": "reconciliation", "flavor": "test-l6bpmqnb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.8052849769592285}
+{"timestamp": 1766255021.2189622, "event": "reconciliation", "flavor": "test-l6bpmqnb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.355404376983643}
+{"timestamp": 1766255019.0, "event": "runner_installed", "flavor": "test-l6bpmqnb", "duration": 126.0}
+{"timestamp": 1766255055.4229977, "event": "reconciliation", "flavor": "test-l6bpmqnb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.36748456954956}
+{"timestamp": 1766255181.9104419, "event": "reconciliation", "flavor": "test-l6bpmqnb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.392748594284058}

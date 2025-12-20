@@ -1,0 +1,69 @@
+18:17:54 WARNING unexpected facade SSHServer received from the controller
+18:17:54 INFO Adding model github-pr-e2c5c-lxd:test-charm-upgrade-2u0r on cloud localhost
+18:17:55 WARNING unexpected facade SSHServer received from the controller
+18:17:55 WARNING unexpected facade SSHSession received from the controller
+18:17:55 WARNING unexpected facade SSHTunneler received from the controller
+18:17:55 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:17:56 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:19 INFO Deploying local:jammy/github-runner-0
+18:18:19 INFO Waiting for model:
+  test-umlubsrv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-umlubsrv/0 [allocating] waiting: waiting for machine
+18:18:49 INFO Waiting for model:
+  test-umlubsrv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-umlubsrv/0 [idle] active: 
+18:19:19 INFO Waiting for model:
+  test-umlubsrv/0 [allocating] waiting: waiting for machine
+18:19:49 INFO Waiting for model:
+  test-umlubsrv/0 [allocating] waiting: agent initialising
+18:20:19 INFO Waiting for model:
+  test-umlubsrv/0 [executing] maintenance: installing charm software
+18:20:49 INFO Waiting for model:
+  test-umlubsrv/0 [executing] maintenance: Update image for runners
+18:21:19 INFO Waiting for model:
+  test-umlubsrv/0 [idle] active: 
+18:23:17 INFO Waiting for model:
+  test-umlubsrv/0 [idle] active:
+18:23:47 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-2u0r  github-pr-e2c5c-lxd  localhost/localhost  3.6.12   unsupported  18:23:47Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-umlubsrv           active      1  any-charm      latest/beta  124  no       
+test-umlubsrv                                  active      1  github-runner                 1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-umlubsrv/0*  active    idle   0        10.33.63.150           
+test-umlubsrv/0*                         active    idle   1        10.33.63.241           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.33.63.150  juju-65a285-0  ubuntu@24.04  github-runner  Running
+1        started  10.33.63.241  juju-65a285-1  ubuntu@22.04  github-runner  Running
+
+18:23:47 INFO Juju error logs:
+
+machine-0: 18:18:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:18:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-umlubsrv-0: 18:20:38 ERROR unit.test-umlubsrv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-umlubsrv-0: 18:20:40 ERROR unit.test-umlubsrv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-umlubsrv-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:23:47 INFO Forgetting model main...
