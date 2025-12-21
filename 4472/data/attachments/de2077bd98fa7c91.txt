@@ -1,0 +1,95 @@
+06:32:28 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:32:58 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:33:01 INFO Current reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:33:01 INFO Waiting for reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:34:11 INFO Current reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:34:11 INFO Current reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72, expected reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:34:11 INFO Waiting for reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:35:12 INFO Current reconcile ID: 488a008b-81b0-4b31-b6ee-79a5f113d9bd
+06:35:12 INFO Current reconcile ID: 488a008b-81b0-4b31-b6ee-79a5f113d9bd, expected reconcile ID: 4658ca35-90e8-4131-83c0-ffc84d10fa72
+06:35:12 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:35:43 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:35:50 INFO Current reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:35:50 INFO Waiting for reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:36:51 INFO Current reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:36:51 INFO Current reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1, expected reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:36:51 INFO Waiting for reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:37:52 INFO Current reconcile ID: ee7fae7a-bbbe-4582-b9ea-53443cf3e4e3
+06:37:52 INFO Current reconcile ID: ee7fae7a-bbbe-4582-b9ea-53443cf3e4e3, expected reconcile ID: 83b24f0e-de75-42e5-9567-6bc60fc607e1
+06:37:59 INFO Wait for condition not met, sleeping 30
+06:38:29 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-fbc266ef&created=%3E%3D2025-12-21T06%3A37%3A57%2B00%3A00
+06:38:40 INFO [TEST SETUP] Run command pkill -9 run.sh on test-arwp94tf-0-n-9e6fa08edcbd
+06:38:40 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.248', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:f0:49'}]])
+06:38:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-arwp94tf-0-n-9e6fa08edcbd.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.248 pkill -9 run.sh'
+06:38:43 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.248' (ED25519) to the list of known hosts.
+'
+06:38:45 INFO Runner test-arwp94tf-0-n-9e6fa08edcbd status: online
+06:38:45 INFO Runner still marked as online, waiting for it to be marked offline
+06:39:45 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:40:15 INFO Waiting for model:
+  test-arwp94tf/0 [idle] active: 
+06:40:18 INFO Current reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:40:18 INFO Waiting for reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:41:19 INFO Current reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:41:19 INFO Current reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d, expected reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:41:19 INFO Waiting for reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:42:20 INFO Current reconcile ID: 378bbc37-467d-4125-a17b-fcafeb0544ab
+06:42:20 INFO Current reconcile ID: 378bbc37-467d-4125-a17b-fcafeb0544ab, expected reconcile ID: 51bc3a23-2504-4f98-8430-48406f60c25d
+06:42:21 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766298755.1645257, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.589815378189087}
+{"timestamp": 1766298898.964772, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.097704410552979}
+{"timestamp": 1766298924.896273, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.980468273162842}
+{"timestamp": 1766299051.3904507, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.371452331542969}
+{"timestamp": 1766299038.0, "event": "runner_installed", "flavor": "test-arwp94tf", "duration": 114.0}
+{"timestamp": 1766299082.0, "event": "runner_start", "flavor": "test-arwp94tf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 44.0, "queue_duration": 2.0}
+{"timestamp": 1766299122.0, "event": "runner_stop", "flavor": "test-arwp94tf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1766299180.3800604, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.937488079071045}
+{"timestamp": 1766299195.453335, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.054111242294312}
+{"timestamp": 1766299321.786759, "event": "reconciliation", "flavor": "test-arwp94tf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.157557487487793}
+06:42:21 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-pa5z  github-pr-e2c5c-lxd  localhost/localhost  3.6.12   unsupported  06:42:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-arwp94tf           active      1  any-charm      latest/beta  124  no       
+test-arwp94tf                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-arwp94tf/0*  active    idle   0        10.73.94.16               
+test-arwp94tf/0*                         active    idle   1        10.73.94.93     8080/tcp  
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.73.94.16  juju-dc2758-0  ubuntu@24.04  github-runner  Running
+1        started  10.73.94.93  juju-dc2758-1  ubuntu@22.04  github-runner  Running
+
+06:42:22 INFO Juju error logs:
+
+machine-0: 06:19:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-arwp94tf-0: 06:21:54 ERROR unit.test-arwp94tf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-arwp94tf-0: 06:21:56 ERROR unit.test-arwp94tf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-arwp94tf-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:42:22 INFO Forgetting model main...
