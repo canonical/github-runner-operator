@@ -1,0 +1,87 @@
+06:20:34 INFO GitHub token rate limit: Rate(reset=2025-12-22 07:06:54+00:00, remaining=4887, limit=5000)
+06:20:47 WARNING unexpected facade SSHServer received from the controller
+06:20:47 INFO Adding model github-pr-e2c5c-lxd:test-charm-metrics-failure-ashw on cloud localhost
+06:20:47 WARNING unexpected facade SSHServer received from the controller
+06:20:47 WARNING unexpected facade SSHSession received from the controller
+06:20:47 WARNING unexpected facade SSHTunneler received from the controller
+06:20:47 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:49 INFO Deploying ch:amd64/noble/any-charm-124
+06:21:03 INFO Deploying local:jammy/github-runner-0
+06:21:03 INFO Waiting for model:
+  test-ytumuop2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ytumuop2/0 [allocating] waiting: waiting for machine
+06:21:33 INFO Waiting for model:
+  test-ytumuop2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ytumuop2/0 [idle] active: 
+06:22:04 INFO Waiting for model:
+  test-ytumuop2/0 [allocating] waiting: waiting for machine
+06:22:34 INFO Waiting for model:
+  test-ytumuop2/0 [allocating] waiting: waiting for machine
+06:23:04 INFO Waiting for model:
+  test-ytumuop2/0 [executing] maintenance: installing charm software
+06:23:34 INFO Waiting for model:
+  test-ytumuop2/0 [executing] maintenance: installing charm software
+06:24:05 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:24:16 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:24:46 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:24:49 INFO Current reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:24:49 INFO Waiting for reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:25:50 INFO Current reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:25:50 INFO Current reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb, expected reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:25:50 INFO Waiting for reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:26:51 INFO Current reconcile ID: 5b7840a2-9d99-4937-8256-362f1bfd5516
+06:26:51 INFO Current reconcile ID: 5b7840a2-9d99-4937-8256-362f1bfd5516, expected reconcile ID: 7520009f-5f50-4426-a388-250e311a27bb
+06:27:30 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:28:00 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:28:03 INFO Current reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:28:03 INFO Waiting for reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:29:04 INFO Current reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:29:04 INFO Current reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea, expected reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:29:04 INFO Waiting for reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:30:05 INFO Current reconcile ID: 333f6395-a9fe-41f9-b1ee-f0cfc77bb232
+06:30:05 INFO Current reconcile ID: 333f6395-a9fe-41f9-b1ee-f0cfc77bb232, expected reconcile ID: 975f8f29-2afb-4e40-8214-8999905794ea
+06:30:09 INFO [TEST SETUP] Exposing port 8080 on test-ytumuop2-0-n-c8793c36f6bc
+06:30:09 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7d:35:cc'}]])
+06:30:10 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-ytumuop2-0-n-c8793c36f6bc.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.7 &
+06:30:11 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.7' (ED25519) to the list of known hosts.
+
+06:30:12 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ytumuop2-0-n-c8793c36f6bc
+06:30:12 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7d:35:cc'}]])
+06:30:13 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ytumuop2-0-n-c8793c36f6bc.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.7 nc -z localhost 8080'
+06:30:14 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:30:15 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ytumuop2-0-n-c8793c36f6bc
+06:30:15 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7d:35:cc'}]])
+06:30:16 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ytumuop2-0-n-c8793c36f6bc.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.7 curl http://localhost:8080'
+06:30:17 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  92825      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:30:20 INFO Wait for condition not met, sleeping 10
+06:30:31 INFO Wait for condition not met, sleeping 60
+06:31:31 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:32:01 INFO Waiting for model:
+  test-ytumuop2/0 [idle] active: 
+06:32:04 INFO Current reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:32:04 INFO Waiting for reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:33:05 INFO Current reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:33:05 INFO Current reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd, expected reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:33:05 INFO Waiting for reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:34:06 INFO Current reconcile ID: becbb3d2-899e-48fa-930e-d43265dbd4b1
+06:34:06 INFO Current reconcile ID: becbb3d2-899e-48fa-930e-d43265dbd4b1, expected reconcile ID: 95e24663-64a7-4f47-9e9e-90e326190bbd
+06:34:07 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766384951.0, "event": "runner_installed", "flavor": "test-ytumuop2", "duration": 93.0}
+{"timestamp": 1766385024.0, "event": "runner_start", "flavor": "test-ytumuop2", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 73.0, "queue_duration": 2.0}
+{"timestamp": 1766385024.0, "event": "runner_stop", "flavor": "test-ytumuop2", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1766385104.7022085, "event": "reconciliation", "flavor": "test-ytumuop2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.32906174659729}
+{"timestamp": 1766385230.222299, "event": "reconciliation", "flavor": "test-ytumuop2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.400555610656738}

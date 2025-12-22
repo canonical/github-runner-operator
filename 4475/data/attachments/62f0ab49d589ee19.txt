@@ -1,0 +1,88 @@
+06:46:48 INFO Waiting for model:
+  test-sapbsxoc/0 [idle] active: 
+06:47:18 INFO Waiting for model:
+  test-sapbsxoc/0 [idle] active: 
+06:47:21 INFO Current reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:47:21 INFO Waiting for reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:48:22 INFO Current reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:48:22 INFO Current reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42, expected reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:48:22 INFO Waiting for reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:49:23 INFO Current reconcile ID: d79d1948-b3d3-4de9-bf4a-3249da899bbd
+06:49:23 INFO Current reconcile ID: d79d1948-b3d3-4de9-bf4a-3249da899bbd, expected reconcile ID: 54dc45bb-bf23-4148-b888-a05411788c42
+06:49:27 INFO [TEST SETUP] Exposing port 8080 on test-sapbsxoc-0-n-e8b80087a70c
+06:49:27 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.35', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:19:e7:fd'}]])
+06:49:28 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-sapbsxoc-0-n-e8b80087a70c.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.35 &
+06:49:29 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.35' (ED25519) to the list of known hosts.
+
+06:49:30 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-sapbsxoc-0-n-e8b80087a70c
+06:49:30 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.35', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:19:e7:fd'}]])
+06:49:31 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-sapbsxoc-0-n-e8b80087a70c.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.35 nc -z localhost 8080'
+06:49:32 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:49:32 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-sapbsxoc-0-n-e8b80087a70c
+06:49:32 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.35', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:19:e7:fd'}]])
+06:49:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-sapbsxoc-0-n-e8b80087a70c.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.35 curl http://localhost:8080'
+06:49:35 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  88575      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:49:37 INFO Wait for condition not met, sleeping 10
+06:49:47 INFO Waiting for model:
+  test-sapbsxoc/0 [idle] active: 
+06:50:18 INFO Waiting for model:
+  test-sapbsxoc/0 [idle] active: 
+06:50:21 INFO Current reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:50:21 INFO Waiting for reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:51:22 INFO Current reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:51:22 INFO Current reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8, expected reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:51:22 INFO Waiting for reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:52:23 INFO Current reconcile ID: df930f23-8afe-4ea6-b5ae-401e3589dd66
+06:52:23 INFO Current reconcile ID: df930f23-8afe-4ea6-b5ae-401e3589dd66, expected reconcile ID: 3faa0196-2c8f-4fe7-8765-53bbd186aaf8
+06:52:23 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-3r6u  github-pr-e2c5c-lxd  localhost/localhost  3.6.12   unsupported  06:52:23Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-sapbsxoc           active      1  any-charm      latest/beta  124  no       
+test-sapbsxoc                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-sapbsxoc/0*  active    idle   0        10.213.107.60             
+test-sapbsxoc/0*                         active    idle   1        10.213.107.199  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.213.107.60   juju-430965-0  ubuntu@24.04  github-runner  Running
+1        started  10.213.107.199  juju-430965-1  ubuntu@22.04  github-runner  Running
+
+06:52:23 INFO Juju error logs:
+
+machine-0: 06:21:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:21:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sapbsxoc-0: 06:23:39 ERROR unit.test-sapbsxoc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sapbsxoc-0: 06:23:41 ERROR unit.test-sapbsxoc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sapbsxoc-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:52:23 INFO Forgetting model main...
