@@ -20,6 +20,7 @@ jobs:
       matrix:
         test-module:
           - test_debug_ssh
+          - test_reactive
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
