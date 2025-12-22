@@ -118,8 +118,7 @@ def reactive_application(
         reactive_config=ReactiveConfig(
             mq_uri=mongodb_uri,
             queue_name=test_config.runner_name,
-            base_size=0,
-            max_size=1,
+            max_total_virtual_machines=1,
         ),
     )
 
@@ -367,8 +366,7 @@ def test_reactive_mode_graceful_shutdown(
         reactive_config=ReactiveConfig(
             mq_uri=mongodb_uri,
             queue_name=test_config.runner_name,
-            base_size=0,
-            max_size=2,
+            max_total_virtual_machines=2,
         ),
     )
 
@@ -450,8 +448,7 @@ def test_reactive_mode_graceful_shutdown(
         reactive_config=ReactiveConfig(
             mq_uri=mongodb_uri,
             queue_name=test_config.runner_name,
-            base_size=0,
-            max_size=0,
+            max_total_virtual_machines=0,
         ),
     )
     config_path.write_text(yaml.dump(config))

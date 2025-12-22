@@ -139,14 +139,16 @@ class ReactiveConfig:
     Attributes:
         mq_uri: MongoDB connection URI.
         queue_name: Name of the queue to consume from.
-        base_size: Minimum number of runners to maintain.
-        max_size: Maximum number of runners allowed.
+        max_total_virtual_machines: Maximum number of runners allowed.
+        images: List of images with their labels.
+        flavors: List of flavors with their labels.
     """
 
     mq_uri: str
     queue_name: str
-    base_size: int = 0
-    max_size: int = 1
+    max_total_virtual_machines: int = 1
+    images: list[dict[str, Any]] | None = None
+    flavors: list[dict[str, Any]] | None = None
 
 
 def create_default_config(
@@ -261,7 +263,31 @@ def create_default_config(
                 ]
             }
         ),
-        "reactive_configuration": asdict(reactive_config) if reactive_config else None,
+        "reactive_configuration": (
+            {
+                "queue": {
+                    "mongodb_uri": reactive_config.mq_uri,
+                    "queue_name": reactive_config.queue_name,
+                },
+                "max_total_virtual_machines": reactive_config.max_total_virtual_machines,
+                "images": reactive_config.images
+                or [
+                    {
+                        "name": openstack_config.image_id or "noble",
+                        "labels": ["noble", "x64"],
+                    }
+                ],
+                "flavors": reactive_config.flavors
+                or [
+                    {
+                        "name": openstack_config.flavor or "small",
+                        "labels": ["small"],
+                    }
+                ],
+            }
+            if reactive_config
+            else None
+        ),
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,
