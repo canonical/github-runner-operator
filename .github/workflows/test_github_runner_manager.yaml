@@ -50,8 +50,8 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
         run: |
-          tox -e integration -- -v --tb=native -s \
-            tests/integration/${{ matrix.test-module }}.py \
+          tox -e integration -- \
+            -k ${{ matrix.test-module }} \
             --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
