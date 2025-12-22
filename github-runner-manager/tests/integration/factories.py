@@ -132,6 +132,23 @@ class SSHDebugConfiguration:
     local_proxy_port: int = 3129
 
 
+@dataclass
+class ReactiveConfig:
+    """Reactive mode configuration for tests.
+
+    Attributes:
+        mq_uri: MongoDB connection URI.
+        queue_name: Name of the queue to consume from.
+        base_size: Minimum number of runners to maintain.
+        max_size: Maximum number of runners allowed.
+    """
+
+    mq_uri: str
+    queue_name: str
+    base_size: int = 0
+    max_size: int = 1
+
+
 def create_default_config(
     allow_external_contributor: bool = False,
     github_config: GitHubConfig | None = None,
@@ -139,6 +156,7 @@ def create_default_config(
     proxy_config: ProxyConfig | None = None,
     ssh_debug_connections: list[SSHDebugConfiguration] | None = None,
     test_config: TestConfig | None = None,
+    reactive_config: ReactiveConfig | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -150,6 +168,7 @@ def create_default_config(
         ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
+        reactive_config: Reactive mode configuration. Defaults to None (non-reactive mode).
 
     Returns:
         Configuration dictionary for the application.
@@ -223,19 +242,26 @@ def create_default_config(
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },
-        "non_reactive_configuration": {
-            "combinations": [
-                {
-                    "image": {
-                        "name": openstack_config.image_id or "noble",
-                        "labels": ["noble", "x64"],
-                    },
-                    "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
-                    "base_virtual_machines": 1,
-                }
-            ]
-        },
-        "reactive_configuration": None,
+        "non_reactive_configuration": (
+            None
+            if reactive_config
+            else {
+                "combinations": [
+                    {
+                        "image": {
+                            "name": openstack_config.image_id or "noble",
+                            "labels": ["noble", "x64"],
+                        },
+                        "flavor": {
+                            "name": openstack_config.flavor or "small",
+                            "labels": ["small"],
+                        },
+                        "base_virtual_machines": 1,
+                    }
+                ]
+            }
+        ),
+        "reactive_configuration": asdict(reactive_config) if reactive_config else None,
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,
