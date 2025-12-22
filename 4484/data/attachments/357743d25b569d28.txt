@@ -1,0 +1,52 @@
+18:18:29 WARNING unexpected facade SSHServer received from the controller
+18:18:29 INFO Adding model github-pr-71e3b-lxd:test-charm-metrics-success-n60s on cloud localhost
+18:18:29 WARNING unexpected facade SSHServer received from the controller
+18:18:29 WARNING unexpected facade SSHSession received from the controller
+18:18:29 WARNING unexpected facade SSHTunneler received from the controller
+18:18:29 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:31 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:46 INFO Deploying local:jammy/github-runner-0
+18:18:46 INFO Waiting for model:
+  test-ngdwsy46/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ngdwsy46/0 [allocating] waiting: waiting for machine
+18:19:16 INFO Waiting for model:
+  test-ngdwsy46/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ngdwsy46/0 [allocating] waiting: waiting for machine
+18:19:47 INFO Waiting for model:
+  test-ngdwsy46/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ngdwsy46/0 [idle] active: 
+18:20:17 INFO Waiting for model:
+  test-ngdwsy46/0 [allocating] waiting: waiting for machine
+18:20:47 INFO Waiting for model:
+  test-ngdwsy46/0 [allocating] waiting: agent initialising
+18:21:18 INFO Waiting for model:
+  test-ngdwsy46/0 [executing] maintenance: installing charm software
+18:21:48 INFO Waiting for model:
+  test-ngdwsy46/0 [executing] maintenance: Update image for runners
+18:22:07 INFO Waiting for model:
+  test-ngdwsy46/0 [idle] active: 
+18:22:38 INFO Waiting for model:
+  test-ngdwsy46/0 [idle] active: 
+18:22:41 INFO Current reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:22:41 INFO Waiting for reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:23:42 INFO Current reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:23:42 INFO Current reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e, expected reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:23:42 INFO Waiting for reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:24:43 INFO Current reconcile ID: 0c4a946f-4b3d-4f7c-bc56-fc5086e4c11b
+18:24:43 INFO Current reconcile ID: 0c4a946f-4b3d-4f7c-bc56-fc5086e4c11b, expected reconcile ID: 9634ec32-f104-4a50-af4a-f380c3a3046e
+18:26:27 INFO Waiting for model:
+  test-ngdwsy46/0 [idle] active: 
+18:26:57 INFO Waiting for model:
+  test-ngdwsy46/0 [idle] active: 
+18:26:59 INFO Current reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:26:59 INFO Waiting for reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:28:00 INFO Current reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:28:00 INFO Current reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800, expected reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:28:00 INFO Waiting for reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:29:01 INFO Current reconcile ID: 58362ba1-b955-4675-8be3-771e896fbf50
+18:29:01 INFO Current reconcile ID: 58362ba1-b955-4675-8be3-771e896fbf50, expected reconcile ID: df545714-cd1d-445f-aec3-ec37e0c26800
+18:29:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766427735.4462962, "event": "reconciliation", "flavor": "test-ngdwsy46", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.592528820037842}
+{"timestamp": 1766427862.444138, "event": "reconciliation", "flavor": "test-ngdwsy46", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.885100603103638}
+{"timestamp": 1766427954.0, "event": "runner_installed", "flavor": "test-ngdwsy46", "duration": 220.0}
+{"timestamp": 1766427998.1384637, "event": "reconciliation", "flavor": "test-ngdwsy46", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.00144338607788}
+{"timestamp": 1766428123.9311948, "event": "reconciliation", "flavor": "test-ngdwsy46", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.678756952285767}

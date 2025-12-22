@@ -1,0 +1,100 @@
+18:18:29 WARNING unexpected facade SSHServer received from the controller
+18:18:29 INFO Adding model github-pr-71e3b-lxd:test-reactive-06u5 on cloud localhost
+18:18:29 WARNING unexpected facade SSHServer received from the controller
+18:18:29 WARNING unexpected facade SSHSession received from the controller
+18:18:29 WARNING unexpected facade SSHTunneler received from the controller
+18:18:30 INFO GitHub token rate limit: Rate(reset=2025-12-22 19:09:11+00:00, remaining=4987, limit=5000)
+18:18:33 INFO Deploying ch:amd64/jammy/mongodb-249
+18:18:34 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:35 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:54 INFO Deploying local:jammy/github-runner-0
+18:18:55 INFO Waiting for model:
+  test-rrfskrsi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rrfskrsi/0 [allocating] waiting: waiting for machine
+18:19:25 INFO Waiting for model:
+  test-rrfskrsi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rrfskrsi/0 [allocating] waiting: waiting for machine
+18:19:55 INFO Waiting for model:
+  test-rrfskrsi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rrfskrsi/0 [idle] active: 
+18:20:26 INFO Waiting for model:
+  test-rrfskrsi/0 [allocating] waiting: waiting for machine
+18:20:56 INFO Waiting for model:
+  test-rrfskrsi/0 [executing] maintenance: installing charm software
+18:21:26 INFO Waiting for model:
+  test-rrfskrsi/0 [executing] maintenance: installing charm software
+18:21:57 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:22:11 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:11 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+  mongodb/0 [executing] maintenance: Installing MongoDB...
+18:22:41 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installing MongoDB...
+18:23:12 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Starting MongoDB.
+18:23:42 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:51 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:24:21 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:24:24 INFO Current reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:24:24 INFO Waiting for reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:25:25 INFO Current reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:25:25 INFO Current reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca, expected reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:25:25 INFO Waiting for reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:26:26 INFO Current reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:26:26 INFO Current reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8, expected reconcile ID: 5332c07a-96df-4697-8982-6e9352eed6ca
+18:26:30 INFO Wait for condition not met, sleeping 10
+18:26:50 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:27:06 INFO Current reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:27:06 INFO Waiting for reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:28:07 INFO Current reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:28:07 INFO Current reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8, expected reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:28:07 INFO Waiting for reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:29:09 INFO Current reconcile ID: 3b602258-9951-40eb-8551-5c4cef0b0471
+18:29:09 INFO Current reconcile ID: 3b602258-9951-40eb-8551-5c4cef0b0471, expected reconcile ID: 1c6dcec1-b438-46ff-9d26-2e618c85c7d8
+18:29:09 INFO Wait for condition not met, sleeping 60
+18:30:09 INFO Wait for condition not met, sleeping 60
+18:31:10 INFO Wait for condition not met, sleeping 60
+18:32:10 INFO Wait for condition not met, sleeping 60
+18:33:10 INFO Wait for condition not met, sleeping 60
+18:34:11 INFO Wait for condition not met, sleeping 60
+18:35:11 INFO Wait for condition not met, sleeping 60
+18:36:11 INFO Wait for condition not met, sleeping 60
+18:37:12 INFO Wait for condition not met, sleeping 60
+18:38:12 INFO Wait for condition not met, sleeping 60
+18:39:13 INFO Wait for condition not met, sleeping 60
+18:40:13 INFO Wait for condition not met, sleeping 60
+18:41:13 INFO Wait for condition not met, sleeping 60
+18:42:14 INFO Wait for condition not met, sleeping 60
+18:43:14 INFO Wait for condition not met, sleeping 60
+18:44:15 INFO Wait for condition not met, sleeping 60
+18:45:15 INFO Wait for condition not met, sleeping 60
+18:46:15 INFO Wait for condition not met, sleeping 60
+18:47:16 INFO Wait for condition not met, sleeping 60
+18:48:16 INFO Wait for condition not met, sleeping 60
+18:49:16 INFO Wait for condition not met, sleeping 60
+18:50:17 INFO Wait for condition not met, sleeping 60
+18:51:17 INFO Wait for condition not met, sleeping 60
+18:52:18 INFO Wait for condition not met, sleeping 60
+18:53:18 INFO Wait for condition not met, sleeping 60
+18:54:18 INFO Wait for condition not met, sleeping 60
+18:55:19 INFO Wait for condition not met, sleeping 60
+18:56:19 INFO Wait for condition not met, sleeping 60
+18:57:19 INFO Wait for condition not met, sleeping 60
+18:58:20 INFO Wait for condition not met, sleeping 60
+18:59:20 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:59:51 INFO Waiting for model:
+  test-rrfskrsi/0 [idle] active: 
+18:59:53 INFO Current reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
+18:59:53 INFO Waiting for reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
+19:00:54 INFO Current reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
+19:00:54 INFO Current reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864, expected reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
+19:00:54 INFO Waiting for reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
+19:01:55 INFO Current reconcile ID: 58e6bdcb-66f5-450c-a18a-e74f23159430
+19:01:55 INFO Current reconcile ID: 58e6bdcb-66f5-450c-a18a-e74f23159430, expected reconcile ID: 2d22d550-4614-43d7-a589-452fe460e864
