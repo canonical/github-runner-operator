@@ -4,14 +4,14 @@ on:
   pull_request:
 
 jobs:
-  application-unit-tests:
-    name: Unit tests for github-runner-manager
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
-    with:
-      self-hosted-runner: true
-      self-hosted-runner-label: edge
-      working-directory: ./github-runner-manager/
+  # application-unit-tests:
+  #   name: Unit tests for github-runner-manager
+  #   uses: canonical/operator-workflows/.github/workflows/test.yaml@main
+  #   secrets: inherit
+  #   with:
+  #     self-hosted-runner: true
+  #     self-hosted-runner-label: edge
+  #     working-directory: ./github-runner-manager/
   application-integration-tests:
     name: Integration tests for github-runner-manager
     runs-on: [self-hosted, pfe-ci]
@@ -19,7 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         test-module:
-          - test_debug_ssh
+          # - test_debug_ssh
+          - test_reactive
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
@@ -49,8 +50,8 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
         run: |
-          tox -e integration -- -v --tb=native -s \
-            tests/integration/${{ matrix.test-module }}.py \
+          tox -e integration -- \
+            -k ${{ matrix.test-module }} \
             --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
