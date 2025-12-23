@@ -229,7 +229,7 @@ def get_queue_size(mongodb_uri: str, queue_name: str) -> int:
 def test_reactive_mode_spawns_runner(
     mongodb_uri: str,
     github_repository: Repository,
-    test_github_branch: Branch,
+    github_branch: Branch,
     test_config: TestConfig,
 ):
     """
@@ -239,7 +239,7 @@ def test_reactive_mode_spawns_runner(
     """
     run = dispatch_workflow(
         github_repository=github_repository,
-        branch=test_github_branch,
+        branch=github_branch,
         workflow_file_name=DISPATCH_TEST_WORKFLOW_FILENAME,
         labels=test_config.labels,
     )
@@ -299,7 +299,7 @@ def test_reactive_mode_with_not_found_job(
 def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     mongodb_uri: str,
     github_repository: Repository,
-    test_github_branch: Branch,
+    github_branch: Branch,
     test_config: TestConfig,
 ):
     """
@@ -309,7 +309,7 @@ def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     """
     run = dispatch_workflow(
         github_repository=github_repository,
-        branch=test_github_branch,
+        branch=github_branch,
         workflow_file_name=DISPATCH_TEST_WORKFLOW_FILENAME,
         labels=test_config.labels,
     )
@@ -345,7 +345,7 @@ def test_reactive_mode_graceful_shutdown(
     proxy_config: ProxyConfig | None,
     test_config: TestConfig,
     github_repository: Repository,
-    test_github_branch: Branch,
+    github_branch: Branch,
     openstack_connection: openstack.connection.Connection,
 ):
     """
@@ -380,7 +380,7 @@ def test_reactive_mode_graceful_shutdown(
 
     run = dispatch_workflow(
         github_repository=github_repository,
-        branch=test_github_branch,
+        branch=github_branch,
         workflow_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
         labels=test_config.labels,
     )
@@ -458,7 +458,7 @@ def test_reactive_mode_graceful_shutdown(
 
     run2 = dispatch_workflow(
         github_repository=github_repository,
-        branch=test_github_branch,
+        branch=github_branch,
         workflow_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
         labels=test_config.labels,
     )
