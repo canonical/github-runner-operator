@@ -56,9 +56,10 @@ def _start_cli_server(
         host: Host to listen on.
         log_file_path: Path to the log file for stdout/stderr. If None, uses stdout/stderr.
     """
-    # Run as RUNNER_MANAGER_USER using sudo
+    # Run as RUNNER_MANAGER_USER using sudo with preserved environment
     args = [
         "/usr/bin/sudo",
+        "-E",  # Preserve environment variables (including PYTHONPATH)
         "-u",
         constants.RUNNER_MANAGER_USER,
         sys.executable,
