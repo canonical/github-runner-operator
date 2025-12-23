@@ -244,25 +244,21 @@ def create_default_config(
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },
-        "non_reactive_configuration": (
-            None
-            if reactive_config
-            else {
-                "combinations": [
-                    {
-                        "image": {
-                            "name": openstack_config.image_id or "noble",
-                            "labels": ["noble", "x64"],
-                        },
-                        "flavor": {
-                            "name": openstack_config.flavor or "small",
-                            "labels": ["small"],
-                        },
-                        "base_virtual_machines": 1,
-                    }
-                ]
-            }
-        ),
+        "non_reactive_configuration": {
+            "combinations": [
+                {
+                    "image": {
+                        "name": openstack_config.image_id or "noble",
+                        "labels": ["noble", "x64"],
+                    },
+                    "flavor": {
+                        "name": openstack_config.flavor or "small",
+                        "labels": ["small"],
+                    },
+                    "base_virtual_machines": 0 if reactive_config else 1,
+                }
+            ]
+        },
         "reactive_configuration": (
             {
                 "queue": {
