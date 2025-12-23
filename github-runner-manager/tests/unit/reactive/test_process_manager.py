@@ -11,12 +11,10 @@ import pytest
 
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.process_manager import (
-    PIDS_COMMAND_LINE,
-    PYTHON_BIN,
-    REACTIVE_RUNNER_SCRIPT_MODULE,
     ReactiveRunnerError,
     kill_reactive_processes,
     reconcile,
+    _get_python_bin,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
 from github_runner_manager.utilities import secure_run_subprocess
@@ -28,10 +26,13 @@ EXAMPLE_MQ_URI = "http://example.com"
 def log_dir_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Return the path to the log file."""
     log_file_path = tmp_path / "logs"
+    # Mock the _get_reactive_log_dir function to return our test path
     monkeypatch.setattr(
-        "github_runner_manager.reactive.process_manager.REACTIVE_RUNNER_LOG_DIR", log_file_path
+        "github_runner_manager.reactive.process_manager._get_reactive_log_dir",
+        lambda reactive_log_dir=None: log_file_path,
     )
-    monkeypatch.setattr("shutil.chown", lambda *args, **kwargs: None)
+    # Mock os.geteuid to return non-root so chown is skipped
+    monkeypatch.setattr("os.geteuid", lambda: 1000)
     return log_file_path
 
 
@@ -168,7 +169,7 @@ def test_reconcile_raises_reactive_runner_error_on_ps_failure(
     assert: A ReactiveRunnerError is raised.
     """
     secure_run_subprocess_mock.return_value = CompletedProcess(
-        args=PIDS_COMMAND_LINE,
+        args=["ps", "axo", "cmd,pid", "--no-headers", "--sort=-start_time"],
         returncode=1,
         stdout=b"",
         stderr=b"error",
@@ -187,12 +188,14 @@ def _arrange_reactive_processes(secure_run_subprocess_mock: MagicMock, count: in
         secure_run_subprocess_mock: The mock to use for the ps command.
         count: The number of processes.
     """
+    python_bin = _get_python_bin()
+    reactive_runner_script_module = "github_runner_manager.reactive.runner"
     process_cmds_before = "\n".join(
-        [f"{PYTHON_BIN} -m {REACTIVE_RUNNER_SCRIPT_MODULE}\t{i}" for i in range(count)]
+        [f"{python_bin} -m {reactive_runner_script_module}\t{i}" for i in range(count)]
     )
 
     secure_run_subprocess_mock.return_value = CompletedProcess(
-        args=PIDS_COMMAND_LINE,
+        args=["ps", "axo", "cmd,pid", "--no-headers", "--sort=-start_time"],
         returncode=0,
         stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
         stderr=b"",
