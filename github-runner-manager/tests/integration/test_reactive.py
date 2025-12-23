@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -110,6 +111,37 @@ def _setup_runner_manager_user() -> None:
         ],
         check=True,
     )
+
+    # Grant runner-manager user access to the tox virtualenv via group permissions
+    # Get test user's primary group
+    test_user = os.environ.get("USER", "ubuntu")
+    test_user_group = subprocess.run(
+        ["/usr/bin/id", "-gn", test_user],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+
+    # Add runner-manager to test user's group so it can access the tox virtualenv
+    subprocess.run(
+        [
+            "/usr/bin/sudo",
+            "/usr/sbin/usermod",
+            "-a",
+            "-G",
+            test_user_group,
+            constants.RUNNER_MANAGER_USER,
+        ],
+        check=True,
+    )
+
+    # Make tox virtualenv directories group-readable/executable
+    python_path = Path(sys.executable)
+    venv_root = python_path.parent.parent  # .tox/integration
+    tox_dir = venv_root.parent  # .tox
+
+    for directory in [tox_dir, venv_root]:
+        subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+rx", str(directory)], check=True)
 
 
 @pytest.fixture(scope="session")
