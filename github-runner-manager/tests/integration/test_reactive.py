@@ -181,9 +181,6 @@ def reactive_application(
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config))
 
-    # Make config readable by runner-manager user
-    subprocess.run(["sudo", "chown", constants.RUNNER_MANAGER_USER, str(config_path)], check=True)
-
     metrics_log_path = test_config.debug_log_dir / f"metrics-{test_config.test_id}.log"
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
 
@@ -191,7 +188,6 @@ def reactive_application(
         config_file_path=config_path,
         metrics_log_path=metrics_log_path,
         log_file_path=log_file_path,
-        run_as_user=constants.RUNNER_MANAGER_USER,
     )
 
     # Wait for application to start
@@ -531,13 +527,7 @@ def test_reactive_mode_graceful_shutdown(
     )
     config_path.write_text(yaml.dump(config))
 
-    # Make config readable by runner-manager user
-    subprocess.run(["sudo", "chown", constants.RUNNER_MANAGER_USER, str(config_path)], check=True)
-
-    app2 = RunningApplication.create(
-        config_file_path=config_path,
-        run_as_user=constants.RUNNER_MANAGER_USER,
-    )
+    app2 = RunningApplication.create(config_file_path=config_path)
     time.sleep(5)
 
     dispatch_time2 = datetime.now(timezone.utc)

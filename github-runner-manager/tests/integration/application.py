@@ -43,30 +43,16 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(
-    config_file_path: Path, port: int, host: str = "127.0.0.1", run_as_user: str | None = None
-) -> None:
+def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
-        run_as_user: If provided, run the CLI as this user using sudo.
     """
-    if run_as_user:
-        # When running as different user, use system python3 and set PYTHONPATH
-        python_executable = "/usr/bin/python3"
-        # Get the source directory from the current sys.path
-        src_dir = str(Path(__file__).parent.parent / "src")
-        env = os.environ.copy()
-        env["PYTHONPATH"] = src_dir
-    else:
-        python_executable = sys.executable
-        env = None
-
     args = [
-        python_executable,
+        sys.executable,
         "-m",
         "github_runner_manager.cli",
         "--config-file",
@@ -79,15 +65,6 @@ def _start_cli_server(
         "DEBUG",
     ]
 
-    if run_as_user:
-        # Prepend sudo command to run as specified user
-        args = [
-            "/usr/bin/sudo",
-            "-u",
-            run_as_user,
-            "-E",  # Preserve environment (including PYTHONPATH)
-        ] + args
-
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
     # Start process and wait for it to exit
@@ -96,7 +73,6 @@ def _start_cli_server(
         args,
         stdout=sys.stdout,
         stderr=sys.stderr,
-        env=env,
     )
 
     # Block until the subprocess exits (either naturally or when terminated)
@@ -173,7 +149,6 @@ class RunningApplication:
         port: int = 8080,
         metrics_log_path: Path | None = None,
         log_file_path: Path | None = None,
-        run_as_user: str | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -184,7 +159,6 @@ class RunningApplication:
             metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
                 environment variable for the application process.
             log_file_path: Path to the application log file. If None, logs to stderr.
-            run_as_user: If provided, run the application as this user using sudo.
 
         Returns:
             A RunningApplication instance with the application running.
@@ -199,7 +173,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host, run_as_user),
+            args=(config_file_path, port, host),
         )
         process.start()
 
