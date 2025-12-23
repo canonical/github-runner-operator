@@ -6,6 +6,7 @@
 import logging
 import multiprocessing
 import os
+import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,9 +14,6 @@ from typing import Any
 
 import requests
 import yaml
-from click.testing import CliRunner
-
-from src.github_runner_manager.cli import main
 
 logger = logging.getLogger(__name__)
 
@@ -44,16 +42,21 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(
+    config_file_path: Path, port: int, host: str = "127.0.0.1", run_as_user: str | None = None
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        run_as_user: If provided, run the CLI as this user using sudo.
     """
-    runner = CliRunner()
     args = [
+        "/usr/bin/python3",
+        "-m",
+        "github_runner_manager.cli",
         "--config-file",
         str(config_file_path),
         "--host",
@@ -64,16 +67,22 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         "DEBUG",
     ]
 
-    result = runner.invoke(
-        main,
-        args,
-        catch_exceptions=False,
-    )
-    if result.exit_code != 0:
-        logger.error("CLI exited with code %d", result.exit_code)
-        logger.error("Output: %s", result.output)
+    if run_as_user:
+        # Prepend sudo command to run as specified user
+        args = [
+            "/usr/bin/sudo",
+            "-u",
+            run_as_user,
+            "-E",  # Preserve environment
+        ] + args
+
+    result = subprocess.run(args, check=False, capture_output=True, text=True)
+    if result.returncode != 0:
+        logger.error("CLI exited with code %d", result.returncode)
+        logger.error("Stdout: %s", result.stdout)
+        logger.error("Stderr: %s", result.stderr)
     else:
-        logger.info("CLI output: %s", result.output)
+        logger.info("CLI output: %s", result.stdout)
 
 
 @dataclass
@@ -144,6 +153,7 @@ class RunningApplication:
         port: int = 8080,
         metrics_log_path: Path | None = None,
         log_file_path: Path | None = None,
+        run_as_user: str | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -154,6 +164,7 @@ class RunningApplication:
             metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
                 environment variable for the application process.
             log_file_path: Path to the application log file. If None, logs to stderr.
+            run_as_user: If provided, run the application as this user using sudo.
 
         Returns:
             A RunningApplication instance with the application running.
@@ -168,7 +179,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, run_as_user),
         )
         process.start()
 

@@ -21,6 +21,7 @@ from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
 from kombu import Connection
 
+from github_runner_manager import constants
 from github_runner_manager.reactive.consumer import JobDetails
 
 from .application import RunningApplication
@@ -43,6 +44,50 @@ logger = logging.getLogger(__name__)
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 MONGODB_PORT = 27017
+
+
+def _setup_runner_manager_user() -> None:
+    """Create the runner-manager user and required directories (matching charm setup)."""
+    result = subprocess.run(
+        ["/usr/bin/id", constants.RUNNER_MANAGER_USER],
+        check=False,
+        capture_output=True,
+    )
+
+    if result.returncode != 0:
+        logger.info("Creating user %s", constants.RUNNER_MANAGER_USER)
+        subprocess.run(
+            [
+                "/usr/bin/sudo",
+                "/usr/sbin/useradd",
+                "--system",
+                "--create-home",
+                "--user-group",
+                constants.RUNNER_MANAGER_USER,
+            ],
+            check=True,
+        )
+
+    ssh_dir = Path(f"/home/{constants.RUNNER_MANAGER_USER}/.ssh")
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/mkdir", "-p", str(ssh_dir)], check=True)
+    subprocess.run(
+        [
+            "/usr/bin/sudo",
+            "/usr/bin/chown",
+            "-R",
+            f"{constants.RUNNER_MANAGER_USER}:{constants.RUNNER_MANAGER_USER}",
+            str(ssh_dir),
+        ],
+        check=True,
+    )
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "700", str(ssh_dir)], check=True)
+
+    # Give the user access to write to /var/log
+    subprocess.run(
+        ["sudo", "/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER],
+        check=True,
+    )
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+w", "/var/log"], check=True)
 
 
 @pytest.fixture(scope="session")
@@ -113,12 +158,8 @@ def reactive_application(
     Yields:
         Running application instance.
     """
-    # GitHub manager user has root permissions
-    log_dir = Path("/var/log/reactive_runner")
-    subprocess.run(["/usr/bin/sudo", "mkdir", "-p", str(log_dir)], check=True)
-    subprocess.run(
-        ["/usr/bin/sudo", "chown", f"{os.getuid()}:{os.getgid()}", str(log_dir)], check=True
-    )
+    # Create runner-manager user and setup permissions (matching charm setup)
+    _setup_runner_manager_user()
 
     # Clear the queue before starting
     clear_queue(mongodb_uri, test_config.runner_name)
@@ -140,6 +181,9 @@ def reactive_application(
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config))
 
+    # Make config readable by runner-manager user
+    subprocess.run(["sudo", "chown", constants.RUNNER_MANAGER_USER, str(config_path)], check=True)
+
     metrics_log_path = test_config.debug_log_dir / f"metrics-{test_config.test_id}.log"
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
 
@@ -147,6 +191,7 @@ def reactive_application(
         config_file_path=config_path,
         metrics_log_path=metrics_log_path,
         log_file_path=log_file_path,
+        run_as_user=constants.RUNNER_MANAGER_USER,
     )
 
     # Wait for application to start
@@ -472,11 +517,6 @@ def test_reactive_mode_graceful_shutdown(
 
     clear_queue(mongodb_uri, test_config.runner_name)
 
-    # Create log directory with proper permissions for new application
-    log_dir = Path("/var/log/reactive_runner")
-    subprocess.run(["sudo", "mkdir", "-p", str(log_dir)], check=True)
-    subprocess.run(["sudo", "chown", f"{os.getuid()}:{os.getgid()}", str(log_dir)], check=True)
-
     # Start new application with max_size=0
     config = create_default_config(
         github_config=github_config,
@@ -491,7 +531,13 @@ def test_reactive_mode_graceful_shutdown(
     )
     config_path.write_text(yaml.dump(config))
 
-    app2 = RunningApplication.create(config_file_path=config_path)
+    # Make config readable by runner-manager user
+    subprocess.run(["sudo", "chown", constants.RUNNER_MANAGER_USER, str(config_path)], check=True)
+
+    app2 = RunningApplication.create(
+        config_file_path=config_path,
+        run_as_user=constants.RUNNER_MANAGER_USER,
+    )
     time.sleep(5)
 
     dispatch_time2 = datetime.now(timezone.utc)
