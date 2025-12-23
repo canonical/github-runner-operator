@@ -132,6 +132,25 @@ class SSHDebugConfiguration:
     local_proxy_port: int = 3129
 
 
+@dataclass
+class ReactiveConfig:
+    """Reactive mode configuration for tests.
+
+    Attributes:
+        mq_uri: MongoDB connection URI.
+        queue_name: Name of the queue to consume from.
+        max_total_virtual_machines: Maximum number of runners allowed.
+        images: List of images with their labels.
+        flavors: List of flavors with their labels.
+    """
+
+    mq_uri: str
+    queue_name: str
+    max_total_virtual_machines: int = 1
+    images: list[dict[str, Any]] | None = None
+    flavors: list[dict[str, Any]] | None = None
+
+
 def create_default_config(
     allow_external_contributor: bool = False,
     github_config: GitHubConfig | None = None,
@@ -139,6 +158,7 @@ def create_default_config(
     proxy_config: ProxyConfig | None = None,
     ssh_debug_connections: list[SSHDebugConfiguration] | None = None,
     test_config: TestConfig | None = None,
+    reactive_config: ReactiveConfig | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -150,6 +170,7 @@ def create_default_config(
         ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
+        reactive_config: Reactive mode configuration. Defaults to None (non-reactive mode).
 
     Returns:
         Configuration dictionary for the application.
@@ -230,12 +251,39 @@ def create_default_config(
                         "name": openstack_config.image_id or "noble",
                         "labels": ["noble", "x64"],
                     },
-                    "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
-                    "base_virtual_machines": 1,
+                    "flavor": {
+                        "name": openstack_config.flavor or "small",
+                        "labels": ["small"],
+                    },
+                    "base_virtual_machines": 0 if reactive_config else 1,
                 }
             ]
         },
-        "reactive_configuration": None,
+        "reactive_configuration": (
+            {
+                "queue": {
+                    "mongodb_uri": reactive_config.mq_uri,
+                    "queue_name": reactive_config.queue_name,
+                },
+                "max_total_virtual_machines": reactive_config.max_total_virtual_machines,
+                "images": reactive_config.images
+                or [
+                    {
+                        "name": openstack_config.image_id or "noble",
+                        "labels": ["noble", "x64"],
+                    }
+                ],
+                "flavors": reactive_config.flavors
+                or [
+                    {
+                        "name": openstack_config.flavor or "small",
+                        "labels": ["small"],
+                    }
+                ],
+            }
+            if reactive_config
+            else None
+        ),
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,

@@ -109,3 +109,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     thread_manager.start()
 
     thread_manager.raise_on_error()
+
+
+if __name__ == "__main__":
+    main()

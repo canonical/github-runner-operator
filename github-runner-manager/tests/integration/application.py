@@ -6,6 +6,8 @@
 import logging
 import multiprocessing
 import os
+import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,9 +15,8 @@ from typing import Any
 
 import requests
 import yaml
-from click.testing import CliRunner
 
-from src.github_runner_manager.cli import main
+from github_runner_manager import constants
 
 logger = logging.getLogger(__name__)
 
@@ -44,16 +45,33 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(
+    config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        log_file_path: Path to the log file for stdout/stderr. If None, uses stdout/stderr.
     """
-    runner = CliRunner()
+    # Ensure config file and its parent directories are accessible by runner-manager user
+    current_path = config_file_path.parent
+    while current_path != current_path.parent and str(current_path).startswith("/tmp"):
+        subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+rx", str(current_path)], check=True)
+        current_path = current_path.parent
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+r", str(config_file_path)], check=True)
+
+    # Run as RUNNER_MANAGER_USER using sudo with preserved environment
     args = [
+        "/usr/bin/sudo",
+        "-E",  # Preserve environment variables (including PYTHONPATH)
+        "-u",
+        constants.RUNNER_MANAGER_USER,
+        sys.executable,
+        "-m",
+        "github_runner_manager.cli",
         "--config-file",
         str(config_file_path),
         "--host",
@@ -64,16 +82,51 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         "DEBUG",
     ]
 
-    result = runner.invoke(
-        main,
-        args,
-        catch_exceptions=False,
-    )
-    if result.exit_code != 0:
-        logger.error("CLI exited with code %d", result.exit_code)
-        logger.error("Output: %s", result.output)
+    # Add python-path if PYTHONPATH is set in environment (from tox)
+    # This ensures reactive runner subprocesses can find the module
+    if "PYTHONPATH" in os.environ:
+        args.extend(["--python-path", os.environ["PYTHONPATH"]])
+
+    logger.info("Starting CLI server with command: %s", " ".join(args))
+
+    # Use current environment and ensure tox Python is found first
+    env = os.environ.copy()
+
+    # Prepend the tox virtualenv bin directory to PATH so subprocesses use tox Python
+    python_bin_dir = Path(sys.executable).parent
+    if "PATH" in env:
+        env["PATH"] = f"{python_bin_dir}:{env['PATH']}"
     else:
-        logger.info("CLI output: %s", result.output)
+        env["PATH"] = str(python_bin_dir)
+
+    # Redirect output to log file or stdout/stderr
+    if log_file_path:
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+        log_file = open(log_file_path, "w", encoding="utf-8")
+        stdout_target = log_file
+        stderr_target = log_file
+        logger.info("CLI output will be written to %s", log_file_path)
+    else:
+        log_file = None
+        stdout_target = sys.stdout
+        stderr_target = sys.stderr
+
+    # Start process and wait for it to exit
+    process = subprocess.Popen(
+        args,
+        stdout=stdout_target,
+        stderr=stderr_target,
+        env=env,
+    )
+
+    # Block until the subprocess exits (either naturally or when terminated)
+    return_code = process.wait()
+
+    # Close log file if we opened one
+    if log_file:
+        log_file.close()
+
+    logger.info("CLI server exited with code %d", return_code)
 
 
 @dataclass
@@ -168,7 +221,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, log_file_path),
         )
         process.start()
 
