@@ -15,6 +15,7 @@ import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
+from github_runner_manager.reactive.process_manager import _get_reactive_log_dir
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -111,7 +112,11 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     python_path_config = python_path
     state_dir_config = state_dir
-    reactive_log_dir_config = reactive_log_dir
+    # Compute default reactive log dir if not explicitly provided
+    if reactive_log_dir is None:
+        reactive_log_dir_config = str(_get_reactive_log_dir())
+    else:
+        reactive_log_dir_config = reactive_log_dir
     
     logging.basicConfig(
         level=log_level,
