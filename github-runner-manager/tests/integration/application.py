@@ -54,8 +54,19 @@ def _start_cli_server(
         host: Host to listen on.
         run_as_user: If provided, run the CLI as this user using sudo.
     """
+    if run_as_user:
+        # When running as different user, use system python3 and set PYTHONPATH
+        python_executable = "/usr/bin/python3"
+        # Get the source directory from the current sys.path
+        src_dir = str(Path(__file__).parent.parent / "src")
+        env = os.environ.copy()
+        env["PYTHONPATH"] = src_dir
+    else:
+        python_executable = sys.executable
+        env = None
+
     args = [
-        sys.executable,
+        python_executable,
         "-m",
         "github_runner_manager.cli",
         "--config-file",
@@ -74,7 +85,7 @@ def _start_cli_server(
             "/usr/bin/sudo",
             "-u",
             run_as_user,
-            "-E",  # Preserve environment
+            "-E",  # Preserve environment (including PYTHONPATH)
         ] + args
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
@@ -85,6 +96,7 @@ def _start_cli_server(
         args,
         stdout=sys.stdout,
         stderr=sys.stderr,
+        env=env,
     )
 
     # Block until the subprocess exits (either naturally or when terminated)
