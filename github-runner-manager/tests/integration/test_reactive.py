@@ -95,7 +95,8 @@ def _setup_runner_manager_user() -> None:
     subprocess.run(["/usr/bin/sudo", "/usr/bin/mkdir", "-p", str(reactive_log_dir)], check=True)
     subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "775", str(reactive_log_dir)], check=True)
     subprocess.run(
-        ["/usr/bin/sudo", "/usr/bin/chgrp", "syslog", str(reactive_log_dir)], check=True
+        ["/usr/bin/sudo", "/usr/bin/chown", f"{os.getuid()}:{os.getgid()}", str(reactive_log_dir)],
+        check=True,
     )
 
 
