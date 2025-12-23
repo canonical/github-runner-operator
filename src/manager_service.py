@@ -184,6 +184,13 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         log_level: The log level of the service.
     """
     python_path = Path(os.getcwd()) / "venv"
+    # Set up state directory for the runner-manager user
+    state_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / ".local" / "state" / "github-runner-manager"
+    # Set up reactive log directory
+    reactive_log_dir = Path("/var/log/reactive_runner")
+    # Set up metrics log path via environment variable
+    metrics_log_path = Path("/var/log/github-runner-metrics.log")
+    
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -194,9 +201,11 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         Type=simple
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
+        Environment="METRICS_LOG_PATH={metrics_log_path}"
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
---python-path {str(python_path)} --log-level {log_level}
+--python-path {str(python_path)} --log-level {log_level} \
+--state-dir {str(state_dir)} --reactive-log-dir {str(reactive_log_dir)}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5

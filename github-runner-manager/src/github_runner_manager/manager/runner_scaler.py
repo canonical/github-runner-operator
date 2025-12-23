@@ -109,6 +109,7 @@ class RunnerScaler:
         application_configuration: ApplicationConfiguration,
         user: UserInfo,
         python_path: str | None = None,
+        reactive_log_dir: str | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
@@ -116,6 +117,7 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
             python_path: The PYTHONPATH to access the github-runner-manager library.
+            reactive_log_dir: The directory for reactive runner logs.
 
         Returns:
             A new RunnerScaler.
@@ -180,6 +182,7 @@ class RunnerScaler:
             max_quantity=max_quantity,
             platform_name=Platform.GITHUB,
             python_path=python_path,
+            reactive_log_dir=reactive_log_dir,
         )
 
     # The `user` argument will be removed once the charm no longer uses the github-runner-manager
@@ -196,6 +199,7 @@ class RunnerScaler:
         max_quantity: int,
         python_path: str | None = None,
         platform_name: Platform = Platform.GITHUB,
+        reactive_log_dir: str | None = None,
     ):
         """Construct the object.
 
@@ -207,6 +211,7 @@ class RunnerScaler:
             max_quantity: The number of maximum runners for reactive.
             platform_name: The name of the platform used for spawning runners.
             python_path: The PYTHONPATH to access the github-runner-manager library.
+            reactive_log_dir: The directory for reactive runner logs.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
@@ -215,6 +220,7 @@ class RunnerScaler:
         self._max_quantity = max_quantity
         self._platform_name = platform_name
         self._python_path = python_path
+        self._reactive_log_dir = reactive_log_dir
 
         EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
 
@@ -303,6 +309,7 @@ class RunnerScaler:
                     reactive_process_config=self._reactive_config,
                     user=self._user,
                     python_path=self._python_path,
+                    reactive_log_dir=self._reactive_log_dir,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats

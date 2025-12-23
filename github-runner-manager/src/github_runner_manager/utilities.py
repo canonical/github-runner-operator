@@ -7,7 +7,9 @@ import functools
 import logging
 import os
 import subprocess  # nosec B404
+import tempfile
 import time
+from pathlib import Path
 from typing import Any, Callable, Optional, Sequence, Type, TypeVar
 
 from typing_extensions import ParamSpec
@@ -156,3 +158,71 @@ def set_env_var(env_var: str, value: str) -> None:
     """
     os.environ[env_var.upper()] = value
     os.environ[env_var.lower()] = value
+
+
+def get_state_dir(state_dir: str | None = None) -> Path:
+    """Get the state directory for application state files.
+
+    This function implements the XDG Base Directory specification for state files.
+    The precedence order is:
+    1. Explicit state_dir parameter (if provided)
+    2. GITHUB_RUNNER_MANAGER_STATE_DIR environment variable
+    3. XDG_RUNTIME_DIR (if set and writable)
+    4. TMPDIR (if set and writable)
+    5. XDG_STATE_HOME/github-runner-manager (if XDG_STATE_HOME is set)
+    6. ~/.local/state/github-runner-manager (default)
+
+    Args:
+        state_dir: Optional explicit state directory path.
+
+    Returns:
+        The resolved state directory path.
+    """
+    # Check explicit parameter first
+    if state_dir:
+        path = Path(state_dir).expanduser().resolve()
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
+    # Check environment variable
+    env_state_dir = os.getenv("GITHUB_RUNNER_MANAGER_STATE_DIR")
+    if env_state_dir:
+        path = Path(env_state_dir).expanduser().resolve()
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
+    # Try XDG_RUNTIME_DIR
+    runtime_dir = os.getenv("XDG_RUNTIME_DIR")
+    if runtime_dir:
+        path = Path(runtime_dir) / "github-runner-manager"
+        try:
+            path.mkdir(parents=True, exist_ok=True)
+            # Test write access
+            (path / ".write_test").touch()
+            (path / ".write_test").unlink()
+            return path
+        except (OSError, PermissionError):
+            logger.debug("Cannot use XDG_RUNTIME_DIR, trying fallback")
+
+    # Try TMPDIR
+    tmpdir = os.getenv("TMPDIR")
+    if tmpdir:
+        path = Path(tmpdir) / "github-runner-manager"
+        try:
+            path.mkdir(parents=True, exist_ok=True)
+            # Test write access
+            (path / ".write_test").touch()
+            (path / ".write_test").unlink()
+            return path
+        except (OSError, PermissionError):
+            logger.debug("Cannot use TMPDIR, trying fallback")
+
+    # Use XDG_STATE_HOME or default ~/.local/state
+    xdg_state_home = os.getenv("XDG_STATE_HOME")
+    if xdg_state_home:
+        path = Path(xdg_state_home) / "github-runner-manager"
+    else:
+        path = Path.home() / ".local" / "state" / "github-runner-manager"
+
+    path.mkdir(parents=True, exist_ok=True)
+    return path

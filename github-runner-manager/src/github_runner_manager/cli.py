@@ -67,6 +67,25 @@ version = importlib.metadata.version("github-runner-manager")
     default="",
     help="The PYTHONPATH to the github-runner-manager library.",
 )
+@click.option(
+    "--state-dir",
+    type=str,
+    default="",
+    help=(
+        "Directory for state files (e.g., reconcile.id). "
+        "If not set, uses GITHUB_RUNNER_MANAGER_STATE_DIR env var or XDG defaults."
+    ),
+)
+@click.option(
+    "--reactive-log-dir",
+    type=str,
+    default="",
+    help=(
+        "Directory for reactive runner logs. "
+        "If not set, uses GITHUB_RUNNER_MANAGER_REACTIVE_LOG_DIR env var "
+        "or defaults to $STATE_DIR/reactive_runner."
+    ),
+)
 # The entry point for the CLI will be tested with integration test.
 def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config_file: TextIO,
@@ -75,6 +94,8 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     debug: bool,
     log_level: str,
     python_path: str,
+    state_dir: str,
+    reactive_log_dir: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -85,8 +106,13 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         debug: Whether to start the application in debug mode.
         log_level: The log level.
         python_path: The PYTHONPATH to access the github-runner-manager library.
+        state_dir: The directory for state files (e.g., reconcile.id).
+        reactive_log_dir: The directory for reactive runner logs.
     """
     python_path_config = python_path if python_path else None
+    state_dir_config = state_dir if state_dir else None
+    reactive_log_dir_config = reactive_log_dir if reactive_log_dir else None
+    
     logging.basicConfig(
         level=log_level,
         stream=sys.stderr,
@@ -104,7 +130,15 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         target=partial(start_http_server, config, lock, http_server_args), daemon=True
     )
     thread_manager.add_thread(
-        target=partial(start_reconcile_service, config, python_path_config, lock), daemon=True
+        target=partial(
+            start_reconcile_service,
+            config,
+            python_path_config,
+            lock,
+            state_dir_config,
+            reactive_log_dir_config,
+        ),
+        daemon=True,
     )
     thread_manager.start()
 
