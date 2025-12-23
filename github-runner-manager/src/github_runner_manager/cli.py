@@ -70,7 +70,7 @@ version = importlib.metadata.version("github-runner-manager")
 @click.option(
     "--state-dir",
     type=str,
-    default="",
+    default=None,
     help=(
         "Directory for state files (e.g., reconcile.id). "
         "If not set, uses GITHUB_RUNNER_MANAGER_STATE_DIR env var or XDG defaults."
@@ -79,7 +79,7 @@ version = importlib.metadata.version("github-runner-manager")
 @click.option(
     "--reactive-log-dir",
     type=str,
-    default="",
+    default=None,
     help=(
         "Directory for reactive runner logs. "
         "If not set, uses GITHUB_RUNNER_MANAGER_REACTIVE_LOG_DIR env var "
@@ -94,8 +94,8 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     debug: bool,
     log_level: str,
     python_path: str,
-    state_dir: str,
-    reactive_log_dir: str,
+    state_dir: str | None,
+    reactive_log_dir: str | None,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -110,8 +110,8 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         reactive_log_dir: The directory for reactive runner logs.
     """
     python_path_config = python_path if python_path else None
-    state_dir_config = state_dir if state_dir else None
-    reactive_log_dir_config = reactive_log_dir if reactive_log_dir else None
+    state_dir_config = state_dir
+    reactive_log_dir_config = reactive_log_dir
     
     logging.basicConfig(
         level=log_level,
