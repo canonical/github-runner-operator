@@ -72,6 +72,16 @@ def _start_cli_server(
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
+    # Set up environment with PYTHONPATH for sudo execution
+    # This ensures system Python can find the github_runner_manager module
+    env = os.environ.copy()
+    src_path = str(Path(__file__).parent.parent / "src")
+    if "PYTHONPATH" in env:
+        env["PYTHONPATH"] = f"{src_path}:{env['PYTHONPATH']}"
+    else:
+        env["PYTHONPATH"] = src_path
+    logger.info("PYTHONPATH set to: %s", env["PYTHONPATH"])
+
     # Redirect output to log file or stdout/stderr
     if log_file_path:
         log_file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -89,6 +99,7 @@ def _start_cli_server(
         args,
         stdout=stdout_target,
         stderr=stderr_target,
+        env=env,
     )
 
     # Block until the subprocess exits (either naturally or when terminated)
