@@ -68,9 +68,11 @@ def _start_cli_server(
         str(port),
         "--log-level",
         "DEBUG",
-        "--python-path",
-        str(Path(__file__).parent.parent / "src"),
     ]
+
+    # Add python-path if PYTHONPATH is set in environment (from tox)
+    if "PYTHONPATH" in os.environ:
+        args.extend(["--python-path", os.environ["PYTHONPATH"]])
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
