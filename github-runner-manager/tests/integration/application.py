@@ -68,19 +68,14 @@ def _start_cli_server(
         str(port),
         "--log-level",
         "DEBUG",
+        "--python-path",
+        str(Path(__file__).parent.parent / "src"),
     ]
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
-    # Set up environment with PYTHONPATH for sudo execution
-    # This ensures system Python can find the github_runner_manager module
+    # Use current environment for sudo execution
     env = os.environ.copy()
-    src_path = str(Path(__file__).parent.parent / "src")
-    if "PYTHONPATH" in env:
-        env["PYTHONPATH"] = f"{src_path}:{env['PYTHONPATH']}"
-    else:
-        env["PYTHONPATH"] = src_path
-    logger.info("PYTHONPATH set to: %s", env["PYTHONPATH"])
 
     # Redirect output to log file or stdout/stderr
     if log_file_path:
