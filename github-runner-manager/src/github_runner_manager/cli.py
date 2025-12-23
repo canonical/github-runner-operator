@@ -74,7 +74,7 @@ version = importlib.metadata.version("github-runner-manager")
     help=(
         "Base directory for all application data (state, logs, metrics). "
         "If not set, uses GITHUB_RUNNER_MANAGER_BASE_DIR env var or defaults to "
-        "$XDG_DATA_HOME/github-runner-manager or ~/.local/share/github-runner-manager."
+        "$XDG_STATE_HOME/github-runner-manager or ~/.local/state/github-runner-manager."
     ),
 )
 # The entry point for the CLI will be tested with integration test.

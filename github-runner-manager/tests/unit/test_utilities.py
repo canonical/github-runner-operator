@@ -43,20 +43,20 @@ def test_get_base_dir_env_var(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert result.is_dir()
 
 
-def test_get_base_dir_xdg_data_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_get_base_dir_xdg_state_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: Given XDG_DATA_HOME is set.
+    arrange: Given XDG_STATE_HOME is set.
     act: Call get_base_dir.
-    assert: Returns XDG_DATA_HOME/github-runner-manager.
+    assert: Returns XDG_STATE_HOME/github-runner-manager.
     """
-    data_home = tmp_path / "data_home"
-    data_home.mkdir()
-    monkeypatch.setenv("XDG_DATA_HOME", str(data_home))
+    state_home = tmp_path / "state_home"
+    state_home.mkdir()
+    monkeypatch.setenv("XDG_STATE_HOME", str(state_home))
     monkeypatch.delenv("GITHUB_RUNNER_MANAGER_BASE_DIR", raising=False)
     
     result = get_base_dir()
     
-    assert result == data_home / "github-runner-manager"
+    assert result == state_home / "github-runner-manager"
     assert result.exists()
     assert result.is_dir()
 
@@ -65,15 +65,15 @@ def test_get_base_dir_default_fallback(tmp_path: Path, monkeypatch: pytest.Monke
     """
     arrange: Given no environment variables set.
     act: Call get_base_dir.
-    assert: Returns ~/.local/share/github-runner-manager.
+    assert: Returns ~/.local/state/github-runner-manager.
     """
-    monkeypatch.delenv("XDG_DATA_HOME", raising=False)
+    monkeypatch.delenv("XDG_STATE_HOME", raising=False)
     monkeypatch.delenv("GITHUB_RUNNER_MANAGER_BASE_DIR", raising=False)
     
     with patch("pathlib.Path.home", return_value=tmp_path):
         result = get_base_dir()
     
-    expected = tmp_path / ".local" / "share" / "github-runner-manager"
+    expected = tmp_path / ".local" / "state" / "github-runner-manager"
     assert result == expected
     assert result.exists()
     assert result.is_dir()

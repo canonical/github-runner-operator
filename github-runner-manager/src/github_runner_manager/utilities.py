@@ -162,12 +162,12 @@ def set_env_var(env_var: str, value: str) -> None:
 def get_base_dir(base_dir: str | None = None) -> Path:
     """Get the base directory for all application data.
 
-    This function implements the XDG Base Directory specification for data files.
+    This function implements the XDG Base Directory specification for state files.
     The precedence order is:
     1. Explicit base_dir parameter (if provided)
     2. GITHUB_RUNNER_MANAGER_BASE_DIR environment variable
-    3. XDG_DATA_HOME/github-runner-manager (if XDG_DATA_HOME is set)
-    4. ~/.local/share/github-runner-manager (default)
+    3. XDG_STATE_HOME/github-runner-manager (if XDG_STATE_HOME is set)
+    4. ~/.local/state/github-runner-manager (default)
 
     Args:
         base_dir: Optional explicit base directory path.
@@ -188,12 +188,12 @@ def get_base_dir(base_dir: str | None = None) -> Path:
         path.mkdir(parents=True, exist_ok=True)
         return path
 
-    # Use XDG_DATA_HOME or default ~/.local/share
-    xdg_data_home = os.getenv("XDG_DATA_HOME")
-    if xdg_data_home:
-        path = Path(xdg_data_home) / "github-runner-manager"
+    # Use XDG_STATE_HOME or default ~/.local/state
+    xdg_state_home = os.getenv("XDG_STATE_HOME")
+    if xdg_state_home:
+        path = Path(xdg_state_home) / "github-runner-manager"
     else:
-        path = Path.home() / ".local" / "share" / "github-runner-manager"
+        path = Path.home() / ".local" / "state" / "github-runner-manager"
 
     path.mkdir(parents=True, exist_ok=True)
     return path

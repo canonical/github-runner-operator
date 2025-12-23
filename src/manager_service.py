@@ -186,7 +186,30 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
     python_path = Path(os.getcwd()) / "venv"
     # Set up base directory for the runner-manager user
     # This will contain subdirectories: state/, logs/reactive/, logs/metrics/
-    base_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / ".local" / "share" / "github-runner-manager"
+    base_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / ".local" / "state" / "github-runner-manager"
+    
+    # Create symlinks in /var/log for grafana-agent to scrape logs
+    # This ensures grafana-agent can access logs from the standard /var/log location
+    reactive_log_symlink = Path("/var/log/reactive_runner")
+    reactive_log_source = base_dir / "logs" / "reactive"
+    
+    # Create the source directory first
+    reactive_log_source.mkdir(parents=True, exist_ok=True)
+    
+    # Create symlink if it doesn't exist or if it points to the wrong location
+    if not reactive_log_symlink.exists() or not reactive_log_symlink.is_symlink():
+        # Remove if it exists but is not a symlink (e.g., a directory)
+        if reactive_log_symlink.exists():
+            if reactive_log_symlink.is_dir():
+                reactive_log_symlink.rmdir()
+            else:
+                reactive_log_symlink.unlink()
+        reactive_log_symlink.symlink_to(reactive_log_source)
+    elif reactive_log_symlink.resolve() != reactive_log_source.resolve():
+        # Symlink exists but points to wrong location - update it
+        reactive_log_symlink.unlink()
+        reactive_log_symlink.symlink_to(reactive_log_source)
+    
     # Set up metrics log path via environment variable
     metrics_log_path = Path("/var/log/github-runner-metrics.log")
     
