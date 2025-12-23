@@ -72,3 +72,6 @@ jobs:
             cat "$log_file"
             echo "================================="
           done
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: canonical/action-tmate@main
