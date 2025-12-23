@@ -15,36 +15,13 @@ from pathlib import Path
 from github_runner_manager import constants
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
-from github_runner_manager.utilities import get_state_dir, secure_run_subprocess
+from github_runner_manager.utilities import get_reactive_log_dir, secure_run_subprocess
 
 logger = logging.getLogger(__name__)
 
 REACTIVE_RUNNER_SCRIPT_MODULE = "github_runner_manager.reactive.runner"
 UBUNTU_USER = "ubuntu"
 RUNNER_CONFIG_ENV_VAR = "RUNNER_CONFIG"
-
-
-def _get_reactive_log_dir(reactive_log_dir: str | None = None) -> Path:
-    """Get the reactive runner log directory.
-
-    Args:
-        reactive_log_dir: Optional explicit reactive log directory path.
-
-    Returns:
-        The resolved reactive log directory path.
-    """
-    # Check explicit parameter first
-    if reactive_log_dir:
-        return Path(reactive_log_dir).expanduser().resolve()
-
-    # Check environment variable
-    env_log_dir = os.getenv("GITHUB_RUNNER_MANAGER_REACTIVE_LOG_DIR")
-    if env_log_dir:
-        return Path(env_log_dir).expanduser().resolve()
-
-    # Default to state_dir/reactive_runner
-    state_dir = get_state_dir()
-    return state_dir / "reactive_runner"
 
 
 def _get_python_bin() -> str:
@@ -89,7 +66,7 @@ def reconcile(
     reactive_process_config: ReactiveProcessConfig,
     user: UserInfo,
     python_path: str | None = None,
-    reactive_log_dir: str | None = None,
+    base_dir: str | None = None,
 ) -> int:
     """Reconcile the number of reactive runner processes.
 
@@ -98,7 +75,7 @@ def reconcile(
         reactive_process_config: The reactive runner configuration.
         user: The user to run the reactive process.
         python_path: The PYTHONPATH to access the github-runner-manager library.
-        reactive_log_dir: The directory for reactive runner logs.
+        base_dir: The base directory for application data.
 
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
@@ -116,7 +93,7 @@ def reconcile(
     delta = quantity - current_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
-        log_dir = _get_reactive_log_dir(reactive_log_dir)
+        log_dir = get_reactive_log_dir(base_dir)
         _setup_logging_for_processes(log_dir, user.user, user.group)
         for _ in range(delta):
             _spawn_runner(reactive_process_config, python_path, python_bin, log_dir, user)

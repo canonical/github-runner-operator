@@ -15,7 +15,6 @@ import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
-from github_runner_manager.reactive.process_manager import _get_reactive_log_dir
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -69,22 +68,13 @@ version = importlib.metadata.version("github-runner-manager")
     help="The PYTHONPATH to the github-runner-manager library.",
 )
 @click.option(
-    "--state-dir",
+    "--base-dir",
     type=str,
     default=None,
     help=(
-        "Directory for state files (e.g., reconcile.id). "
-        "If not set, uses GITHUB_RUNNER_MANAGER_STATE_DIR env var or XDG defaults."
-    ),
-)
-@click.option(
-    "--reactive-log-dir",
-    type=str,
-    default=None,
-    help=(
-        "Directory for reactive runner logs. "
-        "If not set, uses GITHUB_RUNNER_MANAGER_REACTIVE_LOG_DIR env var "
-        "or defaults to $STATE_DIR/reactive_runner."
+        "Base directory for all application data (state, logs, metrics). "
+        "If not set, uses GITHUB_RUNNER_MANAGER_BASE_DIR env var or defaults to "
+        "$XDG_DATA_HOME/github-runner-manager or ~/.local/share/github-runner-manager."
     ),
 )
 # The entry point for the CLI will be tested with integration test.
@@ -95,8 +85,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     debug: bool,
     log_level: str,
     python_path: str | None,
-    state_dir: str | None,
-    reactive_log_dir: str | None,
+    base_dir: str | None,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -107,16 +96,10 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         debug: Whether to start the application in debug mode.
         log_level: The log level.
         python_path: The PYTHONPATH to access the github-runner-manager library.
-        state_dir: The directory for state files (e.g., reconcile.id).
-        reactive_log_dir: The directory for reactive runner logs.
+        base_dir: The base directory for all application data.
     """
     python_path_config = python_path
-    state_dir_config = state_dir
-    # Compute default reactive log dir if not explicitly provided
-    if reactive_log_dir is None:
-        reactive_log_dir_config = str(_get_reactive_log_dir())
-    else:
-        reactive_log_dir_config = reactive_log_dir
+    base_dir_config = base_dir
     
     logging.basicConfig(
         level=log_level,
@@ -140,8 +123,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
             config,
             python_path_config,
             lock,
-            state_dir_config,
-            reactive_log_dir_config,
+            base_dir_config,
         ),
         daemon=True,
     )

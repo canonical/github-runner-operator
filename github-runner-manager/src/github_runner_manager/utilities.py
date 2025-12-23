@@ -159,69 +159,86 @@ def set_env_var(env_var: str, value: str) -> None:
     os.environ[env_var.lower()] = value
 
 
-def get_state_dir(state_dir: str | None = None) -> Path:
-    """Get the state directory for application state files.
+def get_base_dir(base_dir: str | None = None) -> Path:
+    """Get the base directory for all application data.
 
-    This function implements the XDG Base Directory specification for state files.
+    This function implements the XDG Base Directory specification for data files.
     The precedence order is:
-    1. Explicit state_dir parameter (if provided)
-    2. GITHUB_RUNNER_MANAGER_STATE_DIR environment variable
-    3. XDG_RUNTIME_DIR (if set and writable)
-    4. TMPDIR (if set and writable)
-    5. XDG_STATE_HOME/github-runner-manager (if XDG_STATE_HOME is set)
-    6. ~/.local/state/github-runner-manager (default)
+    1. Explicit base_dir parameter (if provided)
+    2. GITHUB_RUNNER_MANAGER_BASE_DIR environment variable
+    3. XDG_DATA_HOME/github-runner-manager (if XDG_DATA_HOME is set)
+    4. ~/.local/share/github-runner-manager (default)
 
     Args:
-        state_dir: Optional explicit state directory path.
+        base_dir: Optional explicit base directory path.
 
     Returns:
-        The resolved state directory path.
+        The resolved base directory path.
     """
     # Check explicit parameter first
-    if state_dir:
-        path = Path(state_dir).expanduser().resolve()
+    if base_dir:
+        path = Path(base_dir).expanduser().resolve()
         path.mkdir(parents=True, exist_ok=True)
         return path
 
     # Check environment variable
-    env_state_dir = os.getenv("GITHUB_RUNNER_MANAGER_STATE_DIR")
-    if env_state_dir:
-        path = Path(env_state_dir).expanduser().resolve()
+    env_base_dir = os.getenv("GITHUB_RUNNER_MANAGER_BASE_DIR")
+    if env_base_dir:
+        path = Path(env_base_dir).expanduser().resolve()
         path.mkdir(parents=True, exist_ok=True)
         return path
 
-    # Try XDG_RUNTIME_DIR
-    runtime_dir = os.getenv("XDG_RUNTIME_DIR")
-    if runtime_dir:
-        path = Path(runtime_dir) / "github-runner-manager"
-        try:
-            path.mkdir(parents=True, exist_ok=True)
-            # Test write access
-            (path / ".write_test").touch()
-            (path / ".write_test").unlink()
-            return path
-        except (OSError, PermissionError):
-            logger.debug("Cannot use XDG_RUNTIME_DIR, trying fallback")
-
-    # Try TMPDIR
-    tmpdir = os.getenv("TMPDIR")
-    if tmpdir:
-        path = Path(tmpdir) / "github-runner-manager"
-        try:
-            path.mkdir(parents=True, exist_ok=True)
-            # Test write access
-            (path / ".write_test").touch()
-            (path / ".write_test").unlink()
-            return path
-        except (OSError, PermissionError):
-            logger.debug("Cannot use TMPDIR, trying fallback")
-
-    # Use XDG_STATE_HOME or default ~/.local/state
-    xdg_state_home = os.getenv("XDG_STATE_HOME")
-    if xdg_state_home:
-        path = Path(xdg_state_home) / "github-runner-manager"
+    # Use XDG_DATA_HOME or default ~/.local/share
+    xdg_data_home = os.getenv("XDG_DATA_HOME")
+    if xdg_data_home:
+        path = Path(xdg_data_home) / "github-runner-manager"
     else:
-        path = Path.home() / ".local" / "state" / "github-runner-manager"
+        path = Path.home() / ".local" / "share" / "github-runner-manager"
 
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def get_state_dir(base_dir: str | None = None) -> Path:
+    """Get the state directory for application state files.
+
+    Args:
+        base_dir: Optional base directory path.
+
+    Returns:
+        The state directory path (base_dir/state).
+    """
+    base = get_base_dir(base_dir)
+    state_path = base / "state"
+    state_path.mkdir(parents=True, exist_ok=True)
+    return state_path
+
+
+def get_metrics_log_dir(base_dir: str | None = None) -> Path:
+    """Get the metrics log directory.
+
+    Args:
+        base_dir: Optional base directory path.
+
+    Returns:
+        The metrics log directory path (base_dir/logs/metrics).
+    """
+    base = get_base_dir(base_dir)
+    metrics_log_path = base / "logs" / "metrics"
+    metrics_log_path.mkdir(parents=True, exist_ok=True)
+    return metrics_log_path
+
+
+def get_reactive_log_dir(base_dir: str | None = None) -> Path:
+    """Get the reactive runner log directory.
+
+    Args:
+        base_dir: Optional base directory path.
+
+    Returns:
+        The reactive log directory path (base_dir/logs/reactive).
+    """
+    base = get_base_dir(base_dir)
+    reactive_log_path = base / "logs" / "reactive"
+    reactive_log_path.mkdir(parents=True, exist_ok=True)
+    return reactive_log_path

@@ -37,7 +37,7 @@ def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
 @pytest.fixture(name="mock_runner_scaler", scope="function")
 def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
     mock = MagicMock(spec=RunnerScaler)
-    # Update lambda to accept 4 arguments (app_config, user, python_path, reactive_log_dir)
+    # Update lambda to accept 4 arguments (app_config, user, python_path, base_dir)
     monkeypatch.setattr(
         "src.github_runner_manager.reconcile_service.RunnerScaler.build",
         lambda x, y, z, w=None: mock,

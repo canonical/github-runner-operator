@@ -26,10 +26,10 @@ EXAMPLE_MQ_URI = "http://example.com"
 def log_dir_path_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Return the path to the log file."""
     log_file_path = tmp_path / "logs"
-    # Mock the _get_reactive_log_dir function to return our test path
+    # Mock the get_reactive_log_dir function to return our test path
     monkeypatch.setattr(
-        "github_runner_manager.reactive.process_manager._get_reactive_log_dir",
-        lambda reactive_log_dir=None: log_file_path,
+        "github_runner_manager.reactive.process_manager.get_reactive_log_dir",
+        lambda base_dir=None: log_file_path,
     )
     # Mock os.geteuid to return non-root so chown is skipped
     monkeypatch.setattr("os.geteuid", lambda: 1000)

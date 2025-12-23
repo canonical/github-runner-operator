@@ -38,7 +38,7 @@ def reconcile(
     reactive_process_config: ReactiveProcessConfig,
     user: UserInfo,
     python_path: str | None = None,
-    reactive_log_dir: str | None = None,
+    base_dir: str | None = None,
 ) -> ReconcileResult:
     """Reconcile runners reactively.
 
@@ -83,7 +83,7 @@ def reconcile(
         reactive_process_config: The reactive runner config.
         user: The user to run the reactive process.
         python_path: The PYTHONPATH to access the github-runner-manager library.
-        reactive_log_dir: The directory for reactive runner logs.
+        base_dir: The base directory for application data.
 
     Returns:
         The number of reactive processes created. If negative, its absolute value is equal
@@ -127,7 +127,7 @@ def reconcile(
         reactive_process_config=reactive_process_config,
         user=user,
         python_path=python_path,
-        reactive_log_dir=reactive_log_dir,
+        base_dir=base_dir,
     )
 
     return ReconcileResult(processes_diff=processes_created, metric_stats=metric_stats)
