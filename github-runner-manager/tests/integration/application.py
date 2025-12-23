@@ -77,13 +77,20 @@ def _start_cli_server(
             "-E",  # Preserve environment
         ] + args
 
-    result = subprocess.run(args, check=False, capture_output=True, text=True)
-    if result.returncode != 0:
-        logger.error("CLI exited with code %d", result.returncode)
-        logger.error("Stdout: %s", result.stdout)
-        logger.error("Stderr: %s", result.stderr)
-    else:
-        logger.info("CLI output: %s", result.stdout)
+    logger.info("Starting CLI server with command: %s", " ".join(args))
+
+    # Start process and wait for it to exit
+    # Output streams to parent's stdout/stderr
+    process = subprocess.Popen(
+        args,
+        stdout=sys.stdout,
+        stderr=sys.stderr,
+    )
+
+    # Block until the subprocess exits (either naturally or when terminated)
+    # This keeps the multiprocessing.Process alive without busy-waiting
+    return_code = process.wait()
+    logger.info("CLI server exited with code %d", return_code)
 
 
 @dataclass
