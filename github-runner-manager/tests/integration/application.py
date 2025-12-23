@@ -43,7 +43,9 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None) -> None:
+def _start_cli_server(
+    config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
@@ -91,11 +93,11 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
 
     # Block until the subprocess exits (either naturally or when terminated)
     return_code = process.wait()
-    
+
     # Close log file if we opened one
     if log_file:
         log_file.close()
-    
+
     logger.info("CLI server exited with code %d", return_code)
 
 

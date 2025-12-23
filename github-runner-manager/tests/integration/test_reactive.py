@@ -146,7 +146,7 @@ def mongodb_uri() -> Iterator[str]:
     container.stop()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def reactive_application(
     tmp_path_factory: pytest.TempPathFactory,
     mongodb_uri: str,
