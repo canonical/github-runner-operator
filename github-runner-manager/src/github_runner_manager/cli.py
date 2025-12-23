@@ -64,7 +64,7 @@ version = importlib.metadata.version("github-runner-manager")
 @click.option(
     "--python-path",
     type=str,
-    default="",
+    default=None,
     help="The PYTHONPATH to the github-runner-manager library.",
 )
 @click.option(
@@ -93,7 +93,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     port: int,
     debug: bool,
     log_level: str,
-    python_path: str,
+    python_path: str | None,
     state_dir: str | None,
     reactive_log_dir: str | None,
 ) -> None:  # pragma: no cover
@@ -109,7 +109,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         state_dir: The directory for state files (e.g., reconcile.id).
         reactive_log_dir: The directory for reactive runner logs.
     """
-    python_path_config = python_path if python_path else None
+    python_path_config = python_path
     state_dir_config = state_dir
     reactive_log_dir_config = reactive_log_dir
     
