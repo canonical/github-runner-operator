@@ -28,6 +28,9 @@ def _get_metrics_log_target() -> TextIO | Path:
 
 METRICS_LOG_TARGET = _get_metrics_log_target()
 
+# For backward compatibility with tests
+METRICS_LOG_PATH = METRICS_LOG_TARGET if isinstance(METRICS_LOG_TARGET, Path) else None
+
 
 logger = logging.getLogger(__name__)
 

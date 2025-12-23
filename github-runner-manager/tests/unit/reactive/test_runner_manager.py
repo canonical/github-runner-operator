@@ -98,6 +98,7 @@ def test_reconcile_positive_runner_diff(
         reactive_process_config=reactive_process_config,
         user=user_info,
         python_path=None,
+        reactive_log_dir=None,
     )
 
 
@@ -144,6 +145,7 @@ def test_reconcile_negative_runner_diff(
         reactive_process_config=reactive_process_config,
         user=user_info,
         python_path=None,
+        reactive_log_dir=None,
     )
 
 
