@@ -89,6 +89,15 @@ def _setup_runner_manager_user() -> None:
     )
     subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+w", "/var/log"], check=True)
 
+    # Pre-create reactive_runner log directory with proper permissions
+    # The current user may not have effective syslog group membership yet
+    reactive_log_dir = Path("/var/log/reactive_runner")
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/mkdir", "-p", str(reactive_log_dir)], check=True)
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "775", str(reactive_log_dir)], check=True)
+    subprocess.run(
+        ["/usr/bin/sudo", "/usr/bin/chgrp", "syslog", str(reactive_log_dir)], check=True
+    )
+
 
 @pytest.fixture(scope="session")
 def mongodb_uri() -> Iterator[str]:
