@@ -202,10 +202,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         Environment="METRICS_LOG_PATH={metrics_log_path}"
-        ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
---python-path {str(python_path)} --log-level {log_level} \
---state-dir {str(state_dir)} --reactive-log-dir {str(reactive_log_dir)}
+        ExecStart=github-runner-manager --config-file {str(config_file)} --host {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)} --log-level {log_level} --state-dir {str(state_dir)} --reactive-log-dir {str(reactive_log_dir)}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5

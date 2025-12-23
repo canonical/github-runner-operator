@@ -7,7 +7,6 @@ import functools
 import logging
 import os
 import subprocess  # nosec B404
-import tempfile
 import time
 from pathlib import Path
 from typing import Any, Callable, Optional, Sequence, Type, TypeVar
