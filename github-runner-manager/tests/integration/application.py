@@ -56,6 +56,13 @@ def _start_cli_server(
         host: Host to listen on.
         log_file_path: Path to the log file for stdout/stderr. If None, uses stdout/stderr.
     """
+    # Ensure config file and its parent directories are accessible by runner-manager user
+    current_path = config_file_path.parent
+    while current_path != current_path.parent and str(current_path).startswith("/tmp"):
+        subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+rx", str(current_path)], check=True)
+        current_path = current_path.parent
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+r", str(config_file_path)], check=True)
+
     # Run as RUNNER_MANAGER_USER using sudo with preserved environment
     args = [
         "/usr/bin/sudo",
