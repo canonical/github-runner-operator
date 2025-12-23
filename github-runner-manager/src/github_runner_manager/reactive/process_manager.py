@@ -119,7 +119,7 @@ def reconcile(
         log_dir = _get_reactive_log_dir(reactive_log_dir)
         _setup_logging_for_processes(log_dir, user.user, user.group)
         for _ in range(delta):
-            _spawn_runner(reactive_process_config, python_path, python_bin, log_dir)
+            _spawn_runner(reactive_process_config, python_path, python_bin, log_dir, user)
     elif delta < 0:
         logger.info("Will kill %d process(es).", -delta)
         for pid in pids[:-delta]:
@@ -224,6 +224,7 @@ def _spawn_runner(
     python_path: str | None,
     python_bin: str,
     log_dir: Path,
+    user: UserInfo,
 ) -> None:
     """Spawn a runner.
 
@@ -232,6 +233,7 @@ def _spawn_runner(
         python_path: The PYTHONPATH to access the github-runner-manager library.
         python_bin: The Python interpreter to use.
         log_dir: The directory for logs.
+        user: The user information for the process.
     """
     env = {
         RUNNER_CONFIG_ENV_VAR: reactive_process_config.json(),
@@ -253,7 +255,7 @@ def _spawn_runner(
     )
     logger.debug("Spawning a new reactive runner process with command: %s", command)
     
-    # Only set user/group if running as root
+    # Set user/group based on privileges
     popen_kwargs = {
         "shell": True,
         "env": env,
@@ -262,7 +264,7 @@ def _spawn_runner(
     }
     
     if os.geteuid() == 0:
-        # Running as root, can set user and group
+        # Running as root, use charm-configured user and group
         popen_kwargs["user"] = constants.RUNNER_MANAGER_USER
         popen_kwargs["group"] = constants.RUNNER_MANAGER_GROUP
         logger.debug(
@@ -271,7 +273,11 @@ def _spawn_runner(
             constants.RUNNER_MANAGER_GROUP,
         )
     else:
-        logger.debug("Not running as root, spawning process as current user")
+        # Not running as root, inherit current user's group
+        popen_kwargs["group"] = user.group
+        logger.debug(
+            "Not running as root, spawning process as current user with group %s", user.group
+        )
     
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,
