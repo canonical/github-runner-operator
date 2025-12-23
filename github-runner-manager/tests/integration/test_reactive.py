@@ -356,7 +356,6 @@ def test_reactive_mode_with_not_found_job(
         test_config.runner_name,
     )
 
-    # Wait for message to be consumed
     max_wait = 30
     for _ in range(max_wait):
         if get_queue_size(mongodb_uri, test_config.runner_name) == 0:

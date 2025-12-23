@@ -43,13 +43,14 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        log_file_path: Path to the log file for stdout/stderr. If None, uses stdout/stderr.
     """
     args = [
         "/usr/bin/sudo",
@@ -69,17 +70,32 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
+    # Redirect output to log file or stdout/stderr
+    if log_file_path:
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+        log_file = open(log_file_path, "w", encoding="utf-8")
+        stdout_target = log_file
+        stderr_target = log_file
+        logger.info("CLI output will be written to %s", log_file_path)
+    else:
+        log_file = None
+        stdout_target = sys.stdout
+        stderr_target = sys.stderr
+
     # Start process and wait for it to exit
-    # Output streams to parent's stdout/stderr
     process = subprocess.Popen(
         args,
-        stdout=sys.stdout,
-        stderr=sys.stderr,
+        stdout=stdout_target,
+        stderr=stderr_target,
     )
 
     # Block until the subprocess exits (either naturally or when terminated)
-    # This keeps the multiprocessing.Process alive without busy-waiting
     return_code = process.wait()
+    
+    # Close log file if we opened one
+    if log_file:
+        log_file.close()
+    
     logger.info("CLI server exited with code %d", return_code)
 
 
@@ -175,7 +191,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, log_file_path),
         )
         process.start()
 
