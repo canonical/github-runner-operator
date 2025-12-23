@@ -82,8 +82,15 @@ def _start_cli_server(
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
-    # Use current environment
+    # Use current environment and ensure tox Python is found first
     env = os.environ.copy()
+
+    # Prepend the tox virtualenv bin directory to PATH so subprocesses use tox Python
+    python_bin_dir = Path(sys.executable).parent
+    if "PATH" in env:
+        env["PATH"] = f"{python_bin_dir}:{env['PATH']}"
+    else:
+        env["PATH"] = str(python_bin_dir)
 
     # Redirect output to log file or stdout/stderr
     if log_file_path:
