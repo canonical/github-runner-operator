@@ -1,0 +1,46 @@
+18:19:08 WARNING unexpected facade SSHServer received from the controller
+18:19:08 INFO Adding model github-pr-71e3b-lxd:test-charm-runner-pfys on cloud localhost
+18:19:08 WARNING unexpected facade SSHServer received from the controller
+18:19:08 WARNING unexpected facade SSHSession received from the controller
+18:19:08 WARNING unexpected facade SSHTunneler received from the controller
+18:19:08 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:09 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:26 INFO Deploying local:jammy/github-runner-0
+18:19:26 INFO Waiting for model:
+  test-zidw63tl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zidw63tl/0 [allocating] waiting: waiting for machine
+18:19:56 INFO Waiting for model:
+  test-zidw63tl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zidw63tl/0 [allocating] waiting: agent initialising
+18:20:27 INFO Waiting for model:
+  test-zidw63tl/0 [allocating] waiting: waiting for machine
+18:20:57 INFO Waiting for model:
+  test-zidw63tl/0 [allocating] waiting: waiting for machine
+18:21:27 INFO Waiting for model:
+  test-zidw63tl/0 [executing] waiting: agent initialising
+18:21:57 INFO Waiting for model:
+  test-zidw63tl/0 [executing] maintenance: installing charm software
+18:22:28 INFO Waiting for model:
+  test-zidw63tl/0 [executing] active:
+18:22:44 INFO Waiting for model:
+  test-zidw63tl/0 [idle] active: 
+18:23:14 INFO Waiting for model:
+  test-zidw63tl/0 [idle] active: 
+18:23:16 INFO Current reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:23:16 INFO Waiting for reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:24:17 INFO Current reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:24:17 INFO Current reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f, expected reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:24:17 INFO Waiting for reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:25:18 INFO Current reconcile ID: 693dcd42-1f50-44fc-b478-fa64a669ff2c
+18:25:18 INFO Current reconcile ID: 693dcd42-1f50-44fc-b478-fa64a669ff2c, expected reconcile ID: a9a0f614-55a8-4ba5-b193-a24507fe8e4f
+18:26:32 INFO Waiting for model:
+  test-zidw63tl/0 [idle] active: 
+18:27:03 INFO Waiting for model:
+  test-zidw63tl/0 [idle] active: 
+18:27:06 INFO Current reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
+18:27:06 INFO Waiting for reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
+18:28:07 INFO Current reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
+18:28:07 INFO Current reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c, expected reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
+18:28:07 INFO Waiting for reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
+18:29:08 INFO Current reconcile ID: 69192677-1845-4d97-8acb-d792f0f8d045
+18:29:08 INFO Current reconcile ID: 69192677-1845-4d97-8acb-d792f0f8d045, expected reconcile ID: 7facc0a7-1b3c-488d-a7e3-9bd177f7724c
