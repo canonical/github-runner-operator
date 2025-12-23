@@ -235,6 +235,10 @@ def reactive_application(
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config))
 
+    # Make config file and temp directory readable by runner-manager user (via group)
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+rx", str(tmp_test_dir)], check=True)
+    subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+r", str(config_path)], check=True)
+
     metrics_log_path = test_config.debug_log_dir / f"metrics-{test_config.test_id}.log"
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
 
