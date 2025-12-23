@@ -16,6 +16,8 @@ from typing import Any
 import requests
 import yaml
 
+from github_runner_manager import constants
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,9 +56,11 @@ def _start_cli_server(
         host: Host to listen on.
         log_file_path: Path to the log file for stdout/stderr. If None, uses stdout/stderr.
     """
+    # Run as RUNNER_MANAGER_USER using sudo
     args = [
         "/usr/bin/sudo",
-        "-E",
+        "-u",
+        constants.RUNNER_MANAGER_USER,
         sys.executable,
         "-m",
         "github_runner_manager.cli",
@@ -71,12 +75,13 @@ def _start_cli_server(
     ]
 
     # Add python-path if PYTHONPATH is set in environment (from tox)
+    # This ensures reactive runner subprocesses can find the module
     if "PYTHONPATH" in os.environ:
         args.extend(["--python-path", os.environ["PYTHONPATH"]])
 
     logger.info("Starting CLI server with command: %s", " ".join(args))
 
-    # Use current environment for sudo execution
+    # Use current environment
     env = os.environ.copy()
 
     # Redirect output to log file or stdout/stderr

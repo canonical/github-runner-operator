@@ -82,20 +82,32 @@ def _setup_runner_manager_user() -> None:
     )
     subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "700", str(ssh_dir)], check=True)
 
-    # Give the user access to write to /var/log
+    # Add runner-manager user to syslog group for /var/log write access
     subprocess.run(
-        ["sudo", "/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER],
+        [
+            "/usr/bin/sudo",
+            "/usr/sbin/usermod",
+            "-a",
+            "-G",
+            "syslog",
+            constants.RUNNER_MANAGER_USER,
+        ],
         check=True,
     )
     subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "g+w", "/var/log"], check=True)
 
     # Pre-create reactive_runner log directory with proper permissions
-    # The current user may not have effective syslog group membership yet
+    # Owned by runner-manager user with syslog group
     reactive_log_dir = Path("/var/log/reactive_runner")
     subprocess.run(["/usr/bin/sudo", "/usr/bin/mkdir", "-p", str(reactive_log_dir)], check=True)
     subprocess.run(["/usr/bin/sudo", "/usr/bin/chmod", "775", str(reactive_log_dir)], check=True)
     subprocess.run(
-        ["/usr/bin/sudo", "/usr/bin/chown", f"{os.getuid()}:{os.getgid()}", str(reactive_log_dir)],
+        [
+            "/usr/bin/sudo",
+            "/usr/bin/chown",
+            f"{constants.RUNNER_MANAGER_USER}:syslog",
+            str(reactive_log_dir),
+        ],
         check=True,
     )
 
