@@ -52,6 +52,8 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         host: Host to listen on.
     """
     args = [
+        "/usr/bin/sudo",
+        "-E",
         sys.executable,
         "-m",
         "github_runner_manager.cli",
@@ -149,6 +151,7 @@ class RunningApplication:
         port: int = 8080,
         metrics_log_path: Path | None = None,
         log_file_path: Path | None = None,
+        use_sudo: bool = False,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -159,6 +162,7 @@ class RunningApplication:
             metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
                 environment variable for the application process.
             log_file_path: Path to the application log file. If None, logs to stderr.
+            use_sudo: If True, run with sudo (needed for reactive mode to drop privileges).
 
         Returns:
             A RunningApplication instance with the application running.
@@ -173,7 +177,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, use_sudo),
         )
         process.start()
 
