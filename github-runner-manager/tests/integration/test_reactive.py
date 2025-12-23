@@ -6,6 +6,7 @@
 import json
 import logging
 import time
+from datetime import datetime, timezone
 from typing import Iterator
 
 import docker
@@ -28,7 +29,11 @@ from .factories import (
     TestConfig,
     create_default_config,
 )
-from .github_helpers import dispatch_workflow, wait_for_workflow_completion
+from .github_helpers import (
+    dispatch_workflow,
+    get_workflow_dispatch_run,
+    wait_for_workflow_completion,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -237,11 +242,17 @@ def test_reactive_mode_spawns_runner(
     act: Application consumes the message and spawns a runner.
     assert: Runner processes the job and the message is removed from the queue.
     """
-    run = dispatch_workflow(
-        github_repository=github_repository,
-        branch=github_branch,
-        workflow_file_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        labels=test_config.labels,
+    dispatch_time = datetime.now(timezone.utc)
+    workflow = dispatch_workflow(
+        repository=github_repository,
+        workflow_filename=DISPATCH_TEST_WORKFLOW_FILENAME,
+        ref=github_branch,
+        inputs={"runner": test_config.labels[0]},
+    )
+    run = get_workflow_dispatch_run(
+        workflow=workflow,
+        ref=github_branch,
+        dispatch_time=dispatch_time,
     )
 
     labels = set(test_config.labels + ["x64"])
@@ -307,11 +318,17 @@ def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     act: Application consumes the message.
     assert: No runner is spawned and the message is removed from the queue.
     """
-    run = dispatch_workflow(
-        github_repository=github_repository,
-        branch=github_branch,
-        workflow_file_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        labels=test_config.labels,
+    dispatch_time = datetime.now(timezone.utc)
+    workflow = dispatch_workflow(
+        repository=github_repository,
+        workflow_filename=DISPATCH_TEST_WORKFLOW_FILENAME,
+        ref=github_branch,
+        inputs={"runner": test_config.labels[0]},
+    )
+    run = get_workflow_dispatch_run(
+        workflow=workflow,
+        ref=github_branch,
+        dispatch_time=dispatch_time,
     )
 
     job = create_job_details(run=run, labels={"not supported label"})
@@ -378,11 +395,17 @@ def test_reactive_mode_graceful_shutdown(
     app = RunningApplication.create(config_file_path=config_path)
     time.sleep(5)
 
-    run = dispatch_workflow(
-        github_repository=github_repository,
-        branch=github_branch,
-        workflow_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-        labels=test_config.labels,
+    dispatch_time = datetime.now(timezone.utc)
+    workflow = dispatch_workflow(
+        repository=github_repository,
+        workflow_filename=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+        ref=github_branch,
+        inputs={"runner": test_config.labels[0]},
+    )
+    run = get_workflow_dispatch_run(
+        workflow=workflow,
+        ref=github_branch,
+        dispatch_time=dispatch_time,
     )
     job = create_job_details(run=run, labels=set(test_config.labels))
     add_to_queue(
@@ -456,11 +479,17 @@ def test_reactive_mode_graceful_shutdown(
     app2 = RunningApplication.create(config_file_path=config_path)
     time.sleep(5)
 
-    run2 = dispatch_workflow(
-        github_repository=github_repository,
-        branch=github_branch,
-        workflow_file_name=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-        labels=test_config.labels,
+    dispatch_time2 = datetime.now(timezone.utc)
+    workflow2 = dispatch_workflow(
+        repository=github_repository,
+        workflow_filename=DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
+        ref=github_branch,
+        inputs={"runner": test_config.labels[0]},
+    )
+    run2 = get_workflow_dispatch_run(
+        workflow=workflow2,
+        ref=github_branch,
+        dispatch_time=dispatch_time2,
     )
     job2 = create_job_details(run=run2, labels=set(test_config.labels))
     add_to_queue(
