@@ -7,6 +7,7 @@ import logging
 import multiprocessing
 import os
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -54,7 +55,7 @@ def _start_cli_server(
         run_as_user: If provided, run the CLI as this user using sudo.
     """
     args = [
-        "/usr/bin/python3",
+        sys.executable,
         "-m",
         "github_runner_manager.cli",
         "--config-file",
