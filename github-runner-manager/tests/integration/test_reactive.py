@@ -5,8 +5,11 @@
 
 import json
 import logging
+import os
+import subprocess
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Iterator
 
 import docker
@@ -110,6 +113,13 @@ def reactive_application(
     Yields:
         Running application instance.
     """
+    # GitHub manager user has root permissions
+    log_dir = Path("/var/log/reactive_runner")
+    subprocess.run(["/usr/bin/sudo", "mkdir", "-p", str(log_dir)], check=True)
+    subprocess.run(
+        ["/usr/bin/sudo", "chown", f"{os.getuid()}:{os.getgid()}", str(log_dir)], check=True
+    )
+
     # Clear the queue before starting
     clear_queue(mongodb_uri, test_config.runner_name)
     assert_queue_is_empty(mongodb_uri, test_config.runner_name)
@@ -461,6 +471,11 @@ def test_reactive_mode_graceful_shutdown(
     )
 
     clear_queue(mongodb_uri, test_config.runner_name)
+
+    # Create log directory with proper permissions for new application
+    log_dir = Path("/var/log/reactive_runner")
+    subprocess.run(["sudo", "mkdir", "-p", str(log_dir)], check=True)
+    subprocess.run(["sudo", "chown", f"{os.getuid()}:{os.getgid()}", str(log_dir)], check=True)
 
     # Start new application with max_size=0
     config = create_default_config(
