@@ -4,7 +4,6 @@
 """Module for managing processes which spawn runners reactively."""
 import logging
 import os
-import shutil
 import signal
 
 # All commands run by subprocess are secure.
@@ -12,7 +11,6 @@ import subprocess  # nosec
 import sys
 from pathlib import Path
 
-from github_runner_manager import constants
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from github_runner_manager.utilities import get_reactive_log_dir, secure_run_subprocess
@@ -94,7 +92,7 @@ def reconcile(
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
         log_dir = get_reactive_log_dir(base_dir)
-        _setup_logging_for_processes(log_dir, user.user, user.group)
+        _setup_logging_for_processes(log_dir)
         for _ in range(delta):
             _spawn_runner(reactive_process_config, python_path, python_bin, log_dir, user)
     elif delta < 0:
@@ -168,32 +166,18 @@ def _get_pids(python_bin: str) -> list[int]:
     ]
 
 
-def _setup_logging_for_processes(log_dir: Path, user: str, group: str) -> None:
+def _setup_logging_for_processes(log_dir: Path) -> None:
     """Set up the log dir.
+
+    With XDG base directory support, the directory is already writable by the current user.
+    No need to chown since the application runs as the invoking user.
 
     Args:
         log_dir: The directory for logs.
-        user: The user for logging.
-        group: The group owning the logs.
     """
     log_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Only attempt to chown if running as root (has appropriate privileges)
-    try:
-        if os.geteuid() == 0:
-            shutil.chown(log_dir, user=user, group=group)
-            logger.debug("Set ownership of %s to %s:%s", log_dir, user, group)
-        else:
-            logger.debug(
-                "Not running as root, skipping chown of %s (will use current user permissions)",
-                log_dir,
-            )
-    except (PermissionError, OSError) as exc:
-        logger.warning(
-            "Failed to set ownership of %s, continuing with current permissions: %s",
-            log_dir,
-            exc,
-        )
+    logger.debug("Created log directory %s", log_dir)
+
 
 
 def _spawn_runner(
@@ -232,29 +216,15 @@ def _spawn_runner(
     )
     logger.debug("Spawning a new reactive runner process with command: %s", command)
     
-    # Set user/group based on privileges
+    # The application does not run as root. Spawn process as the current user.
     popen_kwargs = {
         "shell": True,
         "env": env,
         "stdout": subprocess.DEVNULL,
         "stderr": subprocess.DEVNULL,
+        "group": user.group,
     }
-    
-    if os.geteuid() == 0:
-        # Running as root, use charm-configured user and group
-        popen_kwargs["user"] = constants.RUNNER_MANAGER_USER
-        popen_kwargs["group"] = constants.RUNNER_MANAGER_GROUP
-        logger.debug(
-            "Running as root, spawning process as %s:%s",
-            constants.RUNNER_MANAGER_USER,
-            constants.RUNNER_MANAGER_GROUP,
-        )
-    else:
-        # Not running as root, inherit current user's group
-        popen_kwargs["group"] = user.group
-        logger.debug(
-            "Not running as root, spawning process as current user with group %s", user.group
-        )
+    logger.debug("Spawning process as current user with group %s", user.group)
     
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,

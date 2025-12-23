@@ -190,28 +190,22 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
     
     # Create symlinks in /var/log for grafana-agent to scrape logs
     # This ensures grafana-agent can access logs from the standard /var/log location
+    # Symlinks are readable by grafana-agent as confirmed by logrotate configuration
+    # which uses the same paths (see src/logrotate.py)
+    
+    # Reactive runner logs symlink
     reactive_log_symlink = Path("/var/log/reactive_runner")
     reactive_log_source = base_dir / "logs" / "reactive"
-    
-    # Create the source directory first
     reactive_log_source.mkdir(parents=True, exist_ok=True)
+    _create_or_update_symlink(reactive_log_symlink, reactive_log_source)
     
-    # Create symlink if it doesn't exist or if it points to the wrong location
-    if not reactive_log_symlink.exists() or not reactive_log_symlink.is_symlink():
-        # Remove if it exists but is not a symlink (e.g., a directory)
-        if reactive_log_symlink.exists():
-            if reactive_log_symlink.is_dir():
-                reactive_log_symlink.rmdir()
-            else:
-                reactive_log_symlink.unlink()
-        reactive_log_symlink.symlink_to(reactive_log_source)
-    elif reactive_log_symlink.resolve() != reactive_log_source.resolve():
-        # Symlink exists but points to wrong location - update it
-        reactive_log_symlink.unlink()
-        reactive_log_symlink.symlink_to(reactive_log_source)
-    
-    # Set up metrics log path via environment variable
-    metrics_log_path = Path("/var/log/github-runner-metrics.log")
+    # Metrics log symlink
+    metrics_log_symlink = Path("/var/log/github-runner-metrics.log")
+    metrics_log_source = base_dir / "logs" / "metrics" / "github-runner-metrics.log"
+    metrics_log_source.parent.mkdir(parents=True, exist_ok=True)
+    # Create the file if it doesn't exist
+    metrics_log_source.touch(exist_ok=True)
+    _create_or_update_symlink(metrics_log_symlink, metrics_log_source)
     
     service_file_content = textwrap.dedent(
         f"""\
@@ -223,7 +217,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         Type=simple
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
-        Environment="METRICS_LOG_PATH={metrics_log_path}"
+        Environment="METRICS_LOG_PATH={metrics_log_symlink}"
         ExecStart=github-runner-manager --config-file {str(config_file)} --host {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)} --log-level {log_level} --base-dir {str(base_dir)}
         Restart=on-failure
         RestartSec=30
@@ -238,3 +232,25 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         """
     )
     GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH.write_text(service_file_content, "utf-8")
+
+
+def _create_or_update_symlink(symlink_path: Path, source_path: Path) -> None:
+    """Create or update a symlink to point to the source path.
+    
+    Args:
+        symlink_path: The path where the symlink should be created.
+        source_path: The path the symlink should point to.
+    """
+    # Create symlink if it doesn't exist or if it points to the wrong location
+    if not symlink_path.exists() or not symlink_path.is_symlink():
+        # Remove if it exists but is not a symlink (e.g., a directory or file)
+        if symlink_path.exists():
+            if symlink_path.is_dir():
+                symlink_path.rmdir()
+            else:
+                symlink_path.unlink()
+        symlink_path.symlink_to(source_path)
+    elif symlink_path.resolve() != source_path.resolve():
+        # Symlink exists but points to wrong location - update it
+        symlink_path.unlink()
+        symlink_path.symlink_to(source_path)
