@@ -190,25 +190,30 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
     python_path = Path(os.getcwd()) / "venv"
     # Set up base directory for the runner-manager user
     # This will contain subdirectories: state/, logs/reactive/, logs/metrics/
-    base_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / ".local" / "state" / "github-runner-manager"
-    
+    base_dir = (
+        Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser()
+        / ".local"
+        / "state"
+        / "github-runner-manager"
+    )
+
     # Create symlinks in /var/log for grafana-agent to scrape logs
     # This ensures grafana-agent can access logs from the standard /var/log location
     # Symlinks are readable by grafana-agent as confirmed by logrotate configuration
     # which uses the same paths (see src/logrotate.py)
-    
+
     # Reactive runner logs symlink
     reactive_log_source = base_dir / "logs" / "reactive"
     reactive_log_source.mkdir(parents=True, exist_ok=True)
     _create_or_update_symlink(REACTIVE_RUNNER_LOG_SYMLINK, reactive_log_source)
-    
+
     # Metrics log symlink
     metrics_log_source = base_dir / "logs" / "metrics" / "github-runner-metrics.log"
     metrics_log_source.parent.mkdir(parents=True, exist_ok=True)
     # Create the file if it doesn't exist
     metrics_log_source.touch(exist_ok=True)
     _create_or_update_symlink(METRICS_LOG_SYMLINK, metrics_log_source)
-    
+
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -238,7 +243,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
 
 def _create_or_update_symlink(symlink_path: Path, source_path: Path) -> None:
     """Create or update a symlink to point to the source path.
-    
+
     Args:
         symlink_path: The path where the symlink should be created.
         source_path: The path the symlink should point to.

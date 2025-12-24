@@ -33,11 +33,7 @@ from charm_state import (
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
-from manager_service import (
-    _get_log_file_path,
-    METRICS_LOG_SYMLINK,
-    REACTIVE_RUNNER_LOG_SYMLINK,
-)
+from manager_service import METRICS_LOG_SYMLINK, REACTIVE_RUNNER_LOG_SYMLINK, _get_log_file_path
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
