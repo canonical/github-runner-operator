@@ -118,6 +118,7 @@ def runner_manager_fixture(
         platform_provider=mock_github,
         cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
+        base_dir="/tmp",
     )
     return runner_manager
 

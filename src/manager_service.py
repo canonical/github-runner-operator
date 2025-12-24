@@ -38,6 +38,10 @@ GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
 GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
 
+# Symlink targets for logs scraped by grafana-agent and logrotate
+REACTIVE_RUNNER_LOG_SYMLINK = Path("/var/log/reactive_runner")
+METRICS_LOG_SYMLINK = Path("/var/log/github-runner-metrics.log")
+
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
 _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager application"
@@ -172,6 +176,17 @@ def _setup_config_file(config: ApplicationConfiguration) -> Path:
     path = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
         yaml_safe_dump(config_dict, file)
+    # Ensure the config file is owned by the runner-manager user
+    try:
+        execute_command(
+            [
+                "/usr/bin/chown",
+                f"{constants.RUNNER_MANAGER_USER}:{constants.RUNNER_MANAGER_GROUP}",
+                str(path),
+            ]
+        )
+    except SubprocessError:
+        logger.warning("Failed to chown config.yaml to runner-manager", exc_info=True)
     return path
 
 
@@ -184,6 +199,25 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         log_level: The log level of the service.
     """
     python_path = Path(os.getcwd()) / "venv"
+    # Set up base directory for the runner-manager user
+    # This will contain subdirectories: state/, logs/reactive/, logs/metrics/
+    home_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser()
+    local_dir = home_dir / ".local"
+    base_dir = local_dir / "state" / "github-runner-manager"
+
+    # Create symlinks in /var/log for grafana-agent to scrape logs
+    # This ensures grafana-agent can access logs from the standard /var/log location
+    # Symlinks are readable by grafana-agent as confirmed by logrotate configuration
+    # which uses the same paths (see src/logrotate.py)
+
+    # Reactive runner logs symlink
+    reactive_log_source = base_dir / "logs" / "reactive"
+    _create_or_update_symlink(REACTIVE_RUNNER_LOG_SYMLINK, reactive_log_source)
+
+    # Metrics log symlink
+    metrics_log_source = base_dir / "logs" / "metrics" / "github-runner-metrics.log"
+    _create_or_update_symlink(METRICS_LOG_SYMLINK, metrics_log_source)
+
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -194,9 +228,9 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         Type=simple
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
-        ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
---python-path {str(python_path)} --log-level {log_level}
+        ExecStart=github-runner-manager --config-file {str(config_file)} \
+--host {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
+--python-path {str(python_path)} --log-level {log_level} --base-dir {str(base_dir)}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5
@@ -210,3 +244,25 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         """
     )
     GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH.write_text(service_file_content, "utf-8")
+
+
+def _create_or_update_symlink(symlink_path: Path, source_path: Path) -> None:
+    """Create or update a symlink to point to the source path.
+
+    Args:
+        symlink_path: The path where the symlink should be created.
+        source_path: The path the symlink should point to.
+    """
+    # Create symlink if it doesn't exist or if it points to the wrong location
+    if not symlink_path.exists() or not symlink_path.is_symlink():
+        # Remove if it exists but is not a symlink (e.g., a directory or file)
+        if symlink_path.exists():
+            if symlink_path.is_dir():
+                symlink_path.rmdir()
+            else:
+                symlink_path.unlink()
+        symlink_path.symlink_to(source_path)
+    elif symlink_path.resolve() != source_path.resolve():
+        # Symlink exists but points to wrong location - update it
+        symlink_path.unlink()
+        symlink_path.symlink_to(source_path)

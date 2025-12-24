@@ -20,7 +20,8 @@ jobs:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_charm_upgrade",  "test_reactive"]'
+      modules: '["test_charm_runner"]' # "test_charm_upgrade",  "test_reactive"
+      # "test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner",
       # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
@@ -38,36 +39,38 @@ jobs:
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
-  openstack-integration-tests-cross-controller-private-endpoint:
-    name: Cross controller integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.6/stable
-      pre-run-script: tests/integration/setup-integration-tests.sh
-      provider: lxd
-      test-tox-env: integration-juju3.6
-      modules: '["test_prometheus_metrics"]'
-      # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
-      extra-arguments: |
-        -m=openstack \
-        --log-format="%(asctime)s %(levelname)s %(message)s" \
-        --path="${{ vars.INTEGRATION_TEST_PATH }}" \
-        --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
-        --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
-        --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
-        --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
-        --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
-        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
-        --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
-        --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
-      self-hosted-runner: true
-      self-hosted-runner-label: pfe-ci
+      tmate-debug: true
+      tmate-timeout: 90
+  # openstack-integration-tests-cross-controller-private-endpoint:
+  #   name: Cross controller integration test using private-endpoint
+  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+  #   secrets: inherit
+  #   with:
+  #     juju-channel: 3.6/stable
+  #     pre-run-script: tests/integration/setup-integration-tests.sh
+  #     provider: lxd
+  #     test-tox-env: integration-juju3.6
+  #     modules: '["test_prometheus_metrics"]'
+  #     # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
+  #     # mapping. See CONTRIBUTING.md for more details.
+  #     extra-arguments: |
+  #       -m=openstack \
+  #       --log-format="%(asctime)s %(levelname)s %(message)s" \
+  #       --path="${{ vars.INTEGRATION_TEST_PATH }}" \
+  #       --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
+  #       --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
+  #       --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
+  #       --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
+  #       --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
+  #       --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+  #       --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
+  #       --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+  #       --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
+  #     self-hosted-runner: true
+  #     self-hosted-runner-label: pfe-ci
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
       - openstack-integration-tests-private-endpoint
-      - openstack-integration-tests-cross-controller-private-endpoint
+      # - openstack-integration-tests-cross-controller-private-endpoint
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main

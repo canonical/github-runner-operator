@@ -4,6 +4,7 @@
 """Factories for creating configuration classes for the github-runner-operator library."""
 
 import logging
+from pathlib import Path
 
 from github_runner_manager import constants
 from github_runner_manager.configuration import (
@@ -42,10 +43,15 @@ def create_runner_scaler(state: CharmState, app_name: str, unit_name: str) -> Ru
     """
     application_configuration = create_application_configuration(state, app_name, unit_name)
     user = UserInfo(constants.RUNNER_MANAGER_USER, constants.RUNNER_MANAGER_GROUP)
+    # Resolve base directory for runner-manager user
+    home_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser()
+    local_dir = home_dir / ".local"
+    base_dir = local_dir / "state" / "github-runner-manager"
 
     return RunnerScaler.build(
         application_configuration=application_configuration,
         user=user,
+        base_dir=str(base_dir),
     )
 
 

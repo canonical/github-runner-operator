@@ -55,6 +55,17 @@ def patch_file_paths(monkeypatch, mock_service_path, mock_home_path, mock_log_pa
     )
     monkeypatch.setattr("manager_service.GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", mock_log_path)
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: mock_home_path)
+    # Patch symlink targets away from /var/log to writable temp paths
+    monkeypatch.setattr(
+        "manager_service.REACTIVE_RUNNER_LOG_SYMLINK",
+        mock_log_path / "reactive_runner",
+        raising=False,
+    )
+    monkeypatch.setattr(
+        "manager_service.METRICS_LOG_SYMLINK",
+        mock_log_path / "github-runner-metrics.log",
+        raising=False,
+    )
 
 
 def test_setup_started(

@@ -5,6 +5,7 @@
 
 import importlib.metadata
 import logging
+import os
 import sys
 from functools import partial
 from io import StringIO
@@ -17,6 +18,7 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
+from github_runner_manager.utilities import get_base_dir, set_env_var
 
 version = importlib.metadata.version("github-runner-manager")
 
@@ -64,8 +66,18 @@ version = importlib.metadata.version("github-runner-manager")
 @click.option(
     "--python-path",
     type=str,
-    default="",
+    default=None,
     help="The PYTHONPATH to the github-runner-manager library.",
+)
+@click.option(
+    "--base-dir",
+    type=str,
+    default=None,
+    help=(
+        "Base directory for all application data (state, logs, metrics). "
+        "If not set, uses GITHUB_RUNNER_MANAGER_BASE_DIR env var or defaults to "
+        "$XDG_STATE_HOME/github-runner-manager or ~/.local/state/github-runner-manager."
+    ),
 )
 # The entry point for the CLI will be tested with integration test.
 def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
@@ -74,7 +86,8 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     port: int,
     debug: bool,
     log_level: str,
-    python_path: str,
+    python_path: str | None,
+    base_dir: str | None,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -85,14 +98,22 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         debug: Whether to start the application in debug mode.
         log_level: The log level.
         python_path: The PYTHONPATH to access the github-runner-manager library.
+        base_dir: The base directory for all application data.
     """
-    python_path_config = python_path if python_path else None
+    python_path_config = python_path
+    base_dir_config = base_dir
+    resolved_base_dir = str(get_base_dir(base_dir_config))
+
     logging.basicConfig(
         level=log_level,
         stream=sys.stderr,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
     logging.info("Starting GitHub runner manager service version: %s", version)
+
+    # Export base dir for modules using base-dir convention (e.g., utilities.get_base_dir).
+    if not os.environ.get("GITHUB_RUNNER_MANAGER_BASE_DIR"):
+        set_env_var("GITHUB_RUNNER_MANAGER_BASE_DIR", resolved_base_dir)
 
     lock = Lock()
     config_str = config_file.read()
@@ -104,7 +125,14 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         target=partial(start_http_server, config, lock, http_server_args), daemon=True
     )
     thread_manager.add_thread(
-        target=partial(start_reconcile_service, config, python_path_config, lock), daemon=True
+        target=partial(
+            start_reconcile_service,
+            config,
+            python_path_config,
+            lock,
+            resolved_base_dir,
+        ),
+        daemon=True,
     )
     thread_manager.start()
 

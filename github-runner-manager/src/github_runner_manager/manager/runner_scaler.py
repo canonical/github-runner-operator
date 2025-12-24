@@ -99,7 +99,7 @@ class _ReconcileMetricData:
     expected_runner_quantity: int
 
 
-class RunnerScaler:
+class RunnerScaler:  # pylint: disable=too-many-instance-attributes
     """Manage the reconcile of runners."""
 
     # Disable too many locals due to this function is collecting and processing configurations.
@@ -108,6 +108,7 @@ class RunnerScaler:
         cls,
         application_configuration: ApplicationConfiguration,
         user: UserInfo,
+        base_dir: str = "",
         python_path: str | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
@@ -116,6 +117,8 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
             python_path: The PYTHONPATH to access the github-runner-manager library.
+            base_dir: Base directory for application data. If empty, it will be resolved using
+                environment/XDG defaults.
 
         Returns:
             A new RunnerScaler.
@@ -155,6 +158,7 @@ class RunnerScaler:
                 user=user,
             ),
             labels=labels,
+            base_dir=base_dir,
         )
 
         max_quantity = 0
@@ -180,6 +184,7 @@ class RunnerScaler:
             max_quantity=max_quantity,
             platform_name=Platform.GITHUB,
             python_path=python_path,
+            base_dir=base_dir,
         )
 
     # The `user` argument will be removed once the charm no longer uses the github-runner-manager
@@ -194,6 +199,7 @@ class RunnerScaler:
         user: UserInfo,
         base_quantity: int,
         max_quantity: int,
+        base_dir: str = "",
         python_path: str | None = None,
         platform_name: Platform = Platform.GITHUB,
     ):
@@ -207,6 +213,8 @@ class RunnerScaler:
             max_quantity: The number of maximum runners for reactive.
             platform_name: The name of the platform used for spawning runners.
             python_path: The PYTHONPATH to access the github-runner-manager library.
+            base_dir: Base directory for application data. If empty, it will be resolved using
+                environment/XDG defaults.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
@@ -215,6 +223,7 @@ class RunnerScaler:
         self._max_quantity = max_quantity
         self._platform_name = platform_name
         self._python_path = python_path
+        self._base_dir = base_dir
 
         EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
 
@@ -303,6 +312,7 @@ class RunnerScaler:
                     reactive_process_config=self._reactive_config,
                     user=self._user,
                     python_path=self._python_path,
+                    base_dir=self._base_dir,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats
@@ -328,7 +338,9 @@ class RunnerScaler:
             RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
                 end_timestamp - start_timestamp
             )
-            _issue_reconciliation_metric(reconcile_metric_data, self._manager.manager_name)
+            _issue_reconciliation_metric(
+                reconcile_metric_data, self._manager.manager_name, base_dir=self._base_dir
+            )
 
         logger.info("Finished reconciliation.")
 
@@ -410,13 +422,14 @@ class RunnerScaler:
 
 
 def _issue_reconciliation_metric(
-    reconcile_metric_data: _ReconcileMetricData, manager_name: str
+    reconcile_metric_data: _ReconcileMetricData, manager_name: str, base_dir: str
 ) -> None:
     """Issue the reconciliation metric.
 
     Args:
         reconcile_metric_data: The data used to issue the reconciliation metric.
         manager_name: The name of the manager.
+        base_dir: Base directory to write metrics under.
     """
     idle_runners = {
         runner.name
@@ -456,7 +469,8 @@ def _issue_reconciliation_metric(
                 expected_runners=reconcile_metric_data.expected_runner_quantity,
                 duration=reconcile_metric_data.end_timestamp
                 - reconcile_metric_data.start_timestamp,
-            )
+            ),
+            base_dir=base_dir,
         )
     except IssueMetricEventError:
         logger.exception("Failed to issue Reconciliation metric")

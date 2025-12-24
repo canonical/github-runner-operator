@@ -14,11 +14,11 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github_runner_manager.manager.vm_manager import PostJobStatus
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
 from juju.unit import Unit
 
+from manager_service import METRICS_LOG_SYMLINK
 from tests.integration.helpers.common import get_file_content, run_in_unit, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -90,9 +90,10 @@ async def clear_metrics_log(unit: Unit) -> None:
     Args:
         unit: The unit to clear the metrics log on.
     """
+    metrics_path = str(METRICS_LOG_SYMLINK)
     retcode, _, stderr = await run_in_unit(
         unit=unit,
-        command=f"if [ -f {METRICS_LOG_PATH} ]; then rm {METRICS_LOG_PATH}; fi",
+        command=f"if [ -f {metrics_path} ]; then rm {metrics_path}; fi",
     )
     assert retcode == 0, f"Failed to clear metrics log, {stderr}"
 
@@ -106,7 +107,7 @@ async def get_metrics_log(unit: Unit) -> str:
     Returns:
         The metrics log.
     """
-    return await get_file_content(unit=unit, filepath=METRICS_LOG_PATH)
+    return await get_file_content(unit=unit, filepath=METRICS_LOG_SYMLINK)
 
 
 async def cancel_workflow_run(
