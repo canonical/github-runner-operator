@@ -212,14 +212,10 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
 
     # Reactive runner logs symlink
     reactive_log_source = base_dir / "logs" / "reactive"
-    reactive_log_source.mkdir(parents=True, exist_ok=True)
     _create_or_update_symlink(REACTIVE_RUNNER_LOG_SYMLINK, reactive_log_source)
 
     # Metrics log symlink
     metrics_log_source = base_dir / "logs" / "metrics" / "github-runner-metrics.log"
-    metrics_log_source.parent.mkdir(parents=True, exist_ok=True)
-    # Create the file if it doesn't exist
-    metrics_log_source.touch(exist_ok=True)
     _create_or_update_symlink(METRICS_LOG_SYMLINK, metrics_log_source)
 
     service_file_content = textwrap.dedent(
