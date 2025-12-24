@@ -8,7 +8,6 @@ import grp
 import logging
 import os
 import uuid
-from pathlib import Path
 from threading import Lock
 from time import sleep
 
@@ -62,7 +61,7 @@ def start_reconcile_service(
     # Get the state directory and ensure the reconcile ID file is in it
     resolved_state_dir = get_state_dir(base_dir)
     reconcile_id_file = resolved_state_dir / "reconcile.id"
-    
+
     # This is used for in test to distinguish which reconcile run the unit is at.
     reconcile_id = uuid.uuid4()
     reconcile_id_file.write_text(str(reconcile_id), encoding="utf-8")

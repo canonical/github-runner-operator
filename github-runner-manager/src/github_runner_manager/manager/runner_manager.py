@@ -28,6 +28,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerState,
     RunnersHealthResponse,
 )
+from github_runner_manager.utilities import get_base_dir
 
 logger = logging.getLogger(__name__)
 
@@ -126,13 +127,13 @@ class RunnerManager:
         name_prefix: The name prefix of the runners.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         manager_name: str,
         platform_provider: PlatformProvider,
         cloud_runner_manager: CloudRunnerManager,
         labels: list[str],
-        base_dir: str,
+        base_dir: str = "",
     ):
         """Construct the object.
 
@@ -141,14 +142,15 @@ class RunnerManager:
             platform_provider: Platform provider.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
-            base_dir: Base directory for application data where logs/metrics are stored.
+            base_dir: Base directory for application data where logs/metrics are stored. If empty,
+                it will be resolved using environment/XDG defaults.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
-        self._base_dir = base_dir
+        self._base_dir = str(get_base_dir(base_dir))
 
     def create_runners(
         self, num: int, metadata: RunnerMetadata, reactive: bool = False

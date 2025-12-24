@@ -32,7 +32,7 @@ class ReconcileResult:
     metric_stats: IssuedMetricEventsStats
 
 
-def reconcile(
+def reconcile(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     expected_quantity: int,
     runner_manager: RunnerManager,
     reactive_process_config: ReactiveProcessConfig,

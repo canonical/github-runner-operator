@@ -154,14 +154,15 @@ class Reconciliation(Event):
     duration: NonNegativeFloat
 
 
-def issue_event(event: Event, base_dir: str) -> None:
+def issue_event(event: Event, base_dir: str = "") -> None:
     """Issue a metric event.
 
     The metric event is logged to the metrics log file.
 
     Args:
         event: The metric event to log.
-        base_dir: Explicit base directory used to resolve metrics log path.
+        base_dir: Explicit base directory used to resolve metrics log path. If empty,
+            the default directory resolution is applied.
 
     Raises:
         IssueMetricEventError: If the event cannot be logged.

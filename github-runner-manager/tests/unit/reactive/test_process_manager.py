@@ -12,9 +12,9 @@ import pytest
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.process_manager import (
     ReactiveRunnerError,
+    _get_python_bin,
     kill_reactive_processes,
     reconcile,
-    _get_python_bin,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
 from github_runner_manager.utilities import secure_run_subprocess

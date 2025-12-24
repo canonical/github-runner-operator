@@ -35,6 +35,7 @@ from github_runner_manager.openstack_cloud.constants import (
     RUNNER_INSTALLED_TS_FILE_PATH,
 )
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
+from github_runner_manager.utilities import get_base_dir
 
 logger = logging.getLogger(__name__)
 
@@ -426,7 +427,7 @@ def issue_events(
     runner_metrics: RunnerMetrics,
     flavor: str,
     job_metrics: Optional[GithubJobMetrics],
-    base_dir: str,
+    base_dir: str = "",
 ) -> set[Type[metric_events.Event]]:
     """Issue the metrics events for a runner.
 
@@ -434,17 +435,22 @@ def issue_events(
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
         job_metrics: The metrics about the job run by the runner.
+        base_dir: Base directory used to write metrics logs. If empty, defaults
+            are resolved via environment/XDG.
 
     Returns:
         A set of issued events.
     """
     issued_events: set[Type[metric_events.Event]] = set()
 
+    # Resolve base directory for metrics emission.
+    resolved_base_dir = str(get_base_dir(base_dir))
+
     try:
         if runner_metrics.installation_start_timestamp:
             issued_events.add(
                 _issue_runner_installed(
-                    runner_metrics=runner_metrics, flavor=flavor, base_dir=base_dir
+                    runner_metrics=runner_metrics, flavor=flavor, base_dir=resolved_base_dir
                 )
             )
         if runner_metrics.pre_job:
@@ -453,7 +459,7 @@ def issue_events(
                     runner_metrics=runner_metrics,
                     flavor=flavor,
                     job_metrics=job_metrics,
-                    base_dir=base_dir,
+                    base_dir=resolved_base_dir,
                 )
             )
             if runner_metrics.post_job:
@@ -462,7 +468,7 @@ def issue_events(
                         runner_metrics=runner_metrics,
                         flavor=flavor,
                         job_metrics=job_metrics,
-                        base_dir=base_dir,
+                        base_dir=resolved_base_dir,
                     )
                 )
         else:
@@ -512,10 +518,12 @@ def _issue_runner_installed(
     Args:
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
+        base_dir: Base directory used to write metrics logs.
 
     Returns:
         The type of the issued event.
     """
+    _ = base_dir
     installation_end_timestamp = (
         runner_metrics.installation_end_timestamp or datetime.now().timestamp()
     )
@@ -531,7 +539,7 @@ def _issue_runner_installed(
     )
     RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(duration)
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_installed, base_dir=base_dir)
+    metric_events.issue_event(runner_installed)
 
     return metric_events.RunnerInstalled
 
@@ -548,14 +556,16 @@ def _issue_runner_start(
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
         job_metrics: The metrics about the job run by the runner.
+        base_dir: Base directory used to write metrics logs.
 
     Returns:
         The type of the issued event.
     """
+    _ = base_dir
     runner_start_event = _create_runner_start(runner_metrics, flavor, job_metrics)
 
     logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_start_event, base_dir=base_dir)
+    metric_events.issue_event(runner_start_event)
     idle_duration = (
         (runner_metrics.installation_end_timestamp - runner_metrics.pre_job.timestamp)
         if runner_metrics.installation_end_timestamp and runner_metrics.pre_job
@@ -579,14 +589,16 @@ def _issue_runner_stop(
         runner_metrics: The metrics for the runner.
         flavor: The flavor of the runner.
         job_metrics: The metrics about the job run by the runner.
+        base_dir: Base directory used to write metrics logs.
 
     Returns:
         The type of the issued event.
     """
+    _ = base_dir
     runner_stop_event = _create_runner_stop(runner_metrics, flavor, job_metrics)
 
     logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_stop_event, base_dir=base_dir)
+    metric_events.issue_event(runner_stop_event)
 
     return metric_events.RunnerStop
 

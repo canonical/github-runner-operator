@@ -99,7 +99,7 @@ class _ReconcileMetricData:
     expected_runner_quantity: int
 
 
-class RunnerScaler:
+class RunnerScaler:  # pylint: disable=too-many-instance-attributes
     """Manage the reconcile of runners."""
 
     # Disable too many locals due to this function is collecting and processing configurations.
@@ -108,7 +108,7 @@ class RunnerScaler:
         cls,
         application_configuration: ApplicationConfiguration,
         user: UserInfo,
-        base_dir: str,
+        base_dir: str = "",
         python_path: str | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
@@ -117,7 +117,8 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
             python_path: The PYTHONPATH to access the github-runner-manager library.
-            base_dir: The base directory for application data.
+            base_dir: Base directory for application data. If empty, it will be resolved using
+                environment/XDG defaults.
 
         Returns:
             A new RunnerScaler.
@@ -198,7 +199,7 @@ class RunnerScaler:
         user: UserInfo,
         base_quantity: int,
         max_quantity: int,
-        base_dir: str,
+        base_dir: str = "",
         python_path: str | None = None,
         platform_name: Platform = Platform.GITHUB,
     ):
@@ -212,7 +213,8 @@ class RunnerScaler:
             max_quantity: The number of maximum runners for reactive.
             platform_name: The name of the platform used for spawning runners.
             python_path: The PYTHONPATH to access the github-runner-manager library.
-            base_dir: The base directory for application data.
+            base_dir: Base directory for application data. If empty, it will be resolved using
+                environment/XDG defaults.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config

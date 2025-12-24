@@ -159,7 +159,7 @@ def set_env_var(env_var: str, value: str) -> None:
     os.environ[env_var.lower()] = value
 
 
-def get_base_dir(base_dir: str | None = None) -> Path:
+def get_base_dir(base_dir: str = "") -> Path:
     """Get the base directory for all application data.
 
     This function implements the XDG Base Directory specification for state files.
@@ -170,7 +170,8 @@ def get_base_dir(base_dir: str | None = None) -> Path:
     4. ~/.local/state/github-runner-manager (default)
 
     Args:
-        base_dir: Optional explicit base directory path.
+        base_dir: Explicit base directory path. If empty, environment and XDG variables
+            are used to determine the base directory.
 
     Returns:
         The resolved base directory path.
@@ -199,11 +200,11 @@ def get_base_dir(base_dir: str | None = None) -> Path:
     return path
 
 
-def get_state_dir(base_dir: str | None = None) -> Path:
+def get_state_dir(base_dir: str = "") -> Path:
     """Get the state directory for application state files.
 
     Args:
-        base_dir: Optional base directory path.
+        base_dir: Base directory path. If empty, environment/XDG resolution is used.
 
     Returns:
         The state directory path (base_dir/state).
@@ -214,11 +215,11 @@ def get_state_dir(base_dir: str | None = None) -> Path:
     return state_path
 
 
-def get_metrics_log_dir(base_dir: str | None = None) -> Path:
+def get_metrics_log_dir(base_dir: str = "") -> Path:
     """Get the metrics log directory.
 
     Args:
-        base_dir: Optional base directory path.
+        base_dir: Base directory path. If empty, environment/XDG resolution is used.
 
     Returns:
         The metrics log directory path (base_dir/logs/metrics).
@@ -229,11 +230,11 @@ def get_metrics_log_dir(base_dir: str | None = None) -> Path:
     return metrics_log_path
 
 
-def get_reactive_log_dir(base_dir: str | None = None) -> Path:
+def get_reactive_log_dir(base_dir: str = "") -> Path:
     """Get the reactive runner log directory.
 
     Args:
-        base_dir: Optional base directory path.
+        base_dir: Base directory path. If empty, environment/XDG resolution is used.
 
     Returns:
         The reactive log directory path (base_dir/logs/reactive).
