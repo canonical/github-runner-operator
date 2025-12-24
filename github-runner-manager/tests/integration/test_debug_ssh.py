@@ -442,11 +442,9 @@ def application_with_tmate_ssh_server(
         "Starting application with SSH debug configuration (test_id: %s)",
         test_config.test_id,
     )
-    metrics_log_path = tmp_test_dir / "github-runner-metrics.log"
+    base_dir = tmp_test_dir
     log_file_path = test_config.debug_log_dir / f"application-{test_config.test_id}.log"
-    app = RunningApplication.create(
-        config_path, metrics_log_path=metrics_log_path, log_file_path=log_file_path
-    )
+    app = RunningApplication.create(config_path, base_dir=base_dir, log_file_path=log_file_path)
 
     # Wait for runner to be created and setup reverse SSH tunnel
     logger.info("Waiting for OpenStack runner to be created...")

@@ -108,8 +108,8 @@ class RunnerScaler:
         cls,
         application_configuration: ApplicationConfiguration,
         user: UserInfo,
+        base_dir: str,
         python_path: str | None = None,
-        base_dir: str | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
@@ -157,6 +157,7 @@ class RunnerScaler:
                 user=user,
             ),
             labels=labels,
+            base_dir=base_dir,
         )
 
         max_quantity = 0
@@ -197,9 +198,9 @@ class RunnerScaler:
         user: UserInfo,
         base_quantity: int,
         max_quantity: int,
+        base_dir: str,
         python_path: str | None = None,
         platform_name: Platform = Platform.GITHUB,
-        base_dir: str | None = None,
     ):
         """Construct the object.
 
@@ -335,7 +336,9 @@ class RunnerScaler:
             RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
                 end_timestamp - start_timestamp
             )
-            _issue_reconciliation_metric(reconcile_metric_data, self._manager.manager_name)
+            _issue_reconciliation_metric(
+                reconcile_metric_data, self._manager.manager_name, base_dir=self._base_dir
+            )
 
         logger.info("Finished reconciliation.")
 
@@ -417,13 +420,14 @@ class RunnerScaler:
 
 
 def _issue_reconciliation_metric(
-    reconcile_metric_data: _ReconcileMetricData, manager_name: str
+    reconcile_metric_data: _ReconcileMetricData, manager_name: str, base_dir: str
 ) -> None:
     """Issue the reconciliation metric.
 
     Args:
         reconcile_metric_data: The data used to issue the reconciliation metric.
         manager_name: The name of the manager.
+        base_dir: Base directory to write metrics under.
     """
     idle_runners = {
         runner.name
@@ -463,7 +467,8 @@ def _issue_reconciliation_metric(
                 expected_runners=reconcile_metric_data.expected_runner_quantity,
                 duration=reconcile_metric_data.end_timestamp
                 - reconcile_metric_data.start_timestamp,
-            )
+            ),
+            base_dir=base_dir,
         )
     except IssueMetricEventError:
         logger.exception("Failed to issue Reconciliation metric")

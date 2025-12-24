@@ -5,7 +5,6 @@
 
 import logging
 import multiprocessing
-import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -44,13 +43,16 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(
+    config_file_path: Path, port: int, host: str = "127.0.0.1", base_dir: Path | None = None
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        base_dir: Base directory; when provided, passed to CLI via --base-dir.
     """
     runner = CliRunner()
     args = [
@@ -63,6 +65,9 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         "--log-level",
         "DEBUG",
     ]
+
+    if base_dir:
+        args += ["--base-dir", str(base_dir)]
 
     result = runner.invoke(
         main,
@@ -142,7 +147,7 @@ class RunningApplication:
         config_file_path: Path,
         host: str = "127.0.0.1",
         port: int = 8080,
-        metrics_log_path: Path | None = None,
+        base_dir: Path | None = None,
         log_file_path: Path | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
@@ -151,8 +156,7 @@ class RunningApplication:
             config_file_path: Path to the configuration file.
             host: Host to listen on. Defaults to 127.0.0.1.
             port: Port to listen on. If None, an available port is automatically selected.
-            metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
-                environment variable for the application process.
+            base_dir: Base directory for app state/logs/metrics; passed to CLI via --base-dir.
             log_file_path: Path to the application log file. If None, logs to stderr.
 
         Returns:
@@ -161,14 +165,10 @@ class RunningApplication:
         Raises:
             RuntimeError: If the application fails to start.
         """
-        # Set metrics log path if provided
-        if metrics_log_path:
-            os.environ["METRICS_LOG_PATH"] = str(metrics_log_path)
-
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, base_dir),
         )
         process.start()
 

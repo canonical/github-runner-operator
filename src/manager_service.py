@@ -228,7 +228,6 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         Type=simple
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
-        Environment="METRICS_LOG_PATH={METRICS_LOG_SYMLINK}"
         ExecStart=github-runner-manager --config-file {str(config_file)} \
 --host {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
 --python-path {str(python_path)} --log-level {log_level} --base-dir {str(base_dir)}

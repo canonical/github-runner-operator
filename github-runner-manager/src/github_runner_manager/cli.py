@@ -5,6 +5,7 @@
 
 import importlib.metadata
 import logging
+import os
 import sys
 from functools import partial
 from io import StringIO
@@ -17,6 +18,7 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
+from github_runner_manager.utilities import get_base_dir, set_env_var
 
 version = importlib.metadata.version("github-runner-manager")
 
@@ -100,13 +102,18 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     python_path_config = python_path
     base_dir_config = base_dir
-    
+    resolved_base_dir = str(get_base_dir(base_dir_config))
+
     logging.basicConfig(
         level=log_level,
         stream=sys.stderr,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
     logging.info("Starting GitHub runner manager service version: %s", version)
+
+    # Export base dir for modules using base-dir convention (e.g., utilities.get_base_dir).
+    if not os.environ.get("GITHUB_RUNNER_MANAGER_BASE_DIR"):
+        set_env_var("GITHUB_RUNNER_MANAGER_BASE_DIR", resolved_base_dir)
 
     lock = Lock()
     config_str = config_file.read()
@@ -123,7 +130,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
             config,
             python_path_config,
             lock,
-            base_dir_config,
+            resolved_base_dir,
         ),
         daemon=True,
     )

@@ -26,7 +26,6 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager import constants
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.platform.platform_provider import TokenError
 from github_runner_manager.utilities import set_env_var
 from ops.charm import (
@@ -86,6 +85,7 @@ LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 
 
 logger = logging.getLogger(__name__)
+METRICS_LOG_PATH = pathlib.Path("/var/log/github-runner-metrics.log")
 
 
 class ReconcileRunnersEvent(EventBase):
@@ -323,6 +323,15 @@ class GithubRunnerCharm(CharmBase):
         logger.info(UPGRADE_MSG)
         self._common_install_code()
         _disable_legacy_service()
+        try:
+            if METRICS_LOG_PATH.exists():
+                shutil.chown(
+                    METRICS_LOG_PATH,
+                    user=constants.RUNNER_MANAGER_USER,
+                    group=constants.RUNNER_MANAGER_GROUP,
+                )
+        except OSError:
+            logger.warning("Failed to chown metrics log path", exc_info=True)
         state = self._setup_state()
         self._setup_service(state)
         self._manager_client.flush_runner()
@@ -571,13 +580,6 @@ def _setup_runner_manager_user() -> None:
     # Give the user access to write to /var/log
     execute_command(["/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER])
     execute_command(["/usr/bin/chmod", "g+w", "/var/log"])
-
-    if METRICS_LOG_PATH.exists():
-        shutil.chown(
-            METRICS_LOG_PATH,
-            user=constants.RUNNER_MANAGER_USER,
-            group=constants.RUNNER_MANAGER_GROUP,
-        )
 
 
 def _disable_legacy_service() -> None:

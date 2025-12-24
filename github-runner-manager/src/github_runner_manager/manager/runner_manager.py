@@ -132,6 +132,7 @@ class RunnerManager:
         platform_provider: PlatformProvider,
         cloud_runner_manager: CloudRunnerManager,
         labels: list[str],
+        base_dir: str,
     ):
         """Construct the object.
 
@@ -140,12 +141,14 @@ class RunnerManager:
             platform_provider: Platform provider.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
+            base_dir: Base directory for application data where logs/metrics are stored.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
+        self._base_dir = base_dir
 
     def create_runners(
         self, num: int, metadata: RunnerMetadata, reactive: bool = False
@@ -483,6 +486,7 @@ class RunnerManager:
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
                 flavor=self.manager_name,
+                base_dir=self._base_dir,
             )
 
             for event_type in issued_events:

@@ -109,7 +109,11 @@ def test_flush_runners(
     mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
     mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
-        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+        "test-manager",
+        platform_provider=mock_platform,
+        cloud_runner_manager=mock_cloud,
+        labels=[],
+        base_dir="/tmp",
     )
 
     manager.flush_runners(flush_mode=flush_mode)
@@ -190,7 +194,11 @@ def test_runner_manager_cleanup(
     mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
     mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
-        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+        "test-manager",
+        platform_provider=mock_platform,
+        cloud_runner_manager=mock_cloud,
+        labels=[],
+        base_dir="/tmp",
     )
 
     manager.cleanup()
@@ -218,6 +226,7 @@ def test_runner_manager_create_runners() -> None:
         platform_provider=platform_provider,
         cloud_runner_manager=cloud_runner_manager,
         labels=["label1", "label2"],
+        base_dir="/tmp",
     )
 
     (instance_id,) = runner_manager.create_runners(1, RunnerMetadata(), True)
@@ -264,7 +273,11 @@ def test_runner_manager_get_runners(
     mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
     mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
-        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+        "test-manager",
+        platform_provider=mock_platform,
+        cloud_runner_manager=mock_cloud,
+        labels=[],
+        base_dir="/tmp",
     )
 
     # Test for number of runners matching and that the runner belongs to the cloud instance
@@ -378,7 +391,11 @@ def test_runner_manager_deterministic_delete_runners(
     mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
     mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
-        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+        "test-manager",
+        platform_provider=mock_platform,
+        cloud_runner_manager=mock_cloud,
+        labels=[],
+        base_dir="/tmp",
     )
 
     manager.delete_runners(num_delete)

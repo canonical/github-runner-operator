@@ -3,7 +3,6 @@
 
 """Models and functions for the metric events."""
 import logging
-import os
 from pathlib import Path
 from typing import Any, Optional
 
@@ -11,8 +10,19 @@ from pydantic import BaseModel, NonNegativeFloat
 
 from github_runner_manager.errors import IssueMetricEventError
 from github_runner_manager.manager.vm_manager import CodeInformation
+from github_runner_manager.utilities import get_metrics_log_dir
 
-METRICS_LOG_PATH = Path(os.getenv("METRICS_LOG_PATH", "/var/log/github-runner-metrics.log"))
+
+def get_metrics_log_path(base_dir: str) -> Path:
+    """Compute the metrics log path from the base dir convention.
+
+    Args:
+        base_dir: Explicit base directory used to resolve paths.
+
+    Returns:
+        Path to the metrics log file at `<base_dir>/logs/metrics/github-runner-metrics.log`.
+    """
+    return get_metrics_log_dir(base_dir) / "github-runner-metrics.log"
 
 
 logger = logging.getLogger(__name__)
@@ -144,20 +154,22 @@ class Reconciliation(Event):
     duration: NonNegativeFloat
 
 
-def issue_event(event: Event) -> None:
+def issue_event(event: Event, base_dir: str) -> None:
     """Issue a metric event.
 
     The metric event is logged to the metrics log file.
 
     Args:
         event: The metric event to log.
+        base_dir: Explicit base directory used to resolve metrics log path.
 
     Raises:
         IssueMetricEventError: If the event cannot be logged.
     """
     try:
         event_json = f"{event.json(exclude_none=True)}\n"
-        with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+        metrics_path = get_metrics_log_path(base_dir)
+        with metrics_path.open(mode="a", encoding="utf-8") as metrics_file:
             metrics_file.write(event_json)
     except OSError as exc:
-        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
+        raise IssueMetricEventError(f"Cannot write to {get_metrics_log_path(base_dir)}") from exc

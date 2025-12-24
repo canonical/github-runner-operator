@@ -16,6 +16,7 @@ from github_runner_manager.platform.factory import platform_factory
 from github_runner_manager.reactive.consumer import consume
 from github_runner_manager.reactive.process_manager import RUNNER_CONFIG_ENV_VAR
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
+from github_runner_manager.utilities import get_base_dir
 
 
 def setup_root_logging() -> None:
@@ -55,11 +56,13 @@ def main() -> None:
         vm_prefix=runner_config.cloud_runner_manager.prefix,
         github_config=runner_config.github_configuration,
     )
+    resolved_base_dir = str(get_base_dir())
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
         platform_provider=platform_provider,
         cloud_runner_manager=openstack_runner_manager,
         labels=runner_config.labels,
+        base_dir=resolved_base_dir,
     )
     consume(
         queue_config=queue_config,

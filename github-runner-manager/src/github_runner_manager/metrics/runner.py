@@ -426,6 +426,7 @@ def issue_events(
     runner_metrics: RunnerMetrics,
     flavor: str,
     job_metrics: Optional[GithubJobMetrics],
+    base_dir: str,
 ) -> set[Type[metric_events.Event]]:
     """Issue the metrics events for a runner.
 
@@ -442,18 +443,26 @@ def issue_events(
     try:
         if runner_metrics.installation_start_timestamp:
             issued_events.add(
-                _issue_runner_installed(runner_metrics=runner_metrics, flavor=flavor)
+                _issue_runner_installed(
+                    runner_metrics=runner_metrics, flavor=flavor, base_dir=base_dir
+                )
             )
         if runner_metrics.pre_job:
             issued_events.add(
                 _issue_runner_start(
-                    runner_metrics=runner_metrics, flavor=flavor, job_metrics=job_metrics
+                    runner_metrics=runner_metrics,
+                    flavor=flavor,
+                    job_metrics=job_metrics,
+                    base_dir=base_dir,
                 )
             )
             if runner_metrics.post_job:
                 issued_events.add(
                     _issue_runner_stop(
-                        runner_metrics=runner_metrics, flavor=flavor, job_metrics=job_metrics
+                        runner_metrics=runner_metrics,
+                        flavor=flavor,
+                        job_metrics=job_metrics,
+                        base_dir=base_dir,
                     )
                 )
         else:
@@ -493,7 +502,7 @@ def issue_events(
 
 
 def _issue_runner_installed(
-    runner_metrics: RunnerMetrics, flavor: str
+    runner_metrics: RunnerMetrics, flavor: str, base_dir: str
 ) -> Type[metric_events.Event]:
     """Issue the RunnerInstalled metric for a runner.
 
@@ -522,13 +531,16 @@ def _issue_runner_installed(
     )
     RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(duration)
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_installed)
+    metric_events.issue_event(runner_installed, base_dir=base_dir)
 
     return metric_events.RunnerInstalled
 
 
 def _issue_runner_start(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+    runner_metrics: RunnerMetrics,
+    flavor: str,
+    job_metrics: Optional[GithubJobMetrics],
+    base_dir: str,
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStart metric for a runner.
 
@@ -543,7 +555,7 @@ def _issue_runner_start(
     runner_start_event = _create_runner_start(runner_metrics, flavor, job_metrics)
 
     logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_start_event)
+    metric_events.issue_event(runner_start_event, base_dir=base_dir)
     idle_duration = (
         (runner_metrics.installation_end_timestamp - runner_metrics.pre_job.timestamp)
         if runner_metrics.installation_end_timestamp and runner_metrics.pre_job
@@ -556,7 +568,10 @@ def _issue_runner_start(
 
 
 def _issue_runner_stop(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+    runner_metrics: RunnerMetrics,
+    flavor: str,
+    job_metrics: Optional[GithubJobMetrics],
+    base_dir: str,
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStop metric for a runner.
 
@@ -571,7 +586,7 @@ def _issue_runner_stop(
     runner_stop_event = _create_runner_stop(runner_metrics, flavor, job_metrics)
 
     logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.instance_id)
-    metric_events.issue_event(runner_stop_event)
+    metric_events.issue_event(runner_stop_event, base_dir=base_dir)
 
     return metric_events.RunnerStop
 
