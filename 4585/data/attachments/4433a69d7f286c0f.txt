@@ -1,0 +1,99 @@
+06:19:43 WARNING unexpected facade SSHServer received from the controller
+06:19:43 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-8lix on cloud localhost
+06:19:43 WARNING unexpected facade SSHServer received from the controller
+06:19:43 WARNING unexpected facade SSHSession received from the controller
+06:19:43 WARNING unexpected facade SSHTunneler received from the controller
+06:19:43 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:45 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:01 INFO Deploying local:jammy/github-runner-0
+06:20:01 INFO Waiting for model:
+  test-wpb4xq4n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wpb4xq4n/0 [allocating] waiting: waiting for machine
+06:20:31 INFO Waiting for model:
+  test-wpb4xq4n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wpb4xq4n/0 [idle] active: 
+06:21:01 INFO Waiting for model:
+  test-wpb4xq4n/0 [allocating] waiting: waiting for machine
+06:21:31 INFO Waiting for model:
+  test-wpb4xq4n/0 [allocating] waiting: waiting for machine
+06:22:01 INFO Waiting for model:
+  test-wpb4xq4n/0 [executing] maintenance: installing charm software
+06:22:31 INFO Waiting for model:
+  test-wpb4xq4n/0 [executing] maintenance: installing charm software
+06:23:01 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:23:14 INFO GitHub token rate limit: Rate(reset=2025-12-24 06:32:52+00:00, remaining=4765, limit=5000)
+06:23:26 INFO test_path_config_change
+06:23:26 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:23:56 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:24:17 INFO Ensure there is a runner (this calls reconcile)
+06:24:17 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:24:47 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:24:50 INFO Current reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:24:50 INFO Waiting for reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:25:51 INFO Current reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:25:51 INFO Current reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661, expected reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:25:51 INFO Waiting for reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:26:52 INFO Current reconcile ID: cf2d242c-826c-4b54-b388-ec5ce329f544
+06:26:52 INFO Current reconcile ID: cf2d242c-826c-4b54-b388-ec5ce329f544, expected reconcile ID: 53a78564-c1cc-4f43-8449-ceec7141d661
+06:26:55 INFO Reconciling (again)
+06:26:55 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:27:25 INFO Waiting for model:
+  test-wpb4xq4n/0 [idle] active: 
+06:27:35 INFO Current reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:27:35 INFO Waiting for reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:28:36 INFO Current reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:28:36 INFO Current reconcile ID: 46517de3-a490-4049-a266-e009b820347b, expected reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:28:36 INFO Waiting for reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:29:37 INFO Current reconcile ID: 45abd690-e3d5-434c-b14d-b760772ec4b6
+06:29:37 INFO Current reconcile ID: 45abd690-e3d5-434c-b14d-b760772ec4b6, expected reconcile ID: 46517de3-a490-4049-a266-e009b820347b
+06:30:47 INFO runners: ['test-wpb4xq4n-0-n-b463c35f1259']
+06:30:48 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-14bd533fdb15"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-6664089a264a"), SelfHostedActionsRunner(name="test-d9lto1df-0-n-a0e2517291ab"), SelfHostedActionsRunner(name="test-em44iyni-0-n-b275f4118079"), SelfHostedActionsRunner(name="test-eri54y3k-0-n-ab2cdefad802"), SelfHostedActionsRunner(name="test-fkut2plv-0-n-539e3bf45e27"), SelfHostedActionsRunner(name="test-h005txnb-0-n-661f1bcdf84e"), SelfHostedActionsRunner(name="test-hvxfz2pa-0-n-19324e113009"), SelfHostedActionsRunner(name="test-i4olsy5b-0-n-f95066a191f1"), SelfHostedActionsRunner(name="test-jr11vt5p-0-n-159136b1e89c"), SelfHostedActionsRunner(name="test-p9jl5yym-0-n-6a362801f853"), SelfHostedActionsRunner(name="test-pimcnneq-0-n-b8d46dcbded9"), SelfHostedActionsRunner(name="test-pj99yk6h-0-n-e04c4e40cd52"), SelfHostedActionsRunner(name="test-rife5x6e-0-n-36c143552d72"), SelfHostedActionsRunner(name="test-talybkj6-0-n-25cf9829131c"), SelfHostedActionsRunner(name="test-u6h03ffq-0-n-448860b3b47a"), SelfHostedActionsRunner(name="test-vemdsa5e-0-n-84649050e2f2"), SelfHostedActionsRunner(name="test-wpb4xq4n-0-n-b463c35f1259"), SelfHostedActionsRunner(name="test-xkeci6ct-0-n-90aa3deded65"), SelfHostedActionsRunner(name="test-zet9xbaa-0-n-a10ea94ef437"), SelfHostedActionsRunner(name="test-zvxrioou-0-n-7773e884b7a7")]
+06:30:48 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-8lix  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  06:30:48Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-wpb4xq4n           active      1  any-charm      latest/beta  124  no       
+test-wpb4xq4n                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-wpb4xq4n/0*  active    idle   0        10.13.10.117           
+test-wpb4xq4n/0*                         active    idle   1        10.13.10.159           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.13.10.117  juju-5182eb-0  ubuntu@24.04  github-runner  Running
+1        started  10.13.10.159  juju-5182eb-1  ubuntu@22.04  github-runner  Running
+
+06:30:48 INFO Juju error logs:
+
+machine-0: 06:20:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:20:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-wpb4xq4n-0: 06:22:35 ERROR unit.test-wpb4xq4n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wpb4xq4n-0: 06:22:36 ERROR unit.test-wpb4xq4n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wpb4xq4n-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:30:48 INFO Forgetting model main...
