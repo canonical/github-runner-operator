@@ -34,7 +34,6 @@ def _get_python_bin() -> str:
     return sys.executable
 
 
-# Update these dynamically based on the Python binary
 def _get_pids_command(python_bin: str) -> list[str]:
     """Get the ps command to find reactive runner processes.
 
@@ -179,7 +178,6 @@ def _setup_logging_for_processes(log_dir: Path) -> None:
     logger.debug("Created log directory %s", log_dir)
 
 
-
 def _spawn_runner(
     reactive_process_config: ReactiveProcessConfig,
     python_path: str | None,
@@ -215,7 +213,7 @@ def _spawn_runner(
         ]
     )
     logger.debug("Spawning a new reactive runner process with command: %s", command)
-    
+
     # The application does not run as root. Spawn process as the current user.
     popen_kwargs = {
         "shell": True,
@@ -225,7 +223,7 @@ def _spawn_runner(
         "group": user.group,
     }
     logger.debug("Spawning process as current user with group %s", user.group)
-    
+
     process = subprocess.Popen(  # pylint: disable=consider-using-with  # nosec
         command,
         **popen_kwargs,
