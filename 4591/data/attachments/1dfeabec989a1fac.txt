@@ -1,0 +1,55 @@
+18:18:47 WARNING unexpected facade SSHServer received from the controller
+18:18:47 INFO Adding model github-pr-71e3b-lxd:test-reactive-g4hd on cloud localhost
+18:18:47 WARNING unexpected facade SSHServer received from the controller
+18:18:47 WARNING unexpected facade SSHSession received from the controller
+18:18:47 WARNING unexpected facade SSHTunneler received from the controller
+18:18:47 INFO GitHub token rate limit: Rate(reset=2025-12-24 18:29:49+00:00, remaining=4989, limit=5000)
+18:18:51 INFO Deploying ch:amd64/jammy/mongodb-249
+18:18:51 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:53 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:09 INFO Deploying local:jammy/github-runner-0
+18:19:09 INFO Waiting for model:
+  test-o5p3trbt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-o5p3trbt/0 [allocating] waiting: waiting for machine
+18:19:39 INFO Waiting for model:
+  test-o5p3trbt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-o5p3trbt/0 [allocating] waiting: waiting for machine
+18:20:09 INFO Waiting for model:
+  test-o5p3trbt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-o5p3trbt/0 [idle] active: 
+18:20:39 INFO Waiting for model:
+  test-o5p3trbt/0 [allocating] waiting: agent initialising
+18:21:10 INFO Waiting for model:
+  test-o5p3trbt/0 [executing] maintenance: installing charm software
+18:21:40 INFO Waiting for model:
+  test-o5p3trbt/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-o5p3trbt/0 [idle] active: 
+18:22:06 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:06 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:22:36 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:22:44 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+18:23:14 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+18:23:17 INFO Current reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:23:17 INFO Waiting for reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:24:18 INFO Current reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:24:18 INFO Current reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d, expected reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:24:18 INFO Waiting for reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:25:19 INFO Current reconcile ID: b1452c72-0492-457c-b385-6693d0d4cd13
+18:25:19 INFO Current reconcile ID: b1452c72-0492-457c-b385-6693d0d4cd13, expected reconcile ID: 07a74d86-ba39-46f6-ab4b-58d10618ec9d
+18:25:23 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+18:25:54 INFO Waiting for model:
+  test-o5p3trbt/0 [idle] active: 
+18:25:56 INFO Current reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
+18:25:56 INFO Waiting for reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
+18:26:57 INFO Current reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
+18:26:57 INFO Current reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f, expected reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
+18:26:57 INFO Waiting for reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
+18:27:58 INFO Current reconcile ID: 7536cc77-bf3f-4875-b7db-416b6971e5fa
+18:27:58 INFO Current reconcile ID: 7536cc77-bf3f-4875-b7db-416b6971e5fa, expected reconcile ID: c13dc0bc-74ff-4739-bbc4-a1b797fff68f
