@@ -14,13 +14,7 @@ TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
 def patch_metrics_path_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     """Patch the hardcoded metrics log path."""
     metrics_log_path = Path(tmp_path / "metrics.log")
-    # Patch both TARGET and PATH to ensure tests work
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.events.METRICS_LOG_TARGET", metrics_log_path
-    )
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.events.METRICS_LOG_PATH", metrics_log_path
-    )
+    monkeypatch.setattr("github_runner_manager.metrics.events.METRICS_LOG_PATH", metrics_log_path)
 
 
 def test_issue_events_logs_events(tmp_path: Path):
