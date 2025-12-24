@@ -176,6 +176,17 @@ def _setup_config_file(config: ApplicationConfiguration) -> Path:
     path = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
         yaml_safe_dump(config_dict, file)
+    # Ensure the config file is owned by the runner-manager user
+    try:
+        execute_command(
+            [
+                "/usr/bin/chown",
+                f"{constants.RUNNER_MANAGER_USER}:{constants.RUNNER_MANAGER_GROUP}",
+                str(path),
+            ]
+        )
+    except SubprocessError:
+        logger.warning("Failed to chown config.yaml to runner-manager", exc_info=True)
     return path
 
 
@@ -190,12 +201,9 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
     python_path = Path(os.getcwd()) / "venv"
     # Set up base directory for the runner-manager user
     # This will contain subdirectories: state/, logs/reactive/, logs/metrics/
-    base_dir = (
-        Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser()
-        / ".local"
-        / "state"
-        / "github-runner-manager"
-    )
+    home_dir = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser()
+    local_dir = home_dir / ".local"
+    base_dir = local_dir / "state" / "github-runner-manager"
 
     # Create symlinks in /var/log for grafana-agent to scrape logs
     # This ensures grafana-agent can access logs from the standard /var/log location
