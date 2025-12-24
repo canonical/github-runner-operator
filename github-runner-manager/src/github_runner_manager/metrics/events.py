@@ -4,32 +4,15 @@
 """Models and functions for the metric events."""
 import logging
 import os
-import sys
 from pathlib import Path
-from typing import Any, Optional, TextIO
+from typing import Any, Optional
 
 from pydantic import BaseModel, NonNegativeFloat
 
 from github_runner_manager.errors import IssueMetricEventError
 from github_runner_manager.manager.vm_manager import CodeInformation
 
-
-def _get_metrics_log_target() -> TextIO | Path:
-    """Get the metrics log target (file path or stderr).
-
-    Returns:
-        A Path object if METRICS_LOG_PATH is set, otherwise sys.stderr.
-    """
-    metrics_log_path = os.getenv("METRICS_LOG_PATH")
-    if metrics_log_path:
-        return Path(metrics_log_path)
-    return sys.stderr
-
-
-METRICS_LOG_TARGET = _get_metrics_log_target()
-
-# For backward compatibility with tests
-METRICS_LOG_PATH = METRICS_LOG_TARGET if isinstance(METRICS_LOG_TARGET, Path) else None
+METRICS_LOG_PATH = Path(os.getenv("METRICS_LOG_PATH", "/var/log/github-runner-metrics.log"))
 
 
 logger = logging.getLogger(__name__)
@@ -164,7 +147,7 @@ class Reconciliation(Event):
 def issue_event(event: Event) -> None:
     """Issue a metric event.
 
-    The metric event is logged to the metrics log target (file or stderr).
+    The metric event is logged to the metrics log file.
 
     Args:
         event: The metric event to log.
@@ -174,13 +157,7 @@ def issue_event(event: Event) -> None:
     """
     try:
         event_json = f"{event.json(exclude_none=True)}\n"
-        if isinstance(METRICS_LOG_TARGET, Path):
-            # Write to file
-            with METRICS_LOG_TARGET.open(mode="a", encoding="utf-8") as metrics_file:
-                metrics_file.write(event_json)
-        else:
-            # Write to stderr
-            METRICS_LOG_TARGET.write(event_json)
-            METRICS_LOG_TARGET.flush()
+        with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+            metrics_file.write(event_json)
     except OSError as exc:
-        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_TARGET}") from exc
+        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc

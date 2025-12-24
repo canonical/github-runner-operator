@@ -572,8 +572,6 @@ def _setup_runner_manager_user() -> None:
     execute_command(["/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER])
     execute_command(["/usr/bin/chmod", "g+w", "/var/log"])
 
-    # For charm upgrade, previous revision root owns the metric logs, this is changed to runner
-    # manager.
     if METRICS_LOG_PATH.exists():
         shutil.chown(
             METRICS_LOG_PATH,
