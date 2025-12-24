@@ -6,12 +6,14 @@ from enum import Enum
 from pathlib import Path
 
 from charms.operator_libs_linux.v1 import systemd
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
-from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
-from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR
+from manager_service import (
+    GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR,
+    METRICS_LOG_SYMLINK,
+    REACTIVE_RUNNER_LOG_SYMLINK,
+)
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
@@ -61,7 +63,7 @@ class LogrotateConfig(BaseModel):
 # metrics to Loki twice, which may happen if there is a corrupt log scrape configuration.
 METRICS_LOGROTATE_CONFIG = LogrotateConfig(
     name="github-runner-metrics",
-    log_path_glob_pattern=str(METRICS_LOG_PATH),
+    log_path_glob_pattern=str(METRICS_LOG_SYMLINK),
     rotate=0,
     create=True,
 )
@@ -69,7 +71,7 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
 
 REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
-    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/*.log",
+    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_SYMLINK}/*.log",
     rotate=0,
     create=False,
     notifempty=False,

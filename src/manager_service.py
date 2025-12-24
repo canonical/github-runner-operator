@@ -38,6 +38,10 @@ GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
 GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
 
+# Symlink targets for logs scraped by grafana-agent and logrotate
+REACTIVE_RUNNER_LOG_SYMLINK = Path("/var/log/reactive_runner")
+METRICS_LOG_SYMLINK = Path("/var/log/github-runner-metrics.log")
+
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
 _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager application"
@@ -194,18 +198,16 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
     # which uses the same paths (see src/logrotate.py)
     
     # Reactive runner logs symlink
-    reactive_log_symlink = Path("/var/log/reactive_runner")
     reactive_log_source = base_dir / "logs" / "reactive"
     reactive_log_source.mkdir(parents=True, exist_ok=True)
-    _create_or_update_symlink(reactive_log_symlink, reactive_log_source)
+    _create_or_update_symlink(REACTIVE_RUNNER_LOG_SYMLINK, reactive_log_source)
     
     # Metrics log symlink
-    metrics_log_symlink = Path("/var/log/github-runner-metrics.log")
     metrics_log_source = base_dir / "logs" / "metrics" / "github-runner-metrics.log"
     metrics_log_source.parent.mkdir(parents=True, exist_ok=True)
     # Create the file if it doesn't exist
     metrics_log_source.touch(exist_ok=True)
-    _create_or_update_symlink(metrics_log_symlink, metrics_log_source)
+    _create_or_update_symlink(METRICS_LOG_SYMLINK, metrics_log_source)
     
     service_file_content = textwrap.dedent(
         f"""\
@@ -217,7 +219,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         Type=simple
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
-        Environment="METRICS_LOG_PATH={metrics_log_symlink}"
+        Environment="METRICS_LOG_PATH={METRICS_LOG_SYMLINK}"
         ExecStart=github-runner-manager --config-file {str(config_file)} --host {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)} --log-level {log_level} --base-dir {str(base_dir)}
         Restart=on-failure
         RestartSec=30

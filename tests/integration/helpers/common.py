@@ -20,8 +20,6 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
-from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.action import Action
 from juju.application import Application
 from juju.model import Model
@@ -35,7 +33,11 @@ from charm_state import (
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
-from manager_service import _get_log_file_path
+from manager_service import (
+    _get_log_file_path,
+    METRICS_LOG_SYMLINK,
+    REACTIVE_RUNNER_LOG_SYMLINK,
+)
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -511,7 +513,7 @@ async def get_github_runner_reactive_log(unit: Unit) -> str:
     Returns:
         Reactive process logs.
     """
-    log_file_path = REACTIVE_RUNNER_LOG_DIR / "*.log"
+    log_file_path = REACTIVE_RUNNER_LOG_SYMLINK / "*.log"
     _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",
@@ -532,7 +534,7 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
     Returns:
         Runner metrics logs.
     """
-    log_file_path = METRICS_LOG_PATH
+    log_file_path = METRICS_LOG_SYMLINK
     _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",
