@@ -1,0 +1,359 @@
+06:27:48 INFO Application log: 
+2025-12-26 06:21:20,577 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-26 06:21:20,582 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-26 06:21:20,583 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-26 06:21:20,583 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-26 06:21:20,583 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-26 06:21:20,583 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-26 06:21:20,583 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 2962aefb-a952-4287-86f2-1e5fe60a7d96
+2025-12-26 06:21:20,601 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-26 06:21:20,601 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:21:20,602 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:21,045 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:21:21,458 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-26 06:21:22,321 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:22,700 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:21:22,700 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-26 06:21:22,700 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:21:22,722 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:23,095 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-26 06:21:23,915 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:23,915 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-26 06:21:23,915 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-26 06:21:23,915 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:24,310 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-26 06:21:24,992 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-26 06:21:24,993 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-26 06:21:35,244 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:21:35] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:21:35,250 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:21:35] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:21:35,256 - INFO - github_runner_manager.http_server - Attempting to acquire the lock: unlocked
+2025-12-26 06:21:35,256 - INFO - github_runner_manager.http_server - Flushing runners...
+2025-12-26 06:21:35,273 - INFO - github_runner_manager.http_server - Flushing busy: False
+2025-12-26 06:21:35,274 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:21:35,274 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:35,627 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:21:36,024 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-26 06:21:36,710 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:37,095 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:21:37,095 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-26 06:21:37,095 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:21:37,119 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:21:37,119 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-26 06:21:37,120 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:37,526 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-26 06:21:38,214 - INFO - github_runner_manager.http_server - Flushed 0 runners
+2025-12-26 06:21:38,215 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:21:38] "[35m[1mPOST /runner/flush?flush-busy=False HTTP/1.1[0m" 204 -
+2025-12-26 06:21:55,102 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-26 06:21:55,108 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-26 06:21:55,108 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-26 06:21:55,109 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-26 06:21:55,109 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-26 06:21:55,109 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-26 06:21:55,109 - INFO - github_runner_manager.reconcile_service - Reconcile ID: a4f7780e-5800-4cff-b4d9-b2e8be2953d1
+2025-12-26 06:21:55,127 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 2. max_quantity: 0.
+2025-12-26 06:21:55,127 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:21:55,127 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:55,460 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:21:55,843 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-26 06:21:56,513 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:56,909 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:21:56,909 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-26 06:21:56,910 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:21:56,933 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:21:57,316 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-26 06:21:58,128 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:21:58,128 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 2
+2025-12-26 06:21:58,128 - INFO - github_runner_manager.manager.runner_manager - Creating 2 runners
+2025-12-26 06:21:58,594 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='341848', url=None))
+2025-12-26 06:21:58,708 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='341849', url=None))
+2025-12-26 06:22:00,143 - INFO - github_runner_manager.openstack_cloud.openstack_runner_manager - Runner test-omm3ng1x-0-n-8843674494c5 created successfully
+2025-12-26 06:22:00,905 - INFO - github_runner_manager.openstack_cloud.openstack_runner_manager - Runner test-omm3ng1x-0-n-fe77429fecf3 created successfully
+2025-12-26 06:22:00,906 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:22:01,477 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 2, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:22:02,259 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 2, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-8843674494c5: state=PlatformRunnerState.OFFLINE, health=HealthState.UNKNOWN
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-fe77429fecf3: state=PlatformRunnerState.OFFLINE, health=HealthState.UNKNOWN
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Found 2 unhealthy runners: [RunnerInstance(name='test-omm3ng1x-0-n-8843674494c5', instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.CREATED: '1'>), RunnerInstance(name='test-omm3ng1x-0-n-fe77429fecf3', instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 2, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.CREATED: '1'>)]
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 2
+2025-12-26 06:22:02,260 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-26 06:22:09,772 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:22:09] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:24:02,267 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-26 06:24:02,268 - INFO - github_runner_manager.reconcile_service - Reconcile ID: d8191fc1-30cf-4e78-b653-01ecd1dcb439
+2025-12-26 06:24:02,286 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 2. max_quantity: 0.
+2025-12-26 06:24:02,286 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:24:02,286 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:24:02,653 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:24:03,478 - INFO - github_runner_manager.manager.runner_manager - VMs: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:24:04,184 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:24:05,013 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:24:05,013 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 2 key files, clean up 0 key files
+2025-12-26 06:24:05,013 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:24:05,036 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:24:05,036 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:24:05,037 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:24:05,037 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:24:05,037 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:24:05,037 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:24:05,037 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:24:05,809 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:24:06,649 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:24:06,649 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 2 to 2
+2025-12-26 06:24:06,649 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-26 06:24:06,649 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:24:07,500 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-8843674494c5: state=PlatformRunnerState.OFFLINE, health=HealthState.UNKNOWN
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-fe77429fecf3: state=PlatformRunnerState.OFFLINE, health=HealthState.UNKNOWN
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Found 2 unhealthy runners: [RunnerInstance(name='test-omm3ng1x-0-n-8843674494c5', instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.CREATED: '1'>), RunnerInstance(name='test-omm3ng1x-0-n-fe77429fecf3', instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), cloud_state=<VMState.CREATED: '1'>)]
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-26 06:24:08,174 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-26 06:24:28,905 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:24:28] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:24:28,911 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-26 06:24:28,929 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:24:29,257 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:24:30,089 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:24:30,722 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.CREATED: '1'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:24:30,723 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:24:30] "GET /runner/check HTTP/1.1" 200 -
+2025-12-26 06:25:01,972 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:25:01] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:25:01,978 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-26 06:25:01,996 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:02,362 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:25:03,223 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:03,927 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:03,928 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:25:03] "GET /runner/check HTTP/1.1" 200 -
+2025-12-26 06:25:04,942 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:25:04] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:25:04,948 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-26 06:25:04,969 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:05,304 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:25:06,116 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:06,965 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:06,966 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:25:06] "GET /runner/check HTTP/1.1" 200 -
+2025-12-26 06:25:08,912 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-26 06:25:08,917 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-26 06:25:08,918 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-26 06:25:08,918 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-26 06:25:08,918 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-26 06:25:08,918 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-26 06:25:08,918 - INFO - github_runner_manager.reconcile_service - Reconcile ID: c091f5a2-0935-4732-99a6-57f707743904
+2025-12-26 06:25:08,937 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-26 06:25:08,937 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:25:08,937 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:09,272 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:25:10,103 - INFO - github_runner_manager.manager.runner_manager - VMs: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:10,902 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:11,712 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:25:11,712 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 2 key files, clean up 0 key files
+2025-12-26 06:25:11,712 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:25:11,736 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:25:11,737 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:12,551 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:13,258 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:13,258 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 2 to 0
+2025-12-26 06:25:13,258 - INFO - github_runner_manager.manager.runner_manager - runner_manager::delete_runners Deleting 2 runners
+2025-12-26 06:25:13,258 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:14,006 - INFO - github_runner_manager.manager.runner_manager - VMs: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:14,628 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=False, runner_in_platform=True), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:14,628 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-26 06:25:14,629 - INFO - github_runner_manager.manager.runner_manager - Runners to scale down: {'341849', '341848'}
+2025-12-26 06:25:14,629 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: ['341849', '341848']
+2025-12-26 06:25:14,629 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['341849', '341848']
+2025-12-26 06:25:15,082 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: ['341849', '341848']
+2025-12-26 06:25:15,083 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: [InstanceID('test-omm3ng1x-0-n-8843674494c5'), InstanceID('test-omm3ng1x-0-n-fe77429fecf3')]
+2025-12-26 06:25:15,083 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting openstack server with test-omm3ng1x-0-n-8843674494c5
+2025-12-26 06:25:15,085 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting openstack server with test-omm3ng1x-0-n-fe77429fecf3
+2025-12-26 06:25:15,870 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_9.6p1)
+2025-12-26 06:25:15,928 - INFO - paramiko.transport - Authentication (publickey) successful!
+2025-12-26 06:25:16,459 - INFO - paramiko.transport.sftp - [chan 2] Opened sftp connection (server version 3)
+2025-12-26 06:25:16,474 - WARNING - github_runner_manager.metrics.runner - Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.151.122.118, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+2025-12-26 06:25:16,474 - WARNING - github_runner_manager.metrics.runner - Failed to pull file pre-job-metrics.json metrics for test-omm3ng1x-0-n-8843674494c5: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json.
+2025-12-26 06:25:16,513 - INFO - paramiko.transport - Connected (version 2.0, client OpenSSH_9.6p1)
+2025-12-26 06:25:16,567 - WARNING - github_runner_manager.metrics.runner - Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json on instance 10.151.122.118, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/post-job-metrics.json': No such file or directory
+
+2025-12-26 06:25:16,567 - WARNING - github_runner_manager.metrics.runner - Failed to pull file post-job-metrics.json metrics for test-omm3ng1x-0-n-8843674494c5: Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json.
+2025-12-26 06:25:16,567 - INFO - paramiko.transport.sftp - [chan 2] sftp session closed.
+2025-12-26 06:25:16,571 - INFO - paramiko.transport - Authentication (publickey) successful!
+2025-12-26 06:25:17,167 - INFO - paramiko.transport.sftp - [chan 2] Opened sftp connection (server version 3)
+2025-12-26 06:25:17,182 - WARNING - github_runner_manager.metrics.runner - Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.151.122.186, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+2025-12-26 06:25:17,182 - WARNING - github_runner_manager.metrics.runner - Failed to pull file pre-job-metrics.json metrics for test-omm3ng1x-0-n-fe77429fecf3: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json.
+2025-12-26 06:25:17,228 - WARNING - github_runner_manager.metrics.runner - Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json on instance 10.151.122.186, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/post-job-metrics.json': No such file or directory
+
+2025-12-26 06:25:17,228 - WARNING - github_runner_manager.metrics.runner - Failed to pull file post-job-metrics.json metrics for test-omm3ng1x-0-n-fe77429fecf3: Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json.
+2025-12-26 06:25:17,228 - INFO - paramiko.transport.sftp - [chan 2] sftp session closed.
+2025-12-26 06:25:17,228 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: [InstanceID('test-omm3ng1x-0-n-8843674494c5'), InstanceID('test-omm3ng1x-0-n-fe77429fecf3')]
+2025-12-26 06:25:17,229 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting server test-omm3ng1x-0-n-8843674494c5
+2025-12-26 06:25:17,232 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting server test-omm3ng1x-0-n-fe77429fecf3
+2025-12-26 06:25:17,827 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted server test-omm3ng1x-0-n-8843674494c5 (true delete: True)
+2025-12-26 06:25:17,827 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-omm3ng1x-0-n-8843674494c5
+2025-12-26 06:25:17,843 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted server test-omm3ng1x-0-n-fe77429fecf3 (true delete: True)
+2025-12-26 06:25:17,843 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-omm3ng1x-0-n-fe77429fecf3
+2025-12-26 06:25:17,857 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-omm3ng1x-0-n-8843674494c5
+2025-12-26 06:25:17,873 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-omm3ng1x-0-n-fe77429fecf3
+2025-12-26 06:25:17,873 - INFO - github_runner_manager.manager.runner_manager - deleted VMs: [InstanceID('test-omm3ng1x-0-n-8843674494c5'), InstanceID('test-omm3ng1x-0-n-fe77429fecf3')]
+2025-12-26 06:25:17,874 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:25:18,687 - INFO - github_runner_manager.manager.runner_manager - list vms response: [VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc))]
+2025-12-26 06:25:19,350 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=True, runner_in_platform=False), PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=True, runner_in_platform=False)], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:25:19,350 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-fe77429fecf3: state=PlatformRunnerState.OFFLINE, health=HealthState.UNHEALTHY
+2025-12-26 06:25:19,350 - INFO - github_runner_manager.manager.runner_scaler - Runner test-omm3ng1x-0-n-8843674494c5: state=PlatformRunnerState.OFFLINE, health=HealthState.UNHEALTHY
+2025-12-26 06:25:19,350 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-26 06:25:19,350 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.manager.runner_scaler - Found 2 unhealthy runners: [RunnerInstance(name='test-omm3ng1x-0-n-fe77429fecf3', instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-fe77429fecf3'), metadata=RunnerMetadata(platform_name='github', runner_id='341849', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, 1, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=True, runner_in_platform=False), cloud_state=<VMState.ACTIVE: '2'>), RunnerInstance(name='test-omm3ng1x-0-n-8843674494c5', instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), platform_state=<PlatformRunnerState.OFFLINE: '3'>, platform_health=PlatformRunnerHealth(identity=VM(instance_id=InstanceID('test-omm3ng1x-0-n-8843674494c5'), metadata=RunnerMetadata(platform_name='github', runner_id='341848', url=None), state=<VMState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 12, 26, 6, 22, tzinfo=datetime.timezone.utc)), online=False, busy=False, deletable=True, runner_in_platform=False), cloud_state=<VMState.ACTIVE: '2'>)]
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: -2
+2025-12-26 06:25:19,351 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-26 06:25:23,587 - INFO - werkzeug - 127.0.0.1 - - [26/Dec/2025 06:25:23] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-26 06:27:19,387 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-26 06:27:19,388 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 7f489587-5ead-428c-b76d-c395ef19c681
+2025-12-26 06:27:19,430 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-26 06:27:19,430 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-26 06:27:19,430 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:27:19,767 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-26 06:27:20,546 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-26 06:27:21,270 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:27:22,111 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-26 06:27:22,111 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-26 06:27:22,111 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-26 06:27:22,133 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-26 06:27:22,133 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-26 06:27:22,134 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-26 06:27:22,134 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-26 06:27:22,134 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-26 06:27:22,134 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-26 06:27:22,134 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:27:22,906 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-26 06:27:23,723 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:27:23,724 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-26 06:27:23,724 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-26 06:27:23,724 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-26 06:27:24,516 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-26 06:27:25,283 - INFO - github_runner_manager.reconcile_service - End reconciliation
+
+06:27:49 INFO Reactive log: 
+cat: '/var/log/reactive_runner/*.log': No such file or directory
+
+06:27:50 INFO Metrics log: 
+{"timestamp": 1766730084.993541, "event": "reconciliation", "flavor": "test-omm3ng1x", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 4.391256809234619}
+{"timestamp": 1766730122.260468, "event": "reconciliation", "flavor": "test-omm3ng1x", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 2, "duration": 7.132225751876831}
+{"timestamp": 1766730248.1745725, "event": "reconciliation", "flavor": "test-omm3ng1x", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 2, "duration": 5.887839317321777}
+{"timestamp": 1766730295.0, "event": "runner_installed", "flavor": "test-omm3ng1x", "duration": 175.0}
+{"timestamp": 1766730315.0, "event": "runner_installed", "flavor": "test-omm3ng1x", "duration": 194.0}
+{"timestamp": 1766730319.3512838, "event": "reconciliation", "flavor": "test-omm3ng1x", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.413781881332397}
+{"timestamp": 1766730445.2834706, "event": "reconciliation", "flavor": "test-omm3ng1x", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.85302472114563}
+
+06:27:50 INFO OpenStack servers: []
+06:27:51 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-2qr3  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  06:27:51Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-omm3ng1x           active      1  any-charm      latest/beta  124  no       
+test-omm3ng1x                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-omm3ng1x/0*  active    idle   0        10.254.141.118         
+test-omm3ng1x/0*                         active    idle   1        10.254.141.109         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.254.141.118  juju-007e66-0  ubuntu@24.04  github-runner  Running
+1        started  10.254.141.109  juju-007e66-1  ubuntu@22.04  github-runner  Running
+
+06:27:51 INFO Juju error logs:
+
+machine-0: 06:19:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-omm3ng1x-0: 06:21:16 ERROR unit.test-omm3ng1x/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-omm3ng1x-0: 06:21:18 ERROR unit.test-omm3ng1x/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-omm3ng1x-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:27:51 INFO Forgetting model main...
