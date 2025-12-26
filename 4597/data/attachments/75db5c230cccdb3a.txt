@@ -1,0 +1,120 @@
+18:18:57 WARNING unexpected facade SSHServer received from the controller
+18:18:57 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-g904 on cloud localhost
+18:18:57 WARNING unexpected facade SSHServer received from the controller
+18:18:57 WARNING unexpected facade SSHSession received from the controller
+18:18:57 WARNING unexpected facade SSHTunneler received from the controller
+18:18:57 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:59 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:14 INFO Deploying local:jammy/github-runner-0
+18:19:14 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:19:44 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ifgujiwl/0 [executing] maintenance: installing charm software
+18:20:15 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:20:45 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:21:16 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:21:46 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:22:17 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:22:47 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:23:17 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:23:48 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:24:18 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:24:48 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:25:19 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:25:49 INFO Waiting for model:
+  test-ifgujiwl/0 [allocating] waiting: waiting for machine
+18:26:19 INFO Waiting for model:
+  test-ifgujiwl/0 [executing] maintenance: installing charm software
+18:26:49 INFO Waiting for model:
+  test-ifgujiwl/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ifgujiwl/0 [idle] active: 
+18:27:20 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:27:25 INFO GitHub token rate limit: Rate(reset=2025-12-26 19:18:57+00:00, remaining=4684, limit=5000)
+18:27:37 INFO test_path_config_change
+18:27:37 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:28:07 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:28:37 INFO Ensure there is a runner (this calls reconcile)
+18:28:38 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:29:08 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:29:11 INFO Current reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:29:11 INFO Waiting for reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:30:12 INFO Current reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:30:12 INFO Current reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141, expected reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:30:12 INFO Waiting for reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:31:13 INFO Current reconcile ID: bcde6f9f-366d-4e93-9b5a-f3f437455aa3
+18:31:13 INFO Current reconcile ID: bcde6f9f-366d-4e93-9b5a-f3f437455aa3, expected reconcile ID: 74504799-0dff-4bd1-b3ec-587a87a64141
+18:31:16 INFO Reconciling (again)
+18:31:16 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:31:46 INFO Waiting for model:
+  test-ifgujiwl/0 [idle] active: 
+18:31:53 INFO Current reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:31:53 INFO Waiting for reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:32:54 INFO Current reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:32:54 INFO Current reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517, expected reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:32:54 INFO Waiting for reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:33:55 INFO Current reconcile ID: 8b0ab0f8-9c6c-4375-9b53-c7fa73fd5510
+18:33:55 INFO Current reconcile ID: 8b0ab0f8-9c6c-4375-9b53-c7fa73fd5510, expected reconcile ID: bffe5769-c3c2-4507-b16b-c012a19e6517
+18:35:38 INFO runners: ['test-ifgujiwl-0-n-c14a7d8f97cc']
+18:35:38 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-c9d1ef1ad6cf"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-7891d577ea28"), SelfHostedActionsRunner(name="test-ifgujiwl-0-n-c14a7d8f97cc"), SelfHostedActionsRunner(name="test-r89f67td-0-n-99955548c472"), SelfHostedActionsRunner(name="test-sihbz2lw-0-n-9f94853da5ce"), SelfHostedActionsRunner(name="test-yaa0n5mh-0-n-5065707581d1"), SelfHostedActionsRunner(name="test-yin4jy6c-0-n-d013473b1984")]
+18:35:39 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-g904  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  18:35:39Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ifgujiwl           active      1  any-charm      latest/beta  124  no       
+test-ifgujiwl                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ifgujiwl/0*  active    idle   0        10.43.10.147           
+test-ifgujiwl/0*                         active    idle   1        10.43.10.42            
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.43.10.147  juju-93a5fa-0  ubuntu@24.04  github-runner  Running
+1        started  10.43.10.42   juju-93a5fa-1  ubuntu@22.04  github-runner  Running
+
+18:35:39 INFO Juju error logs:
+
+machine-0: 18:19:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ifgujiwl-0: 18:26:45 ERROR unit.test-ifgujiwl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ifgujiwl-0: 18:26:47 ERROR unit.test-ifgujiwl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ifgujiwl-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:35:39 INFO Forgetting model main...
