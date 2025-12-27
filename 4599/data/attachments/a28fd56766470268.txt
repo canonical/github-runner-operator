@@ -1,0 +1,99 @@
+18:18:45 WARNING unexpected facade SSHServer received from the controller
+18:18:45 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-fxm4 on cloud localhost
+18:18:46 WARNING unexpected facade SSHServer received from the controller
+18:18:46 WARNING unexpected facade SSHSession received from the controller
+18:18:46 WARNING unexpected facade SSHTunneler received from the controller
+18:18:46 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:48 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:05 INFO Deploying local:jammy/github-runner-0
+18:19:05 INFO Waiting for model:
+  test-fs88k79l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fs88k79l/0 [allocating] waiting: waiting for machine
+18:19:35 INFO Waiting for model:
+  test-fs88k79l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fs88k79l/0 [executing] maintenance: installing charm software
+18:20:05 INFO Waiting for model:
+  test-fs88k79l/0 [allocating] waiting: waiting for machine
+18:20:35 INFO Waiting for model:
+  test-fs88k79l/0 [allocating] waiting: waiting for machine
+18:21:06 INFO Waiting for model:
+  test-fs88k79l/0 [executing] waiting: agent initialising
+18:21:36 INFO Waiting for model:
+  test-fs88k79l/0 [executing] maintenance: installing charm software
+18:22:07 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:22:20 INFO GitHub token rate limit: Rate(reset=2025-12-27 18:38:49+00:00, remaining=4891, limit=5000)
+18:22:31 INFO test_path_config_change
+18:22:31 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:23:01 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:23:22 INFO Ensure there is a runner (this calls reconcile)
+18:23:22 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:23:52 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:23:55 INFO Current reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:23:55 INFO Waiting for reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:24:56 INFO Current reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:24:56 INFO Current reconcile ID: 581947e1-9902-4508-8560-13206ae14d06, expected reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:24:56 INFO Waiting for reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:25:57 INFO Current reconcile ID: 91f1611e-e3c0-4c3d-8890-9b92782afc05
+18:25:57 INFO Current reconcile ID: 91f1611e-e3c0-4c3d-8890-9b92782afc05, expected reconcile ID: 581947e1-9902-4508-8560-13206ae14d06
+18:26:00 INFO Reconciling (again)
+18:26:00 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:26:30 INFO Waiting for model:
+  test-fs88k79l/0 [idle] active: 
+18:26:38 INFO Current reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:26:38 INFO Waiting for reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:27:39 INFO Current reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:27:39 INFO Current reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf, expected reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:27:39 INFO Waiting for reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:28:40 INFO Current reconcile ID: 148e4ca5-2380-4aad-bdf0-fb3cabcf6007
+18:28:40 INFO Current reconcile ID: 148e4ca5-2380-4aad-bdf0-fb3cabcf6007, expected reconcile ID: a0a4455e-320b-4b91-b510-b42f1b94e3cf
+18:30:24 INFO runners: ['test-fs88k79l-0-n-7c9192f6a89e']
+18:30:24 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-62f1fd90e3a1"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-431dfdeb9c2e"), SelfHostedActionsRunner(name="test-cv891zc4-0-n-f8494963509b"), SelfHostedActionsRunner(name="test-fs88k79l-0-n-7c9192f6a89e"), SelfHostedActionsRunner(name="test-ifgujiwl-0-n-c14a7d8f97cc"), SelfHostedActionsRunner(name="test-vpq501zx-0-n-32c3e439fbde"), SelfHostedActionsRunner(name="test-z4o1a7pn-0-n-08e3f1c3f53c")]
+18:30:25 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-fxm4  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  18:30:25Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-fs88k79l           active      1  any-charm      latest/beta  124  no       
+test-fs88k79l                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-fs88k79l/0*  active    idle   0        10.247.12.205          
+test-fs88k79l/0*                         active    idle   1        10.247.12.64           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.247.12.205  juju-19ae53-0  ubuntu@24.04  github-runner  Running
+1        started  10.247.12.64   juju-19ae53-1  ubuntu@22.04  github-runner  Running
+
+18:30:25 INFO Juju error logs:
+
+machine-0: 18:19:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fs88k79l-0: 18:21:42 ERROR unit.test-fs88k79l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fs88k79l-0: 18:21:43 ERROR unit.test-fs88k79l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fs88k79l-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:30:25 INFO Forgetting model main...
