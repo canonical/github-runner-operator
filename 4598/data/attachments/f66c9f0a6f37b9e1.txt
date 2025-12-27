@@ -1,0 +1,99 @@
+06:18:26 WARNING unexpected facade SSHServer received from the controller
+06:18:26 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-xfqs on cloud localhost
+06:18:26 WARNING unexpected facade SSHServer received from the controller
+06:18:26 WARNING unexpected facade SSHSession received from the controller
+06:18:26 WARNING unexpected facade SSHTunneler received from the controller
+06:18:27 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:18:28 INFO Deploying ch:amd64/noble/any-charm-124
+06:18:44 INFO Deploying local:jammy/github-runner-0
+06:18:45 INFO Waiting for model:
+  test-vpq501zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vpq501zx/0 [allocating] waiting: waiting for machine
+06:19:15 INFO Waiting for model:
+  test-vpq501zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vpq501zx/0 [idle] active: 
+06:19:45 INFO Waiting for model:
+  test-vpq501zx/0 [allocating] waiting: waiting for machine
+06:20:15 INFO Waiting for model:
+  test-vpq501zx/0 [allocating] waiting: waiting for machine
+06:20:45 INFO Waiting for model:
+  test-vpq501zx/0 [executing] maintenance: installing charm software
+06:21:15 INFO Waiting for model:
+  test-vpq501zx/0 [executing] maintenance: installing charm software
+06:21:45 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:21:57 INFO GitHub token rate limit: Rate(reset=2025-12-27 06:34:58+00:00, remaining=4892, limit=5000)
+06:22:08 INFO test_path_config_change
+06:22:08 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:22:38 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:22:59 INFO Ensure there is a runner (this calls reconcile)
+06:22:59 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:23:29 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:23:32 INFO Current reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:23:32 INFO Waiting for reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:24:33 INFO Current reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:24:33 INFO Current reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055, expected reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:24:33 INFO Waiting for reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:25:34 INFO Current reconcile ID: 048be7f6-0b5c-4ebf-a8e9-13187fa9fd49
+06:25:34 INFO Current reconcile ID: 048be7f6-0b5c-4ebf-a8e9-13187fa9fd49, expected reconcile ID: d3e361e8-307f-49c2-aa6a-0250d654d055
+06:25:37 INFO Reconciling (again)
+06:25:37 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:26:07 INFO Waiting for model:
+  test-vpq501zx/0 [idle] active: 
+06:26:17 INFO Current reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:26:17 INFO Waiting for reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:27:18 INFO Current reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:27:18 INFO Current reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b, expected reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:27:18 INFO Waiting for reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:28:19 INFO Current reconcile ID: af53934d-377f-4372-8e88-beca31014d3d
+06:28:19 INFO Current reconcile ID: af53934d-377f-4372-8e88-beca31014d3d, expected reconcile ID: 35d8035d-15bb-4d30-8e0d-3314f69cf61b
+06:30:03 INFO runners: ['test-vpq501zx-0-n-32c3e439fbde']
+06:30:03 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-7d07e912df36"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-0d888c4b015a"), SelfHostedActionsRunner(name="test-birr7c0e-0-n-02a9053d46ec"), SelfHostedActionsRunner(name="test-g9k5pv98-0-n-2a41188a888e"), SelfHostedActionsRunner(name="test-ifgujiwl-0-n-c14a7d8f97cc"), SelfHostedActionsRunner(name="test-r89f67td-0-n-99955548c472"), SelfHostedActionsRunner(name="test-sihbz2lw-0-n-9f94853da5ce"), SelfHostedActionsRunner(name="test-vpq501zx-0-n-32c3e439fbde"), SelfHostedActionsRunner(name="test-yin4jy6c-0-n-d013473b1984")]
+06:30:04 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-xfqs  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  06:30:04Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-vpq501zx           active      1  any-charm      latest/beta  124  no       
+test-vpq501zx                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vpq501zx/0*  active    idle   0        10.48.57.111           
+test-vpq501zx/0*                         active    idle   1        10.48.57.8             
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.48.57.111  juju-816357-0  ubuntu@24.04  github-runner  Running
+1        started  10.48.57.8    juju-816357-1  ubuntu@22.04  github-runner  Running
+
+06:30:04 INFO Juju error logs:
+
+machine-0: 06:19:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vpq501zx-0: 06:21:17 ERROR unit.test-vpq501zx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-vpq501zx-0: 06:21:19 ERROR unit.test-vpq501zx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vpq501zx-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:30:04 INFO Forgetting model main...
