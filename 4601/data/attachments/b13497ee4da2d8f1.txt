@@ -1,0 +1,96 @@
+18:18:54 WARNING unexpected facade SSHServer received from the controller
+18:18:54 INFO Adding model github-pr-71e3b-lxd:test-reactive-n4sj on cloud localhost
+18:18:54 WARNING unexpected facade SSHServer received from the controller
+18:18:54 WARNING unexpected facade SSHSession received from the controller
+18:18:54 WARNING unexpected facade SSHTunneler received from the controller
+18:18:54 INFO GitHub token rate limit: Rate(reset=2025-12-28 19:14:47+00:00, remaining=4998, limit=5000)
+18:18:58 INFO Deploying ch:amd64/jammy/mongodb-249
+18:18:58 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:00 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:20 INFO Deploying local:jammy/github-runner-0
+18:19:20 INFO Waiting for model:
+  test-yec0l7gg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yec0l7gg/0 [allocating] waiting: waiting for machine
+18:19:50 INFO Waiting for model:
+  test-yec0l7gg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yec0l7gg/0 [executing] maintenance: installing charm software
+18:20:20 INFO Waiting for model:
+  test-yec0l7gg/0 [allocating] waiting: waiting for machine
+18:20:50 INFO Waiting for model:
+  test-yec0l7gg/0 [allocating] waiting: agent initialising
+18:21:21 INFO Waiting for model:
+  test-yec0l7gg/0 [executing] maintenance: installing charm software
+18:21:51 INFO Waiting for model:
+  test-yec0l7gg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yec0l7gg/0 [idle] active: 
+18:22:21 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:22:30 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:30 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:00 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:09 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:23:39 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:23:42 INFO Current reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:23:42 INFO Waiting for reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:24:43 INFO Current reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:24:43 INFO Current reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a, expected reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:24:43 INFO Waiting for reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:25:44 INFO Current reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:25:44 INFO Current reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d, expected reconcile ID: 83c12828-15c8-4548-9cf8-fa11c8945e0a
+18:25:49 INFO Wait for condition not met, sleeping 10
+18:26:10 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:26:26 INFO Current reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:26:26 INFO Waiting for reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:27:27 INFO Current reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:27:27 INFO Current reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d, expected reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:27:27 INFO Waiting for reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:28:28 INFO Current reconcile ID: c865f8d3-8820-4613-893f-771ddebe2570
+18:28:28 INFO Current reconcile ID: c865f8d3-8820-4613-893f-771ddebe2570, expected reconcile ID: a9a1ef61-ea0f-4448-a5e2-d86cd738ba0d
+18:28:28 INFO Wait for condition not met, sleeping 60
+18:29:28 INFO Wait for condition not met, sleeping 60
+18:30:29 INFO Wait for condition not met, sleeping 60
+18:31:29 INFO Wait for condition not met, sleeping 60
+18:32:30 INFO Wait for condition not met, sleeping 60
+18:33:30 INFO Wait for condition not met, sleeping 60
+18:34:30 INFO Wait for condition not met, sleeping 60
+18:35:31 INFO Wait for condition not met, sleeping 60
+18:36:31 INFO Wait for condition not met, sleeping 60
+18:37:32 INFO Wait for condition not met, sleeping 60
+18:38:32 INFO Wait for condition not met, sleeping 60
+18:39:32 INFO Wait for condition not met, sleeping 60
+18:40:33 INFO Wait for condition not met, sleeping 60
+18:41:33 INFO Wait for condition not met, sleeping 60
+18:42:33 INFO Wait for condition not met, sleeping 60
+18:43:34 INFO Wait for condition not met, sleeping 60
+18:44:34 INFO Wait for condition not met, sleeping 60
+18:45:34 INFO Wait for condition not met, sleeping 60
+18:46:35 INFO Wait for condition not met, sleeping 60
+18:47:35 INFO Wait for condition not met, sleeping 60
+18:48:35 INFO Wait for condition not met, sleeping 60
+18:49:36 INFO Wait for condition not met, sleeping 60
+18:50:36 INFO Wait for condition not met, sleeping 60
+18:51:37 INFO Wait for condition not met, sleeping 60
+18:52:37 INFO Wait for condition not met, sleeping 60
+18:53:37 INFO Wait for condition not met, sleeping 60
+18:54:38 INFO Wait for condition not met, sleeping 60
+18:55:38 INFO Wait for condition not met, sleeping 60
+18:56:38 INFO Wait for condition not met, sleeping 60
+18:57:39 INFO Wait for condition not met, sleeping 60
+18:58:39 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:59:09 INFO Waiting for model:
+  test-yec0l7gg/0 [idle] active: 
+18:59:12 INFO Current reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
+18:59:12 INFO Waiting for reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
+19:00:13 INFO Current reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
+19:00:13 INFO Current reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c, expected reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
+19:00:13 INFO Waiting for reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
+19:01:14 INFO Current reconcile ID: 1a8f45af-3ffa-4783-a513-5f35b8fca519
+19:01:14 INFO Current reconcile ID: 1a8f45af-3ffa-4783-a513-5f35b8fca519, expected reconcile ID: 0c4dd5f7-3442-4caf-91ba-13e01081141c
