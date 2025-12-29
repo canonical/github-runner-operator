@@ -1,0 +1,52 @@
+06:29:49 INFO Waiting for model:
+  test-dilo9njk/0 [idle] active: 
+06:30:05 INFO Current reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:30:05 INFO Waiting for reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:31:06 INFO Current reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:31:06 INFO Current reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676, expected reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:31:06 INFO Waiting for reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:32:07 INFO Current reconcile ID: d18bc18a-5c96-41c6-930a-bb734d5a06e9
+06:32:07 INFO Current reconcile ID: d18bc18a-5c96-41c6-930a-bb734d5a06e9, expected reconcile ID: 261e4862-e38a-4bfd-8c37-441a148d3676
+06:32:09 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-brte  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  06:32:09Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-dilo9njk           active      1  any-charm      latest/beta  124  no       
+test-dilo9njk                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dilo9njk/0*  active    idle   0        10.78.34.105           
+test-dilo9njk/0*                         active    idle   1        10.78.34.19            
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.78.34.105  juju-974af1-0  ubuntu@24.04  github-runner  Running
+1        started  10.78.34.19   juju-974af1-1  ubuntu@22.04  github-runner  Running
+
+06:32:09 INFO Juju error logs:
+
+machine-0: 06:21:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:21:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dilo9njk-0: 06:23:35 ERROR unit.test-dilo9njk/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dilo9njk-0: 06:23:36 ERROR unit.test-dilo9njk/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dilo9njk-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:32:09 INFO Forgetting model main...

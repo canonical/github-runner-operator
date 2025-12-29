@@ -1,0 +1,1220 @@
+07:03:01 INFO Application log: 
+2025-12-29 06:23:41,719 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-29 06:23:41,724 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-29 06:23:41,725 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-29 06:23:41,725 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-29 06:23:41,725 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-29 06:23:41,725 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:23:41,725 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 40d79183-9cbb-4cb8-af77-cd5d545250ed
+2025-12-29 06:23:41,744 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-29 06:23:41,744 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:23:41,744 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:23:42,084 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:23:42,463 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:23:43,116 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:23:43,481 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:23:43,481 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:23:43,481 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:23:43,500 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:23:43,875 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:23:44,704 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:23:44,704 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-29 06:23:44,704 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-29 06:23:44,704 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:23:45,246 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:23:45,913 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:23:45,914 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:23:56,385 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 06:23:56] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-29 06:23:56,391 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 06:23:56] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-29 06:23:56,396 - INFO - github_runner_manager.http_server - Attempting to acquire the lock: unlocked
+2025-12-29 06:23:56,396 - INFO - github_runner_manager.http_server - Flushing runners...
+2025-12-29 06:23:56,414 - INFO - github_runner_manager.http_server - Flushing busy: False
+2025-12-29 06:23:56,414 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:23:56,414 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:23:56,748 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:23:57,379 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:23:58,431 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:23:59,055 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:23:59,056 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:23:59,056 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:23:59,076 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:23:59,077 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:23:59,700 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:24:00,506 - INFO - github_runner_manager.http_server - Flushed 0 runners
+2025-12-29 06:24:00,507 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 06:24:00] "[35m[1mPOST /runner/flush?flush-busy=False HTTP/1.1[0m" 204 -
+2025-12-29 06:24:21,289 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-29 06:24:21,295 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-29 06:24:21,296 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-29 06:24:21,296 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-29 06:24:21,296 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-29 06:24:21,296 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:24:21,296 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 728f7124-0674-462d-b0ba-b26429873d42
+2025-12-29 06:24:21,315 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-29 06:24:21,315 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:24:21,315 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:24:21,315 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:21,648 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:24:22,309 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:24:23,163 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:23,806 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:24:23,806 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:24:23,806 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:24:23,827 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:24:24,004 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:24:24,004 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:24:24,004 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:24,726 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:24:25,382 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:26,010 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:24:26,634 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:26,634 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:24:26,640 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 0
+2025-12-29 06:24:26,640 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:24:26,640 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:27,249 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:24:27,946 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:24:27,947 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:24:27,947 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:24:27,947 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:24:35,960 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 06:24:35] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-29 06:24:55,427 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-29 06:24:55,433 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-29 06:24:55,434 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-29 06:24:55,434 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-29 06:24:55,434 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-29 06:24:55,434 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:24:55,434 - INFO - github_runner_manager.reconcile_service - Reconcile ID: db2eb9f5-6c13-42ee-85cd-e9fe0bf09bf2
+2025-12-29 06:24:55,453 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:24:55,453 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:24:55,453 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:24:55,453 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:55,796 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:24:56,546 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:24:57,194 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:57,977 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:24:57,977 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:24:57,977 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:24:57,999 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:24:57,999 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:24:57,999 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:24:57,999 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:24:57,999 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:24:58,000 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:24:58,091 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:24:58,091 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:24:58,091 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:24:58,871 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:24:59,601 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:24:59,602 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:25:00,315 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:25:01,006 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:25:01,006 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:25:01,010 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 1
+2025-12-29 06:25:01,010 - INFO - github_runner_manager.reactive.process_manager - Will spawn 1 new reactive runner process(es)
+2025-12-29 06:25:01,012 - INFO - github_runner_manager.reactive.process_manager - Spawned a new reactive runner process with pid 9119
+2025-12-29 06:25:01,013 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:25:01,897 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:25:02,590 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:25:02,591 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:25:02,591 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-29 06:25:02,591 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:25:10,096 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 06:25:10] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-29 06:27:02,595 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:27:02,595 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 630fed61-1745-4b8e-adf6-4ff91153fb38
+2025-12-29 06:27:02,614 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:27:02,614 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:27:02,614 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:27:02,614 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:27:02,966 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:27:03,901 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:27:04,543 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:27:05,467 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:27:05,467 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:27:05,467 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:27:05,490 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:27:05,504 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:27:05,504 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:27:05,504 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:27:06,415 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:27:07,176 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:27:08,005 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:27:08,786 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:27:08,787 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:27:08,792 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:27:08,792 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:27:08,792 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:27:09,661 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:27:10,347 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:27:10,348 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:29:10,417 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:29:10,417 - INFO - github_runner_manager.reconcile_service - Reconcile ID: b710be8c-ca35-4f52-9227-439a3446fe99
+2025-12-29 06:29:10,436 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:29:10,436 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:29:10,436 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:29:10,436 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:29:10,786 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:29:11,669 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:29:12,367 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:29:13,119 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:29:13,119 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:29:13,119 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:29:13,143 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:29:13,157 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:29:13,893 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:29:14,569 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:29:14,570 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:29:14,573 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 1
+2025-12-29 06:29:14,573 - INFO - github_runner_manager.reactive.process_manager - Will spawn 1 new reactive runner process(es)
+2025-12-29 06:29:14,576 - INFO - github_runner_manager.reactive.process_manager - Spawned a new reactive runner process with pid 9349
+2025-12-29 06:29:14,576 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:29:15,371 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-29 06:29:16,049 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:31:16,150 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:31:16,150 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 534495cb-2443-4446-968f-7e0a056b1237
+2025-12-29 06:31:16,172 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:31:16,172 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:31:16,172 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:31:16,172 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:31:16,515 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:31:17,436 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:31:18,181 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:31:19,125 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:31:19,125 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:31:19,125 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:31:19,152 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:31:19,153 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:31:19,153 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:31:19,153 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:31:19,153 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:31:19,153 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:31:19,168 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:31:20,056 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:31:20,790 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:31:20,790 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:31:20,794 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 1
+2025-12-29 06:31:20,794 - INFO - github_runner_manager.reactive.process_manager - Will spawn 1 new reactive runner process(es)
+2025-12-29 06:31:20,797 - INFO - github_runner_manager.reactive.process_manager - Spawned a new reactive runner process with pid 9420
+2025-12-29 06:31:20,797 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:31:21,853 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:31:22,544 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:31:22,545 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:31:22,545 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-29 06:31:22,545 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:33:22,615 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:33:22,615 - INFO - github_runner_manager.reconcile_service - Reconcile ID: cad88f09-aa85-40bd-bc6e-8dbb59543ea1
+2025-12-29 06:33:22,635 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:33:22,635 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:33:22,635 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:33:22,635 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:33:22,977 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:33:23,692 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:33:24,322 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:33:25,097 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:33:25,097 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:33:25,097 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:33:25,118 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:33:25,132 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:33:25,132 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:33:25,132 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:33:25,816 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:33:26,509 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:33:26,510 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:33:27,211 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:33:27,890 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:33:27,890 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:33:27,894 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:33:27,894 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:33:27,894 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:33:28,600 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:33:29,224 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:35:29,309 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:35:29,309 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 0265ef96-297c-4bb5-bb4c-9636cde98af6
+2025-12-29 06:35:29,331 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:35:29,331 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:35:29,331 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:35:29,332 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:35:29,678 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:35:30,506 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:35:31,433 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:35:32,224 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:35:32,224 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:35:32,224 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:35:32,252 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:35:32,252 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:35:32,253 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:35:32,253 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:35:32,253 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:35:32,253 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:35:32,268 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:35:33,118 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:35:33,884 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:35:33,884 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:35:33,888 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 1
+2025-12-29 06:35:33,888 - INFO - github_runner_manager.reactive.process_manager - Will spawn 1 new reactive runner process(es)
+2025-12-29 06:35:33,891 - INFO - github_runner_manager.reactive.process_manager - Spawned a new reactive runner process with pid 9610
+2025-12-29 06:35:33,891 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:35:34,725 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:35:35,669 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:35:35,670 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:35:35,670 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-29 06:35:35,670 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:37:35,740 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:37:35,740 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 3238c648-07a7-4dba-b39f-3908d9574f0e
+2025-12-29 06:37:35,763 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:37:35,763 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:37:35,763 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:37:35,763 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:37:36,108 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:37:36,894 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:37:37,605 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:37:38,326 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:37:38,326 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:37:38,326 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:37:38,349 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:37:38,363 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:37:38,363 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:37:38,363 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:37:39,112 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:37:39,804 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:37:39,805 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:37:40,523 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:37:41,219 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:37:41,219 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:37:41,223 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:37:41,223 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:37:41,223 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:37:41,994 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:37:42,836 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:37:42,837 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:37:42,837 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:37:42,837 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:39:42,845 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:39:42,845 - INFO - github_runner_manager.reconcile_service - Reconcile ID: ec995c21-27a3-4ed6-aef4-85d42ba9ec88
+2025-12-29 06:39:42,864 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:39:42,864 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:39:42,864 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:39:42,864 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:39:43,202 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:39:43,981 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:39:44,705 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:39:45,538 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:39:45,539 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:39:45,539 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:39:45,561 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:39:45,562 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:39:45,562 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:39:45,562 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:39:45,562 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:39:45,562 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:39:45,576 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:39:45,576 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:39:45,576 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:39:46,403 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:39:47,112 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:39:48,043 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:39:48,703 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:39:48,703 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:39:48,707 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:39:48,707 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:39:48,707 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:39:49,550 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:39:50,500 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:39:50,501 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:39:50,501 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:39:50,501 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:41:50,589 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:41:50,589 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 128a49c1-47b5-45e5-99ce-11a8dd517587
+2025-12-29 06:41:50,611 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:41:50,611 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:41:50,611 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:41:50,611 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:41:50,981 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:41:51,876 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:41:52,578 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:41:53,411 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:41:53,411 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:41:53,411 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:41:53,435 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:41:53,449 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:41:53,449 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:41:53,449 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:41:54,293 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:41:54,995 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:41:54,996 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:41:55,800 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:41:56,485 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:41:56,486 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:41:56,490 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:41:56,490 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:41:56,490 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:41:57,379 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:41:58,056 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:41:58,056 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:41:58,056 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:41:58,056 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:41:58,057 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:43:58,112 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:43:58,112 - INFO - github_runner_manager.reconcile_service - Reconcile ID: aefd57b4-b4e9-4059-8e13-acefb1d52f7a
+2025-12-29 06:43:58,131 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:43:58,131 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:43:58,131 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:43:58,131 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:43:58,491 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:43:59,309 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:43:59,970 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:44:00,727 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:44:00,727 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:44:00,727 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:44:00,749 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:44:00,765 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:44:01,477 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:44:02,171 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:44:02,172 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:44:02,176 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 1
+2025-12-29 06:44:02,176 - INFO - github_runner_manager.reactive.process_manager - Will spawn 1 new reactive runner process(es)
+2025-12-29 06:44:02,180 - INFO - github_runner_manager.reactive.process_manager - Spawned a new reactive runner process with pid 9977
+2025-12-29 06:44:02,180 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:44:03,058 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:44:03,735 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:44:03,735 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:44:03,735 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:44:03,735 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:44:03,735 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:44:03,736 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:44:03,736 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:44:03,736 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:44:03,736 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-29 06:44:03,736 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:46:03,793 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:46:03,793 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 76155f70-a432-4dfd-8053-698905928098
+2025-12-29 06:46:03,859 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:46:03,859 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:46:03,859 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:46:03,859 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:46:04,254 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:46:05,172 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:46:05,976 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:46:06,807 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:46:06,807 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:46:06,807 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:46:06,830 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:46:06,830 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:46:06,830 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:46:06,830 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:46:06,830 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:46:06,831 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:46:06,845 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:46:06,845 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:46:06,845 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:46:07,706 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:46:08,424 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:46:08,425 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:46:09,250 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:46:09,998 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:46:09,998 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:46:10,002 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:46:10,002 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:46:10,002 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:46:10,789 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:46:11,557 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:46:11,558 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:48:11,656 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:48:11,656 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 2c68869f-ac65-4ebf-9dfc-27c35bb7d79e
+2025-12-29 06:48:11,675 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:48:11,675 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:48:11,675 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:48:11,675 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:48:12,054 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:48:12,971 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:48:13,653 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:48:14,430 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:48:14,431 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:48:14,431 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:48:14,459 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:48:14,473 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:48:14,473 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:48:14,473 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:48:15,273 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:48:16,121 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:48:16,892 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:48:17,651 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:48:17,651 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:48:17,655 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:48:17,655 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:48:17,655 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:48:18,510 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:48:19,196 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:50:19,263 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:50:19,264 - INFO - github_runner_manager.reconcile_service - Reconcile ID: efc9be44-77b8-48cf-8e56-3951be85c0eb
+2025-12-29 06:50:19,282 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:50:19,282 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:50:19,282 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:50:19,282 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:50:19,674 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:50:20,518 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:50:21,191 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:50:21,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:50:21,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:50:21,986 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:50:22,010 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:50:22,024 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:50:22,024 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:50:22,024 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:50:22,729 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:50:23,575 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:50:23,576 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:50:24,339 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:50:25,170 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:50:25,171 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:50:25,175 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:50:25,175 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:50:25,175 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:50:25,964 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:50:26,661 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:50:26,662 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:50:26,662 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:50:26,662 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:52:26,717 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:52:26,718 - INFO - github_runner_manager.reconcile_service - Reconcile ID: df276055-3162-41aa-8956-234e301b2cf7
+2025-12-29 06:52:26,736 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:52:26,736 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:52:26,736 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:52:26,736 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:52:27,092 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:52:27,961 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:52:28,624 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:52:29,465 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:52:29,465 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:52:29,465 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:52:29,490 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:52:29,505 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:52:29,505 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:52:29,505 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:52:30,259 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:52:31,001 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:52:31,002 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:52:31,731 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:52:32,383 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:52:32,383 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:52:32,387 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:52:32,387 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:52:32,387 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:52:33,141 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:52:33,839 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:52:33,839 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:52:33,839 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:52:33,839 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:52:33,839 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:52:33,840 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:52:33,840 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:52:33,840 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:52:33,840 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:52:33,840 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:54:33,857 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:54:33,857 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 2533dacc-681c-4de1-849c-3240e3cadbb9
+2025-12-29 06:54:33,877 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:54:33,877 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:54:33,877 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:54:33,877 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:54:34,320 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:54:35,141 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:54:35,819 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:54:36,618 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:54:36,618 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:54:36,618 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:54:36,641 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:54:36,662 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:54:36,662 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:54:36,662 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:54:37,449 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:54:38,116 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:54:38,117 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:54:38,872 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:54:39,547 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:54:39,547 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:54:39,551 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:54:39,551 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:54:39,551 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:54:40,398 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:54:41,049 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:54:41,050 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:54:41,050 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:54:41,050 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:56:41,148 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:56:41,148 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 1c58eedb-a4eb-4ac1-b54e-7acb4d4f1410
+2025-12-29 06:56:41,167 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:56:41,167 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:56:41,167 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:56:41,167 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:56:41,510 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:56:42,345 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:56:42,996 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:56:43,796 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:56:43,796 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:56:43,796 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:56:43,820 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:56:43,834 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:56:43,834 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:56:43,834 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:56:44,615 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:56:45,404 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:56:46,160 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:56:46,830 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:56:46,830 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:56:46,834 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:56:46,834 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:56:46,834 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:56:47,639 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:56:48,312 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:56:48,313 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 06:58:48,361 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 06:58:48,362 - INFO - github_runner_manager.reconcile_service - Reconcile ID: efd8a6b2-ca58-430b-9624-107d90b04bec
+2025-12-29 06:58:48,381 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 1.
+2025-12-29 06:58:48,381 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 06:58:48,381 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 06:58:48,381 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:58:48,757 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 06:58:49,579 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:58:50,272 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:58:51,009 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 06:58:51,010 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 06:58:51,010 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 06:58:51,036 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 06:58:51,051 - INFO - github_runner_manager.reactive.runner_manager - Reactive reconcile. Flushing on empty queue
+2025-12-29 06:58:51,051 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-29 06:58:51,051 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:58:51,879 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 06:58:52,611 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-29 06:58:52,612 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:58:53,396 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:58:54,105 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:58:54,106 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 06:58:54,110 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 1, expected quantity 1
+2025-12-29 06:58:54,110 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 06:58:54,110 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 06:58:54,855 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 06:58:55,596 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 07:00:26,516 - INFO - root - Starting GitHub runner manager service version: 0.10.2
+2025-12-29 07:00:26,522 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-29 07:00:26,523 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-29 07:00:26,523 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-29 07:00:26,523 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-29 07:00:26,524 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 07:00:26,524 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 10afbf71-3cc9-48a8-ae9f-cbd7e1b63156
+2025-12-29 07:00:26,542 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-29 07:00:26,542 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 07:00:26,542 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 07:00:26,542 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:00:26,889 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 07:00:27,739 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 07:00:28,444 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:00:29,270 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 07:00:29,270 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 07:00:29,270 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 07:00:29,293 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 07:00:29,376 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:00:30,122 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 07:00:32,853 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:00:32,854 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 07:00:32,857 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 0
+2025-12-29 07:00:32,857 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 07:00:32,857 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:00:33,615 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 07:00:34,236 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 07:00:34,237 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 07:00:34,237 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-29 07:00:40,966 - INFO - werkzeug - 127.0.0.1 - - [29/Dec/2025 07:00:40] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-29 07:02:34,337 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-29 07:02:34,337 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 441953e7-f7d6-493d-9544-9cbe5e8ae497
+2025-12-29 07:02:34,357 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-29 07:02:34,357 - INFO - github_runner_manager.manager.runner_scaler - Reactive configuration detected, spawning runners in reactive mode.
+2025-12-29 07:02:34,357 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-29 07:02:34,357 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:02:34,766 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-29 07:02:35,554 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-29 07:02:36,249 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:02:37,084 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-29 07:02:37,084 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-29 07:02:37,084 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-29 07:02:37,106 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-29 07:02:37,106 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-29 07:02:37,106 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-29 07:02:37,107 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-29 07:02:37,107 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-29 07:02:37,107 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-29 07:02:37,120 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:02:37,910 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 07:02:38,731 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:02:38,732 - INFO - github_runner_manager.utilities - Executing command ['ps', 'axo', 'cmd:57,pid', '--no-headers', '--sort=-start_time']
+2025-12-29 07:02:38,735 - INFO - github_runner_manager.reactive.process_manager - Reactive runner processes: current quantity 0, expected quantity 0
+2025-12-29 07:02:38,735 - INFO - github_runner_manager.reactive.process_manager - No changes to number of reactive runner processes needed.
+2025-12-29 07:02:38,735 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-29 07:02:39,449 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-29 07:02:40,148 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-29 07:02:40,148 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-29 07:02:40,148 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-29 07:02:40,149 - INFO - github_runner_manager.reconcile_service - End reconciliation
+
+07:03:02 INFO Reactive log: 
+2025-12-29 06:27:44,404 - github_runner_manager.reactive.consumer - INFO - Received job with labels {'test-k2tjyung', 'x64'} and job_url https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396
+2025-12-29 06:27:44,404 - github_runner_manager.reactive.consumer - INFO - Received reactive job: labels={'test-k2tjyung', 'x64'} url=HttpUrl('https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396', )
+Restoring 1 unacknowledged message(s)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 73, in <module>
+    main()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 64, in main
+    consume(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/consumer.py", line 194, in consume
+    if platform_provider.check_job_been_picked_up(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/platform/github_provider.py", line 274, in check_job_been_picked_up
+    job_info = self._client.get_job_info(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 78, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 381, in get_job_info
+    return self._to_job_info(job_raw)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 403, in _to_job_info
+    return JobInfo(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/pydantic/main.py", line 347, in __init__
+    raise validation_error
+pydantic.error_wrappers.ValidationError: 1 validation error for JobInfo
+conclusion
+  value is not a valid enumeration member; permitted: 'action_required', 'cancelled', 'failure', 'neutral', 'skipped', 'success', 'timed_out' (type=type_error.enum; enum_values=[<JobConclusion.ACTION_REQUIRED: 'action_required'>, <JobConclusion.CANCELLED: 'cancelled'>, <JobConclusion.FAILURE: 'failure'>, <JobConclusion.NEUTRAL: 'neutral'>, <JobConclusion.SKIPPED: 'skipped'>, <JobConclusion.SUCCESS: 'success'>, <JobConclusion.TIMED_OUT: 'timed_out'>])
+2025-12-29 06:29:15,373 - github_runner_manager.reactive.consumer - INFO - Received job with labels {'test-k2tjyung', 'x64'} and job_url https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396
+2025-12-29 06:29:15,373 - github_runner_manager.reactive.consumer - INFO - Received reactive job: labels={'test-k2tjyung', 'x64'} url=HttpUrl('https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396', )
+2025-12-29 06:29:15,373 - github_runner_manager.reactive.consumer - INFO - Pause job https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396 with retry count 2 for 120 seconds (exponential backoff)
+Restoring 1 unacknowledged message(s)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 73, in <module>
+    main()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 64, in main
+    consume(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/consumer.py", line 194, in consume
+    if platform_provider.check_job_been_picked_up(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/platform/github_provider.py", line 274, in check_job_been_picked_up
+    job_info = self._client.get_job_info(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 78, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 381, in get_job_info
+    return self._to_job_info(job_raw)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 403, in _to_job_info
+    return JobInfo(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/pydantic/main.py", line 347, in __init__
+    raise validation_error
+pydantic.error_wrappers.ValidationError: 1 validation error for JobInfo
+conclusion
+  value is not a valid enumeration member; permitted: 'action_required', 'cancelled', 'failure', 'neutral', 'skipped', 'success', 'timed_out' (type=type_error.enum; enum_values=[<JobConclusion.ACTION_REQUIRED: 'action_required'>, <JobConclusion.CANCELLED: 'cancelled'>, <JobConclusion.FAILURE: 'failure'>, <JobConclusion.NEUTRAL: 'neutral'>, <JobConclusion.SKIPPED: 'skipped'>, <JobConclusion.SUCCESS: 'success'>, <JobConclusion.TIMED_OUT: 'timed_out'>])
+2025-12-29 06:31:21,588 - github_runner_manager.reactive.consumer - INFO - Received job with labels {'x64', 'test-k2tjyung'} and job_url https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396
+2025-12-29 06:31:21,588 - github_runner_manager.reactive.consumer - INFO - Received reactive job: labels={'x64', 'test-k2tjyung'} url=HttpUrl('https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396', )
+2025-12-29 06:31:21,588 - github_runner_manager.reactive.consumer - INFO - Pause job https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396 with retry count 3 for 240 seconds (exponential backoff)
+Restoring 1 unacknowledged message(s)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 73, in <module>
+    main()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 64, in main
+    consume(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/consumer.py", line 194, in consume
+    if platform_provider.check_job_been_picked_up(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/platform/github_provider.py", line 274, in check_job_been_picked_up
+    job_info = self._client.get_job_info(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 78, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 381, in get_job_info
+    return self._to_job_info(job_raw)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 403, in _to_job_info
+    return JobInfo(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/pydantic/main.py", line 347, in __init__
+    raise validation_error
+pydantic.error_wrappers.ValidationError: 1 validation error for JobInfo
+conclusion
+  value is not a valid enumeration member; permitted: 'action_required', 'cancelled', 'failure', 'neutral', 'skipped', 'success', 'timed_out' (type=type_error.enum; enum_values=[<JobConclusion.ACTION_REQUIRED: 'action_required'>, <JobConclusion.CANCELLED: 'cancelled'>, <JobConclusion.FAILURE: 'failure'>, <JobConclusion.NEUTRAL: 'neutral'>, <JobConclusion.SKIPPED: 'skipped'>, <JobConclusion.SUCCESS: 'success'>, <JobConclusion.TIMED_OUT: 'timed_out'>])
+2025-12-29 06:35:34,685 - github_runner_manager.reactive.consumer - INFO - Received job with labels {'x64', 'test-k2tjyung'} and job_url https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396
+2025-12-29 06:35:34,685 - github_runner_manager.reactive.consumer - INFO - Received reactive job: labels={'x64', 'test-k2tjyung'} url=HttpUrl('https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396', )
+2025-12-29 06:35:34,685 - github_runner_manager.reactive.consumer - INFO - Pause job https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396 with retry count 4 for 480 seconds (exponential backoff)
+Restoring 1 unacknowledged message(s)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 73, in <module>
+    main()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 64, in main
+    consume(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/consumer.py", line 194, in consume
+    if platform_provider.check_job_been_picked_up(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/platform/github_provider.py", line 274, in check_job_been_picked_up
+    job_info = self._client.get_job_info(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 78, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 381, in get_job_info
+    return self._to_job_info(job_raw)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 403, in _to_job_info
+    return JobInfo(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/pydantic/main.py", line 347, in __init__
+    raise validation_error
+pydantic.error_wrappers.ValidationError: 1 validation error for JobInfo
+conclusion
+  value is not a valid enumeration member; permitted: 'action_required', 'cancelled', 'failure', 'neutral', 'skipped', 'success', 'timed_out' (type=type_error.enum; enum_values=[<JobConclusion.ACTION_REQUIRED: 'action_required'>, <JobConclusion.CANCELLED: 'cancelled'>, <JobConclusion.FAILURE: 'failure'>, <JobConclusion.NEUTRAL: 'neutral'>, <JobConclusion.SKIPPED: 'skipped'>, <JobConclusion.SUCCESS: 'success'>, <JobConclusion.TIMED_OUT: 'timed_out'>])
+2025-12-29 06:44:03,000 - github_runner_manager.reactive.consumer - INFO - Received job with labels {'test-k2tjyung', 'x64'} and job_url https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396
+2025-12-29 06:44:03,000 - github_runner_manager.reactive.consumer - INFO - Received reactive job: labels={'test-k2tjyung', 'x64'} url=HttpUrl('https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396', )
+2025-12-29 06:44:03,000 - github_runner_manager.reactive.consumer - INFO - Pause job https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/59065587396 with retry count 5 for 960 seconds (exponential backoff)
+Restoring 1 unacknowledged message(s)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 73, in <module>
+    main()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/runner.py", line 64, in main
+    consume(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/reactive/consumer.py", line 194, in consume
+    if platform_provider.check_job_been_picked_up(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/platform/github_provider.py", line 274, in check_job_been_picked_up
+    job_info = self._client.get_job_info(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 78, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 381, in get_job_info
+    return self._to_job_info(job_raw)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/github_runner_manager/github_client.py", line 403, in _to_job_info
+    return JobInfo(
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/venv/pydantic/main.py", line 347, in __init__
+    raise validation_error
+pydantic.error_wrappers.ValidationError: 1 validation error for JobInfo
+conclusion
+  value is not a valid enumeration member; permitted: 'action_required', 'cancelled', 'failure', 'neutral', 'skipped', 'success', 'timed_out' (type=type_error.enum; enum_values=[<JobConclusion.ACTION_REQUIRED: 'action_required'>, <JobConclusion.CANCELLED: 'cancelled'>, <JobConclusion.FAILURE: 'failure'>, <JobConclusion.NEUTRAL: 'neutral'>, <JobConclusion.SKIPPED: 'skipped'>, <JobConclusion.SUCCESS: 'success'>, <JobConclusion.TIMED_OUT: 'timed_out'>])
+
+07:03:03 INFO Metrics log: 
+{"timestamp": 1766989756.0496016, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.612781763076782}
+{"timestamp": 1766989882.545006, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.371999025344849}
+{"timestamp": 1766990009.2243402, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.589112997055054}
+{"timestamp": 1766990135.669854, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.337787389755249}
+{"timestamp": 1766990262.8370128, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.073091745376587}
+{"timestamp": 1766990390.5008016, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.635831594467163}
+{"timestamp": 1766990518.0571384, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.445245981216431}
+{"timestamp": 1766990643.7361147, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.604243755340576}
+{"timestamp": 1766990771.558289, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.69896125793457}
+{"timestamp": 1766990899.1966913, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.520962476730347}
+{"timestamp": 1766991026.6617606, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.379092454910278}
+{"timestamp": 1766991153.840089, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.103024482727051}
+{"timestamp": 1766991281.0499718, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.172624349594116}
+{"timestamp": 1766991408.3132017, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.145981311798096}
+{"timestamp": 1766991535.596569, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.215211391448975}
+{"timestamp": 1766991634.2367415, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.693737745285034}
+{"timestamp": 1766991760.149139, "event": "reconciliation", "flavor": "test-k2tjyung", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.791341066360474}
+
+07:03:03 INFO OpenStack servers: []
+07:03:04 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-q9rw  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  07:03:04Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-k2tjyung           active      1  any-charm      latest/beta  124  no       
+mongodb                               6.0.24   active      1  mongodb        6/edge       249  no       
+test-k2tjyung                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-k2tjyung/0*  active    idle   1        10.119.225.135             
+mongodb/0*                               active    idle   0        10.119.225.41   27017/tcp  Primary.
+test-k2tjyung/0*                         active    idle   2        10.119.225.239             
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.119.225.41   juju-6458e7-0  ubuntu@22.04  github-runner  Running
+1        started  10.119.225.135  juju-6458e7-1  ubuntu@24.04  github-runner  Running
+2        started  10.119.225.239  juju-6458e7-2  ubuntu@22.04  github-runner  Running
+
+07:03:04 INFO Juju error logs:
+
+machine-1: 06:21:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:22:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:22:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:22:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:22:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-k2tjyung-0: 06:23:37 ERROR unit.test-k2tjyung/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-k2tjyung-0: 06:23:39 ERROR unit.test-k2tjyung/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-k2tjyung-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:03:04 INFO Forgetting model main...
