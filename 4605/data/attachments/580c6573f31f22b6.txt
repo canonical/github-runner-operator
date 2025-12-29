@@ -1,0 +1,105 @@
+18:19:05 WARNING unexpected facade SSHServer received from the controller
+18:19:05 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-repo-i34g on cloud localhost
+18:19:05 WARNING unexpected facade SSHServer received from the controller
+18:19:05 WARNING unexpected facade SSHSession received from the controller
+18:19:05 WARNING unexpected facade SSHTunneler received from the controller
+18:19:05 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:07 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:23 INFO Deploying local:jammy/github-runner-0
+18:19:23 INFO Waiting for model:
+  test-asjp8rka/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asjp8rka/0 [allocating] waiting: waiting for machine
+18:19:53 INFO Waiting for model:
+  test-asjp8rka/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asjp8rka/0 [idle] active: 
+18:20:23 INFO Waiting for model:
+  test-asjp8rka/0 [allocating] waiting: waiting for machine
+18:20:53 INFO Waiting for model:
+  test-asjp8rka/0 [allocating] waiting: waiting for machine
+18:21:23 INFO Waiting for model:
+  test-asjp8rka/0 [allocating] waiting: waiting for machine
+18:21:53 INFO Waiting for model:
+  test-asjp8rka/0 [executing] maintenance: installing charm software
+18:22:24 INFO Waiting for model:
+  test-asjp8rka/0 [executing] maintenance: installing charm software
+18:22:54 INFO Waiting for model:
+  test-asjp8rka/0 [executing] maintenance: Update image for runners
+18:23:13 INFO GitHub token rate limit: Rate(reset=2025-12-29 18:46:49+00:00, remaining=4855, limit=5000)
+18:24:06 INFO Waiting for model:
+  test-asjp8rka/0 [idle] active: 
+18:24:36 INFO Waiting for model:
+  test-asjp8rka/0 [idle] active: 
+18:24:39 INFO Current reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:24:39 INFO Waiting for reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:25:40 INFO Current reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:25:40 INFO Current reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11, expected reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:25:40 INFO Waiting for reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:26:41 INFO Current reconcile ID: e88ab8f0-15ee-4a30-95e4-87334b4023d5
+18:26:41 INFO Current reconcile ID: e88ab8f0-15ee-4a30-95e4-87334b4023d5, expected reconcile ID: c400237c-3351-479a-bf67-2e7d3bafdf11
+18:26:45 INFO [TEST SETUP] Exposing port 8080 on test-asjp8rka-0-n-4342afafe7ad
+18:26:45 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.22', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:d2:bf'}]])
+18:26:46 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-asjp8rka-0-n-4342afafe7ad.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.22 &
+18:26:47 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.22' (ED25519) to the list of known hosts.
+
+18:26:49 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-asjp8rka-0-n-4342afafe7ad
+18:26:49 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.22', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:d2:bf'}]])
+18:26:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-asjp8rka-0-n-4342afafe7ad.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.22 nc -z localhost 8080'
+18:26:51 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:26:51 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-asjp8rka-0-n-4342afafe7ad
+18:26:51 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.22', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:d2:bf'}]])
+18:26:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-asjp8rka-0-n-4342afafe7ad.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.22 curl http://localhost:8080'
+18:26:53 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  88765      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:26:56 INFO Wait for condition not met, sleeping 10
+18:27:07 INFO Wait for condition not met, sleeping 60
+18:28:10 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-i34g  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  18:28:10Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-asjp8rka           active      1  any-charm      latest/beta  124  no       
+test-asjp8rka                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-asjp8rka/0*  active    idle   0        10.116.25.245             
+test-asjp8rka/0*                         active    idle   1        10.116.25.139   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.116.25.245  juju-731088-0  ubuntu@24.04  github-runner  Running
+1        started  10.116.25.139  juju-731088-1  ubuntu@22.04  github-runner  Running
+
+18:28:10 INFO Juju error logs:
+
+machine-0: 18:19:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-asjp8rka-0: 18:22:34 ERROR unit.test-asjp8rka/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-asjp8rka-0: 18:22:36 ERROR unit.test-asjp8rka/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-asjp8rka-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:28:10 INFO Forgetting model main...
