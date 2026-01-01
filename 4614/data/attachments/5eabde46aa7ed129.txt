@@ -1,0 +1,49 @@
+18:18:44 WARNING unexpected facade SSHServer received from the controller
+18:18:44 INFO Adding model github-pr-71e3b-lxd:test-charm-runner-dhde on cloud localhost
+18:18:44 WARNING unexpected facade SSHServer received from the controller
+18:18:44 WARNING unexpected facade SSHSession received from the controller
+18:18:44 WARNING unexpected facade SSHTunneler received from the controller
+18:18:44 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:46 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:02 INFO Deploying local:jammy/github-runner-0
+18:19:02 INFO Waiting for model:
+  test-yis350s3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yis350s3/0 [allocating] waiting: waiting for machine
+18:19:32 INFO Waiting for model:
+  test-yis350s3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yis350s3/0 [executing] maintenance: installing charm software
+18:20:03 INFO Waiting for model:
+  test-yis350s3/0 [allocating] waiting: waiting for machine
+18:20:33 INFO Waiting for model:
+  test-yis350s3/0 [allocating] waiting: agent initialising
+18:21:03 INFO Waiting for model:
+  test-yis350s3/0 [executing] maintenance: installing charm software
+18:21:33 INFO Waiting for model:
+  test-yis350s3/0 [executing] maintenance: installing charm software
+18:22:04 INFO Waiting for model:
+  test-yis350s3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-yis350s3/0 [idle] active: 
+18:22:34 INFO Waiting for model:
+  test-yis350s3/0 [idle] active:
+18:22:36 INFO Waiting for model:
+  test-yis350s3/0 [idle] active: 
+18:23:06 INFO Waiting for model:
+  test-yis350s3/0 [idle] active: 
+18:23:09 INFO Current reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:23:09 INFO Waiting for reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:24:10 INFO Current reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:24:10 INFO Current reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4, expected reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:24:10 INFO Waiting for reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:25:11 INFO Current reconcile ID: 2f315e73-65c4-456d-8462-3f4fa2f017df
+18:25:11 INFO Current reconcile ID: 2f315e73-65c4-456d-8462-3f4fa2f017df, expected reconcile ID: 7a18dc98-20f5-4212-b08f-70fb8d76c1a4
+18:25:17 INFO Waiting for model:
+  test-yis350s3/0 [idle] active: 
+18:25:47 INFO Waiting for model:
+  test-yis350s3/0 [idle] active: 
+18:25:50 INFO Current reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
+18:25:50 INFO Waiting for reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
+18:26:51 INFO Current reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
+18:26:51 INFO Current reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7, expected reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
+18:26:51 INFO Waiting for reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
+18:27:52 INFO Current reconcile ID: cbb6925c-5ee1-43b8-b748-a5b4224fd3ff
+18:27:52 INFO Current reconcile ID: cbb6925c-5ee1-43b8-b748-a5b4224fd3ff, expected reconcile ID: 8fb86e41-b487-479c-a77b-bd23effaaff7
