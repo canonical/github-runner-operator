@@ -1,0 +1,37 @@
+06:20:01 WARNING unexpected facade SSHServer received from the controller
+06:20:01 INFO Adding model github-pr-71e3b-lxd:test-charm-metrics-success-78er on cloud localhost
+06:20:01 WARNING unexpected facade SSHServer received from the controller
+06:20:01 WARNING unexpected facade SSHSession received from the controller
+06:20:01 WARNING unexpected facade SSHTunneler received from the controller
+06:20:01 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:04 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:19 INFO Deploying local:jammy/github-runner-0
+06:20:19 INFO Waiting for model:
+  test-uh70unom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uh70unom/0 [allocating] waiting: waiting for machine
+06:20:50 INFO Waiting for model:
+  test-uh70unom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uh70unom/0 [idle] active: 
+06:21:20 INFO Waiting for model:
+  test-uh70unom/0 [allocating] waiting: waiting for machine
+06:21:50 INFO Waiting for model:
+  test-uh70unom/0 [allocating] waiting: waiting for machine
+06:22:20 INFO Waiting for model:
+  test-uh70unom/0 [allocating] waiting: agent initialising
+06:22:51 INFO Waiting for model:
+  test-uh70unom/0 [executing] maintenance: installing charm software
+06:23:21 INFO Waiting for model:
+  test-uh70unom/0 [executing] maintenance: installing charm software
+06:23:51 INFO Waiting for model:
+  test-uh70unom/0 [idle] active:
+06:24:03 INFO Waiting for model:
+  test-uh70unom/0 [idle] active: 
+06:24:33 INFO Waiting for model:
+  test-uh70unom/0 [idle] active: 
+06:24:36 INFO Current reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
+06:24:36 INFO Waiting for reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
+06:25:37 INFO Current reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
+06:25:37 INFO Current reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5, expected reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
+06:25:37 INFO Waiting for reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
+06:26:38 INFO Current reconcile ID: 19ec1b1d-f525-4754-9b83-8f69730558a9
+06:26:38 INFO Current reconcile ID: 19ec1b1d-f525-4754-9b83-8f69730558a9, expected reconcile ID: 4d59bc8e-ba3b-4af4-95a9-755c236a74d5
