@@ -1,0 +1,102 @@
+18:23:15 WARNING unexpected facade SSHServer received from the controller
+18:23:15 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-bdy3 on cloud localhost
+18:23:16 WARNING unexpected facade SSHServer received from the controller
+18:23:16 WARNING unexpected facade SSHSession received from the controller
+18:23:16 WARNING unexpected facade SSHTunneler received from the controller
+18:23:16 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:23:17 INFO Deploying ch:amd64/noble/any-charm-124
+18:23:34 INFO Deploying local:jammy/github-runner-0
+18:23:34 INFO Waiting for model:
+  test-m1ipy0oy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m1ipy0oy/0 [allocating] waiting: waiting for machine
+18:24:05 INFO Waiting for model:
+  test-m1ipy0oy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m1ipy0oy/0 [allocating] waiting: waiting for machine
+18:24:35 INFO Waiting for model:
+  test-m1ipy0oy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m1ipy0oy/0 [executing] maintenance: installing charm software
+18:25:05 INFO Waiting for model:
+  test-m1ipy0oy/0 [allocating] waiting: waiting for machine
+18:25:36 INFO Waiting for model:
+  test-m1ipy0oy/0 [executing] maintenance: installing charm software
+18:26:06 INFO Waiting for model:
+  test-m1ipy0oy/0 [executing] maintenance: installing charm software
+18:26:36 INFO Waiting for model:
+  test-m1ipy0oy/0 [executing] maintenance: installing charm software
+18:27:06 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:27:22 INFO GitHub token rate limit: Rate(reset=2026-01-03 19:11:33+00:00, remaining=4896, limit=5000)
+18:27:33 INFO test_path_config_change
+18:27:33 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:28:03 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:28:23 INFO Ensure there is a runner (this calls reconcile)
+18:28:23 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:28:53 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:28:56 INFO Current reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:28:56 INFO Waiting for reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:29:57 INFO Current reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:29:57 INFO Current reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d, expected reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:29:57 INFO Waiting for reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:30:58 INFO Current reconcile ID: c878470c-aa5f-45b4-a1bb-7bc073671351
+18:30:58 INFO Current reconcile ID: c878470c-aa5f-45b4-a1bb-7bc073671351, expected reconcile ID: e9f6bfc8-8492-4b4c-977e-df9778e3af6d
+18:32:45 INFO Reconciling (again)
+18:32:45 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:33:15 INFO Waiting for model:
+  test-m1ipy0oy/0 [idle] active: 
+18:33:25 INFO Current reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:33:25 INFO Waiting for reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:34:26 INFO Current reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:34:26 INFO Current reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13, expected reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:34:26 INFO Waiting for reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:35:27 INFO Current reconcile ID: 22da2432-f059-4f8a-a844-96f7a3f9dbf9
+18:35:27 INFO Current reconcile ID: 22da2432-f059-4f8a-a844-96f7a3f9dbf9, expected reconcile ID: f7763763-d10b-483a-a1dd-1338f6047f13
+18:37:43 INFO runners: ['test-m1ipy0oy-0-n-5b1afc440712']
+18:37:44 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-950c96704844"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-42a4dba18a45"), SelfHostedActionsRunner(name="test-btfq07q2-0-n-0abefb88460b"), SelfHostedActionsRunner(name="test-m1ipy0oy-0-n-5b1afc440712"), SelfHostedActionsRunner(name="test-nitym72m-0-n-9ac2f7838047"), SelfHostedActionsRunner(name="test-vyug7nt4-0-n-e052c6441a1e"), SelfHostedActionsRunner(name="test-y1hk12bm-0-n-7b97aadf33ff"), SelfHostedActionsRunner(name="test-zpddxj7x-0-n-08d6a54782d5"), SelfHostedActionsRunner(name="test-zuja8ud4-0-n-02d88bc56d8f")]
+18:37:44 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-bdy3  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  18:37:44Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-m1ipy0oy           active      1  any-charm      latest/beta  124  no       
+test-m1ipy0oy                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-m1ipy0oy/0*  active    idle   0        10.182.174.49          
+test-m1ipy0oy/0*                         active    idle   1        10.182.174.139         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.182.174.49   juju-52b744-0  ubuntu@24.04  github-runner  Running
+1        started  10.182.174.139  juju-52b744-1  ubuntu@22.04  github-runner  Running
+
+18:37:44 INFO Juju error logs:
+
+machine-0: 18:24:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-m1ipy0oy-0: 18:26:42 ERROR unit.test-m1ipy0oy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-m1ipy0oy-0: 18:26:44 ERROR unit.test-m1ipy0oy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m1ipy0oy-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:37:44 INFO Forgetting model main...

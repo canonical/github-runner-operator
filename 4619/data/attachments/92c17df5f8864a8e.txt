@@ -1,0 +1,29 @@
+18:23:18 WARNING unexpected facade SSHServer received from the controller
+18:23:18 INFO Adding model github-pr-71e3b-lxd:test-charm-no-runner-d6r7 on cloud localhost
+18:23:18 WARNING unexpected facade SSHServer received from the controller
+18:23:18 WARNING unexpected facade SSHSession received from the controller
+18:23:18 WARNING unexpected facade SSHTunneler received from the controller
+18:23:19 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:23:20 INFO Deploying ch:amd64/noble/any-charm-124
+18:23:37 INFO Deploying local:jammy/github-runner-0
+18:23:37 INFO Waiting for model:
+  test-nvg1snvs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nvg1snvs/0 [allocating] waiting: waiting for machine
+18:24:07 INFO Waiting for model:
+  test-nvg1snvs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nvg1snvs/0 [allocating] waiting: waiting for machine
+18:24:38 INFO Waiting for model:
+  test-nvg1snvs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nvg1snvs/0 [idle] active: 
+18:25:08 INFO Waiting for model:
+  test-nvg1snvs/0 [allocating] waiting: waiting for machine
+18:25:38 INFO Waiting for model:
+  test-nvg1snvs/0 [allocating] waiting: agent initialising
+18:26:09 INFO Waiting for model:
+  test-nvg1snvs/0 [executing] maintenance: installing charm software
+18:26:39 INFO Waiting for model:
+  test-nvg1snvs/0 [executing] maintenance: installing charm software
+18:27:10 INFO Waiting for model:
+  test-nvg1snvs/0 [executing] maintenance: Update image for runners
+18:27:30 INFO Waiting for model:
+  test-nvg1snvs/0 [idle] active:
