@@ -15,6 +15,11 @@ jobs:
   application-integration-tests:
     name: Integration tests for github-runner-manager
     runs-on: [self-hosted, pfe-ci]
+    strategy:
+      fail-fast: false
+      matrix:
+        test-module:
+          - test_debug_ssh
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
@@ -22,7 +27,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install tox with UV
         run: uv tool install tox --with tox-uv
-      - name: Run integration tests
+      - name: configure DockerHub mirror
+        run: |
+          echo "{\"registry-mirrors\": [\"$DOCKERHUB_MIRROR\"]}" | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker.service
+      - name: Run integration tests - ${{ matrix.test-module }}
         working-directory: ./github-runner-manager/
         env:
           # GitHub configuration
@@ -41,6 +50,7 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
         run: |
           tox -e integration -- -v --tb=native -s \
+            tests/integration/${{ matrix.test-module }}.py \
             --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
@@ -49,4 +59,15 @@ jobs:
             --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
             --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
             --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-            --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"
+            --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+            --debug-log-dir="/tmp/github-runner-manager-test-logs"
+      - name: Print debug logs
+        if: ${{ failure() }}
+        run: |
+          echo "Printing debug logs from /tmp/github-runner-manager-test-logs"
+          ls -l /tmp/github-runner-manager-test-logs
+          for log_file in /tmp/github-runner-manager-test-logs/*; do
+            echo "===== Contents of $log_file ====="
+            cat "$log_file"
+            echo "================================="
+          done
