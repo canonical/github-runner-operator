@@ -1,0 +1,102 @@
+06:30:57 WARNING unexpected facade SSHServer received from the controller
+06:30:57 INFO Adding model github-pr-71e3b-lxd:test-charm-fork-path-change-tqdl on cloud localhost
+06:30:58 WARNING unexpected facade SSHServer received from the controller
+06:30:58 WARNING unexpected facade SSHSession received from the controller
+06:30:58 WARNING unexpected facade SSHTunneler received from the controller
+06:30:58 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:31:00 INFO Deploying ch:amd64/noble/any-charm-124
+06:31:15 INFO Deploying local:jammy/github-runner-0
+06:31:15 INFO Waiting for model:
+  test-fipokn5s/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fipokn5s/0 [allocating] waiting: waiting for machine
+06:31:46 INFO Waiting for model:
+  test-fipokn5s/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fipokn5s/0 [allocating] waiting: agent initialising
+06:32:16 INFO Waiting for model:
+  test-fipokn5s/0 [allocating] waiting: waiting for machine
+06:32:46 INFO Waiting for model:
+  test-fipokn5s/0 [allocating] waiting: agent initialising
+06:33:16 INFO Waiting for model:
+  test-fipokn5s/0 [executing] maintenance: installing charm software
+06:33:46 INFO Waiting for model:
+  test-fipokn5s/0 [executing] maintenance: installing charm software
+06:34:16 INFO Waiting for model:
+  test-fipokn5s/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-fipokn5s/0 [idle] active: 
+06:34:47 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:34:55 INFO GitHub token rate limit: Rate(reset=2026-01-05 07:23:35+00:00, remaining=4598, limit=5000)
+06:35:07 INFO test_path_config_change
+06:35:07 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:35:37 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:35:59 INFO Ensure there is a runner (this calls reconcile)
+06:35:59 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:36:29 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:36:31 INFO Current reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:36:31 INFO Waiting for reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:37:32 INFO Current reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:37:32 INFO Current reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984, expected reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:37:32 INFO Waiting for reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:38:33 INFO Current reconcile ID: bef227f7-32dd-428b-b25c-3c74c4312be3
+06:38:33 INFO Current reconcile ID: bef227f7-32dd-428b-b25c-3c74c4312be3, expected reconcile ID: 2fc808d4-9d53-4c31-a69b-63537f933984
+06:38:37 INFO Reconciling (again)
+06:38:37 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:39:07 INFO Waiting for model:
+  test-fipokn5s/0 [idle] active: 
+06:39:22 INFO Current reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:39:22 INFO Waiting for reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:40:23 INFO Current reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:40:23 INFO Current reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4, expected reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:40:23 INFO Waiting for reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:41:25 INFO Current reconcile ID: aa3989ec-e768-4d98-a2da-586e2e5ea760
+06:41:25 INFO Current reconcile ID: aa3989ec-e768-4d98-a2da-586e2e5ea760, expected reconcile ID: 03dfa8fc-c33c-4100-8ae3-1c3b8a5b1fc4
+06:48:20 INFO runners: ['test-fipokn5s-0-n-dcdc9b3980f2']
+06:48:20 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-ff865b73cfad"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-385f5e614b0f"), SelfHostedActionsRunner(name="test-at18js52-0-n-685e6269578b"), SelfHostedActionsRunner(name="test-f6o42hkh-0-n-d59b995c673f"), SelfHostedActionsRunner(name="test-fipokn5s-0-n-dcdc9b3980f2"), SelfHostedActionsRunner(name="test-g2n1kfvo-0-n-9f996ad76d81"), SelfHostedActionsRunner(name="test-h2rjzekt-0-n-7de8693b230f"), SelfHostedActionsRunner(name="test-ih8y75s1-0-n-ba0177e6c7e4"), SelfHostedActionsRunner(name="test-lvopl0dc-0-n-b9db42b62739"), SelfHostedActionsRunner(name="test-mxje69hk-0-n-b69b7e381d7d"), SelfHostedActionsRunner(name="test-nszil2l9-0-n-643d9a096d44"), SelfHostedActionsRunner(name="test-og66895n-0-n-88cee9833ed8"), SelfHostedActionsRunner(name="test-ot8z3o29-0-n-9a48d48b7bf0"), SelfHostedActionsRunner(name="test-p4o4k4g6-0-n-27b31fc54f23"), SelfHostedActionsRunner(name="test-t7gw28y6-0-n-dc6729a7a8ef"), SelfHostedActionsRunner(name="test-uss0sif1-0-n-edf06746890d"), SelfHostedActionsRunner(name="test-vq4fli7s-0-n-3b5458a89d75"), SelfHostedActionsRunner(name="test-w2kdlvsb-0-n-4fb707ba7364"), SelfHostedActionsRunner(name="test-ynpruna0-0-n-c676f08b42d6"), SelfHostedActionsRunner(name="test-zt70g1qg-0-n-cefdb6094b3c"), SelfHostedActionsRunner(name="test-zxtyku8z-0-n-0cb86b572afb")]
+06:48:21 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-tqdl  github-pr-71e3b-lxd  localhost/localhost  3.6.12   unsupported  06:48:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-fipokn5s           active      1  any-charm      latest/beta  124  no       
+test-fipokn5s                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-fipokn5s/0*  active    idle   0        10.115.189.66          
+test-fipokn5s/0*                         active    idle   1        10.115.189.26          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.115.189.66  juju-ee800d-0  ubuntu@24.04  github-runner  Running
+1        started  10.115.189.26  juju-ee800d-1  ubuntu@22.04  github-runner  Running
+
+06:48:21 INFO Juju error logs:
+
+machine-0: 06:31:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:31:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fipokn5s-0: 06:34:13 ERROR unit.test-fipokn5s/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fipokn5s-0: 06:34:15 ERROR unit.test-fipokn5s/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fipokn5s-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:48:21 INFO Forgetting model main...
