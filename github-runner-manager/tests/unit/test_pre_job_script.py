@@ -114,6 +114,7 @@ def _create_github_event_payload(
     author_association: str,
     event_type: str = "pull_request",
     is_fork: bool = False,
+    is_private: bool = False,
 ) -> Dict:
     """Create a GitHub event payload for testing.
 
@@ -122,6 +123,7 @@ def _create_github_event_payload(
             (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
         event_type: The type of GitHub event (pull_request, push, issue_comment, etc.)
         is_fork: Whether to simulate a fork PR (only applies to PR events)
+        is_private: Whether the repository is private
 
     Returns:
         A dictionary representing the GitHub event payload
@@ -131,6 +133,7 @@ def _create_github_event_payload(
         "repository": {
             "name": "github-runner-operator",
             "full_name": "canonical/github-runner-operator",
+            "private": is_private,
             "owner": {
                 "login": "canonical",
             },
@@ -463,6 +466,95 @@ def test_allow_external_contributor_enabled_skips_check(
     assert "AUTHOR_ASSOCIATION" not in result.stderr
     assert LOG_AUTH_FAILED not in result.stderr
     assert LOG_CHECK_PASSED not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,should_pass",
+    [
+        ("OWNER", True),
+        ("MEMBER", True),
+        ("COLLABORATOR", True),
+        ("CONTRIBUTOR", True),  # Allowed for private repos
+        ("FIRST_TIME_CONTRIBUTOR", False),  # Still blocked
+        ("NONE", False),  # Still blocked
+    ],
+)
+def test_private_repository_allows_contributor(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    should_pass: bool,
+    default_template_vars: Dict,
+):
+    """Test that private repositories extend allowed authorizations to include CONTRIBUTOR.
+
+    Private repositories trust CONTRIBUTORs since they have repository access,
+    but still block FIRST_TIME_CONTRIBUTOR and NONE.
+    """
+    # Create a fork PR event for a private repository
+    private_repo_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+        is_private=True,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=private_repo_event,
+        tmp_path=tmp_path,
+    )
+
+    if should_pass:
+        assert result.returncode == 0, (
+            f"Expected exit code 0 for private repository with {author_association}, "
+            f"got {result.returncode}\nstderr: {result.stderr}"
+        )
+        assert "Private repository - extended authorization includes CONTRIBUTOR" in result.stderr
+        assert LOG_AUTH_FAILED not in result.stderr
+    else:
+        assert result.returncode == 1, (
+            f"Expected exit code 1 for private repository with {author_association}, "
+            f"got {result.returncode}\nstderr: {result.stderr}"
+        )
+        assert LOG_AUTH_FAILED in result.stderr
+
+
+def test_public_repository_blocks_contributor(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    default_template_vars: Dict,
+):
+    """Test that public repositories still block CONTRIBUTOR role.
+
+    This ensures the behavior change only applies to private repositories.
+    """
+    # Create a fork PR event for a public repository with CONTRIBUTOR
+    public_repo_event = _create_github_event_payload(
+        author_association="CONTRIBUTOR",
+        is_fork=True,
+        is_private=False,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=public_repo_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == 1, (
+        f"Expected exit code 1 for public repository with CONTRIBUTOR, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+    assert "Author association: CONTRIBUTOR, is allowed: false" in result.stderr
+    assert LOG_AUTH_FAILED in result.stderr
+    # Should not see private repo message for public repos
+    assert "Private repository - extended authorization includes CONTRIBUTOR" not in result.stderr
 
 
 @pytest.mark.parametrize(
