@@ -1,0 +1,53 @@
+06:20:07 WARNING unexpected facade SSHServer received from the controller
+06:20:07 INFO Adding model github-pr-71e3b-lxd:test-charm-metrics-success-vn15 on cloud localhost
+06:20:07 WARNING unexpected facade SSHServer received from the controller
+06:20:07 WARNING unexpected facade SSHSession received from the controller
+06:20:07 WARNING unexpected facade SSHTunneler received from the controller
+06:20:07 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:09 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:23 INFO Deploying local:jammy/github-runner-0
+06:20:23 INFO Waiting for model:
+  test-brvv34f4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-brvv34f4/0 [allocating] waiting: waiting for machine
+06:20:54 INFO Waiting for model:
+  test-brvv34f4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-brvv34f4/0 [executing] active: 
+06:21:24 INFO Waiting for model:
+  test-brvv34f4/0 [allocating] waiting: waiting for machine
+06:21:55 INFO Waiting for model:
+  test-brvv34f4/0 [allocating] waiting: waiting for machine
+06:22:25 INFO Waiting for model:
+  test-brvv34f4/0 [executing] maintenance: installing charm software
+06:22:55 INFO Waiting for model:
+  test-brvv34f4/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-brvv34f4/0 [idle] active: 
+06:23:26 INFO Waiting for model:
+  test-brvv34f4/0 [idle] active:
+06:23:30 INFO Waiting for model:
+  test-brvv34f4/0 [idle] active: 
+06:24:00 INFO Waiting for model:
+  test-brvv34f4/0 [idle] active: 
+06:24:03 INFO Current reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:24:03 INFO Waiting for reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:25:04 INFO Current reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:25:04 INFO Current reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4, expected reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:25:04 INFO Waiting for reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:26:05 INFO Current reconcile ID: 25ced10d-b957-48c5-ac24-41ef820ee9d1
+06:26:05 INFO Current reconcile ID: 25ced10d-b957-48c5-ac24-41ef820ee9d1, expected reconcile ID: 38e4853c-a3f7-412f-bcfc-798fd20f1ad4
+06:28:20 INFO Waiting for model:
+  test-brvv34f4/0 [idle] active: 
+06:28:51 INFO Waiting for model:
+  test-brvv34f4/0 [idle] active: 
+06:28:53 INFO Current reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:28:53 INFO Waiting for reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:29:54 INFO Current reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:29:54 INFO Current reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924, expected reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:29:54 INFO Waiting for reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:30:56 INFO Current reconcile ID: 925ca01d-baea-47c9-b606-fe5894233c1a
+06:30:56 INFO Current reconcile ID: 925ca01d-baea-47c9-b606-fe5894233c1a, expected reconcile ID: ec1bd343-fb24-4a4c-ae4a-339e0b3a0924
+06:30:57 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1767680619.3782127, "event": "reconciliation", "flavor": "test-brvv34f4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.63198447227478}
+{"timestamp": 1767680745.5005856, "event": "reconciliation", "flavor": "test-brvv34f4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.002695560455322}
+{"timestamp": 1767680871.7492168, "event": "reconciliation", "flavor": "test-brvv34f4", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.130526304244995}
+{"timestamp": 1767680864.0, "event": "runner_installed", "flavor": "test-brvv34f4", "duration": 246.0}
+{"timestamp": 1767680912.1301374, "event": "reconciliation", "flavor": "test-brvv34f4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.265573978424072}
+{"timestamp": 1767681041.1316383, "event": "reconciliation", "flavor": "test-brvv34f4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.924492120742798}
