@@ -394,9 +394,9 @@ class GithubClient:
         # which is not supported by datetime.fromisoformat
         created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
         started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
-        # conclusion could be null per api schema, so we need to handle that,
+        # conclusion could be null per api schema, or an empty dictionary so we need to handle that,
         # though we would assume that it should always be present, as the job should be finished.
-        conclusion = job.get("conclusion", None)
+        conclusion = job.get("conclusion", None) or None
 
         status = job["status"]
         job_id = job["id"]
