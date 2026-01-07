@@ -1,0 +1,47 @@
+18:21:28 WARNING unexpected facade SSHServer received from the controller
+18:21:28 INFO Adding model github-pr-dc02b-lxd:test-charm-runner-cnl0 on cloud localhost
+18:21:28 WARNING unexpected facade SSHServer received from the controller
+18:21:28 WARNING unexpected facade SSHSession received from the controller
+18:21:28 WARNING unexpected facade SSHTunneler received from the controller
+18:21:29 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:21:31 INFO Deploying ch:amd64/noble/any-charm-124
+18:21:43 INFO Deploying local:jammy/github-runner-0
+18:21:43 INFO Waiting for model:
+  test-n6dt3dr1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n6dt3dr1/0 [allocating] waiting: waiting for machine
+18:22:14 INFO Waiting for model:
+  test-n6dt3dr1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n6dt3dr1/0 [allocating] waiting: waiting for machine
+18:22:44 INFO Waiting for model:
+  test-n6dt3dr1/0 [allocating] waiting: waiting for machine
+18:23:14 INFO Waiting for model:
+  test-n6dt3dr1/0 [allocating] waiting: agent initialising
+18:23:44 INFO Waiting for model:
+  test-n6dt3dr1/0 [executing] maintenance: installing charm software
+18:24:15 INFO Waiting for model:
+  test-n6dt3dr1/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-n6dt3dr1/0 [idle] active: 
+18:24:45 INFO Waiting for model:
+  test-n6dt3dr1/0 [idle] active:
+18:24:46 INFO Waiting for model:
+  test-n6dt3dr1/0 [idle] active: 
+18:25:16 INFO Waiting for model:
+  test-n6dt3dr1/0 [idle] active: 
+18:25:18 INFO Current reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:25:18 INFO Waiting for reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:26:19 INFO Current reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:26:19 INFO Current reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a, expected reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:26:19 INFO Waiting for reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:27:20 INFO Current reconcile ID: 92019a06-d70b-4070-b219-2c7d7b48bea8
+18:27:20 INFO Current reconcile ID: 92019a06-d70b-4070-b219-2c7d7b48bea8, expected reconcile ID: ce44700c-0092-4344-a183-1d21f0fc715a
+18:29:09 INFO Waiting for model:
+  test-n6dt3dr1/0 [idle] active: 
+18:29:39 INFO Waiting for model:
+  test-n6dt3dr1/0 [idle] active: 
+18:29:42 INFO Current reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
+18:29:42 INFO Waiting for reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
+18:30:44 INFO Current reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
+18:30:44 INFO Current reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975, expected reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
+18:30:44 INFO Waiting for reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
+18:31:45 INFO Current reconcile ID: 0e0077c6-6a69-49b4-83ec-ecb4c0bfcbc8
+18:31:45 INFO Current reconcile ID: 0e0077c6-6a69-49b4-83ec-ecb4c0bfcbc8, expected reconcile ID: bc52530e-2f4a-40c3-936f-905d858d0975
