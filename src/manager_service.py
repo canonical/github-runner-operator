@@ -8,6 +8,7 @@ import logging
 import os
 import textwrap
 from pathlib import Path
+import shutil
 
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
@@ -77,9 +78,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
 
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
-    GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
-    log_file_path = _get_log_file_path(unit_name)
-    log_file_path.touch(exist_ok=True)
+    log_file_path = _ensure_log_file(unit_name)
     _setup_service_file(config_file, log_file_path, state.charm_config.runner_manager_log_level)
     try:
         systemd.daemon_reload()
@@ -145,6 +144,39 @@ def _get_log_file_path(unit_name: str) -> Path:
     return GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / log_name
 
 
+def _ensure_log_file(unit_name: str) -> Path:
+    """Ensure the log file exists and is writable by the application user.
+
+    Creates the parent directory, sets ownership to the runner-manager user/group,
+    and touches the file. Raises RunnerManagerApplicationStartError on failure.
+
+    Args:
+        unit_name: The Juju unit name.
+
+    Returns:
+        The path to the ensured log file.
+    """
+    log_file = _get_log_file_path(unit_name)
+    parent = log_file.parent
+    try:
+        parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from exc
+    try:
+        shutil.chown(parent, user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP)
+    except Exception:
+        # Continue even if chown fails; system may handle permissions differently.
+        pass
+    try:
+        log_file.touch(exist_ok=True)
+        shutil.chown(log_file, user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP)
+    except OSError as exc:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from exc
+    if not os.access(parent, os.W_OK):
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE)
+    return log_file
+
+
 def _enable_service() -> None:
     """Enable the github runner manager service.
 
@@ -195,15 +227,13 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
---python-path {str(python_path)} --log-level {log_level}
+    {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
+    --python-path {str(python_path)} --log-level {log_level} --log-path {str(GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR)}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5
         RestartMaxDelaySec=600
         KillMode=process
-        StandardOutput=append:{log_file}
-        StandardError=append:{log_file}
 
         [Install]
         WantedBy=multi-user.target
