@@ -400,13 +400,6 @@ class GithubClient:
 
         status = job["status"]
         job_id = job["id"]
-        logger.info(
-            "Fetched job info: id=%s, status=%s, conclusion=%s, job: %s",
-            job_id,
-            status,
-            conclusion,
-            job,
-        )
         return JobInfo(
             job_id=job_id,
             created_at=created_at,
