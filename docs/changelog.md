@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-01-07
+
+- Add `--log-path` option for the GitHub runner application.
+
 ## 2025-12-19
 
 - Revert deletion of apt-get update due to the impact on existing workflows.
