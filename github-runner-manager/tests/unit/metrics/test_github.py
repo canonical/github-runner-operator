@@ -1,4 +1,4 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 from datetime import datetime, timedelta, timezone
 from random import randint
