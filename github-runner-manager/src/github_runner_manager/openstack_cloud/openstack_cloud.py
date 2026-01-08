@@ -146,8 +146,7 @@ class OpenstackInstance:
             instance_id=InstanceID.build_from_name(prefix, server.name),
             server_id=server.id,
             status=server.status,
-            # To be backwards compatible, we need a default RunnerMetadata.
-            metadata=RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata(),
+            metadata=RunnerMetadata.from_dict(server.metadata),
         )
 
 

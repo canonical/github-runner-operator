@@ -48,9 +48,7 @@ class RunnerMetadataFactory(factory.Factory):
 
         model = RunnerMetadata
 
-    platform_name = "github"
     runner_id = str(factory.Faker("random_int", min=1, max=10000))
-    url = factory.Faker("url")
 
 
 class CloudRunnerInstanceFactory(factory.Factory):

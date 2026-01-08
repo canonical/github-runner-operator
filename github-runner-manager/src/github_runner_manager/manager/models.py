@@ -157,29 +157,38 @@ class InstanceID:
 
 @dataclass(order=True)
 class RunnerMetadata:
-    """This class contains information about the runner and the platform it runs in.
-
-    The information in this class is needed to link cloud runners with their
-    platform ones.
+    """Metadata linking a cloud runner to its GitHub runner.
 
     Attributes:
-        platform_name: Legacy field, always "github". Kept for backwards compatibility
-            with existing OpenStack VM metadata.
-        runner_id: Id of the runner in the platform.
-        url: URL for the runner.
+        runner_id: The GitHub runner ID.
     """
 
-    platform_name: str = "github"
     runner_id: str | None = None
-    url: str | None = None
 
     def as_dict(self) -> dict[str, str]:
-        """Return the metadata as a dict.
+        """Return the metadata as a dict for storage.
 
         Returns:
-            metadata as a dict.
+            Metadata as a dict with non-None values.
         """
         return {k: v for k, v in asdict(self).items() if v is not None}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, str] | None) -> "RunnerMetadata":
+        """Create RunnerMetadata from a dict, ignoring unknown fields.
+
+        This handles backwards compatibility with VMs that have legacy fields
+        like 'platform_name', 'url', or 'prefix' stored in their metadata.
+
+        Args:
+            data: Dictionary from OpenStack VM metadata.
+
+        Returns:
+            RunnerMetadata instance.
+        """
+        if not data:
+            return cls()
+        return cls(runner_id=data.get("runner_id"))
 
 
 @dataclass(order=True)
