@@ -1,0 +1,165 @@
+06:33:51 INFO Waiting for model:
+  test-ljdovsh5/0 [idle] active: 
+06:34:21 INFO Waiting for model:
+  test-ljdovsh5/0 [idle] active: 
+06:34:23 INFO Current reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:34:23 INFO Waiting for reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:35:24 INFO Current reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:35:24 INFO Current reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f, expected reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:35:24 INFO Waiting for reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:36:25 INFO Current reconcile ID: 1d7f3d7b-4b49-453e-b2cc-19da9a3e26f5
+06:36:25 INFO Current reconcile ID: 1d7f3d7b-4b49-453e-b2cc-19da9a3e26f5, expected reconcile ID: ed7416bc-42eb-4911-a987-3f8cc536975f
+06:36:25 INFO Waiting for model:
+  test-ljdovsh5/0 [idle] active: 
+06:36:56 INFO Waiting for model:
+  test-ljdovsh5/0 [executing] active: 
+06:37:25 INFO Current reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:37:25 INFO Waiting for reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:38:26 INFO Current reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:38:26 INFO Current reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821, expected reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:38:26 INFO Waiting for reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:39:27 INFO Current reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:39:27 INFO Current reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821, expected reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:39:27 INFO Waiting for reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:40:29 INFO Current reconcile ID: 0023105e-70de-4541-9b9d-3bd854265886
+06:40:29 INFO Current reconcile ID: 0023105e-70de-4541-9b9d-3bd854265886, expected reconcile ID: 3b41d08a-ffa4-46e1-8c6a-001c295a6821
+06:42:05 INFO Wait for condition not met, sleeping 30
+06:42:47 INFO [TEST SETUP] Run command pkill -9 run.sh on test-ljdovsh5-0-n-f1747d9c643e
+06:42:47 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.49', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9c:fd:da'}]])
+06:42:48 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ljdovsh5-0-n-f1747d9c643e.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.49 pkill -9 run.sh'
+06:42:49 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.49' (ED25519) to the list of known hosts.
+'
+06:42:51 INFO Runner test-ljdovsh5-0-n-f1747d9c643e status: online
+06:42:51 INFO Runner still marked as online, waiting for it to be marked offline
+06:43:52 INFO Waiting for model:
+  test-ljdovsh5/0 [idle] active: 
+06:44:22 INFO Waiting for model:
+  test-ljdovsh5/0 [idle] active: 
+06:44:24 INFO Current reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:44:24 INFO Waiting for reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:45:25 INFO Current reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:45:25 INFO Current reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555, expected reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:45:25 INFO Waiting for reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:46:26 INFO Current reconcile ID: eaf30376-d855-4097-9790-a9a1a0622790
+06:46:26 INFO Current reconcile ID: eaf30376-d855-4097-9790-a9a1a0622790, expected reconcile ID: 370e7088-bedb-485b-94c4-4a80f4b18555
+06:46:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1767854038.2506588, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.2323691844940186}
+{"timestamp": 1767854171.0458624, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.728128910064697}
+{"timestamp": 1767854222.4654808, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 35.67626595497131}
+{"timestamp": 1767854390.609344, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 3.320449113845825}
+{"timestamp": 1767854437.2847462, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 15.998720169067383}
+{"timestamp": 1767854474.3149464, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.532296180725098}
+{"timestamp": 1767854326.0, "event": "runner_installed", "flavor": "test-ljdovsh5", "duration": 106.0}
+{"timestamp": 1767854528.0, "event": "runner_start", "flavor": "test-ljdovsh5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 202.0, "queue_duration": 2.0}
+{"timestamp": 1767854568.0, "event": "runner_stop", "flavor": "test-ljdovsh5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1767854602.9585223, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.545393705368042}
+{"timestamp": 1767854639.1352885, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.2768471240997314}
+{"timestamp": 1767854766.2332013, "event": "reconciliation", "flavor": "test-ljdovsh5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.060847997665405}
+06:46:28 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-7lu8  github-pr-dc02b-lxd  localhost/localhost  3.6.12   unsupported  06:46:28Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ljdovsh5           active      1  any-charm      latest/beta  124  no       
+test-ljdovsh5                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ljdovsh5/0*  active    idle   0        10.217.131.178            
+test-ljdovsh5/0*                         active    idle   1        10.217.131.25   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.217.131.178  juju-21ea32-0  ubuntu@24.04  github-runner  Running
+1        started  10.217.131.25   juju-21ea32-1  ubuntu@22.04  github-runner  Running
+
+06:46:28 INFO Juju error logs:
+
+machine-0: 06:20:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:20:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ljdovsh5-0: 06:23:14 ERROR unit.test-ljdovsh5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ljdovsh5-0: 06:23:16 ERROR unit.test-ljdovsh5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ljdovsh5-0: 06:40:35 ERROR unit.test-ljdovsh5/0.juju-log Failed request with code 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+unit-test-ljdovsh5-0: 06:40:35 ERROR unit.test-ljdovsh5/0.juju-log Failed runner manager request
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 60, in func_with_error_handling
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 132, in check_runner
+    response = self._request(_HTTPMethod.GET, "/runner/check", timeout=READ_TIMEOUT)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 121, in _request
+    response.raise_for_status()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/venv/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: INTERNAL SERVER ERROR for url: http://127.0.0.1:55555/runner/check
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 162, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 370, in _on_check_runners_action
+    info = self._manager_client.check_runner()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 67, in func_with_error_handling
+    raise RunnerManagerServiceResponseError(
+errors.RunnerManagerServiceResponseError: Failed request with code 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+unit-test-ljdovsh5-0: 06:41:23 ERROR unit.test-ljdovsh5/0.juju-log Failed request with code 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+unit-test-ljdovsh5-0: 06:41:23 ERROR unit.test-ljdovsh5/0.juju-log Failed runner manager request
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 60, in func_with_error_handling
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 132, in check_runner
+    response = self._request(_HTTPMethod.GET, "/runner/check", timeout=READ_TIMEOUT)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 121, in _request
+    response.raise_for_status()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/venv/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: INTERNAL SERVER ERROR for url: http://127.0.0.1:55555/runner/check
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 162, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/./src/charm.py", line 370, in _on_check_runners_action
+    info = self._manager_client.check_runner()
+  File "/var/lib/juju/agents/unit-test-ljdovsh5-0/charm/src/manager_client.py", line 67, in func_with_error_handling
+    raise RunnerManagerServiceResponseError(
+errors.RunnerManagerServiceResponseError: Failed request with code 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+
+06:46:28 INFO Forgetting model main...

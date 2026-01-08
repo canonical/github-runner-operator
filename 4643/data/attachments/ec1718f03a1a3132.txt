@@ -1,0 +1,52 @@
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 INFO Adding model github-pr-dc02b-lxd:test-charm-metrics-success-52gq on cloud localhost
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 WARNING unexpected facade SSHSession received from the controller
+06:19:36 WARNING unexpected facade SSHTunneler received from the controller
+06:19:36 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:38 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:57 INFO Deploying local:jammy/github-runner-0
+06:19:57 INFO Waiting for model:
+  test-w3tqsdkm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w3tqsdkm/0 [allocating] waiting: waiting for machine
+06:20:27 INFO Waiting for model:
+  test-w3tqsdkm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w3tqsdkm/0 [allocating] waiting: agent initialising
+06:20:58 INFO Waiting for model:
+  test-w3tqsdkm/0 [allocating] waiting: waiting for machine
+06:21:28 INFO Waiting for model:
+  test-w3tqsdkm/0 [allocating] waiting: waiting for machine
+06:21:58 INFO Waiting for model:
+  test-w3tqsdkm/0 [allocating] waiting: agent initialising
+06:22:29 INFO Waiting for model:
+  test-w3tqsdkm/0 [executing] maintenance: installing charm software
+06:22:59 INFO Waiting for model:
+  test-w3tqsdkm/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-w3tqsdkm/0 [idle] active:
+06:23:29 INFO Waiting for model:
+  test-w3tqsdkm/0 [idle] active: 
+06:24:00 INFO Waiting for model:
+  test-w3tqsdkm/0 [idle] active: 
+06:24:02 INFO Current reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:24:02 INFO Waiting for reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:25:03 INFO Current reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:25:03 INFO Current reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606, expected reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:25:03 INFO Waiting for reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:26:04 INFO Current reconcile ID: 6b773c63-13d6-4e46-8725-b506f9cd539f
+06:26:04 INFO Current reconcile ID: 6b773c63-13d6-4e46-8725-b506f9cd539f, expected reconcile ID: 9b0ce5dd-16e0-4b2a-9adb-aaf789dac606
+06:26:08 INFO Waiting for model:
+  test-w3tqsdkm/0 [idle] active: 
+06:26:38 INFO Waiting for model:
+  test-w3tqsdkm/0 [idle] active: 
+06:26:41 INFO Current reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:26:41 INFO Waiting for reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:27:42 INFO Current reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:27:42 INFO Current reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f, expected reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:27:42 INFO Waiting for reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:28:43 INFO Current reconcile ID: c4d79e9d-fa5a-4ab1-a281-100f11283ee5
+06:28:43 INFO Current reconcile ID: c4d79e9d-fa5a-4ab1-a281-100f11283ee5, expected reconcile ID: 33ecb49c-625e-45b9-97c0-eafc7d4eec6f
+06:28:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1767853418.8546464, "event": "reconciliation", "flavor": "test-w3tqsdkm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.061821222305298}
+{"timestamp": 1767853547.1547482, "event": "reconciliation", "flavor": "test-w3tqsdkm", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.218772888183594}
+{"timestamp": 1767853494.0, "event": "runner_installed", "flavor": "test-w3tqsdkm", "duration": 76.0}
+{"timestamp": 1767853582.0315125, "event": "reconciliation", "flavor": "test-w3tqsdkm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.280238389968872}
+{"timestamp": 1767853709.1077595, "event": "reconciliation", "flavor": "test-w3tqsdkm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.017681837081909}

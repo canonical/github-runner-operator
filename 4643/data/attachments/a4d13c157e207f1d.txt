@@ -1,0 +1,104 @@
+06:19:42 WARNING unexpected facade SSHServer received from the controller
+06:19:42 INFO Adding model github-pr-dc02b-lxd:test-charm-fork-path-change-156p on cloud localhost
+06:19:42 WARNING unexpected facade SSHServer received from the controller
+06:19:42 WARNING unexpected facade SSHSession received from the controller
+06:19:42 WARNING unexpected facade SSHTunneler received from the controller
+06:19:43 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:45 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:04 INFO Deploying local:jammy/github-runner-0
+06:20:04 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-obvyh857/0 [allocating] waiting: waiting for machine
+06:20:34 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-obvyh857/0 [executing] maintenance: installing charm software
+06:21:05 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: waiting for machine
+06:21:35 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: waiting for machine
+06:22:06 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: waiting for machine
+06:22:36 INFO Waiting for model:
+  test-obvyh857/0 [allocating] waiting: agent initialising
+06:23:06 INFO Waiting for model:
+  test-obvyh857/0 [executing] maintenance: installing charm software
+06:23:37 INFO Waiting for model:
+  test-obvyh857/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-obvyh857/0 [idle] active: 
+06:24:07 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:24:10 INFO GitHub token rate limit: Rate(reset=2026-01-08 06:37:03+00:00, remaining=4288, limit=5000)
+06:24:21 INFO test_path_config_change
+06:24:21 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:24:51 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:25:15 INFO Ensure there is a runner (this calls reconcile)
+06:25:15 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:25:45 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:25:48 INFO Current reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:25:48 INFO Waiting for reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:26:49 INFO Current reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:26:49 INFO Current reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7, expected reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:26:49 INFO Waiting for reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:27:50 INFO Current reconcile ID: 53d8f82e-f090-4ac5-9966-71c7756be91b
+06:27:50 INFO Current reconcile ID: 53d8f82e-f090-4ac5-9966-71c7756be91b, expected reconcile ID: 7907b5f3-f7a1-484c-b704-55cb9e7d11f7
+06:27:54 INFO Reconciling (again)
+06:27:54 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:28:24 INFO Waiting for model:
+  test-obvyh857/0 [idle] active: 
+06:28:33 INFO Current reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:28:33 INFO Waiting for reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:29:34 INFO Current reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:29:34 INFO Current reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21, expected reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:29:34 INFO Waiting for reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:30:35 INFO Current reconcile ID: 43ee3c84-5ffa-47c8-95b2-2ae83cc5f76f
+06:30:35 INFO Current reconcile ID: 43ee3c84-5ffa-47c8-95b2-2ae83cc5f76f, expected reconcile ID: 7a574bf1-a6be-4470-a209-8d253f88fb21
+06:31:48 INFO runners: ['test-obvyh857-0-n-360c531e789a']
+06:31:49 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-ff035c135672"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-2c22cab18912"), SelfHostedActionsRunner(name="test-dnq2aull-0-n-b5e67bb8ad24"), SelfHostedActionsRunner(name="test-e2exnhxh-0-n-88c269ca1b48"), SelfHostedActionsRunner(name="test-floi1kyv-0-n-929a8a0f182b"), SelfHostedActionsRunner(name="test-h5ui96o4-0-n-c852f02feb92"), SelfHostedActionsRunner(name="test-hvgvppzc-0-n-f700eeffc4c7"), SelfHostedActionsRunner(name="test-jbf4lpv3-0-n-0a135a546010"), SelfHostedActionsRunner(name="test-jv0c2q50-0-n-ebb07e7337c4"), SelfHostedActionsRunner(name="test-k7di8v97-0-n-91e35c0ef211"), SelfHostedActionsRunner(name="test-mwa5z2fz-0-n-a31c3559778c"), SelfHostedActionsRunner(name="test-nlvsxceq-0-n-fbd9b1d3cf5a"), SelfHostedActionsRunner(name="test-obvyh857-0-n-360c531e789a"), SelfHostedActionsRunner(name="test-prumsfju-0-n-3017dcec4d91"), SelfHostedActionsRunner(name="test-runner-77d7kbtn-n-1f74ef37b897"), SelfHostedActionsRunner(name="test-runner-rrb3rjrm-n-2ff55befba36"), SelfHostedActionsRunner(name="test-runner-sodvlyjl-n-dbbf6d8a332d"), SelfHostedActionsRunner(name="test-s1sbvw7d-0-n-55611da30040"), SelfHostedActionsRunner(name="test-tmxa6tkm-0-n-37b1392593ea"), SelfHostedActionsRunner(name="test-unl6m2r1-0-n-7ffcf593e5c6"), SelfHostedActionsRunner(name="test-y6bmsd5i-0-n-9367bed52e65"), SelfHostedActionsRunner(name="test-yr28g8ng-0-n-ec56fe5f8b68"), SelfHostedActionsRunner(name="test-zloseb0f-0-n-102b238435d4")]
+06:31:49 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-156p  github-pr-dc02b-lxd  localhost/localhost  3.6.12   unsupported  06:31:49Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-obvyh857           active      1  any-charm      latest/beta  124  no       
+test-obvyh857                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-obvyh857/0*  active    idle   0        10.244.76.139          
+test-obvyh857/0*                         active    idle   1        10.244.76.45           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.244.76.139  juju-1e0ff5-0  ubuntu@24.04  github-runner  Running
+1        started  10.244.76.45   juju-1e0ff5-1  ubuntu@22.04  github-runner  Running
+
+06:31:49 INFO Juju error logs:
+
+machine-0: 06:20:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:20:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-obvyh857-0: 06:23:29 ERROR unit.test-obvyh857/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-obvyh857-0: 06:23:30 ERROR unit.test-obvyh857/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-obvyh857-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:31:49 INFO Forgetting model main...
