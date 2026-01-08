@@ -7,7 +7,6 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerInstance, RunnerManager
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
@@ -220,7 +219,7 @@ def test_runner_manager_create_runners() -> None:
         labels=["label1", "label2"],
     )
 
-    (instance_id,) = runner_manager.create_runners(1, RunnerMetadata(), True)
+    (instance_id,) = runner_manager.create_runners(1, True)
 
     assert instance_id
     cloud_runner_manager.create_runner.assert_called_once()

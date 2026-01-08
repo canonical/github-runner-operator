@@ -17,12 +17,10 @@ from github_runner_manager.metrics.runner import (
     PostJobMetrics,
     PreJobMetrics,
     PulledMetrics,
-    RunnerMetadata,
 )
 from tests.unit.factories.runner_instance_factory import (
     InstanceIDFactory,
     OpenstackInstanceFactory,
-    RunnerMetadataFactory,
 )
 
 
@@ -179,7 +177,7 @@ class _RunnerMetricsAble:
     """Dataclass compatible with RunnerMetrics protocol data structure.
 
     Attributes:
-        metadata: The metadata of the VM in which the metrics are fetched from.
+        runner_id: The GitHub runner ID.
         instance_id: The instance ID of the VM in which the metrics are fetched from.
         installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
         installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
@@ -189,7 +187,7 @@ class _RunnerMetricsAble:
 
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
-    metadata: RunnerMetadata
+    runner_id: str | None
     instance_id: InstanceID
     installation_start_timestamp: NonNegativeFloat
     installation_end_timestamp: NonNegativeFloat | None
@@ -209,7 +207,7 @@ class RunnerMetricsFactory(factory.Factory):
 
     pre_job: PreJobMetrics | None = PreJobMetricsFactory()
     post_job: PostJobMetrics | None = PostJobMetricsFactory()
-    metadata = RunnerMetadataFactory()
+    runner_id = str(factory.Faker("random_int", min=1, max=10000))
     instance_id = InstanceIDFactory()
     installation_start_timestamp = datetime.now().timestamp()
     installation_end_timestamp: float | None = datetime.now().timestamp() + 3

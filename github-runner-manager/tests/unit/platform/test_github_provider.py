@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 from github_runner_manager.platform.github_provider import (
     GithubRunnerNotFoundError,
     GitHubRunnerPlatform,
@@ -26,15 +26,15 @@ def _params_test_get_runner_health():
     """Parameterized data for test_get_runner_health."""
     prefix = "unit-0"
     runner_id = 3
-    metadata = RunnerMetadata(runner_id=str(runner_id))
+    runner_id = str(runner_id)
     instance_id = InstanceID.build(prefix=prefix)
-    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+    identity = RunnerIdentity(instance_id=instance_id, runner_id=runner_id)
     # The parameterized arguments are:
-    # "instance_id,metadata,self_hosted_runner,expected_online,expected_busy,expected_deletable",
+    # "instance_id,runner_id,self_hosted_runner,expected_online,expected_busy,expected_deletable",
     return [
         pytest.param(
             instance_id,
-            metadata,
+            runner_id,
             SelfHostedRunner(
                 identity=identity,
                 busy=False,
@@ -49,7 +49,7 @@ def _params_test_get_runner_health():
         ),
         pytest.param(
             instance_id,
-            metadata,
+            runner_id,
             SelfHostedRunner(
                 identity=identity,
                 busy=False,
@@ -64,7 +64,7 @@ def _params_test_get_runner_health():
         ),
         pytest.param(
             instance_id,
-            metadata,
+            runner_id,
             SelfHostedRunner(
                 identity=identity,
                 busy=True,
@@ -79,7 +79,7 @@ def _params_test_get_runner_health():
         ),
         pytest.param(
             instance_id,
-            metadata,
+            runner_id,
             GithubRunnerNotFoundError("not found"),
             False,
             False,
@@ -90,13 +90,13 @@ def _params_test_get_runner_health():
 
 
 @pytest.mark.parametrize(
-    "instance_id,metadata,self_hosted_runner,expected_online,expected_busy,expected_deletable",
+    "instance_id,runner_id,self_hosted_runner,expected_online,expected_busy,expected_deletable",
     _params_test_get_runner_health(),
 )
 def test_get_runner_health(
     monkeypatch: pytest.MonkeyPatch,
     instance_id: InstanceID,
-    metadata: RunnerMetadata,
+    runner_id: str,
     self_hosted_runner: SelfHostedRunner,
     expected_online: bool,
     expected_busy: bool,
@@ -114,7 +114,7 @@ def test_get_runner_health(
 
     platform = GitHubRunnerPlatform(prefix=prefix, path="org", github_client=github_client_mock)
 
-    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+    identity = RunnerIdentity(instance_id=instance_id, runner_id=runner_id)
     runner_health = platform.get_runner_health(identity)
 
     assert runner_health
@@ -136,11 +136,11 @@ def test_get_runner_health(
             [
                 identity_1 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(runner_id=str(1)),
+                    runner_id=str(1),
                 ),
                 identity_2 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(runner_id=str(2)),
+                    runner_id=str(2),
                 ),
             ],
             [
@@ -176,7 +176,7 @@ def test_get_runner_health(
             [
                 identity_1 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(runner_id=str(1)),
+                    runner_id=str(1),
                 ),
             ],
             [
@@ -192,7 +192,7 @@ def test_get_runner_health(
                     identity=(
                         identity_2 := RunnerIdentity(
                             InstanceID.build(prefix="unit-0"),
-                            metadata=RunnerMetadata(runner_id=str(2)),
+                            runner_id=str(2),
                         )
                     ),
                     busy=True,

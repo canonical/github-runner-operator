@@ -17,7 +17,6 @@ from kombu.exceptions import KombuError
 from kombu.simple import SimpleQueue
 from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
-from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import JobNotFoundError, PlatformProvider
 from github_runner_manager.reactive.types_ import QueueConfig
@@ -186,14 +185,7 @@ def consume(  # noqa: C901
                     msg.reject(requeue=False)
                     continue
                 try:
-                    metadata = _build_runner_metadata(job_details.url)
-                except ValueError:
-                    msg.reject(requeue=False)
-                    break
-                try:
-                    if platform_provider.check_job_been_picked_up(
-                        metadata=metadata, job_url=job_details.url
-                    ):
+                    if platform_provider.check_job_been_picked_up(job_url=job_details.url):
                         logger.info("reactive job: %s already picked up.", job_details)
                         msg.ack()
                         continue
@@ -207,32 +199,13 @@ def consume(  # noqa: C901
                     job_url=job_details.url,
                     msg=msg,
                     platform_provider=platform_provider,
-                    metadata=metadata,
                 )
                 break
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
 
 
-def _build_runner_metadata(job_url: str) -> RunnerMetadata:
-    """Build runner metadata from the job url.
 
-    Args:
-        job_url: The job URL.
-
-    Returns:
-        RunnerMetadata for GitHub.
-
-    Raises:
-        ValueError: If the URL is not a GitHub URL.
-    """
-    parsed_url = urlparse(job_url)
-    # We only support github.com URLs now
-    if "github.com" in parsed_url.netloc:
-        return RunnerMetadata()
-
-    logger.error("Invalid URL for a job. Only GitHub URLs are supported. url: %s", job_url)
-    raise ValueError(f"Invalid job url {job_url}. Only GitHub URLs are supported.")
 
 
 def _parse_job_details(msg: Message) -> JobDetails:
@@ -269,7 +242,6 @@ def _spawn_runner(
     job_url: HttpUrl,
     msg: Message,
     platform_provider: PlatformProvider,
-    metadata: RunnerMetadata,
 ) -> None:
     """Spawn a runner.
 
@@ -284,10 +256,9 @@ def _spawn_runner(
         job_url: The URL of the job.
         msg: The message to acknowledge or reject.
         platform_provider: Platform provider.
-        metadata: RunnerMetadata for the runner to spawn..
     """
     logger.info("Spawning new reactive runner for job %s", job_url)
-    instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
+    instance_ids = runner_manager.create_runners(1, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner for job %s. Will reject the message.", job_url)
         msg.reject(requeue=True)
@@ -298,7 +269,7 @@ def _spawn_runner(
         sleep(WAIT_TIME_IN_SEC)
         logger.info("Checking if job picked up for reactive runner %s", instance_ids)
         try:
-            if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
+            if platform_provider.check_job_been_picked_up(job_url=job_url):
                 logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
                 msg.ack()
                 break

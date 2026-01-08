@@ -23,7 +23,6 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.vm_manager import (
     PostJobMetrics,
     PreJobMetrics,
-    RunnerMetadata,
     RunnerMetrics,
 )
 from github_runner_manager.metrics import events as metric_events
@@ -390,7 +389,7 @@ class PulledMetrics:
         runner_installed_timestamp: The timestamp in which the runner was installed.
         pre_job: String with the pre-job-metrics file.
         post_job: String with the post-job-metrics file.
-        metadata: The metadata of the VM in which the metrics are fetched from.
+        runner_id: The GitHub runner ID.
         instance_id: The instance ID of the VM in which the metrics are fetched from.
         installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
         installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
@@ -407,9 +406,9 @@ class PulledMetrics:
         return self.instance.instance_id
 
     @property
-    def metadata(self) -> RunnerMetadata:
-        """The metadata of the VM."""
-        return self.instance.metadata
+    def runner_id(self) -> str | None:
+        """The GitHub runner ID."""
+        return self.instance.runner_id
 
     @property
     def installation_start_timestamp(self) -> NonNegativeFloat:

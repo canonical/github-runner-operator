@@ -10,7 +10,6 @@ from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
-    RunnerMetadata,
 )
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.metrics.runner import RunnerMetrics
@@ -275,12 +274,11 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
         return deleted_runner_ids
 
     def get_runner_context(
-        self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
+        self, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a context for a runner.
 
         Args:
-            metadata: The runner's metadata.
             instance_id: The ID of the instance.
             labels: The labels of the instance.
 
@@ -289,11 +287,10 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
         """
         raise NotImplementedError
 
-    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
+    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
         """Check if a job has been picked up by the runner.
 
         Args:
-            metadata: The metadata of the runner.
             job_url: The URL of the job.
 
         Raises:
@@ -302,12 +299,11 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
         raise NotImplementedError
 
     def get_job_info(
-        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+        self, repository: str, workflow_run_id: str, runner: InstanceID
     ) -> JobInfo:
         """Get information about a job.
 
         Args:
-            metadata: The metadata of the runner.
             repository: The name of the repository.
             workflow_run_id: The ID of the workflow run.
             runner: The ID of the runner.

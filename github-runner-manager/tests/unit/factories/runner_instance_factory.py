@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 import factory
 
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 from github_runner_manager.manager.runner_manager import RunnerInstance
 from github_runner_manager.manager.vm_manager import VM, VMState
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackInstance
@@ -36,21 +36,6 @@ class InstanceIDFactory(factory.Factory):
     suffix = factory.LazyAttribute(lambda _: secrets.token_hex(6))
 
 
-class RunnerMetadataFactory(factory.Factory):
-    """Factory for creating RunnerMetadata instances."""
-
-    class Meta:
-        """Meta class for RunnerMetadata.
-
-        Attributes:
-            model: The metadata reference model.
-        """
-
-        model = RunnerMetadata
-
-    runner_id = str(factory.Faker("random_int", min=1, max=10000))
-
-
 class CloudRunnerInstanceFactory(factory.Factory):
     """Factory for creating CloudRunnerInstance instances."""
 
@@ -64,7 +49,7 @@ class CloudRunnerInstanceFactory(factory.Factory):
         model = VM
 
     instance_id = factory.SubFactory(InstanceIDFactory)
-    metadata = factory.SubFactory(RunnerMetadataFactory)
+    runner_id = str(factory.Faker("random_int", min=1, max=10000))
     state = VMState.ACTIVE
     created_at = factory.LazyFunction(lambda: datetime.now(tz=timezone.utc))
 
@@ -80,7 +65,7 @@ class CloudRunnerInstanceFactory(factory.Factory):
         """
         return CloudRunnerInstanceFactory(
             instance_id=self_hosted_runner.identity.instance_id,
-            metadata=RunnerMetadataFactory(runner_id=str(self_hosted_runner.id)),
+            runner_id=str(self_hosted_runner.id),
         )
 
 
@@ -101,7 +86,7 @@ class OpenstackInstanceFactory(factory.Factory):
     instance_id = InstanceIDFactory()
     server_id = factory.Faker("uuid4")
     status = factory.Faker("word")
-    metadata = RunnerMetadataFactory()
+    runner_id = str(factory.Faker("random_int", min=1, max=10000))
 
 
 class RunnerIdentityFactory(factory.Factory):
@@ -117,7 +102,7 @@ class RunnerIdentityFactory(factory.Factory):
         model = RunnerIdentity
 
     instance_id = factory.SubFactory(InstanceIDFactory)
-    metadata = factory.SubFactory(RunnerMetadataFactory)
+    runner_id = str(factory.Faker("random_int", min=1, max=10000))
 
 
 class PlatformRunnerHealthFactory(factory.Factory):
@@ -206,9 +191,9 @@ class SelfHostedRunnerFactory(factory.Factory):
     labels = factory.List([factory.Faker("word") for _ in range(3)])
     status = factory.Faker("word", ext_word_list=["online", "offline"])
     deletable = factory.Faker("boolean")
-    # identity.metadata.runner_id should be equal to the id attribute.
+    # identity.runner_id should be equal to the id attribute.
     identity = factory.LazyAttribute(
         lambda obj: RunnerIdentityFactory(
-            metadata=RunnerMetadata(runner_id=obj.id),
+            runner_id=obj.id,
         )
     )

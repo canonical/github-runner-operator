@@ -23,7 +23,7 @@ from requests import HTTPError as RequestsHTTPError
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -400,7 +400,7 @@ def test_get_runner_context_repo(github_client: GithubClient):
     assert runner == SelfHostedRunner(
         identity=RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(runner_id=113),
+            runner_id=113,
         ),
         busy=False,
         id=113,
@@ -551,7 +551,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
     assert github_runner == SelfHostedRunner(
         identity=RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(runner_id=18),
+            runner_id=18,
         ),
         busy=False,
         id=18,

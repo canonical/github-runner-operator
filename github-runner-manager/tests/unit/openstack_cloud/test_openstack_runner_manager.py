@@ -13,7 +13,6 @@ from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
-    RunnerMetadata,
 )
 from github_runner_manager.metrics import runner
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
@@ -163,7 +162,7 @@ def test_create_runner_with_aproxy(
     agent_command = "agent"
     runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
-    identity = RunnerIdentity(instance_id=instance_id, metadata=RunnerMetadata())
+    identity = RunnerIdentity(instance_id=instance_id, runner_id=None)
 
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
@@ -194,7 +193,7 @@ def test_create_runner_without_aproxy(
     agent_command = "agent"
     runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
-    identity = RunnerIdentity(instance_id=instance_id, metadata=RunnerMetadata())
+    identity = RunnerIdentity(instance_id=instance_id, runner_id=None)
 
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)

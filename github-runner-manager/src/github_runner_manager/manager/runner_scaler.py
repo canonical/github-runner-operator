@@ -21,7 +21,6 @@ from github_runner_manager.manager.runner_manager import (
     IssuedMetricEventsStats,
     RunnerInstance,
     RunnerManager,
-    RunnerMetadata,
 )
 from github_runner_manager.manager.vm_manager import HealthState
 from github_runner_manager.metrics import events as metric_events
@@ -346,7 +345,7 @@ class RunnerScaler:
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
             try:
-                self._manager.create_runners(num=runner_diff, metadata=RunnerMetadata())
+                self._manager.create_runners(num=runner_diff)
             except MissingServerConfigError:
                 logging.exception(
                     "Unable to spawn runner due to missing server configuration, "
