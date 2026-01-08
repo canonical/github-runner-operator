@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 name: Run End-to-End test
@@ -22,7 +22,7 @@ on:
 jobs:
   e2e-test:
     name: End-to-End Test Run
-    runs-on: [ self-hosted, linux, "${{ inputs.runner-tag }}" ]
+    runs-on: [self-hosted, linux, "${{ inputs.runner-tag }}"]
     steps:
       - name: Hostname is set to "github-runner"
         run: sudo hostnamectl hostname | grep github-runner
