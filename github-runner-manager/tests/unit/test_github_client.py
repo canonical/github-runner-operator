@@ -400,7 +400,7 @@ def test_get_runner_context_repo(github_client: GithubClient):
     assert runner == SelfHostedRunner(
         identity=RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(platform_name="github", runner_id=113),
+            metadata=RunnerMetadata(runner_id=113),
         ),
         busy=False,
         id=113,
@@ -551,7 +551,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
     assert github_runner == SelfHostedRunner(
         identity=RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(platform_name="github", runner_id=18),
+            metadata=RunnerMetadata(runner_id=18),
         ),
         busy=False,
         id=18,

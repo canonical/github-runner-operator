@@ -37,7 +37,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
 from github_runner_manager.platform.factory import platform_factory
-from github_runner_manager.platform.platform_provider import Platform, PlatformRunnerState
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -178,7 +178,6 @@ class RunnerScaler:
             user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
-            platform_name=Platform.GITHUB,
             python_path=python_path,
         )
 
@@ -186,8 +185,7 @@ class RunnerScaler:
     # as a library. The `user` is currently an argument as github-runner-manager as a library needs
     # it to be set to a hardcoded value, while as an application the value would be the current
     # user.
-    # Disable the too many arguments for now as `user` will be removed later on.
-    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         runner_manager: RunnerManager,
         reactive_process_config: ReactiveProcessConfig | None,
@@ -195,7 +193,6 @@ class RunnerScaler:
         base_quantity: int,
         max_quantity: int,
         python_path: str | None = None,
-        platform_name: Platform = Platform.GITHUB,
     ):
         """Construct the object.
 
@@ -205,7 +202,6 @@ class RunnerScaler:
             user: The user to run the reactive process.
             base_quantity: The number of intended non-reactive runners.
             max_quantity: The number of maximum runners for reactive.
-            platform_name: The name of the platform used for spawning runners.
             python_path: The PYTHONPATH to access the github-runner-manager library.
         """
         self._manager = runner_manager
@@ -213,7 +209,6 @@ class RunnerScaler:
         self._user = user
         self._base_quantity = base_quantity
         self._max_quantity = max_quantity
-        self._platform_name = platform_name
         self._python_path = python_path
 
         EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
@@ -350,9 +345,7 @@ class RunnerScaler:
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
             try:
-                self._manager.create_runners(
-                    num=runner_diff, metadata=RunnerMetadata(platform_name=self._platform_name)
-                )
+                self._manager.create_runners(num=runner_diff, metadata=RunnerMetadata())
             except MissingServerConfigError:
                 logging.exception(
                     "Unable to spawn runner due to missing server configuration, "

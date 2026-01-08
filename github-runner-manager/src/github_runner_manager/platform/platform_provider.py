@@ -19,18 +19,6 @@ from github_runner_manager.manager.models import (
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
-_GITHUB_PLATFORM_KEY = "github"
-
-
-class Platform(str, Enum):
-    """Enum for supported platforms.
-
-    Attributes:
-        GITHUB: GitHub platform.
-    """
-
-    GITHUB = _GITHUB_PLATFORM_KEY
-
 
 class PlatformError(Exception):
     """Base class for all platform provider errors."""
@@ -123,7 +111,7 @@ class PlatformProvider(abc.ABC):
         Raises JobNotFoundError if the job was not found.
 
         Args:
-            metadata: metadata. Always needed at least for the platform selection.
+            metadata: Runner metadata.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

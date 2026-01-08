@@ -48,7 +48,7 @@ class RunnerMetadataFactory(factory.Factory):
 
         model = RunnerMetadata
 
-    platform_name = factory.Faker("word", ext_word_list=["github"])
+    platform_name = "github"
     runner_id = str(factory.Faker("random_int", min=1, max=10000))
     url = factory.Faker("url")
 
@@ -211,6 +211,6 @@ class SelfHostedRunnerFactory(factory.Factory):
     # identity.metadata.runner_id should be equal to the id attribute.
     identity = factory.LazyAttribute(
         lambda obj: RunnerIdentityFactory(
-            metadata=RunnerMetadata(platform_name="github", runner_id=obj.id),
+            metadata=RunnerMetadata(runner_id=obj.id),
         )
     )

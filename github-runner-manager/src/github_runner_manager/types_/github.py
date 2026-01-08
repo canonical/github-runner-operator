@@ -83,7 +83,7 @@ class SelfHostedRunner(BaseModel):
         github_dict["labels"] = [label["name"] for label in github_dict["labels"]]
         github_dict["identity"] = RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(platform_name="github", runner_id=github_dict["id"]),
+            metadata=RunnerMetadata(runner_id=github_dict["id"]),
         )
         return cls.parse_obj(github_dict)
 

@@ -163,8 +163,9 @@ class RunnerMetadata:
     platform ones.
 
     Attributes:
-        platform_name: Platform name where the runner resides (currently only github)
-        runner_id: Id of the runner in the platform
+        platform_name: Legacy field, always "github". Kept for backwards compatibility
+            with existing OpenStack VM metadata.
+        runner_id: Id of the runner in the platform.
         url: URL for the runner.
     """
 

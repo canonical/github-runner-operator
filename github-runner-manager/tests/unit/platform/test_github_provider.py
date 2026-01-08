@@ -26,7 +26,7 @@ def _params_test_get_runner_health():
     """Parameterized data for test_get_runner_health."""
     prefix = "unit-0"
     runner_id = 3
-    metadata = RunnerMetadata(platform_name="github", runner_id=str(runner_id))
+    metadata = RunnerMetadata(runner_id=str(runner_id))
     instance_id = InstanceID.build(prefix=prefix)
     identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
     # The parameterized arguments are:
@@ -136,11 +136,11 @@ def test_get_runner_health(
             [
                 identity_1 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(platform_name="github", runner_id=str(1)),
+                    metadata=RunnerMetadata(runner_id=str(1)),
                 ),
                 identity_2 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(platform_name="github", runner_id=str(2)),
+                    metadata=RunnerMetadata(runner_id=str(2)),
                 ),
             ],
             [
@@ -176,7 +176,7 @@ def test_get_runner_health(
             [
                 identity_1 := RunnerIdentity(
                     InstanceID.build(prefix="unit-0"),
-                    metadata=RunnerMetadata(platform_name="github", runner_id=str(1)),
+                    metadata=RunnerMetadata(runner_id=str(1)),
                 ),
             ],
             [
@@ -192,7 +192,7 @@ def test_get_runner_health(
                     identity=(
                         identity_2 := RunnerIdentity(
                             InstanceID.build(prefix="unit-0"),
-                            metadata=RunnerMetadata(platform_name="github", runner_id=str(2)),
+                            metadata=RunnerMetadata(runner_id=str(2)),
                         )
                     ),
                     busy=True,
