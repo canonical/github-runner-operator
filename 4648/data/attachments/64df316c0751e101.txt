@@ -1,0 +1,68 @@
+18:19:16 WARNING unexpected facade SSHServer received from the controller
+18:19:16 INFO Adding model github-pr-fe65c-lxd:test-charm-metrics-success-f237 on cloud localhost
+18:19:17 WARNING unexpected facade SSHServer received from the controller
+18:19:17 WARNING unexpected facade SSHSession received from the controller
+18:19:17 WARNING unexpected facade SSHTunneler received from the controller
+18:19:17 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:19 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:49 INFO Deploying local:jammy/github-runner-0
+18:19:49 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uabnukn4/0 [allocating] waiting: waiting for machine
+18:20:20 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uabnukn4/0 [allocating] waiting: waiting for machine
+18:20:50 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uabnukn4/0 [idle] active: 
+18:21:20 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+18:21:50 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+18:22:21 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+18:22:51 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: waiting for machine
+18:23:22 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: agent initialising
+18:23:52 INFO Waiting for model:
+  test-uabnukn4/0 [allocating] waiting: agent initialising
+18:24:23 INFO Waiting for model:
+  test-uabnukn4/0 [executing] maintenance: installing charm software
+18:24:53 INFO Waiting for model:
+  test-uabnukn4/0 [executing] maintenance: installing charm software
+18:25:23 INFO Waiting for model:
+  test-uabnukn4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uabnukn4/0 [idle] active: 
+18:25:53 INFO Waiting for model:
+  test-uabnukn4/0 [idle] active:
+18:26:09 INFO Waiting for model:
+  test-uabnukn4/0 [idle] active: 
+18:26:40 INFO Waiting for model:
+  test-uabnukn4/0 [idle] active: 
+18:26:43 INFO Current reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:26:43 INFO Waiting for reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:27:44 INFO Current reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:27:44 INFO Current reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88, expected reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:27:44 INFO Waiting for reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:28:45 INFO Current reconcile ID: e2fbe9ba-2608-4950-ae17-0c91e1d9b4d1
+18:28:45 INFO Current reconcile ID: e2fbe9ba-2608-4950-ae17-0c91e1d9b4d1, expected reconcile ID: 8577e8a1-89e4-4af1-8251-7e3be3525a88
+18:28:51 INFO Waiting for model:
+  test-uabnukn4/0 [idle] active: 
+18:29:21 INFO Waiting for model:
+  test-uabnukn4/0 [idle] active: 
+18:29:25 INFO Current reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:29:25 INFO Waiting for reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:30:26 INFO Current reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:30:26 INFO Current reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9, expected reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:30:26 INFO Waiting for reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:31:27 INFO Current reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:31:27 INFO Current reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9, expected reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:31:27 INFO Waiting for reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:32:28 INFO Current reconcile ID: d33bcbdd-cd2b-4b93-aaba-54c1ffaf0b47
+18:32:28 INFO Current reconcile ID: d33bcbdd-cd2b-4b93-aaba-54c1ffaf0b47, expected reconcile ID: 01d996f2-c72e-48cf-a876-f3b2d5d5c9d9
+18:32:29 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1767896782.6915047, "event": "reconciliation", "flavor": "test-uabnukn4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.378031969070435}
+{"timestamp": 1767896912.6645486, "event": "reconciliation", "flavor": "test-uabnukn4", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 9.815081119537354}
+{"timestamp": 1767896875.0, "event": "runner_installed", "flavor": "test-uabnukn4", "duration": 94.0}
+{"timestamp": 1767896957.3166513, "event": "reconciliation", "flavor": "test-uabnukn4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.599106550216675}
+{"timestamp": 1767897088.246478, "event": "reconciliation", "flavor": "test-uabnukn4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.7359938621521}
