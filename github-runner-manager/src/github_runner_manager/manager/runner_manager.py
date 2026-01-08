@@ -3,7 +3,6 @@
 
 """Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
-import copy
 import logging
 import time
 from dataclasses import dataclass
@@ -13,7 +12,7 @@ from typing import Iterator, Sequence, Type
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
@@ -64,7 +63,7 @@ class RunnerInstance:
     Attributes:
         name: Full name of the runner. Managed by the cloud runner manager.
         instance_id: ID of the runner. Managed by the runner manager.
-        metadata: Metadata for the runner.
+        runner_id: The GitHub runner ID.
         health: The health state of the runner.
         platform_state: State on the platform.
         platform_health: Health information queried from the platform provider.
@@ -73,7 +72,7 @@ class RunnerInstance:
 
     name: str
     instance_id: InstanceID
-    metadata: RunnerMetadata
+    runner_id: str | None
     platform_state: PlatformRunnerState | None
     platform_health: PlatformRunnerHealth | None
     cloud_state: VMState
@@ -107,7 +106,7 @@ class RunnerInstance:
         return cls(
             name=cloud_instance.instance_id.name,
             instance_id=cloud_instance.instance_id,
-            metadata=cloud_instance.metadata,
+            runner_id=cloud_instance.runner_id,
             platform_state=(
                 PlatformRunnerState.from_platform_health(health=platform_health_state)
                 if platform_health_state is not None
@@ -148,13 +147,12 @@ class RunnerManager:
         self._labels = labels
 
     def create_runners(
-        self, num: int, metadata: RunnerMetadata, reactive: bool = False
+        self, num: int, reactive: bool = False
     ) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
-            metadata: Metadata information for the runner.
             reactive: If the runner is reactive.
 
         Returns:
@@ -170,9 +168,6 @@ class RunnerManager:
             RunnerManager._CreateRunnerArgs(
                 cloud_runner_manager=self._cloud,
                 platform_provider=self._platform,
-                # The metadata may be manipulated when creating the runner, as the platform may
-                # assign for example the id of the runner if it was not provided.
-                metadata=copy.copy(metadata),
                 labels=labels,
                 reactive=reactive,
             )
@@ -285,8 +280,8 @@ class RunnerManager:
         runners_not_marked_for_cleanup = [
             runner
             for runner in runners_health_response.requested_runners
-            if runner.identity.metadata.runner_id
-            and runner.identity.metadata.runner_id not in platform_runner_ids_to_cleanup
+            if runner.identity.runner_id
+            and runner.identity.runner_id not in platform_runner_ids_to_cleanup
         ]
         num_runners_to_scale_down = max(num - len(platform_runner_ids_to_cleanup), 0)
         platform_runner_ids_to_scaledown = _get_platform_runners_to_scale_down(
@@ -499,14 +494,12 @@ class RunnerManager:
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
             platform_provider: To manage self-hosted runner on the Platform side.
-            metadata: Metadata for the runner to create.
             labels: List of labels to add to the runners.
             reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager
         platform_provider: PlatformProvider
-        metadata: RunnerMetadata
         labels: list[str]
         reactive: bool
 
@@ -527,14 +520,11 @@ class RunnerManager:
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
         runner_context, runner_info = args.platform_provider.get_runner_context(
-            instance_id=instance_id, metadata=args.metadata, labels=args.labels
+            instance_id=instance_id, labels=args.labels
         )
 
-        # Update the runner id if necessary
-        if not args.metadata.runner_id:
-            args.metadata.runner_id = str(runner_info.id)
-
-        runner_identity = RunnerIdentity(instance_id=instance_id, metadata=args.metadata)
+        runner_id = str(runner_info.id)
+        runner_identity = RunnerIdentity(instance_id=instance_id, runner_id=runner_id)
         try:
             args.cloud_runner_manager.create_runner(
                 runner_identity=runner_identity,
@@ -542,7 +532,7 @@ class RunnerManager:
             )
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
-            args.platform_provider.delete_runners(runner_ids=[args.metadata.runner_id])
+            args.platform_provider.delete_runners(runner_ids=[runner_id])
             raise
         return instance_id
 
@@ -567,17 +557,17 @@ def _get_platform_runners_to_cleanup(
     """
     # Always clean all runners in the platform that are not in the cloud
     dangling_runners: set[str] = set(
-        runner.metadata.runner_id
+        runner.runner_id
         for runner in runners.non_requested_runners
-        if runner.metadata.runner_id
+        if runner.runner_id
     )
     reconcile_metrics.DANGLING_RUNNERS_TOTAL.inc(len(dangling_runners))
     logger.debug("Dangling runners IDs: %s", dangling_runners)
 
     deletable_runners: set[str] = set(
-        runner.identity.metadata.runner_id
+        runner.identity.runner_id
         for runner in runners.requested_runners
-        if runner.deletable and runner.identity.metadata.runner_id
+        if runner.deletable and runner.identity.runner_id
     )
     reconcile_metrics.MISSING_RUNNERS_TOTAL.inc(len(deletable_runners))
     logger.debug("Deletable runner IDs: %s", deletable_runners)
@@ -587,9 +577,9 @@ def _get_platform_runners_to_cleanup(
     # We may also kill here runners that were online and not busy and went temporarily to
     # offline, but that should not be an issue, as those runners will be spawned again.
     timed_out_offline_idle_runners: set[str] = set(
-        runner.identity.metadata.runner_id
+        runner.identity.runner_id
         for runner in runners.requested_runners
-        if runner.identity.metadata.runner_id
+        if runner.identity.runner_id
         and not runner.online
         and not runner.busy
         and runner.identity.instance_id in vm_instance_id_map
@@ -613,18 +603,18 @@ def _get_platform_runners_to_flush(
         flush_mode: Runner flushing strategy.
     """
     online_idle_runners = set(
-        runner.identity.metadata.runner_id
+        runner.identity.runner_id
         for runner in runners.requested_runners
-        if runner.identity.metadata.runner_id and runner.online and not runner.busy
+        if runner.identity.runner_id and runner.online and not runner.busy
     )
     reconcile_metrics.FLUSHED_ONLINE_IDLE_RUNNERS_TOTAL.inc(len(online_idle_runners))
     logger.debug("Online idle runners: %s", online_idle_runners)
     busy_runners = set(
-        runner.identity.metadata.runner_id
+        runner.identity.runner_id
         for runner in runners.requested_runners
-        if runner.identity.metadata.runner_id
+        if runner.identity.runner_id
         and flush_mode == FlushMode.FLUSH_BUSY
-        and runner.identity.metadata.runner_id not in online_idle_runners
+        and runner.identity.runner_id not in online_idle_runners
     )
     reconcile_metrics.FLUSHED_ONLINE_IDLE_RUNNERS_TOTAL.inc(len(online_idle_runners))
     logger.debug("Busy runners (flush_busy: %s): %s", flush_mode, busy_runners)
@@ -646,9 +636,9 @@ def _get_platform_runners_to_scale_down(
         runners, key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
     )
     return set(
-        runner.identity.metadata.runner_id
+        runner.identity.runner_id
         for runner in sorted_runners[:num]
-        if runner.identity.metadata.runner_id
+        if runner.identity.runner_id
     )
 
 
@@ -662,12 +652,12 @@ def _get_vms_to_cleanup(*, vms: Sequence[VM], runner_ids: list[str]) -> set[Inst
     Returns:
         The VM InstanceIDs (NOT VM UUIDs) to clean up.
     """
-    vms_without_runner_ids = set(vm.instance_id for vm in vms if not vm.metadata.runner_id)
+    vms_without_runner_ids = set(vm.instance_id for vm in vms if not vm.runner_id)
     logger.debug("VMs without platform runner ID metadata:\n%s", vms_without_runner_ids)
     vms_with_deleted_runners = set(
         vm.instance_id
         for vm in vms
-        if vm.metadata.runner_id and vm.metadata.runner_id in runner_ids
+        if vm.runner_id and vm.runner_id in runner_ids
     )
     logger.debug("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
 

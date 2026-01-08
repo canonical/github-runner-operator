@@ -28,7 +28,7 @@ from openstack.network.v2.security_group_rule import SecurityGroupRule
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
@@ -113,7 +113,7 @@ class OpenstackInstance:
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
         status: Status of the server.
-        metadata: Medatada of the server.
+        runner_id: The GitHub runner ID.
     """
 
     addresses: list[str]
@@ -121,7 +121,7 @@ class OpenstackInstance:
     instance_id: InstanceID
     server_id: str
     status: str
-    metadata: RunnerMetadata
+    runner_id: str | None
 
     @classmethod
     def from_openstack_server(cls, server: OpenstackServer, prefix: str) -> "OpenstackInstance":
@@ -134,6 +134,8 @@ class OpenstackInstance:
         Returns:
             The OpenstackInstance.
         """
+        # Extract runner_id from server metadata, handling legacy fields gracefully
+        runner_id = server.metadata.get("runner_id") if server.metadata else None
         return cls(
             addresses=[
                 address["addr"]
@@ -146,7 +148,7 @@ class OpenstackInstance:
             instance_id=InstanceID.build_from_name(prefix, server.name),
             server_id=server.id,
             status=server.status,
-            metadata=RunnerMetadata.from_dict(server.metadata),
+            runner_id=runner_id,
         )
 
 

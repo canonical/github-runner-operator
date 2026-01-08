@@ -15,7 +15,6 @@ from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
-    RunnerMetadata,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
@@ -81,40 +80,37 @@ class PlatformProvider(abc.ABC):
 
     @abc.abstractmethod
     def get_runner_context(
-        self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
+        self, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
 
         Args:
-            metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
             labels: Labels for the runner.
         """
 
     @abc.abstractmethod
-    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
+    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 
         Args:
-            metadata: Metadata for the runner.
             job_url: The URL of the job.
         """
 
     @abc.abstractmethod
     def get_job_info(
-        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+        self, repository: str, workflow_run_id: str, runner: InstanceID
     ) -> "JobInfo":
         """Get the Job info from the provider.
 
         Raises JobNotFoundError if the job was not found.
 
         Args:
-            metadata: Runner metadata.
-            repository: repository to get the job from.
-            workflow_run_id: workflow run id of the job.
-            runner: runner to get the job from.
+            repository: Repository to get the job from.
+            workflow_run_id: Workflow run ID of the job.
+            runner: Runner to get the job from.
         """
 
 

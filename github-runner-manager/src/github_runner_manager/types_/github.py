@@ -12,7 +12,7 @@ from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
 
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity
 
 
 class GitHubRunnerStatus(str, Enum):
@@ -83,7 +83,7 @@ class SelfHostedRunner(BaseModel):
         github_dict["labels"] = [label["name"] for label in github_dict["labels"]]
         github_dict["identity"] = RunnerIdentity(
             instance_id=instance_id,
-            metadata=RunnerMetadata(runner_id=github_dict["id"]),
+            runner_id=github_dict["id"],
         )
         return cls.parse_obj(github_dict)
 

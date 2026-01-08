@@ -4,7 +4,7 @@
 """Module containing the main classes for business logic."""
 
 import secrets
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 
 INSTANCE_SUFFIX_LENGTH = 12
 
@@ -156,58 +156,16 @@ class InstanceID:
 
 
 @dataclass(order=True)
-class RunnerMetadata:
-    """Metadata linking a cloud runner to its GitHub runner.
-
-    Attributes:
-        runner_id: The GitHub runner ID.
-    """
-
-    runner_id: str | None = None
-
-    def as_dict(self) -> dict[str, str]:
-        """Return the metadata as a dict for storage.
-
-        Returns:
-            Metadata as a dict with non-None values.
-        """
-        return {k: v for k, v in asdict(self).items() if v is not None}
-
-    @classmethod
-    def from_dict(cls, data: dict[str, str] | None) -> "RunnerMetadata":
-        """Create RunnerMetadata from a dict, ignoring unknown fields.
-
-        This handles backwards compatibility with VMs that have legacy fields
-        like 'platform_name', 'url', or 'prefix' stored in their metadata.
-
-        Args:
-            data: Dictionary from OpenStack VM metadata.
-
-        Returns:
-            RunnerMetadata instance.
-        """
-        if not data:
-            return cls()
-        return cls(runner_id=data.get("runner_id"))
-
-
-@dataclass(order=True)
 class RunnerIdentity:
-    """Identity for the runner.
-
-    The full identity of the runner is made of the instance_id and the
-    metadata. The instance_id is used for the name of the runner in the cloud
-    provider, and it should be immutable. The metadata is used to identify the
-    platform provider and other information that could be relevant to identify
-    the runner in the platform provider.
+    """Identity for a runner, linking cloud instance to GitHub runner.
 
     Attributes:
-        instance_id: InstanceID of the runner.
-        metadata: Metadata for the runner.
+        instance_id: InstanceID of the runner (used as VM name in cloud).
+        runner_id: The GitHub runner ID (set after registration with GitHub).
     """
 
     instance_id: InstanceID
-    metadata: RunnerMetadata
+    runner_id: str | None = None
 
 
 @dataclass

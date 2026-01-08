@@ -185,7 +185,8 @@ class RunnerScaler:
     # as a library. The `user` is currently an argument as github-runner-manager as a library needs
     # it to be set to a hardcoded value, while as an application the value would be the current
     # user.
-    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
+    # Disable the too many arguments for now as `user` will be removed later on.
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         runner_manager: RunnerManager,
         reactive_process_config: ReactiveProcessConfig | None,

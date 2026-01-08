@@ -16,7 +16,6 @@ from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
-    RunnerMetadata,
 )
 
 logger = logging.getLogger(__name__)
@@ -100,13 +99,13 @@ class VM:
 
     Attributes:
         instance_id: VM instance identifier (NOT VM UUID).
-        metadata: Metadata associated with the VM.
+        runner_id: The GitHub runner ID.
         state: The VM state.
         created_at: Creation time of the runner in the cloud provider.
     """
 
     instance_id: InstanceID
-    metadata: RunnerMetadata
+    runner_id: str | None
     state: VMState
     created_at: datetime
 
@@ -183,7 +182,7 @@ class RunnerMetrics(Protocol):
     """Metrics for a runner.
 
     Attributes:
-        metadata: The metadata of the VM in which the metrics are fetched from.
+        runner_id: The GitHub runner ID.
         instance_id: The instance ID of the VM in which the metrics are fetched from.
         installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
         installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
@@ -201,8 +200,8 @@ class RunnerMetrics(Protocol):
 
     @property
     # Ignore no return implementation because this is a protocol class.
-    def metadata(self) -> RunnerMetadata:  # type: ignore
-        """Metadata of the VM in which the metrics are fetche from."""
+    def runner_id(self) -> str | None:  # type: ignore
+        """The GitHub runner ID."""
 
     @property
     # Ignore no return implementation because this is a protocol class.
