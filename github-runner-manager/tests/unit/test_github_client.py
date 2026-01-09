@@ -608,7 +608,7 @@ def test_get_runner(
 
     assert github_runner
     assert github_runner.id == runner_id
-    assert github_runner.identity.metadata.runner_id == str(runner_id)
+    assert github_runner.identity.runner_id == str(runner_id)
 
 
 def test_get_runner_not_found(

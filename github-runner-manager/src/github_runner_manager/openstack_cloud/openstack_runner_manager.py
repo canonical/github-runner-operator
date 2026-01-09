@@ -136,9 +136,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> VM:
         """Build a new cloud runner instance from an openstack instance."""
-        metadata = instance.metadata
         return VM(
-            metadata=metadata,
+            runner_id=instance.runner_id,
             instance_id=instance.instance_id,
             state=VMState.from_openstack_server_status(instance.status),
             created_at=instance.created_at,

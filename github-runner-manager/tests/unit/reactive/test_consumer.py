@@ -78,7 +78,7 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
         supported_labels=supported_labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 
@@ -128,7 +128,7 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
         supported_labels=labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 
@@ -352,7 +352,7 @@ def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: Magi
         supported_labels=labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 

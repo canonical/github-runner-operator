@@ -138,7 +138,7 @@ class RunnerInstanceFactory(factory.Factory):
 
     name = factory.Faker("name")
     instance_id = factory.SubFactory(InstanceIDFactory)
-    metadata = factory.LazyAttribute(lambda _: {"key": "value"})
+    runner_id = str(factory.Faker("random_int", min=1, max=10000))
     platform_state = factory.LazyFunction(lambda: secrets.choice(list(PlatformRunnerState)))
     platform_health = factory.LazyAttribute(
         lambda obj: PlatformRunnerHealthFactory(
@@ -163,7 +163,7 @@ class RunnerInstanceFactory(factory.Factory):
         return RunnerInstance(
             name=cloud_runner.instance_id.name,
             instance_id=cloud_runner.instance_id,
-            metadata=cloud_runner.metadata,
+            runner_id=cloud_runner.runner_id,
             platform_state=(
                 PlatformRunnerState.from_platform_health(platform_health)
                 if platform_health is not None

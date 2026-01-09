@@ -134,7 +134,6 @@ class OpenstackInstance:
         Returns:
             The OpenstackInstance.
         """
-        # Extract runner_id from server metadata, handling legacy fields gracefully
         runner_id = server.metadata.get("runner_id") if server.metadata else None
         return cls(
             addresses=[
@@ -283,13 +282,13 @@ class OpenstackCloud:
         """
         logger.info("Creating openstack server with %s", runner_identity)
         instance_id = runner_identity.instance_id
-        metadata = runner_identity.metadata
 
         with self._get_openstack_connection() as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
             keypair = self._setup_keypair(conn, runner_identity.instance_id)
-            meta = metadata.as_dict()
-            meta["prefix"] = self.prefix
+            meta = {"prefix": self.prefix}
+            if runner_identity.runner_id:
+                meta["runner_id"] = runner_identity.runner_id
             try:
                 server = conn.create_server(
                     name=instance_id.name,

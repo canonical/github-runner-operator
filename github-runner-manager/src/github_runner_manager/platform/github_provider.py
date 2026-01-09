@@ -96,7 +96,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         try:
             runner = self._client.get_runner(
-                self._path, self._prefix, int(runner_identity.metadata.runner_id)
+                self._path, self._prefix, int(runner_identity.runner_id)
             )
             online = runner.status == GitHubRunnerStatus.ONLINE
             return PlatformRunnerHealth(
