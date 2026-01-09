@@ -37,7 +37,14 @@ systemctl enable nftables.service
 nft -f /etc/nftables.conf
 {% endif %}
 
-apt-get -o Acquire::Retries="10" update 
+for i in {0..6}; do
+  if apt-get update; then
+    break
+  else
+    echo "apt-get update failed, retrying in 10 seconds..."
+    sleep 10
+  fi
+done
 
 {% if ssh_debug_info and runner_proxy_config and runner_proxy_config.proxy_address %}
 # The tmate-proxy service will be started by the canonical/action-tmate if necessary.
