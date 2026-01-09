@@ -1,0 +1,53 @@
+06:20:34 WARNING unexpected facade SSHServer received from the controller
+06:20:34 INFO Adding model github-pr-fe65c-lxd:test-charm-metrics-success-tnyq on cloud localhost
+06:20:34 WARNING unexpected facade SSHServer received from the controller
+06:20:34 WARNING unexpected facade SSHSession received from the controller
+06:20:34 WARNING unexpected facade SSHTunneler received from the controller
+06:20:34 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:36 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:53 INFO Deploying local:jammy/github-runner-0
+06:20:53 INFO Waiting for model:
+  test-u54xulcg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u54xulcg/0 [allocating] waiting: waiting for machine
+06:21:24 INFO Waiting for model:
+  test-u54xulcg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u54xulcg/0 [allocating] waiting: agent initialising
+06:21:54 INFO Waiting for model:
+  test-u54xulcg/0 [allocating] waiting: waiting for machine
+06:22:24 INFO Waiting for model:
+  test-u54xulcg/0 [allocating] waiting: waiting for machine
+06:22:55 INFO Waiting for model:
+  test-u54xulcg/0 [allocating] waiting: agent initialising
+06:23:25 INFO Waiting for model:
+  test-u54xulcg/0 [executing] waiting: agent initialising
+06:23:55 INFO Waiting for model:
+  test-u54xulcg/0 [executing] maintenance: installing charm software
+06:24:25 INFO Waiting for model:
+  test-u54xulcg/0 [idle] active:
+06:24:41 INFO Waiting for model:
+  test-u54xulcg/0 [idle] active: 
+06:25:11 INFO Waiting for model:
+  test-u54xulcg/0 [idle] active: 
+06:25:14 INFO Current reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:25:14 INFO Waiting for reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:26:15 INFO Current reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:26:15 INFO Current reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536, expected reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:26:15 INFO Waiting for reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:27:16 INFO Current reconcile ID: ee547076-d40e-4b94-ad04-7242e392fcd0
+06:27:16 INFO Current reconcile ID: ee547076-d40e-4b94-ad04-7242e392fcd0, expected reconcile ID: 302cab2d-1876-45be-a008-6e5385de3536
+06:27:24 INFO Waiting for model:
+  test-u54xulcg/0 [idle] active: 
+06:27:54 INFO Waiting for model:
+  test-u54xulcg/0 [idle] active: 
+06:27:56 INFO Current reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:27:56 INFO Waiting for reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:28:57 INFO Current reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:28:57 INFO Current reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7, expected reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:28:57 INFO Waiting for reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:29:58 INFO Current reconcile ID: ac4806b5-8fed-4cbe-8cb9-2c70561b0d35
+06:29:58 INFO Current reconcile ID: ac4806b5-8fed-4cbe-8cb9-2c70561b0d35, expected reconcile ID: 97761c4b-052a-4322-b0b7-606ed674cfb7
+06:29:59 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1767939891.6714866, "event": "reconciliation", "flavor": "test-u54xulcg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.38596224784851}
+{"timestamp": 1767940019.243374, "event": "reconciliation", "flavor": "test-u54xulcg", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.497312545776367}
+{"timestamp": 1767939970.0, "event": "runner_installed", "flavor": "test-u54xulcg", "duration": 80.0}
+{"timestamp": 1767940059.2494988, "event": "reconciliation", "flavor": "test-u54xulcg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.167222023010254}
+{"timestamp": 1767940185.9070508, "event": "reconciliation", "flavor": "test-u54xulcg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.51026725769043}
