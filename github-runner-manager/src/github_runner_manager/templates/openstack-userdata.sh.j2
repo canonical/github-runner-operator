@@ -37,6 +37,9 @@ systemctl enable nftables.service
 nft -f /etc/nftables.conf
 {% endif %}
 
+# Adding retry to apt-get due to occasional apt mirror sync issues.
+# Retry builtin in apt-get does not retry 404, which mirror sync issues can cause.
+# Therefore, a bash for loop is used for retrying.
 for i in {0..6}; do
   if apt-get update; then
     break
