@@ -1,0 +1,47 @@
+18:19:41 WARNING unexpected facade SSHServer received from the controller
+18:19:41 INFO Adding model github-pr-fe65c-lxd:test-charm-runner-om7o on cloud localhost
+18:19:41 WARNING unexpected facade SSHServer received from the controller
+18:19:41 WARNING unexpected facade SSHSession received from the controller
+18:19:41 WARNING unexpected facade SSHTunneler received from the controller
+18:19:42 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:44 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:59 INFO Deploying local:jammy/github-runner-0
+18:19:59 INFO Waiting for model:
+  test-juemuxbl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-juemuxbl/0 [allocating] waiting: waiting for machine
+18:20:29 INFO Waiting for model:
+  test-juemuxbl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-juemuxbl/0 [allocating] waiting: agent initialising
+18:20:59 INFO Waiting for model:
+  test-juemuxbl/0 [allocating] waiting: waiting for machine
+18:21:30 INFO Waiting for model:
+  test-juemuxbl/0 [allocating] waiting: waiting for machine
+18:22:00 INFO Waiting for model:
+  test-juemuxbl/0 [allocating] waiting: agent initialising
+18:22:30 INFO Waiting for model:
+  test-juemuxbl/0 [executing] maintenance: installing charm software
+18:23:01 INFO Waiting for model:
+  test-juemuxbl/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-juemuxbl/0 [idle] active:
+18:23:27 INFO Waiting for model:
+  test-juemuxbl/0 [idle] active: 
+18:23:58 INFO Waiting for model:
+  test-juemuxbl/0 [idle] active: 
+18:24:00 INFO Current reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:24:00 INFO Waiting for reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:25:01 INFO Current reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:25:01 INFO Current reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba, expected reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:25:01 INFO Waiting for reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:26:02 INFO Current reconcile ID: 1064a4ff-b2ee-4e8a-8c72-8deac4a4828a
+18:26:02 INFO Current reconcile ID: 1064a4ff-b2ee-4e8a-8c72-8deac4a4828a, expected reconcile ID: 98eac6d5-19d3-44c7-ac58-dc083f78fdba
+18:26:10 INFO Waiting for model:
+  test-juemuxbl/0 [idle] active: 
+18:26:40 INFO Waiting for model:
+  test-juemuxbl/0 [idle] active: 
+18:26:44 INFO Current reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
+18:26:44 INFO Waiting for reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
+18:27:45 INFO Current reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
+18:27:45 INFO Current reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea, expected reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
+18:27:45 INFO Waiting for reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
+18:28:46 INFO Current reconcile ID: 6ddaabb3-0ef4-4bee-a339-dfb457b3d74e
+18:28:46 INFO Current reconcile ID: 6ddaabb3-0ef4-4bee-a339-dfb457b3d74e, expected reconcile ID: 31b350d8-6209-4f1c-a2e7-284a83ec14ea
