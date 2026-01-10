@@ -1,0 +1,95 @@
+06:32:32 INFO Waiting for model:
+  test-coz15t64/0 [idle] active: 
+06:33:02 INFO Waiting for model:
+  test-coz15t64/0 [idle] active: 
+06:33:04 INFO Current reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:33:04 INFO Waiting for reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:34:05 INFO Current reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:34:05 INFO Current reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f, expected reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:34:05 INFO Waiting for reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:35:06 INFO Current reconcile ID: 3203732d-8fdd-4730-b67d-877871b43ef2
+06:35:06 INFO Current reconcile ID: 3203732d-8fdd-4730-b67d-877871b43ef2, expected reconcile ID: 7ba5f2fe-2be8-4649-b146-9bb6de3b5d7f
+06:35:06 INFO Waiting for model:
+  test-coz15t64/0 [executing] active: 
+06:35:37 INFO Waiting for model:
+  test-coz15t64/0 [idle] active: 
+06:35:43 INFO Current reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:35:43 INFO Waiting for reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:36:44 INFO Current reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:36:44 INFO Current reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d, expected reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:36:44 INFO Waiting for reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:37:45 INFO Current reconcile ID: d2b9ed98-ef7f-4472-b6b3-6f18c97b35e4
+06:37:45 INFO Current reconcile ID: d2b9ed98-ef7f-4472-b6b3-6f18c97b35e4, expected reconcile ID: bfb27d92-6cfd-427c-980f-b487ad8dde7d
+06:37:51 INFO Wait for condition not met, sleeping 30
+06:38:21 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-95e62db6&created=%3E%3D2026-01-10T06%3A37%3A49%2B00%3A00
+06:38:32 INFO [TEST SETUP] Run command pkill -9 run.sh on test-coz15t64-0-n-c6def6947b4f
+06:38:32 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.188', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d1:6d:fa'}]])
+06:38:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-coz15t64-0-n-c6def6947b4f.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.188 pkill -9 run.sh'
+06:38:34 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.188' (ED25519) to the list of known hosts.
+'
+06:38:36 INFO Runner test-coz15t64-0-n-c6def6947b4f status: online
+06:38:36 INFO Runner still marked as online, waiting for it to be marked offline
+06:39:37 INFO Waiting for model:
+  test-coz15t64/0 [idle] active: 
+06:40:07 INFO Waiting for model:
+  test-coz15t64/0 [idle] active: 
+06:40:09 INFO Current reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:40:09 INFO Waiting for reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:41:10 INFO Current reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:41:10 INFO Current reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4, expected reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:41:10 INFO Waiting for reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:42:11 INFO Current reconcile ID: 4f6a151d-2f97-4327-8b0b-c9cc0e85822d
+06:42:11 INFO Current reconcile ID: 4f6a151d-2f97-4327-8b0b-c9cc0e85822d, expected reconcile ID: 04de99ef-e913-44df-a0f7-854ef575bce4
+06:42:13 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768026759.2350638, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.310053110122681}
+{"timestamp": 1768026888.3191736, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.965130090713501}
+{"timestamp": 1768026917.613572, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.979849338531494}
+{"timestamp": 1768027044.7768676, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.09576678276062}
+{"timestamp": 1768026996.0, "event": "runner_installed", "flavor": "test-coz15t64", "duration": 81.0}
+{"timestamp": 1768027074.0, "event": "runner_start", "flavor": "test-coz15t64", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 78.0, "queue_duration": 2.0}
+{"timestamp": 1768027114.0, "event": "runner_stop", "flavor": "test-coz15t64", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1768027173.6833642, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.813442707061768}
+{"timestamp": 1768027183.8050883, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.70616888999939}
+{"timestamp": 1768027309.6108806, "event": "reconciliation", "flavor": "test-coz15t64", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.698481559753418}
+06:42:13 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-8rc9  github-pr-fe65c-lxd  localhost/localhost  3.6.12   unsupported  06:42:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-coz15t64           active      1  any-charm      latest/beta  124  no       
+test-coz15t64                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-coz15t64/0*  active    idle   0        10.90.105.212             
+test-coz15t64/0*                         active    idle   1        10.90.105.12    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.90.105.212  juju-0d88af-0  ubuntu@24.04  github-runner  Running
+1        started  10.90.105.12   juju-0d88af-1  ubuntu@22.04  github-runner  Running
+
+06:42:13 INFO Juju error logs:
+
+machine-0: 06:19:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-coz15t64-0: 06:21:56 ERROR unit.test-coz15t64/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-coz15t64-0: 06:21:57 ERROR unit.test-coz15t64/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-coz15t64-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:42:13 INFO Forgetting model main...

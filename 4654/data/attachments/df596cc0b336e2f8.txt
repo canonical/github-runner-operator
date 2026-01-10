@@ -1,0 +1,52 @@
+06:28:02 INFO Waiting for model:
+  test-oofxscj6/0 [idle] active: 
+06:28:18 INFO Current reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:28:18 INFO Waiting for reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:29:19 INFO Current reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:29:19 INFO Current reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65, expected reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:29:19 INFO Waiting for reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:30:20 INFO Current reconcile ID: 43ee1660-26f8-47ac-8772-e0f29110eee3
+06:30:20 INFO Current reconcile ID: 43ee1660-26f8-47ac-8772-e0f29110eee3, expected reconcile ID: fc637736-2fad-4d23-ad83-9a331b7def65
+06:30:21 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-dw64  github-pr-fe65c-lxd  localhost/localhost  3.6.12   unsupported  06:30:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-oofxscj6           active      1  any-charm      latest/beta  124  no       
+test-oofxscj6                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-oofxscj6/0*  active    idle   0        10.114.201.22          
+test-oofxscj6/0*                         active    idle   1        10.114.201.30          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.114.201.22  juju-18fb8d-0  ubuntu@24.04  github-runner  Running
+1        started  10.114.201.30  juju-18fb8d-1  ubuntu@22.04  github-runner  Running
+
+06:30:22 INFO Juju error logs:
+
+machine-0: 06:19:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oofxscj6-0: 06:21:49 ERROR unit.test-oofxscj6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oofxscj6-0: 06:21:50 ERROR unit.test-oofxscj6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oofxscj6-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:30:22 INFO Forgetting model main...
