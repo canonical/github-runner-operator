@@ -5,9 +5,10 @@
 
 import importlib.metadata
 import logging
-import sys
+import os
 from functools import partial
 from io import StringIO
+from pathlib import Path
 from threading import Lock
 from typing import TextIO
 
@@ -19,6 +20,50 @@ from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
 version = importlib.metadata.version("github-runner-manager")
+
+
+def _resolve_log_path(log_path: str | None) -> Path:
+    """Resolve the full log file path based on input/XDG defaults.
+
+    Args:
+        log_path: Optional user-provided log directory path.
+
+    Returns:
+        The resolved full path to the application log file (manager.log).
+    """
+    if log_path is None:
+        xdg_state_home = os.environ.get("XDG_STATE_HOME")
+        base_state = Path(xdg_state_home) if xdg_state_home else Path.home() / ".local" / "state"
+        return base_state / "github-runner" / "logs" / "manager.log"
+    return Path(log_path) / "manager.log"
+
+
+def _ensure_log_path(log_path: str | None) -> Path:
+    """Resolve and validate the log file path, ensuring directories exist.
+
+    This will create the parent directories if needed and verify the directory
+    is writable. Returns the full path to the log file.
+
+    Args:
+        log_path: Optional user-provided log directory path.
+
+    Returns:
+        Path to the log file.
+
+    Raises:
+        click.ClickException: If the path cannot be created or is not writable.
+    """
+    file_path = _resolve_log_path(log_path)
+    parent = file_path.parent
+    try:
+        parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise click.ClickException(f"Cannot create log directory: {parent} ({exc})") from exc
+    if parent.is_file():
+        raise click.ClickException(f"Expected a directory for logs but found a file: {parent}")
+    if not os.access(parent, os.W_OK):
+        raise click.ClickException(f"Log directory is not writable: {parent}")
+    return file_path
 
 
 @click.command()
@@ -62,6 +107,15 @@ version = importlib.metadata.version("github-runner-manager")
     help="The log level for the application.",
 )
 @click.option(
+    "--log-path",
+    type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+    default=None,
+    help=(
+        "Directory to write application logs. Defaults to "
+        "XDG_STATE_HOME/github-runner/logs (or ~/.local/state/github-runner/logs)."
+    ),
+)
+@click.option(
     "--python-path",
     type=str,
     default="",
@@ -74,6 +128,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     port: int,
     debug: bool,
     log_level: str,
+    log_path: str | None,
     python_path: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
@@ -85,12 +140,20 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         debug: Whether to start the application in debug mode.
         log_level: The log level.
         python_path: The PYTHONPATH to access the github-runner-manager library.
+        log_path: Directory to write application logs; defaults to XDG path.
     """
+    log_file = _ensure_log_path(log_path)
+
     python_path_config = python_path if python_path else None
+    file_handler = logging.FileHandler(log_file, encoding="utf-8")
+    file_handler.setLevel(log_level)
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+    )
     logging.basicConfig(
         level=log_level,
-        stream=sys.stderr,
-        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        handlers=[file_handler],
+        force=True,
     )
     logging.info("Starting GitHub runner manager service version: %s", version)
 
