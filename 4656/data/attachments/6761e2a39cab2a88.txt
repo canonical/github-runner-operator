@@ -1,0 +1,52 @@
+06:18:56 WARNING unexpected facade SSHServer received from the controller
+06:18:56 INFO Adding model github-pr-fe65c-lxd:test-charm-metrics-success-kp4n on cloud localhost
+06:18:56 WARNING unexpected facade SSHServer received from the controller
+06:18:56 WARNING unexpected facade SSHSession received from the controller
+06:18:56 WARNING unexpected facade SSHTunneler received from the controller
+06:18:56 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:18:58 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:12 INFO Deploying local:jammy/github-runner-0
+06:19:12 INFO Waiting for model:
+  test-vy49n2mj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vy49n2mj/0 [allocating] waiting: waiting for machine
+06:19:43 INFO Waiting for model:
+  test-vy49n2mj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vy49n2mj/0 [executing] maintenance: installing charm software
+06:20:13 INFO Waiting for model:
+  test-vy49n2mj/0 [allocating] waiting: waiting for machine
+06:20:43 INFO Waiting for model:
+  test-vy49n2mj/0 [allocating] waiting: waiting for machine
+06:21:13 INFO Waiting for model:
+  test-vy49n2mj/0 [allocating] waiting: agent initialising
+06:21:44 INFO Waiting for model:
+  test-vy49n2mj/0 [executing] maintenance: installing charm software
+06:22:14 INFO Waiting for model:
+  test-vy49n2mj/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-vy49n2mj/0 [idle] active:
+06:22:40 INFO Waiting for model:
+  test-vy49n2mj/0 [idle] active: 
+06:23:10 INFO Waiting for model:
+  test-vy49n2mj/0 [idle] active: 
+06:23:13 INFO Current reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:23:13 INFO Waiting for reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:24:14 INFO Current reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:24:14 INFO Current reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7, expected reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:24:14 INFO Waiting for reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:25:15 INFO Current reconcile ID: 261b8848-be1d-42ff-8b21-ede31b33c5f0
+06:25:15 INFO Current reconcile ID: 261b8848-be1d-42ff-8b21-ede31b33c5f0, expected reconcile ID: f609ba6c-11e2-4517-a87c-1a41f26402a7
+06:25:18 INFO Waiting for model:
+  test-vy49n2mj/0 [idle] active: 
+06:25:48 INFO Waiting for model:
+  test-vy49n2mj/0 [idle] active: 
+06:25:50 INFO Current reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:25:50 INFO Waiting for reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:26:51 INFO Current reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:26:51 INFO Current reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed, expected reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:26:51 INFO Waiting for reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:27:52 INFO Current reconcile ID: 969bb027-3a91-4a33-86d2-67825e1a5c9c
+06:27:52 INFO Current reconcile ID: 969bb027-3a91-4a33-86d2-67825e1a5c9c, expected reconcile ID: f626ef8a-ea0d-4c5b-8508-025c70bc0aed
+06:27:53 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768112568.5158987, "event": "reconciliation", "flavor": "test-vy49n2mj", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.073370695114136}
+{"timestamp": 1768112694.6422014, "event": "reconciliation", "flavor": "test-vy49n2mj", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.106000900268555}
+{"timestamp": 1768112641.0, "event": "runner_installed", "flavor": "test-vy49n2mj", "duration": 73.0}
+{"timestamp": 1768112729.5796897, "event": "reconciliation", "flavor": "test-vy49n2mj", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.453245162963867}
+{"timestamp": 1768112856.2007337, "event": "reconciliation", "flavor": "test-vy49n2mj", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.477540016174316}
