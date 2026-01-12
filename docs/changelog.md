@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-01-07
+
+- Add retry to apt-get update in cloud init stage of runner creation. This should improve stability in runner creation during network instability.
+
 ## 2025-12-19
 
 - Revert deletion of apt-get update due to the impact on existing workflows.
