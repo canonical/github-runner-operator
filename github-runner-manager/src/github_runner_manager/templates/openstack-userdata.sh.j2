@@ -37,7 +37,17 @@ systemctl enable nftables.service
 nft -f /etc/nftables.conf
 {% endif %}
 
-apt-get update
+# Adding retry to apt-get due to occasional apt mirror sync issues.
+# Retry builtin in apt-get does not retry 404, which mirror sync issues can cause.
+# Therefore, a bash for loop is used for retrying.
+for i in {0..6}; do
+  if apt-get update; then
+    break
+  else
+    echo "apt-get update failed, retrying in 10 seconds..."
+    sleep 10
+  fi
+done
 
 {% if ssh_debug_info and runner_proxy_config and runner_proxy_config.proxy_address %}
 # The tmate-proxy service will be started by the canonical/action-tmate if necessary.
