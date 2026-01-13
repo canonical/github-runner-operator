@@ -1,0 +1,28 @@
+18:20:06 WARNING unexpected facade SSHServer received from the controller
+18:20:06 INFO Adding model github-pr-ee035-lxd:test-charm-no-runner-k3pm on cloud localhost
+18:20:06 WARNING unexpected facade SSHServer received from the controller
+18:20:06 WARNING unexpected facade SSHSession received from the controller
+18:20:06 WARNING unexpected facade SSHTunneler received from the controller
+18:20:06 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:08 INFO Deploying ch:amd64/noble/any-charm-124
+18:20:21 INFO Deploying local:jammy/github-runner-0
+18:20:21 INFO Waiting for model:
+  test-beaop15g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beaop15g/0 [allocating] waiting: waiting for machine
+18:20:52 INFO Waiting for model:
+  test-beaop15g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beaop15g/0 [executing] maintenance: installing charm software
+18:21:22 INFO Waiting for model:
+  test-beaop15g/0 [allocating] waiting: waiting for machine
+18:21:52 INFO Waiting for model:
+  test-beaop15g/0 [allocating] waiting: waiting for machine
+18:22:22 INFO Waiting for model:
+  test-beaop15g/0 [allocating] waiting: waiting for machine
+18:22:53 INFO Waiting for model:
+  test-beaop15g/0 [executing] maintenance: installing charm software
+18:23:23 INFO Waiting for model:
+  test-beaop15g/0 [executing] maintenance: installing charm software
+18:23:54 INFO Waiting for model:
+  test-beaop15g/0 [executing] maintenance: Update image for runners
+18:24:13 INFO Waiting for model:
+  test-beaop15g/0 [idle] active:

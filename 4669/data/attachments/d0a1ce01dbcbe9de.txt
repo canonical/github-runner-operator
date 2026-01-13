@@ -1,0 +1,69 @@
+18:20:05 WARNING unexpected facade SSHServer received from the controller
+18:20:05 INFO Adding model github-pr-ee035-lxd:test-reactive-iydv on cloud localhost
+18:20:05 WARNING unexpected facade SSHServer received from the controller
+18:20:05 WARNING unexpected facade SSHSession received from the controller
+18:20:05 WARNING unexpected facade SSHTunneler received from the controller
+18:20:05 INFO GitHub token rate limit: Rate(reset=2026-01-13 19:20:06+00:00, remaining=5000, limit=5000)
+18:20:09 INFO Deploying ch:amd64/jammy/mongodb-255
+18:20:10 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:13 INFO Deploying ch:amd64/noble/any-charm-124
+18:20:31 INFO Deploying local:jammy/github-runner-0
+18:20:31 INFO Waiting for model:
+  test-qeb7sd6p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qeb7sd6p/0 [allocating] waiting: waiting for machine
+18:21:01 INFO Waiting for model:
+  test-qeb7sd6p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qeb7sd6p/0 [allocating] waiting: waiting for machine
+18:21:31 INFO Waiting for model:
+  test-qeb7sd6p/0 [allocating] waiting: waiting for machine
+18:22:01 INFO Waiting for model:
+  test-qeb7sd6p/0 [allocating] waiting: waiting for machine
+18:22:32 INFO Waiting for model:
+  test-qeb7sd6p/0 [allocating] waiting: agent initialising
+18:23:02 INFO Waiting for model:
+  test-qeb7sd6p/0 [executing] maintenance: installing charm software
+18:23:32 INFO Waiting for model:
+  test-qeb7sd6p/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-qeb7sd6p/0 [idle] active: 
+18:24:02 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:24:03 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:24:03 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:24:33 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:24:41 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:25:11 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:25:14 INFO Current reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:25:14 INFO Waiting for reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:26:15 INFO Current reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:26:15 INFO Current reconcile ID: 15694782-784f-4e09-90cf-711231500ed0, expected reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:26:15 INFO Waiting for reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:27:16 INFO Current reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:27:16 INFO Current reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163, expected reconcile ID: 15694782-784f-4e09-90cf-711231500ed0
+18:27:20 INFO Wait for condition not met, sleeping 10
+18:27:41 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:27:57 INFO Current reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:27:57 INFO Waiting for reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:28:58 INFO Current reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:28:58 INFO Current reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163, expected reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:28:58 INFO Waiting for reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:29:59 INFO Current reconcile ID: 4663ca4f-6c51-42a9-b843-f450b78b3059
+18:29:59 INFO Current reconcile ID: 4663ca4f-6c51-42a9-b843-f450b78b3059, expected reconcile ID: 0948b74d-7965-4dfc-8783-5a7dff38b163
+18:29:59 INFO Queue item payload: {"labels": ["x64", "test-qeb7sd6p"], "url": "https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/60263493351", "ignored_noise": "foobar"}, headers: {'X-Process-Count': 1}
+18:29:59 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:30:30 INFO Waiting for model:
+  test-qeb7sd6p/0 [idle] active: 
+18:30:32 INFO Current reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
+18:30:32 INFO Waiting for reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
+18:31:33 INFO Current reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
+18:31:33 INFO Current reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e, expected reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
+18:31:33 INFO Waiting for reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
+18:32:34 INFO Current reconcile ID: bc460b3a-93c2-4022-827b-566ee6800667
+18:32:34 INFO Current reconcile ID: bc460b3a-93c2-4022-827b-566ee6800667, expected reconcile ID: b81ee0d6-e354-49bf-bcca-f6381abe8e7e
