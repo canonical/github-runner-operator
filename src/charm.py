@@ -83,6 +83,7 @@ FAILED_RECONCILE_ACTION_ERR_MSG = (
 UPGRADE_MSG = "Upgrading github-runner charm."
 LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
 LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
+LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
 
 
 logger = logging.getLogger(__name__)
@@ -190,7 +191,10 @@ class GithubRunnerCharm(CharmBase):
         self._grafana_agent = COSAgentProvider(
             self,
             metrics_endpoints=[
-                {"path": "/metrics", "port": manager_service.get_http_port_for_unit(self.unit.name)}
+                {
+                    "path": "/metrics",
+                    "port": manager_service.get_http_port_for_unit(self.unit.name),
+                }
             ],
         )
 
@@ -595,12 +599,22 @@ def _disable_legacy_service() -> None:
         systemd.service_stop(LEGACY_RECONCILE_SERVICE)
     except systemd.SystemdError:
         pass
+    # Stop and disable the pre-instance singleton service if it exists.
+    try:
+        systemd.service_disable(LEGACY_MANAGER_SINGLETON_SERVICE)
+        systemd.service_stop(LEGACY_MANAGER_SINGLETON_SERVICE)
+    except systemd.SystemdError:
+        pass
 
     try:
         timer_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_TIMER_SERVICE
         service_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_SERVICE
+        manager_singleton_path = (
+            pathlib.Path("/etc/systemd/system") / LEGACY_MANAGER_SINGLETON_SERVICE
+        )
         timer_path.unlink(missing_ok=True)
         service_path.unlink(missing_ok=True)
+        manager_singleton_path.unlink(missing_ok=True)
     except OSError:
         logger.warning(
             "Unexpected exception during removal of legacy systemd service files", exc_info=True
