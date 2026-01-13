@@ -1,0 +1,51 @@
+06:19:43 WARNING unexpected facade SSHServer received from the controller
+06:19:43 INFO Adding model github-pr-24825-lxd:test-charm-runner-gxj6 on cloud localhost
+06:19:43 WARNING unexpected facade SSHServer received from the controller
+06:19:43 WARNING unexpected facade SSHSession received from the controller
+06:19:43 WARNING unexpected facade SSHTunneler received from the controller
+06:19:44 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:47 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:03 INFO Deploying local:jammy/github-runner-0
+06:20:04 INFO Waiting for model:
+  test-pdaaey3a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pdaaey3a/0 [allocating] waiting: waiting for machine
+06:20:34 INFO Waiting for model:
+  test-pdaaey3a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pdaaey3a/0 [allocating] waiting: waiting for machine
+06:21:04 INFO Waiting for model:
+  test-pdaaey3a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pdaaey3a/0 [allocating] waiting: waiting for machine
+06:21:34 INFO Waiting for model:
+  test-pdaaey3a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pdaaey3a/0 [allocating] waiting: waiting for machine
+06:22:04 INFO Waiting for model:
+  test-pdaaey3a/0 [allocating] waiting: installing agent
+  github-runner-image-builder-pdaaey3a/0 [allocating] waiting: waiting for machine
+06:22:35 INFO Waiting for model:
+  test-pdaaey3a/0 [executing] maintenance: installing charm software
+06:23:05 INFO Waiting for model:
+  test-pdaaey3a/0 [executing] maintenance: installing charm software
+06:23:35 INFO Waiting for model:
+  test-pdaaey3a/0 [executing] maintenance: Update image for runners
+06:23:54 INFO Waiting for model:
+  test-pdaaey3a/0 [idle] active: 
+06:24:24 INFO Waiting for model:
+  test-pdaaey3a/0 [idle] active: 
+06:24:27 INFO Current reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:24:27 INFO Waiting for reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:25:28 INFO Current reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:25:28 INFO Current reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a, expected reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:25:28 INFO Waiting for reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:26:29 INFO Current reconcile ID: aaa62cfc-2b62-4d55-8150-335bbdb4a65d
+06:26:29 INFO Current reconcile ID: aaa62cfc-2b62-4d55-8150-335bbdb4a65d, expected reconcile ID: 9b3bd337-3f29-4dcf-a326-1566acb39e9a
+06:26:37 INFO Waiting for model:
+  test-pdaaey3a/0 [idle] active: 
+06:27:07 INFO Waiting for model:
+  test-pdaaey3a/0 [idle] active: 
+06:27:10 INFO Current reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
+06:27:10 INFO Waiting for reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
+06:28:11 INFO Current reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
+06:28:11 INFO Current reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a, expected reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
+06:28:11 INFO Waiting for reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
+06:29:12 INFO Current reconcile ID: ac76abad-bd1f-4228-a1d2-eadf0dc9b390
+06:29:12 INFO Current reconcile ID: ac76abad-bd1f-4228-a1d2-eadf0dc9b390, expected reconcile ID: a86fa26e-f382-46e5-8308-1bea3db2d41a
