@@ -26,12 +26,8 @@ from factories import create_application_configuration
 from utilities import execute_command
 
 GITHUB_RUNNER_MANAGER_ADDRESS = "127.0.0.1"
-GITHUB_RUNNER_MANAGER_PORT = "55555"
+_BASE_PORT = 55555
 SYSTEMD_SERVICE_PATH = Path("/etc/systemd/system")
-GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE = "github-runner-manager.service"
-GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH = (
-    SYSTEMD_SERVICE_PATH / GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE
-)
 GITHUB_RUNNER_MANAGER_PACKAGE = "github_runner_manager"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
@@ -45,6 +41,39 @@ _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager applicat
 logger = logging.getLogger(__name__)
 
 
+def get_http_port_for_unit(unit_name: str) -> int:
+    """Return a stable HTTP port for a unit based on its index.
+
+    Args:
+        unit_name: The Juju unit name (e.g., app/0).
+
+    Returns:
+        Port number derived from a deterministic base + unit index.
+    """
+    try:
+        index = int(unit_name.split("/")[-1])
+    except (ValueError, IndexError):
+        index = 0
+    return _BASE_PORT + index
+
+
+def _normalized_unit(unit_name: str) -> str:
+    """Normalize a Juju unit name to a safe identifier.
+
+    Args:
+        unit_name: The Juju unit name (e.g., app/0).
+
+    Returns:
+        Normalized name (e.g., app-0).
+    """
+    return unit_name.replace("/", "-")
+
+
+def _instance_service_name(unit_name: str) -> str:
+    """Build the systemd instance service name for a unit."""
+    return f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{_normalized_unit(unit_name)}"
+
+
 def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     """Set up the github-runner-manager service.
 
@@ -56,36 +85,29 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     Raises:
         RunnerManagerApplicationStartError: Setup of the runner manager service has failed.
     """
+    instance_service = _instance_service_name(unit_name)
     try:
-        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+        if systemd.service_running(instance_service):
+            systemd.service_stop(instance_service)
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
-    # Currently, there is some multiprocess issues that cause leftover processes.
-    # This is a temp patch to clean them up.
-    output, code = execute_command(
-        ["/usr/bin/pkill", "-f", GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH], check_exit=False
-    )
-    if code == 1:
-        logger.info("No leftover github-runner-manager process to clean up.")
-    elif code == 0:
-        logger.warning("Clean up leftover processes.")
-    else:
-        logger.warning(
-            "Unexpected return code %s of pkill for cleanup processes: %s", code, output
-        )
 
     config = create_application_configuration(state, app_name, unit_name)
-    config_file = _setup_config_file(config)
+    config_file = _setup_config_file(config, unit_name)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
     log_file_path = _get_log_file_path(unit_name)
     log_file_path.touch(exist_ok=True)
-    _setup_service_file(config_file, log_file_path, state.charm_config.runner_manager_log_level)
+    _setup_service_file(
+        unit_name,
+        config_file,
+        log_file_path,
+        state.charm_config.runner_manager_log_level,
+    )
     try:
         systemd.daemon_reload()
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
-    _enable_service()
+    _enable_service(unit_name)
 
 
 def install_package() -> None:
@@ -125,9 +147,16 @@ def _stop() -> None:
     Raises:
         RunnerManagerApplicationStopError: Failed to stop the service.
     """
+    # Best-effort stop for this unit's instance service; if unit name is not available
+    # fall back to stopping the generic service name if present.
     try:
-        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+        # Attempt to read JUJU_UNIT_NAME from environment as a fallback for stop hooks
+        unit_name = os.environ.get("JUJU_UNIT_NAME", "")
+        service_name = (
+            _instance_service_name(unit_name) if unit_name else GITHUB_RUNNER_MANAGER_SERVICE_NAME
+        )
+        if systemd.service_running(service_name):
+            systemd.service_stop(service_name)
     except SystemdError as err:
         raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
 
@@ -145,45 +174,52 @@ def _get_log_file_path(unit_name: str) -> Path:
     return GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / log_name
 
 
-def _enable_service() -> None:
+def _enable_service(unit_name: str) -> None:
     """Enable the github runner manager service.
 
     Raises:
         RunnerManagerApplicationStartError: Unable to startup the service.
     """
+    instance_service = _instance_service_name(unit_name)
     try:
-        systemd.service_enable(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
-        if not systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_start(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+        systemd.service_enable(instance_service)
+        if not systemd.service_running(instance_service):
+            systemd.service_start(instance_service)
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
 
 
-def _setup_config_file(config: ApplicationConfiguration) -> Path:
-    """Write the configuration to file.
+def _setup_config_file(config: ApplicationConfiguration, unit_name: str) -> Path:
+    """Write the configuration to a per-unit file.
 
     Args:
         config: The application configuration.
+        unit_name: The Juju unit name used to choose the per-unit directory.
     """
     # Directly converting to `dict` will have the value be Python objects rather than string
     # representations. The values needs to be string representations to be converted to YAML file.
     # No easy way to directly convert to YAML file, so json module is used.
     config_dict = json.loads(config.json())
-    path = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / "config.yaml"
+    unit_dir = Path("/var/lib/github-runner-manager") / _normalized_unit(unit_name)
+    unit_dir.mkdir(parents=True, exist_ok=True)
+    path = unit_dir / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
         yaml_safe_dump(config_dict, file)
     return path
 
 
-def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> None:
-    """Configure the systemd service.
+def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_level: str) -> None:
+    """Configure the per-unit systemd service.
 
     Args:
+        unit_name: The Juju unit name used to render the instance service.
         config_file: The configuration file for the service.
         log_file: The file location to store the logs.
         log_level: The log level of the service.
     """
     python_path = Path(os.getcwd()) / "venv"
+    instance = _normalized_unit(unit_name)
+    http_port = get_http_port_for_unit(unit_name)
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -195,13 +231,14 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {http_port} \
 --python-path {str(python_path)} --log-level {log_level}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5
         RestartMaxDelaySec=600
-        KillMode=process
+        KillMode=control-group
+        TimeoutStopSec=30
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
 
@@ -209,4 +246,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         WantedBy=multi-user.target
         """
     )
-    GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH.write_text(service_file_content, "utf-8")
+    service_path = (
+        SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{instance}.service"
+    )
+    service_path.write_text(service_file_content, "utf-8")

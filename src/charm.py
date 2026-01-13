@@ -190,7 +190,7 @@ class GithubRunnerCharm(CharmBase):
         self._grafana_agent = COSAgentProvider(
             self,
             metrics_endpoints=[
-                {"path": "/metrics", "port": int(manager_service.GITHUB_RUNNER_MANAGER_PORT)}
+                {"path": "/metrics", "port": manager_service.get_http_port_for_unit(self.unit.name)}
             ],
         )
 
@@ -236,7 +236,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
-            port=manager_service.GITHUB_RUNNER_MANAGER_PORT,
+            port=manager_service.get_http_port_for_unit(self.unit.name),
         )
 
     def _setup_state(self) -> CharmState:
