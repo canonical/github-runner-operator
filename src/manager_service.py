@@ -3,9 +3,11 @@
 
 """Manage the service of github-runner-manager."""
 
+import fcntl
 import json
 import logging
 import os
+import socket
 import textwrap
 from pathlib import Path
 
@@ -27,6 +29,7 @@ from utilities import execute_command
 
 GITHUB_RUNNER_MANAGER_ADDRESS = "127.0.0.1"
 _BASE_PORT = 55555
+_PORT_SCAN_SPAN = 100  # how many ports to try beyond base if occupied
 SYSTEMD_SERVICE_PATH = Path("/etc/systemd/system")
 GITHUB_RUNNER_MANAGER_PACKAGE = "github_runner_manager"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
@@ -42,19 +45,78 @@ logger = logging.getLogger(__name__)
 
 
 def get_http_port_for_unit(unit_name: str) -> int:
-    """Return a stable HTTP port for a unit based on its index.
+    """Return the per-unit HTTP port, allocating if needed.
+
+    This will first try to read a persisted port for the unit. If none exists,
+    it will pick a deterministic candidate based on the unit index, and probe
+    availability, scanning a small bounded range on collisions. The selection
+    is persisted to avoid future changes.
 
     Args:
         unit_name: The Juju unit name (e.g., app/0).
 
     Returns:
-        Port number derived from a deterministic base + unit index.
+        The selected/persisted HTTP port for the unit.
     """
+    unit_dir = Path("/var/lib/github-runner-manager") / _normalized_unit(unit_name)
+    unit_dir.mkdir(parents=True, exist_ok=True)
+    port_file = unit_dir / "http_port"
+    if port_file.exists():
+        try:
+            return int(port_file.read_text(encoding="utf-8").strip())
+        except (ValueError, OSError):
+            # Fall through to re-allocate on read errors.
+            pass
+
+    # Global allocator lock to avoid cross-unit races when probing.
+    alloc_lock = Path("/var/lib/github-runner-manager/port-alloc.lock")
+    alloc_lock.parent.mkdir(parents=True, exist_ok=True)
+    with alloc_lock.open("w+", encoding="utf-8") as lock_f:
+        try:
+            fcntl.flock(lock_f.fileno(), fcntl.LOCK_EX)
+            selected = _select_http_port(unit_name)
+            port_file.write_text(str(selected), encoding="utf-8")
+            return selected
+        finally:
+            try:
+                fcntl.flock(lock_f.fileno(), fcntl.LOCK_UN)
+            except OSError:
+                pass
+
+
+def _select_http_port(unit_name: str) -> int:
+    """Choose an available HTTP port for the unit.
+
+    Prefers the deterministic candidate derived from unit index; on collision,
+    scan a small bounded range on 127.0.0.1.
+    """
+    base = _deterministic_port_for_unit(unit_name)
+    if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, base):
+        return base
+    for offset in range(1, _PORT_SCAN_SPAN + 1):
+        cand = base + offset
+        if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, cand):
+            return cand
+    # As a last resort, return the base even if busy; systemd start will fail and surface error.
+    return base
+
+
+def _deterministic_port_for_unit(unit_name: str) -> int:
     try:
         index = int(unit_name.split("/")[-1])
     except (ValueError, IndexError):
         index = 0
     return _BASE_PORT + index
+
+
+def _port_available(host: str, port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            s.bind((host, port))
+        except OSError:
+            return False
+    return True
 
 
 def _normalized_unit(unit_name: str) -> str:
