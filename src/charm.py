@@ -586,7 +586,8 @@ def _setup_runner_manager_user() -> None:
         )
 
 
-def _disable_legacy_service() -> None:
+# 2025-01-14 Disable too complex errors, this migration function is targeted for deprecation.
+def _disable_legacy_service() -> None:  # noqa: C901
     """Disable any legacy service."""
     logger.info("Attempting to stop legacy services")
     try:

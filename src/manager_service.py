@@ -101,6 +101,14 @@ def _select_http_port(unit_name: str) -> int:
 
 
 def _deterministic_port_for_unit(unit_name: str) -> int:
+    """Derive a deterministic base port from the unit index.
+
+    Args:
+        unit_name: The Juju unit name (e.g., app/0).
+
+    Returns:
+        Base port number calculated as `_BASE_PORT + unit_index`.
+    """
     try:
         index = int(unit_name.split("/")[-1])
     except (ValueError, IndexError):
@@ -109,6 +117,15 @@ def _deterministic_port_for_unit(unit_name: str) -> int:
 
 
 def _port_available(host: str, port: int) -> bool:
+    """Check if a TCP port is available for binding on the given host.
+
+    Args:
+        host: Host address to bind to.
+        port: Port number to check.
+
+    Returns:
+        True if binding succeeds (port available), otherwise False.
+    """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:

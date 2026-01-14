@@ -21,7 +21,15 @@ from manager_service import SystemdError
 
 @dataclass(frozen=True)
 class PatchedPaths:
-    """Expose monkeypatched paths so tests can reference them when needed."""
+    """Expose monkeypatched paths so tests can reference them when needed.
+
+    Attributes:
+        package_path: Path to the mocked github-runner-manager package source.
+        systemd_service_path: Path to the mocked systemd service directory.
+        service_log_dir: Path to the mocked log directory for the manager service.
+        service_dir: Path to the mocked service state directory.
+        home_path: Path serving as a temp root for per-unit files in tests.
+    """
 
     package_path: Path
     systemd_service_path: Path
@@ -220,8 +228,16 @@ def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     def stub_port_available(host, port):
         """Simulate port availability.
 
-        Base port 55555 and the next two ports are busy; ports from base+3 onward
-        are available.
+        Args:
+            host: Host address (ignored in this stub).
+            port: Port number to evaluate.
+
+        Returns:
+            True when ``port`` is greater than or equal to ``base+3``; otherwise False.
+
+        Notes:
+            Base port 55555 and the next two ports are busy; ports from base+3 onward
+            are available.
         """
         base_port = manager_service._BASE_PORT
         return port >= base_port + 3

@@ -33,8 +33,10 @@ async def test_multi_unit_same_machine_co_location(
     # Get machine id of the first unit
     unit0 = app.units[0]
     status = await model.get_status([app.name])
-    app_status = status.applications[app.name]
-    unit0_status = app_status.units[unit0.name]
+    app_status = status.applications.get(app.name)
+    assert app_status is not None, "Application status missing for deployed app"
+    unit0_status = app_status.units.get(unit0.name)
+    assert unit0_status is not None, "Unit status missing for first unit"
     machine_id = unit0_status.machine
 
     # Add a second unit to the same machine and wait for it to settle
@@ -43,7 +45,8 @@ async def test_multi_unit_same_machine_co_location(
 
     # Refresh units reference (juju lib may not auto-refresh the list)
     status = await model.get_status([app.name])
-    app_status = status.applications[app.name]
+    app_status = status.applications.get(app.name)
+    assert app_status is not None, "Application status missing after add-unit"
     unit_names = list(app_status.units.keys())
     assert len(unit_names) >= 2, "Expected at least two units after add-unit"
 
