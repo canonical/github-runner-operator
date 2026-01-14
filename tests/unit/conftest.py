@@ -39,6 +39,10 @@ def disk_usage_mock(total_disk: int):
 def mocks(monkeypatch, tmp_path, exec_command):
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr(
+        "manager_service.get_http_port_for_unit",
+        unittest.mock.MagicMock(return_value=55555),
+    )
 
 
 @pytest.fixture(autouse=True, name="cloud_name")
