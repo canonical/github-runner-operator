@@ -20,7 +20,9 @@ from tests.integration.helpers.common import get_file_content, run_in_unit
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_multi_unit_same_machine_co_location(model: Model, app_openstack_runner: Application) -> None:
+async def test_multi_unit_same_machine_co_location(
+    model: Model, app_openstack_runner: Application
+) -> None:
     """
     arrange: Have one deployed unit, find its machine, and add a second unit to the same machine.
     act: Verify per-unit systemd instance services, distinct/persisted ports, and metrics.
@@ -78,6 +80,8 @@ async def test_multi_unit_same_machine_co_location(model: Model, app_openstack_r
     before = int((await get_file_content(unit1, port_file1)))
     await run_in_unit(unit1, f"sudo systemctl restart {inst1}.service", assert_on_failure=True)
     rc, out, err = await run_in_unit(unit1, f"systemctl is-active {inst1}.service")
-    assert rc == 0 and (out or "").strip() == "active", f"{inst1} not active after restart: {out} {err}"
+    assert (
+        rc == 0 and (out or "").strip() == "active"
+    ), f"{inst1} not active after restart: {out} {err}"
     after = int((await get_file_content(unit1, port_file1)))
     assert before == after, "Persisted port changed after restart"
