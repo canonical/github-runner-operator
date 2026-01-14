@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-01-14
+
+- Add support for running multiple GitHub runner applications on a single instance.
+
 ## 2025-01-07
 
 - Add retry to apt-get update in cloud init stage of runner creation. This should improve stability in runner creation during network instability.
