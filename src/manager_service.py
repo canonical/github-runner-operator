@@ -208,7 +208,13 @@ def install_package() -> None:
     try:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
-            ["pipx", "install", "--global", "--force", str(GITHUB_RUNNER_MANAGER_PACKAGE_PATH)]
+            [
+                "pipx",
+                "install",
+                "--global",
+                "--force",
+                str(GITHUB_RUNNER_MANAGER_PACKAGE_PATH.absolute()),
+            ]
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
