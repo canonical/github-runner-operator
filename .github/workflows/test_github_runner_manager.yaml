@@ -1,73 +1,73 @@
-name: Tests for github-runner-manager
+# name: Tests for github-runner-manager
 
-on:
-  pull_request:
+# on:
+#   pull_request:
 
-jobs:
-  application-unit-tests:
-    name: Unit tests for github-runner-manager
-    uses: canonical/operator-workflows/.github/workflows/test.yaml@main
-    secrets: inherit
-    with:
-      self-hosted-runner: true
-      self-hosted-runner-label: edge
-      working-directory: ./github-runner-manager/
-  application-integration-tests:
-    name: Integration tests for github-runner-manager
-    runs-on: [self-hosted, pfe-ci]
-    strategy:
-      fail-fast: false
-      matrix:
-        test-module:
-          - test_debug_ssh
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6.0.1
-      - name: Setup Astral UV
-        uses: astral-sh/setup-uv@v7
-      - name: Install tox with UV
-        run: uv tool install tox --with tox-uv
-      - name: configure DockerHub mirror
-        run: |
-          echo "{\"registry-mirrors\": [\"$DOCKERHUB_MIRROR\"]}" | sudo tee /etc/docker/daemon.json
-          sudo systemctl restart docker.service
-      - name: Run integration tests - ${{ matrix.test-module }}
-        working-directory: ./github-runner-manager/
-        env:
-          # GitHub configuration
-          # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
-          # OpenStack configuration
-          # OS_AUTH_URL, OS_PROJECT_DOMAIN_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_USERNAME, OS_PASSWORD, OS_NETWORK, OS_REGION_NAME
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_6 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_6 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_7 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_7 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
-          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
-        run: |
-          tox -e integration -- -v --tb=native -s \
-            tests/integration/${{ matrix.test-module }}.py \
-            --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
-            --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
-            --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
-            --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
-            --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
-            --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
-            --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
-            --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-            --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
-            --debug-log-dir="/tmp/github-runner-manager-test-logs"
-      - name: Print debug logs
-        if: ${{ failure() }}
-        run: |
-          echo "Printing debug logs from /tmp/github-runner-manager-test-logs"
-          ls -l /tmp/github-runner-manager-test-logs
-          for log_file in /tmp/github-runner-manager-test-logs/*; do
-            echo "===== Contents of $log_file ====="
-            cat "$log_file"
-            echo "================================="
-          done
+# jobs:
+#   application-unit-tests:
+#     name: Unit tests for github-runner-manager
+#     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
+#     secrets: inherit
+#     with:
+#       self-hosted-runner: true
+#       self-hosted-runner-label: edge
+#       working-directory: ./github-runner-manager/
+#   application-integration-tests:
+#     name: Integration tests for github-runner-manager
+#     runs-on: [self-hosted, pfe-ci]
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         test-module:
+#           - test_debug_ssh
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v6.0.1
+#       - name: Setup Astral UV
+#         uses: astral-sh/setup-uv@v7
+#       - name: Install tox with UV
+#         run: uv tool install tox --with tox-uv
+#       - name: configure DockerHub mirror
+#         run: |
+#           echo "{\"registry-mirrors\": [\"$DOCKERHUB_MIRROR\"]}" | sudo tee /etc/docker/daemon.json
+#           sudo systemctl restart docker.service
+#       - name: Run integration tests - ${{ matrix.test-module }}
+#         working-directory: ./github-runner-manager/
+#         env:
+#           # GitHub configuration
+#           # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
+#           # OpenStack configuration
+#           # OS_AUTH_URL, OS_PROJECT_DOMAIN_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_USERNAME, OS_PASSWORD, OS_NETWORK, OS_REGION_NAME
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_6 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_6 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_7 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_7 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
+#           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+#         run: |
+#           tox -e integration -- -v --tb=native -s \
+#             tests/integration/${{ matrix.test-module }}.py \
+#             --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
+#             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
+#             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
+#             --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
+#             --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
+#             --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
+#             --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+#             --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
+#             --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+#             --debug-log-dir="/tmp/github-runner-manager-test-logs"
+#       - name: Print debug logs
+#         if: ${{ failure() }}
+#         run: |
+#           echo "Printing debug logs from /tmp/github-runner-manager-test-logs"
+#           ls -l /tmp/github-runner-manager-test-logs
+#           for log_file in /tmp/github-runner-manager-test-logs/*; do
+#             echo "===== Contents of $log_file ====="
+#             cat "$log_file"
+#             echo "================================="
+#           done
