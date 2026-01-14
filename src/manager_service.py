@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 
 """Manage the service of github-runner-manager."""
-
 import fcntl
 import json
 import logging
@@ -32,10 +31,10 @@ _BASE_PORT = 55555
 _PORT_SCAN_SPAN = 100  # how many ports to try beyond base if occupied
 SYSTEMD_SERVICE_PATH = Path("/etc/systemd/system")
 GITHUB_RUNNER_MANAGER_PACKAGE = "github_runner_manager"
-GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
+GITHUB_RUNNER_MANAGER_PACKAGE_PATH = Path("./github-runner-manager")
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
-GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
+GITHUB_RUNNER_MANAGER_SERVICE_DIR = Path("/var/lib/github-runner-manager")
 
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
@@ -58,7 +57,7 @@ def get_http_port_for_unit(unit_name: str) -> int:
     Returns:
         The selected/persisted HTTP port for the unit.
     """
-    unit_dir = Path("/var/lib/github-runner-manager") / _normalized_unit(unit_name)
+    unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
     unit_dir.mkdir(parents=True, exist_ok=True)
     port_file = unit_dir / "http_port"
     if port_file.exists():
@@ -69,7 +68,7 @@ def get_http_port_for_unit(unit_name: str) -> int:
             pass
 
     # Global allocator lock to avoid cross-unit races when probing.
-    alloc_lock = Path("/var/lib/github-runner-manager/port-alloc.lock")
+    alloc_lock = GITHUB_RUNNER_MANAGER_SERVICE_DIR / "port-alloc.lock"
     alloc_lock.parent.mkdir(parents=True, exist_ok=True)
     with alloc_lock.open("w+", encoding="utf-8") as lock_f:
         try:
@@ -192,7 +191,7 @@ def install_package() -> None:
     try:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
-            ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
+            ["pipx", "install", "--global", "--force", str(GITHUB_RUNNER_MANAGER_PACKAGE_PATH)]
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
@@ -262,7 +261,7 @@ def _setup_config_file(config: ApplicationConfiguration, unit_name: str) -> Path
     # representations. The values needs to be string representations to be converted to YAML file.
     # No easy way to directly convert to YAML file, so json module is used.
     config_dict = json.loads(config.json())
-    unit_dir = Path("/var/lib/github-runner-manager") / _normalized_unit(unit_name)
+    unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
     unit_dir.mkdir(parents=True, exist_ok=True)
     path = unit_dir / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
@@ -311,4 +310,5 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     service_path = (
         SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{instance}.service"
     )
+    service_path.parent.mkdir(parents=True, exist_ok=True)
     service_path.write_text(service_file_content, "utf-8")

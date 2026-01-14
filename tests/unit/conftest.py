@@ -36,7 +36,9 @@ def disk_usage_mock(total_disk: int):
 
 
 @pytest.fixture(autouse=True)
-def mocks(monkeypatch, tmp_path, exec_command):
+def mocks(monkeypatch, tmp_path, exec_command, request):
+    if "noautofixtures" in request.keywords:
+        return
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
     monkeypatch.setattr(

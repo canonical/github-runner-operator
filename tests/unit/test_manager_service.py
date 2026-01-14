@@ -3,6 +3,7 @@
 
 """Unit test for manager_service."""
 
+from dataclasses import dataclass
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -18,19 +19,35 @@ from errors import (
 from manager_service import SystemdError
 
 
-@pytest.fixture(name="mock_service_path")
-def mock_service_path_fixture(tmp_path_factory):
-    return tmp_path_factory.mktemp("service") / "mock.service"
+@dataclass(frozen=True)
+class PatchedPaths:
+    """Expose monkeypatched paths so tests can reference them when needed."""
+
+    package_path: Path
+    systemd_service_path: Path
+    service_log_dir: Path
+    service_dir: Path
+    home_path: Path
 
 
-@pytest.fixture(name="mock_home_path")
-def mock_home_path_fixture(tmp_path_factory):
-    return tmp_path_factory.mktemp("home")
+@pytest.fixture(name="patched_paths", autouse=True)
+def patched_paths_fixture(monkeypatch, tmp_path) -> PatchedPaths:
+    paths = PatchedPaths(
+        package_path=tmp_path / "github-runner-manager",
+        systemd_service_path=tmp_path / "etc" / "systemd" / "system",
+        service_log_dir=tmp_path / "var" / "log" / "github-runner-manager",
+        service_dir=tmp_path / "var" / "lib" / "github-runner-manager",
+        home_path=tmp_path / "home",
+    )
 
+    monkeypatch.setattr(manager_service, "GITHUB_RUNNER_MANAGER_PACKAGE_PATH", paths.package_path)
+    monkeypatch.setattr(manager_service, "SYSTEMD_SERVICE_PATH", paths.systemd_service_path)
+    monkeypatch.setattr(
+        manager_service, "GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", paths.service_log_dir
+    )
+    monkeypatch.setattr(manager_service, "GITHUB_RUNNER_MANAGER_SERVICE_DIR", paths.service_dir)
 
-@pytest.fixture(name="mock_log_path")
-def mock_log_path_fixture(tmp_path_factory):
-    return tmp_path_factory.mktemp("log") / "github-runner-manager"
+    return paths
 
 
 @pytest.fixture(name="mock_systemd")
@@ -47,23 +64,12 @@ def mock_execute_command_fixture(monkeypatch):
     return mock_execute_command
 
 
-@pytest.fixture(name="patch_file_paths")
-def patch_file_paths(monkeypatch, mock_service_path, mock_home_path, mock_log_path):
-    """Patch the file path used."""
-    monkeypatch.setattr(
-        "manager_service.GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH", mock_service_path
-    )
-    monkeypatch.setattr("manager_service.GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", mock_log_path)
-    monkeypatch.setattr("manager_service.Path.expanduser", lambda x: mock_home_path)
-
-
 def test_setup_started(
-    patch_file_paths: None,
     complete_charm_state: CharmState,
-    mock_service_path: Path,
-    mock_home_path: Path,
+    patched_paths: PatchedPaths,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
+    monkeypatch,
 ):
     """
     arrange: Mock the service to be running.
@@ -71,18 +77,27 @@ def test_setup_started(
     assert: The files are written, and the systemd is called. System service start is not called.
     """
     mock_systemd.service_running.return_value = True
-    manager_service.setup(complete_charm_state, "mock_app", "mock_unit")
+    unit_name = "mock_unit"
+    # Ensure manager_service writes config under the mock home path
+    monkeypatch.setattr(
+        manager_service, "GITHUB_RUNNER_MANAGER_SERVICE_DIR", patched_paths.home_path
+    )
+    manager_service.setup(complete_charm_state, "mock_app", unit_name)
 
-    service_content = mock_service_path.read_text()
+    service_path = (
+        patched_paths.systemd_service_path / f"github-runner-manager@{unit_name}.service"
+    )
+    service_content = service_path.read_text()
     assert "User=runner-manager" in service_content
     assert "Group=runner-manager" in service_content
+    config_path = patched_paths.home_path / unit_name / "config.yaml"
     assert (
-        f"ExecStart=github-runner-manager --config-file {mock_home_path}/config.yaml --host 127.0.0.1 --port 55555"
+        f"ExecStart=github-runner-manager --config-file {config_path} --host 127.0.0.1 --port 55555"
         in service_content
     )
     assert "Restart=on-failure" in service_content
 
-    config_content = (mock_home_path / "config.yaml").read_text()
+    config_content = (patched_paths.home_path / unit_name / "config.yaml").read_text()
     # Check some configuration options
     assert "openstack_configuration:" in config_content
     assert "manager_proxy_command: ssh -W %h:%p example.com" in config_content
@@ -94,7 +109,6 @@ def test_setup_started(
 
 
 def test_setup_no_started(
-    patch_file_paths: None,
     complete_charm_state: CharmState,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
@@ -112,7 +126,6 @@ def test_setup_no_started(
 
 
 def test_setup_systemd_error(
-    patch_file_paths: None,
     complete_charm_state: CharmState,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
@@ -170,20 +183,7 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     mock_systemd.service_stop.assert_not_called()
 
 
-def _convert_root_path(root_dir: Path):
-    def map_path(path_input: str | Path):
-        # Map absolute paths into an isolated temp root; pass through Path objects.
-        if isinstance(path_input, Path):
-            path_str = str(path_input)
-        else:
-            path_str = path_input
-        if path_str.startswith("/"):
-            return root_dir / path_str.lstrip("/")
-        return root_dir / path_str
-
-    return map_path
-
-
+@pytest.mark.noautofixtures
 def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     """
     Arrange: isolate filesystem via Path monkeypatch and stub ports as available.
@@ -191,7 +191,6 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     Assert: first call writes and returns a port; second call reuses persisted value.
     """
     # Scenario 1: port is available, should be allocated and persisted.
-    monkeypatch.setattr(manager_service, "Path", _convert_root_path(tmp_path))
     monkeypatch.setattr(manager_service, "_port_available", lambda host, port: True)
     unit_name = "github-runner-operator/0"
 
@@ -210,13 +209,13 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     assert second_port == first_port, "Expected persisted port to be reused"
 
 
+@pytest.mark.noautofixtures
 def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     """
     Arrange: map Path to temp root and stub availability so base and next two are busy.
     Act: request a port for a unit whose base is 55555.
     Assert: selected port is base+3 and persisted to the per-unit file.
     """
-    monkeypatch.setattr(manager_service, "Path", _convert_root_path(tmp_path))
 
     def stub_port_available(host, port):
         """Simulate port availability.
