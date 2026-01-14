@@ -1,8 +1,8 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-variable "model" {
-  description = "Reference to the Juju model to deploy the github-runner and github-runner-image-builder operators."
+variable "model_uuid" {
+  description = "Reference to the Juju model UUID to deploy the github-runner and github-runner-image-builder operators."
   type        = string
 }
 

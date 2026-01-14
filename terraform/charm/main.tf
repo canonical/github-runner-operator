@@ -3,7 +3,7 @@
 
 resource "juju_application" "github_runner" {
   name  = var.app_name
-  model = var.model
+  model_uuid = var.model_uuid
 
   charm {
     name     = "github-runner"
