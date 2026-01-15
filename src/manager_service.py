@@ -327,8 +327,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         RestartSec=30
         RestartSteps=5
         RestartMaxDelaySec=600
-        KillMode=control-group
-        TimeoutStopSec=30
+        KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
 
