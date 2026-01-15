@@ -1,0 +1,111 @@
+18:20:07 WARNING unexpected facade SSHServer received from the controller
+18:20:07 INFO Adding model github-pr-ee035-lxd:test-charm-fork-path-change-0ysf on cloud localhost
+18:20:07 WARNING unexpected facade SSHServer received from the controller
+18:20:07 WARNING unexpected facade SSHSession received from the controller
+18:20:07 WARNING unexpected facade SSHTunneler received from the controller
+18:20:07 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:10 INFO Deploying ch:amd64/noble/any-charm-124
+18:20:39 INFO Deploying local:jammy/github-runner-0
+18:20:40 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:21:10 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:21:40 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p1qssv/0 [executing] maintenance: installing charm software
+18:22:11 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:22:41 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:23:11 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:23:41 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: waiting for machine
+18:24:11 INFO Waiting for model:
+  test-u1p1qssv/0 [allocating] waiting: agent initialising
+18:24:41 INFO Waiting for model:
+  test-u1p1qssv/0 [executing] waiting: agent initialising
+18:25:11 INFO Waiting for model:
+  test-u1p1qssv/0 [executing] maintenance: installing charm software
+18:25:41 INFO Waiting for model:
+  test-u1p1qssv/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-u1p1qssv/0 [idle] active: 
+18:26:12 INFO Waiting for model:
+  test-u1p1qssv/0 [executing] maintenance: Update image for runners
+18:26:29 INFO GitHub token rate limit: Rate(reset=2026-01-14 18:56:57+00:00, remaining=4427, limit=5000)
+18:26:41 INFO test_path_config_change
+18:26:41 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:27:11 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:27:34 INFO Ensure there is a runner (this calls reconcile)
+18:27:35 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:28:05 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:28:08 INFO Current reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:28:08 INFO Waiting for reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:29:10 INFO Current reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:29:10 INFO Current reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847, expected reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:29:10 INFO Waiting for reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:30:11 INFO Current reconcile ID: 48595758-2ffd-4d64-94a2-1a9cd97b1ae5
+18:30:11 INFO Current reconcile ID: 48595758-2ffd-4d64-94a2-1a9cd97b1ae5, expected reconcile ID: 342e2139-c8f5-4f86-b8ca-b8472d486847
+18:30:16 INFO Reconciling (again)
+18:30:16 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:30:46 INFO Waiting for model:
+  test-u1p1qssv/0 [idle] active: 
+18:30:57 INFO Current reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:30:57 INFO Waiting for reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:31:58 INFO Current reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:31:58 INFO Current reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207, expected reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:31:58 INFO Waiting for reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:32:59 INFO Current reconcile ID: 4c58beab-8ce8-45ce-8f3d-56cbb741f678
+18:32:59 INFO Current reconcile ID: 4c58beab-8ce8-45ce-8f3d-56cbb741f678, expected reconcile ID: 7ecf849b-0e14-4e34-8dac-ca6ece981207
+18:34:17 INFO runners: ['test-u1p1qssv-0-n-d0c610c25f08']
+18:34:18 INFO runners in github repo: [SelfHostedActionsRunner(name="test-b9hflq4f-0-n-137aff59a631"), SelfHostedActionsRunner(name="test-bddmnjdq-0-n-8c57f4a05835"), SelfHostedActionsRunner(name="test-bslb1xz6-0-n-4d8f8269acdd"), SelfHostedActionsRunner(name="test-bvz5szli-0-n-60e648721d1a"), SelfHostedActionsRunner(name="test-cbbjnwne-0-n-95d2c75c2066"), SelfHostedActionsRunner(name="test-cf6p2nnd-0-n-d09ecc2c7d4c"), SelfHostedActionsRunner(name="test-gelyb1v8-0-n-e4927fc0c057"), SelfHostedActionsRunner(name="test-gzgi16js-0-n-ae5ae3bf948f"), SelfHostedActionsRunner(name="test-iykn669p-0-n-9d1c519acde9"), SelfHostedActionsRunner(name="test-jkpbj0lt-0-n-e961b6485f58"), SelfHostedActionsRunner(name="test-lapyqo08-0-n-5062d979cc42"), SelfHostedActionsRunner(name="test-ljyq1z4e-0-n-8ef85fd4f0ac"), SelfHostedActionsRunner(name="test-lxw4731o-0-n-68ce87c1a6ba"), SelfHostedActionsRunner(name="test-omxb649t-0-n-1806ddd0e6f0"), SelfHostedActionsRunner(name="test-or3kbebn-0-n-d5d5f564e5c3"), SelfHostedActionsRunner(name="test-qlpwvnsg-0-n-727e425a9b53"), SelfHostedActionsRunner(name="test-r5w9duwe-0-n-f9bc58f70c49"), SelfHostedActionsRunner(name="test-s0mwmxvf-0-n-f17c812c4954"), SelfHostedActionsRunner(name="test-sixwjtbe-0-n-799e70f02d5e"), SelfHostedActionsRunner(name="test-u1p1qssv-0-n-d0c610c25f08"), SelfHostedActionsRunner(name="test-udhxhpcd-0-n-8e100294ade7"), SelfHostedActionsRunner(name="test-ujfvrinw-0-n-50907dc55b75"), SelfHostedActionsRunner(name="test-v30x2poh-0-n-bd0ed85c04a1"), SelfHostedActionsRunner(name="test-yq4mtums-0-n-b1fea3b1b1e9")]
+18:34:19 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-0ysf  github-pr-ee035-lxd  localhost/localhost  3.6.12   unsupported  18:34:19Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-u1p1qssv           active      1  any-charm      latest/beta  124  no       
+test-u1p1qssv                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-u1p1qssv/0*  active    idle   0        10.24.67.61            
+test-u1p1qssv/0*                         active    idle   1        10.24.67.181           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.24.67.61   juju-14bb28-0  ubuntu@24.04  github-runner  Running
+1        started  10.24.67.181  juju-14bb28-1  ubuntu@22.04  github-runner  Running
+
+18:34:19 INFO Juju error logs:
+
+machine-0: 18:21:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-u1p1qssv-0: 18:25:40 ERROR unit.test-u1p1qssv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-u1p1qssv-0: 18:25:43 ERROR unit.test-u1p1qssv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u1p1qssv-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:34:19 INFO Forgetting model main...

@@ -1,0 +1,121 @@
+18:20:09 WARNING unexpected facade SSHServer received from the controller
+18:20:09 INFO Adding model github-pr-ee035-lxd:test-charm-fork-repo-zib8 on cloud localhost
+18:20:10 WARNING unexpected facade SSHServer received from the controller
+18:20:10 WARNING unexpected facade SSHSession received from the controller
+18:20:10 WARNING unexpected facade SSHTunneler received from the controller
+18:20:10 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:13 INFO Deploying ch:amd64/noble/any-charm-124
+18:20:48 INFO Deploying local:jammy/github-runner-0
+18:20:48 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:21:19 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:21:49 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-knx7mr0l/0 [allocating] waiting: agent initialising
+18:22:19 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:22:50 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:23:20 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:23:51 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:24:21 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: waiting for machine
+18:24:52 INFO Waiting for model:
+  test-knx7mr0l/0 [allocating] waiting: agent initialising
+18:25:22 INFO Waiting for model:
+  test-knx7mr0l/0 [executing] maintenance: installing charm software
+18:25:52 INFO Waiting for model:
+  test-knx7mr0l/0 [executing] maintenance: installing charm software
+18:26:22 INFO Waiting for model:
+  test-knx7mr0l/0 [executing] maintenance: installing charm software
+18:26:52 INFO Waiting for model:
+  test-knx7mr0l/0 [executing] maintenance: installing charm software
+18:27:23 INFO Waiting for model:
+  test-knx7mr0l/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-knx7mr0l/0 [idle] active: 
+18:27:53 INFO Waiting for model:
+  test-knx7mr0l/0 [idle] active: 
+18:28:05 INFO GitHub token rate limit: Rate(reset=2026-01-14 18:56:57+00:00, remaining=4349, limit=5000)
+18:29:10 INFO Waiting for model:
+  test-knx7mr0l/0 [idle] active: 
+18:29:41 INFO Waiting for model:
+  test-knx7mr0l/0 [idle] active: 
+18:29:44 INFO Current reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:29:44 INFO Waiting for reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:30:46 INFO Current reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:30:46 INFO Current reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5, expected reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:30:46 INFO Waiting for reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:31:47 INFO Current reconcile ID: 97a3c347-8ea6-445d-ad73-f29b87a476d0
+18:31:47 INFO Current reconcile ID: 97a3c347-8ea6-445d-ad73-f29b87a476d0, expected reconcile ID: 627dc51d-0ec1-4378-b6fb-a97ce753e1a5
+18:31:54 INFO [TEST SETUP] Exposing port 8080 on test-knx7mr0l-0-n-093a2e58ccab
+18:31:54 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5e:26:f8'}]])
+18:31:55 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-knx7mr0l-0-n-093a2e58ccab.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.7 &
+18:31:56 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.7' (ED25519) to the list of known hosts.
+
+18:31:59 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-knx7mr0l-0-n-093a2e58ccab
+18:31:59 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5e:26:f8'}]])
+18:32:00 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-knx7mr0l-0-n-093a2e58ccab.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.7 nc -z localhost 8080'
+18:32:01 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:32:02 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-knx7mr0l-0-n-093a2e58ccab
+18:32:02 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.7', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5e:26:f8'}]])
+18:32:03 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-knx7mr0l-0-n-093a2e58ccab.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.7 curl http://localhost:8080'
+18:32:04 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  59346      0 --:--:-- --:--:-- --:--:-- 69000
+'
+18:32:07 INFO Wait for condition not met, sleeping 10
+18:32:18 INFO Wait for condition not met, sleeping 60
+18:33:23 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-zib8  github-pr-ee035-lxd  localhost/localhost  3.6.12   unsupported  18:33:23Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-knx7mr0l           active      1  any-charm      latest/beta  124  no       
+test-knx7mr0l                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-knx7mr0l/0*  active    idle   0        10.225.63.18              
+test-knx7mr0l/0*                         active    idle   1        10.225.63.155   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.225.63.18   juju-531952-0  ubuntu@24.04  github-runner  Running
+1        started  10.225.63.155  juju-531952-1  ubuntu@22.04  github-runner  Running
+
+18:33:23 INFO Juju error logs:
+
+machine-0: 18:21:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-knx7mr0l-0: 18:27:14 ERROR unit.test-knx7mr0l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-knx7mr0l-0: 18:27:17 ERROR unit.test-knx7mr0l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-knx7mr0l-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:33:23 INFO Forgetting model main...
