@@ -51,6 +51,9 @@ def get_http_port_for_unit(unit_name: str) -> int:
     availability, scanning a small bounded range on collisions. The selection
     is persisted to avoid future changes.
 
+    Port allocation lock is used to avoid multiple units probing ports
+    simultaneously.
+
     Args:
         unit_name: The Juju unit name (e.g., app/0).
 
@@ -64,13 +67,11 @@ def get_http_port_for_unit(unit_name: str) -> int:
         try:
             return int(port_file.read_text(encoding="utf-8").strip())
         except (ValueError, OSError):
-            # Fall through to re-allocate on read errors.
             pass
 
-    # Global allocator lock to avoid cross-unit races when probing.
-    alloc_lock = GITHUB_RUNNER_MANAGER_SERVICE_DIR / "port-alloc.lock"
-    alloc_lock.parent.mkdir(parents=True, exist_ok=True)
-    with alloc_lock.open("w+", encoding="utf-8") as lock_f:
+    port_allocation_lock = GITHUB_RUNNER_MANAGER_SERVICE_DIR / "port-alloc.lock"
+    port_allocation_lock.parent.mkdir(parents=True, exist_ok=True)
+    with port_allocation_lock.open("w+", encoding="utf-8") as lock_f:
         try:
             fcntl.flock(lock_f.fileno(), fcntl.LOCK_EX)
             selected = _select_http_port(unit_name)
@@ -88,6 +89,8 @@ def _select_http_port(unit_name: str) -> int:
 
     Prefers the deterministic candidate derived from unit index; on collision,
     scan a small bounded range on 127.0.0.1.
+
+    Return the base port if all busy; systemd start will fail and surface error.
     """
     base = _deterministic_port_for_unit(unit_name)
     if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, base):
@@ -96,7 +99,6 @@ def _select_http_port(unit_name: str) -> int:
         cand = base + offset
         if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, cand):
             return cand
-    # As a last resort, return the base even if busy; systemd start will fail and surface error.
     return base
 
 
