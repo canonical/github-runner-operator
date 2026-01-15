@@ -1,0 +1,57 @@
+06:19:37 WARNING unexpected facade SSHServer received from the controller
+06:19:37 INFO Adding model github-pr-ee035-lxd:test-charm-metrics-success-7w76 on cloud localhost
+06:19:38 WARNING unexpected facade SSHServer received from the controller
+06:19:38 WARNING unexpected facade SSHSession received from the controller
+06:19:38 WARNING unexpected facade SSHTunneler received from the controller
+06:19:38 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:40 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:57 INFO Deploying local:jammy/github-runner-0
+06:19:57 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p5kg9o/0 [allocating] waiting: waiting for machine
+06:20:28 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p5kg9o/0 [allocating] waiting: waiting for machine
+06:20:58 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u1p5kg9o/0 [executing] maintenance: installing charm software
+06:21:28 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: waiting for machine
+06:21:58 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: waiting for machine
+06:22:28 INFO Waiting for model:
+  test-u1p5kg9o/0 [allocating] waiting: agent initialising
+06:22:59 INFO Waiting for model:
+  test-u1p5kg9o/0 [executing] maintenance: installing charm software
+06:23:29 INFO Waiting for model:
+  test-u1p5kg9o/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-u1p5kg9o/0 [idle] active: 
+06:24:00 INFO Waiting for model:
+  test-u1p5kg9o/0 [idle] active:
+06:24:05 INFO Waiting for model:
+  test-u1p5kg9o/0 [idle] active: 
+06:24:35 INFO Waiting for model:
+  test-u1p5kg9o/0 [idle] active: 
+06:24:38 INFO Current reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:24:38 INFO Waiting for reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:25:39 INFO Current reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:25:39 INFO Current reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e, expected reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:25:39 INFO Waiting for reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:26:40 INFO Current reconcile ID: bbad170c-3829-4ee3-bc91-11e1c1aee900
+06:26:40 INFO Current reconcile ID: bbad170c-3829-4ee3-bc91-11e1c1aee900, expected reconcile ID: 9455529d-33da-40f6-96ec-894fcbb0dd2e
+06:26:44 INFO Waiting for model:
+  test-u1p5kg9o/0 [idle] active: 
+06:27:14 INFO Waiting for model:
+  test-u1p5kg9o/0 [idle] active: 
+06:27:17 INFO Current reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:27:17 INFO Waiting for reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:28:18 INFO Current reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:28:18 INFO Current reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4, expected reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:28:18 INFO Waiting for reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:29:19 INFO Current reconcile ID: 5c012683-5aa8-4512-a685-7db7c447f442
+06:29:19 INFO Current reconcile ID: 5c012683-5aa8-4512-a685-7db7c447f442, expected reconcile ID: 7c5d7e10-dae5-47ac-abef-d35b3bfbd5c4
+06:29:20 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768458257.7982614, "event": "reconciliation", "flavor": "test-u1p5kg9o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.956098556518555}
+{"timestamp": 1768458388.610191, "event": "reconciliation", "flavor": "test-u1p5kg9o", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 10.67592191696167}
+{"timestamp": 1768458334.0, "event": "runner_installed", "flavor": "test-u1p5kg9o", "duration": 78.0}
+{"timestamp": 1768458420.4987621, "event": "reconciliation", "flavor": "test-u1p5kg9o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.989700555801392}
+{"timestamp": 1768458549.2596462, "event": "reconciliation", "flavor": "test-u1p5kg9o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.641713857650757}

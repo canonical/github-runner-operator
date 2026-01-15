@@ -1,0 +1,107 @@
+06:19:37 WARNING unexpected facade SSHServer received from the controller
+06:19:38 INFO Adding model github-pr-ee035-lxd:test-charm-fork-path-change-it5p on cloud localhost
+06:19:38 WARNING unexpected facade SSHServer received from the controller
+06:19:38 WARNING unexpected facade SSHSession received from the controller
+06:19:38 WARNING unexpected facade SSHTunneler received from the controller
+06:19:38 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:40 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:57 INFO Deploying local:jammy/github-runner-0
+06:19:58 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hvm343pb/0 [allocating] waiting: waiting for machine
+06:20:28 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hvm343pb/0 [allocating] waiting: waiting for machine
+06:20:58 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hvm343pb/0 [executing] maintenance: installing charm software
+06:21:28 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+06:21:58 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+06:22:29 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: waiting for machine
+06:22:59 INFO Waiting for model:
+  test-hvm343pb/0 [allocating] waiting: agent initialising
+06:23:29 INFO Waiting for model:
+  test-hvm343pb/0 [executing] maintenance: installing charm software
+06:23:59 INFO Waiting for model:
+  test-hvm343pb/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-hvm343pb/0 [idle] active: 
+06:24:30 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:24:33 INFO GitHub token rate limit: Rate(reset=2026-01-15 07:06:00+00:00, remaining=4627, limit=5000)
+06:24:44 INFO test_path_config_change
+06:24:44 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:25:15 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:25:40 INFO Ensure there is a runner (this calls reconcile)
+06:25:40 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:26:10 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:26:13 INFO Current reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:26:13 INFO Waiting for reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:27:14 INFO Current reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:27:14 INFO Current reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1, expected reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:27:14 INFO Waiting for reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:28:15 INFO Current reconcile ID: 0672d8d7-7267-4dc2-8782-ffef86869bd0
+06:28:15 INFO Current reconcile ID: 0672d8d7-7267-4dc2-8782-ffef86869bd0, expected reconcile ID: 9c3bcafc-5425-4600-9c19-d50977ba22b1
+06:28:19 INFO Reconciling (again)
+06:28:19 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:28:49 INFO Waiting for model:
+  test-hvm343pb/0 [idle] active: 
+06:28:59 INFO Current reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:28:59 INFO Waiting for reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:30:00 INFO Current reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:30:00 INFO Current reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109, expected reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:30:00 INFO Waiting for reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:31:01 INFO Current reconcile ID: 106487a7-4457-4c21-877b-64a3983dbc0d
+06:31:01 INFO Current reconcile ID: 106487a7-4457-4c21-877b-64a3983dbc0d, expected reconcile ID: 58696a15-8e32-4e81-8fd6-bceb552fb109
+06:32:49 INFO runners: ['test-hvm343pb-0-n-3af93c017d06']
+06:32:50 INFO runners in github repo: [SelfHostedActionsRunner(name="test-b9hflq4f-0-n-137aff59a631"), SelfHostedActionsRunner(name="test-bddmnjdq-0-n-8c57f4a05835"), SelfHostedActionsRunner(name="test-bmpnjlvu-0-n-fbbb8e3a0653"), SelfHostedActionsRunner(name="test-bvz5szli-0-n-60e648721d1a"), SelfHostedActionsRunner(name="test-cbbjnwne-0-n-a28d8542c808"), SelfHostedActionsRunner(name="test-cf6p2nnd-0-n-d09ecc2c7d4c"), SelfHostedActionsRunner(name="test-g6lt39uq-0-n-d6ad250892d2"), SelfHostedActionsRunner(name="test-gelyb1v8-0-n-e4927fc0c057"), SelfHostedActionsRunner(name="test-hvm343pb-0-n-3af93c017d06"), SelfHostedActionsRunner(name="test-iykn669p-0-n-9d1c519acde9"), SelfHostedActionsRunner(name="test-jds6chb5-0-n-ded7e1510093"), SelfHostedActionsRunner(name="test-jk18naxy-0-n-ef8137ffe97f"), SelfHostedActionsRunner(name="test-jkpbj0lt-0-n-e961b6485f58"), SelfHostedActionsRunner(name="test-kpr4fk5x-0-n-36ed9014eb31"), SelfHostedActionsRunner(name="test-lapyqo08-0-n-5062d979cc42"), SelfHostedActionsRunner(name="test-ljyq1z4e-0-n-8ef85fd4f0ac"), SelfHostedActionsRunner(name="test-omxb649t-0-n-1806ddd0e6f0"), SelfHostedActionsRunner(name="test-or3kbebn-0-n-d5d5f564e5c3"), SelfHostedActionsRunner(name="test-qlpwvnsg-0-n-727e425a9b53"), SelfHostedActionsRunner(name="test-r5w9duwe-0-n-f9bc58f70c49"), SelfHostedActionsRunner(name="test-rwxz8vuw-0-n-bfa229ba96f4"), SelfHostedActionsRunner(name="test-s0mwmxvf-0-n-f17c812c4954"), SelfHostedActionsRunner(name="test-sixwjtbe-0-n-799e70f02d5e"), SelfHostedActionsRunner(name="test-szpzxslv-0-n-6287fe848bed"), SelfHostedActionsRunner(name="test-szpzxslv-0-n-c7291b8b7056"), SelfHostedActionsRunner(name="test-u1p1qssv-0-n-71da237d5d8c"), SelfHostedActionsRunner(name="test-udhxhpcd-0-n-8e100294ade7"), SelfHostedActionsRunner(name="test-uf4gf9el-0-n-1b9a9f973a01"), SelfHostedActionsRunner(name="test-ujfvrinw-0-n-50907dc55b75"), SelfHostedActionsRunner(name="test-v30x2poh-0-n-bd0ed85c04a1"), SelfHostedActionsRunner(name="test-vrvnk55l-0-n-41268101c615"), SelfHostedActionsRunner(name="test-yq4mtums-0-n-b1fea3b1b1e9"), SelfHostedActionsRunner(name="test-ysiypbxx-0-n-37974f547d4e")]
+06:32:51 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-it5p  github-pr-ee035-lxd  localhost/localhost  3.6.12   unsupported  06:32:51Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-hvm343pb           active      1  any-charm      latest/beta  124  no       
+test-hvm343pb                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hvm343pb/0*  active    idle   0        10.77.145.156          
+test-hvm343pb/0*                         active    idle   1        10.77.145.81           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.77.145.156  juju-095493-0  ubuntu@24.04  github-runner  Running
+1        started  10.77.145.81   juju-095493-1  ubuntu@22.04  github-runner  Running
+
+06:32:51 INFO Juju error logs:
+
+machine-0: 06:20:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:20:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hvm343pb-0: 06:23:51 ERROR unit.test-hvm343pb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hvm343pb-0: 06:23:53 ERROR unit.test-hvm343pb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hvm343pb-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:32:51 INFO Forgetting model main...
