@@ -1,0 +1,90 @@
+18:22:27 INFO GitHub token rate limit: Rate(reset=2026-01-15 19:22:28+00:00, remaining=5000, limit=5000)
+18:22:40 WARNING unexpected facade SSHServer received from the controller
+18:22:40 INFO Adding model github-pr-bbd2f-lxd:test-charm-metrics-failure-pna5 on cloud localhost
+18:22:40 WARNING unexpected facade SSHServer received from the controller
+18:22:40 WARNING unexpected facade SSHSession received from the controller
+18:22:40 WARNING unexpected facade SSHTunneler received from the controller
+18:22:40 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:22:42 INFO Deploying ch:amd64/noble/any-charm-124
+18:22:58 INFO Deploying local:jammy/github-runner-0
+18:22:58 INFO Waiting for model:
+  test-z6bh60ql/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z6bh60ql/0 [allocating] waiting: waiting for machine
+18:23:28 INFO Waiting for model:
+  test-z6bh60ql/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z6bh60ql/0 [allocating] waiting: waiting for machine
+18:23:59 INFO Waiting for model:
+  test-z6bh60ql/0 [allocating] waiting: waiting for machine
+18:24:29 INFO Waiting for model:
+  test-z6bh60ql/0 [allocating] waiting: waiting for machine
+18:24:59 INFO Waiting for model:
+  test-z6bh60ql/0 [allocating] waiting: agent initialising
+18:25:29 INFO Waiting for model:
+  test-z6bh60ql/0 [executing] maintenance: installing charm software
+18:25:59 INFO Waiting for model:
+  test-z6bh60ql/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-z6bh60ql/0 [idle] active: 
+18:26:29 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:26:36 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:27:06 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:27:09 INFO Current reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:27:09 INFO Waiting for reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:28:10 INFO Current reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:28:10 INFO Current reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a, expected reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:28:10 INFO Waiting for reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:29:11 INFO Current reconcile ID: e1de1d0f-c81b-42f1-8eb0-03a3e3d2b1b7
+18:29:11 INFO Current reconcile ID: e1de1d0f-c81b-42f1-8eb0-03a3e3d2b1b7, expected reconcile ID: 402abdad-8243-462c-97c2-130219d2f52a
+18:29:53 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:30:23 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:30:27 INFO Current reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:30:27 INFO Waiting for reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:31:28 INFO Current reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:31:28 INFO Current reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c, expected reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:31:28 INFO Waiting for reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:32:29 INFO Current reconcile ID: 27833baf-9d72-4b35-a40e-2153994d973b
+18:32:29 INFO Current reconcile ID: 27833baf-9d72-4b35-a40e-2153994d973b, expected reconcile ID: 8758cd2a-9568-4ce7-9127-941af5e7716c
+18:32:34 INFO [TEST SETUP] Exposing port 8080 on test-z6bh60ql-0-n-5426dea23ab8
+18:32:34 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.82', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:db:d6'}]])
+18:32:35 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-z6bh60ql-0-n-5426dea23ab8.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.82 &
+18:32:36 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.82' (ED25519) to the list of known hosts.
+
+18:32:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-z6bh60ql-0-n-5426dea23ab8
+18:32:38 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.82', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:db:d6'}]])
+18:32:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z6bh60ql-0-n-5426dea23ab8.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.82 nc -z localhost 8080'
+18:32:40 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:32:41 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-z6bh60ql-0-n-5426dea23ab8
+18:32:41 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.82', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:db:d6'}]])
+18:32:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z6bh60ql-0-n-5426dea23ab8.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.82 curl http://localhost:8080'
+18:32:43 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  77325      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:32:46 INFO Wait for condition not met, sleeping 10
+18:32:57 INFO Wait for condition not met, sleeping 60
+18:33:57 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:34:27 INFO Waiting for model:
+  test-z6bh60ql/0 [idle] active: 
+18:34:30 INFO Current reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:34:30 INFO Waiting for reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:35:31 INFO Current reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:35:31 INFO Current reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1, expected reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:35:31 INFO Waiting for reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:36:32 INFO Current reconcile ID: 9ae0310b-18cc-4287-a090-b0f7ba2f3c84
+18:36:32 INFO Current reconcile ID: 9ae0310b-18cc-4287-a090-b0f7ba2f3c84, expected reconcile ID: 048eceb8-93a3-435c-9ba3-9cd36cf630c1
+18:36:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768501903.0, "event": "runner_installed", "flavor": "test-z6bh60ql", "duration": 100.0}
+{"timestamp": 1768501971.0, "event": "runner_start", "flavor": "test-z6bh60ql", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 68.0, "queue_duration": 2.0}
+{"timestamp": 1768501971.0, "event": "runner_stop", "flavor": "test-z6bh60ql", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1768502053.9774976, "event": "reconciliation", "flavor": "test-z6bh60ql", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.979539394378662}
+{"timestamp": 1768502181.0408938, "event": "reconciliation", "flavor": "test-z6bh60ql", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.994884490966797}
