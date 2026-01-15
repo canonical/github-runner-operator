@@ -174,7 +174,7 @@ def test_stop_with_running_service(mock_systemd: MagicMock):
     assert: There is a call for stopping service.
     """
     mock_systemd.service_running.return_value = True
-    manager_service.stop()
+    manager_service.stop(unit_name="test-unit/0")
     mock_systemd.service_running.assert_called_once()
     mock_systemd.service_stop.assert_called_once()
 
@@ -186,7 +186,7 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     assert: There is no call for stopping service.
     """
     mock_systemd.service_running.return_value = False
-    manager_service.stop()
+    manager_service.stop(unit_name="test-unit/0")
     mock_systemd.service_running.assert_called_once()
     mock_systemd.service_stop.assert_not_called()
 
