@@ -162,7 +162,7 @@ def test_install_package_failure(mock_execute_command: MagicMock):
     )
 
     with pytest.raises(RunnerManagerApplicationInstallError) as err:
-        manager_service.install_package()
+        manager_service.install_package(unit_name="test-unit/1")
 
     assert manager_service._INSTALL_ERROR_MESSAGE in str(err.value)
 

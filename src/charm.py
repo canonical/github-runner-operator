@@ -130,11 +130,11 @@ def catch_charm_errors(
         except ImageIntegrationMissingError:
             logger.exception("Missing image integration.")
             self.unit.status = BlockedStatus("Please provide image integration.")
-            manager_service.stop()
+            manager_service.stop(self.unit.name)
         except ImageNotFoundError:
             logger.exception("Missing image in image integration.")
             self.unit.status = WaitingStatus("Waiting for image over integration.")
-            manager_service.stop()
+            manager_service.stop(self.unit.name)
 
     return func_with_catch_errors
 
@@ -296,7 +296,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            manager_service.install_package()
+            manager_service.install_package(self.unit.name)
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
             # Not re-raising error for until the github-runner-manager service replaces the
@@ -440,7 +440,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
         self._manager_client.flush_runner(busy=True)
-        manager_service.stop()
+        manager_service.stop(self.unit.name)
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""

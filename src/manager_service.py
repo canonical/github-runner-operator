@@ -188,13 +188,16 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service(unit_name)
 
 
-def install_package() -> None:
+def install_package(unit_name: str) -> None:
     """Install the GitHub runner manager package.
+
+    Args:
+        unit_name: The Juju unit name.
 
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
-    _stop()
+    _stop(unit_name)
 
     logger.info("Ensure pipx is at latest version")
     try:
@@ -220,25 +223,26 @@ def install_package() -> None:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
 
 
-def stop() -> None:
-    """Stop the GitHub runner manager service."""
-    _stop()
-
-
-def _stop() -> None:
+def stop(unit_name: str) -> None:
     """Stop the GitHub runner manager service.
+
+    Args:
+        unit_name: The Juju unit name.
+    """
+    _stop(unit_name)
+
+
+def _stop(unit_name: str) -> None:
+    """Stop the GitHub runner manager service.
+
+    Args:
+        unit_name: The Juju unit name.
 
     Raises:
         RunnerManagerApplicationStopError: Failed to stop the service.
     """
-    # Best-effort stop for this unit's instance service; if unit name is not available
-    # fall back to stopping the generic service name if present.
     try:
-        # Attempt to read JUJU_UNIT_NAME from environment as a fallback for stop hooks
-        unit_name = os.environ.get("JUJU_UNIT_NAME", "")
-        service_name = (
-            _instance_service_name(unit_name) if unit_name else GITHUB_RUNNER_MANAGER_SERVICE_NAME
-        )
+        service_name = _instance_service_name(unit_name)
         if systemd.service_running(service_name):
             systemd.service_stop(service_name)
     except SystemdError as err:
