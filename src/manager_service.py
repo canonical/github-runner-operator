@@ -86,18 +86,21 @@ def ensure_http_port_for_unit(unit_name: str) -> int:
 def _select_http_port(unit_name: str) -> int:
     """Choose an available HTTP port for the unit.
 
-    Prefers the deterministic candidate derived from unit index; on collision,
-    scan a small bounded range on 127.0.0.1.
-
-    Return the base port if all busy; systemd start will fail and surface error.
+    Prefers the deterministic candidate derived from unit index. On collision,
+    scans a small bounded range on 127.0.0.1 and avoids ports already
+    persisted by other units. If all candidates are busy, returns the base
+    port; systemd start will fail and surface error.
     """
     base = _deterministic_port_for_unit(unit_name)
-    if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, base):
+    used_ports = _get_persisted_ports()
+    if base not in used_ports and _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, base):
         return base
     for offset in range(1, _PORT_SCAN_SPAN + 1):
-        cand = base + offset
-        if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, cand):
-            return cand
+        candidate = base + offset
+        if candidate in used_ports:
+            continue
+        if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, candidate):
+            return candidate
     return base
 
 
@@ -134,6 +137,33 @@ def _port_available(host: str, port: int) -> bool:
         except OSError:
             return False
     return True
+
+
+def _get_persisted_ports() -> set[int]:
+    """Return the set of ports persisted by all known units.
+
+    This avoids transient races where another unit has persisted a port but
+    has not started binding yet.
+
+    Returns:
+        A set of port numbers read from `http_port` files under the service dir.
+    """
+    ports: set[int] = set()
+    try:
+        for entry in GITHUB_RUNNER_MANAGER_SERVICE_DIR.iterdir():
+            if not entry.is_dir():
+                continue
+            port_file = entry / "http_port"
+            if not port_file.exists():
+                continue
+            try:
+                ports.add(int(port_file.read_text(encoding="utf-8").strip()))
+            except (ValueError, OSError):
+                continue
+    except FileNotFoundError:
+        # Base dir may not exist yet.
+        return set()
+    return ports
 
 
 def _normalized_unit(unit_name: str) -> str:
