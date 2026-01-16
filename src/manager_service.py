@@ -43,16 +43,15 @@ _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager applicat
 logger = logging.getLogger(__name__)
 
 
-def get_http_port_for_unit(unit_name: str) -> int:
-    """Return the per-unit HTTP port, allocating if needed.
+def ensure_http_port_for_unit(unit_name: str) -> int:
+    """Return the per-unit HTTP port, allocating and persisting if needed.
 
-    This will first try to read a persisted port for the unit. If none exists,
-    it will pick a deterministic candidate based on the unit index, and probe
-    availability, scanning a small bounded range on collisions. The selection
-    is persisted to avoid future changes.
-
-    Port allocation lock is used to avoid multiple units probing ports
-    simultaneously.
+    The persisted per-unit port is used whenever available. If missing, a
+    deterministic candidate derived from the unit index is probed for
+    availability, falling back to scanning within a bounded range on
+    collisions. Allocation is performed under a process-wide lock and written
+    to disk before the lock is released to avoid concurrent units choosing the
+    same port.
 
     Args:
         unit_name: The Juju unit name (e.g., app/0).
