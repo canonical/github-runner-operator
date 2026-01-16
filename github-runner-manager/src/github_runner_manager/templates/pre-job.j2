@@ -22,7 +22,7 @@ jq -n \
 {% endif %}
 
 {% if do_repo_policy_check %}
-  logger -s "Repo policy check is marked for deprecation. Consider using `allow_external_contributor` instead"
+  logger -s "Repo policy check is marked for deprecation. Consider using 'allow_external_contributor' instead"
 
     # Log common env variables.
     logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
@@ -141,7 +141,6 @@ jq -n \
   check_author_association() {
     local event_name="$1"
     local event_path="$2"
-    
 
     # Skip check for non-contributor events
     if [[ "$event_name" != "pull_request" && "$event_name" != "pull_request_target" && 
@@ -152,9 +151,20 @@ jq -n \
     fi
     
     # Helper function to check if author association is allowed
+    # Private repositories allow CONTRIBUTOR in addition to OWNER/MEMBER/COLLABORATOR
     is_author_allowed() {
-      local ALLOWED_AUTHORIZATIONS=("OWNER" "MEMBER" "COLLABORATOR")
       local author="$1"
+      local ALLOWED_AUTHORIZATIONS=("OWNER" "MEMBER" "COLLABORATOR")
+      
+      # Check if repository is private to determine authorization level
+      local is_private=$(jq -r '.repository.private // false' "$event_path")
+      
+      # Extend allowed authorizations for private repositories
+      if [[ "$is_private" == "true" ]]; then
+        ALLOWED_AUTHORIZATIONS+=("CONTRIBUTOR")
+        logger -s "Private repository - extended authorization includes CONTRIBUTOR"
+      fi
+      
       local auth
       for auth in "${ALLOWED_AUTHORIZATIONS[@]}"; do
         if [[ "$author" == "$auth" ]]; then

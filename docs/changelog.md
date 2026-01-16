@@ -2,6 +2,28 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-01-07
+
+- Add retry to apt-get update in cloud init stage of runner creation. This should improve stability in runner creation during network instability.
+
+## 2025-12-19
+
+- Revert deletion of apt-get update due to the impact on existing workflows.
+
+## 2025-12-17
+
+- Extend contributor check on private-repositories to contributors.
+- Moved charm-architecture documents from Explanation to Reference category.
+
+## 2025-12-16
+
+- Implemented exponential backoff strategy for reactive consumer message retries to reduce load on dependencies during sustained failures. The backoff starts at 60 seconds and doubles with each retry, capped at 1800 seconds (30 minutes).
+
+## 2025-12-10
+
+- Removed apt update step in cloud-init of the VM creation step since it is now applied in the
+GitHub runner image builder side.
+
 ## 2025-12-05
 
 - Modified pre-job script to distinguish between internal PRs and fork PRs when applying author association checks. Internal PRs (where head and base repositories match) now skip the author association check, allowing team members to run workflows on their internal branches. Fork PRs continue to enforce OWNER/MEMBER/COLLABORATOR requirements for security.

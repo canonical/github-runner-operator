@@ -1,16 +1,13 @@
-# See https://github.com/canonical/gh-jira-sync-bot for config
 settings:
-  jira_project_key: "ISD"
-
-  status_mapping:
-    opened: Untriaged
-    closed: done
-    not_planned: rejected
-
   add_gh_comment: true
-
+  components:
+  - GitHub runner
   epic_key: ISD-3981
-
+  jira_project_key: ISD
   label_mapping:
     bug: Bug
     enhancement: Story
+  status_mapping:
+    closed: done
+    not_planned: rejected
+    opened: Untriaged
