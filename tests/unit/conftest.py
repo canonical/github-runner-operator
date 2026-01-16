@@ -42,7 +42,7 @@ def mocks(monkeypatch, tmp_path, exec_command, request):
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
     monkeypatch.setattr(
-        "manager_service.get_http_port_for_unit",
+        "manager_service.ensure_http_port_for_unit",
         unittest.mock.MagicMock(return_value=55555),
     )
 

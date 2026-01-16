@@ -202,7 +202,7 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     monkeypatch.setattr(manager_service, "_port_available", lambda host, port: True)
     unit_name = "github-runner-operator/0"
 
-    first_port = manager_service.get_http_port_for_unit(unit_name)
+    first_port = manager_service.ensure_http_port_for_unit(unit_name)
 
     unit_dir = tmp_path / "var/lib/github-runner-manager" / unit_name.replace("/", "-")
     port_file = unit_dir / "http_port"
@@ -212,7 +212,7 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     # Scenario 2: port is not available, but persisted value should be reused.
     monkeypatch.setattr(manager_service, "_port_available", lambda host, port: False)
 
-    second_port = manager_service.get_http_port_for_unit(unit_name)
+    second_port = manager_service.ensure_http_port_for_unit(unit_name)
 
     assert second_port == first_port, "Expected persisted port to be reused"
 
@@ -245,7 +245,7 @@ def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     monkeypatch.setattr(manager_service, "_port_available", stub_port_available)
     unit_name = "github-runner-operator/0"
 
-    selected_port = manager_service.get_http_port_for_unit(unit_name)
+    selected_port = manager_service.ensure_http_port_for_unit(unit_name)
 
     assert selected_port == manager_service._BASE_PORT + 3
     unit_dir = tmp_path / "var/lib/github-runner-manager" / unit_name.replace("/", "-")
