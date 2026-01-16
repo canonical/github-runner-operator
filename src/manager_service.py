@@ -164,6 +164,9 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     Raises:
         RunnerManagerApplicationStartError: Setup of the runner manager service has failed.
     """
+    # NOTE: Cleanup of any legacy singleton service and stray processes is handled at the
+    # charm layer (`_disable_legacy_service()`), so this setup routine focuses solely on
+    # configuring and starting the per-unit instance service.
     instance_service = _instance_service_name(unit_name)
     try:
         if systemd.service_running(instance_service):
@@ -264,7 +267,10 @@ def _get_log_file_path(unit_name: str) -> Path:
 
 
 def _enable_service(unit_name: str) -> None:
-    """Enable the github runner manager service.
+    """Enable and start the per-unit github runner manager service.
+
+    Args:
+        unit_name: The Juju unit name used to select the instance service.
 
     Raises:
         RunnerManagerApplicationStartError: Unable to startup the service.
@@ -308,7 +314,9 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     """
     python_path = Path(os.getcwd()) / "venv"
     instance = _normalized_unit(unit_name)
-    http_port = get_http_port_for_unit(unit_name)
+    # NOTE: Port allocation and persistence are performed under a process-wide
+    # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
+    http_port = ensure_http_port_for_unit(unit_name)
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
