@@ -1,0 +1,95 @@
+18:34:03 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:34:33 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:34:35 INFO Current reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:34:35 INFO Waiting for reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:35:36 INFO Current reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:35:36 INFO Current reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2, expected reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:35:36 INFO Waiting for reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:36:37 INFO Current reconcile ID: 3703ae7d-e8b6-48bd-9006-d66172b45de9
+18:36:37 INFO Current reconcile ID: 3703ae7d-e8b6-48bd-9006-d66172b45de9, expected reconcile ID: d48bd477-3b7c-44e8-a0ce-119a73eaaac2
+18:36:37 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:37:07 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:37:15 INFO Current reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:37:15 INFO Waiting for reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:38:16 INFO Current reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:38:16 INFO Current reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1, expected reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:38:16 INFO Waiting for reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:39:17 INFO Current reconcile ID: 8e0763dc-3224-4043-9f67-07d460ce847b
+18:39:17 INFO Current reconcile ID: 8e0763dc-3224-4043-9f67-07d460ce847b, expected reconcile ID: b1175cab-452f-44c1-95f6-bfb2e0ea38f1
+18:39:24 INFO Wait for condition not met, sleeping 30
+18:39:54 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-279db7f2&created=%3E%3D2026-01-16T18%3A39%3A21%2B00%3A00
+18:40:06 INFO [TEST SETUP] Run command pkill -9 run.sh on test-faoy33mk-0-n-184911edabaa
+18:40:06 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.81', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:da:ab:17'}]])
+18:40:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-faoy33mk-0-n-184911edabaa.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.81 pkill -9 run.sh'
+18:40:08 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.81' (ED25519) to the list of known hosts.
+'
+18:40:10 INFO Runner test-faoy33mk-0-n-184911edabaa status: online
+18:40:10 INFO Runner still marked as online, waiting for it to be marked offline
+18:41:11 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:41:41 INFO Waiting for model:
+  test-faoy33mk/0 [idle] active: 
+18:41:44 INFO Current reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:41:44 INFO Waiting for reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:42:45 INFO Current reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:42:45 INFO Current reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff, expected reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:42:45 INFO Waiting for reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:43:46 INFO Current reconcile ID: 2748a45a-6b53-4b3a-9dc7-55596dc72062
+18:43:46 INFO Current reconcile ID: 2748a45a-6b53-4b3a-9dc7-55596dc72062, expected reconcile ID: 69814360-823b-4a90-b68a-576dd7fe84ff
+18:43:47 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768588450.624505, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.804076433181763}
+{"timestamp": 1768588577.3361132, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.592572927474976}
+{"timestamp": 1768588609.221675, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.661540269851685}
+{"timestamp": 1768588736.814775, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.519702434539795}
+{"timestamp": 1768588681.0, "event": "runner_installed", "flavor": "test-faoy33mk", "duration": 73.0}
+{"timestamp": 1768588767.0, "event": "runner_start", "flavor": "test-faoy33mk", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 86.0, "queue_duration": 1.0}
+{"timestamp": 1768588807.0, "event": "runner_stop", "flavor": "test-faoy33mk", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1768588867.0583153, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.123649835586548}
+{"timestamp": 1768588879.203242, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.93457555770874}
+{"timestamp": 1768589006.2907345, "event": "reconciliation", "flavor": "test-faoy33mk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.052255153656006}
+18:43:47 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-37ew  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  18:43:47Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-faoy33mk           active      1  any-charm      latest/beta  124  no       
+test-faoy33mk                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-faoy33mk/0*  active    idle   0        10.247.177.95             
+test-faoy33mk/0*                         active    idle   1        10.247.177.209  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.247.177.95   juju-f5c882-0  ubuntu@24.04  github-runner  Running
+1        started  10.247.177.209  juju-f5c882-1  ubuntu@22.04  github-runner  Running
+
+18:43:47 INFO Juju error logs:
+
+machine-0: 18:20:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:20:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:22:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:22:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-faoy33mk-0: 18:23:15 ERROR unit.test-faoy33mk/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-faoy33mk-0: 18:23:16 ERROR unit.test-faoy33mk/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-faoy33mk-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:43:47 INFO Forgetting model main...
