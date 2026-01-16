@@ -127,10 +127,10 @@ def _port_available(host: str, port: int) -> bool:
     Returns:
         True if binding succeeds (port available), otherwise False.
     """
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
-            s.bind((host, port))
+            sock.bind((host, port))
         except OSError:
             return False
     return True
