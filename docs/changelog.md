@@ -5,9 +5,9 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-01-14
 
 - Add support for running multiple GitHub runner applications on a single instance.
-- Backward-incompatible: per-unit services replace the legacy singleton service and
+- Backward-incompatible: services for each unit replace the legacy singleton service and
   remove the previous shared storage layout. Existing deployments must redeploy the
-  application to adopt the new per-unit model. Upgrades will disable any legacy
+  application to adopt the new model where each unit has its own service. Upgrades will disable any legacy
   service during charm upgrade.
 
 ## 2025-01-07
