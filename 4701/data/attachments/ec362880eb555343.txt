@@ -1,0 +1,55 @@
+18:18:33 WARNING unexpected facade SSHServer received from the controller
+18:18:33 INFO Adding model github-pr-bbd2f-lxd:test-charm-metrics-success-xu51 on cloud localhost
+18:18:33 WARNING unexpected facade SSHServer received from the controller
+18:18:33 WARNING unexpected facade SSHSession received from the controller
+18:18:33 WARNING unexpected facade SSHTunneler received from the controller
+18:18:34 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:18:35 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:52 INFO Deploying local:jammy/github-runner-0
+18:18:53 INFO Waiting for model:
+  test-xfozi0dd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xfozi0dd/0 [allocating] waiting: waiting for machine
+18:19:23 INFO Waiting for model:
+  test-xfozi0dd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xfozi0dd/0 [allocating] waiting: waiting for machine
+18:19:53 INFO Waiting for model:
+  test-xfozi0dd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xfozi0dd/0 [idle] active: 
+18:20:23 INFO Waiting for model:
+  test-xfozi0dd/0 [allocating] waiting: waiting for machine
+18:20:53 INFO Waiting for model:
+  test-xfozi0dd/0 [allocating] waiting: agent initialising
+18:21:23 INFO Waiting for model:
+  test-xfozi0dd/0 [executing] maintenance: installing charm software
+18:21:53 INFO Waiting for model:
+  test-xfozi0dd/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-xfozi0dd/0 [idle] active: 
+18:22:24 INFO Waiting for model:
+  test-xfozi0dd/0 [idle] active:
+18:22:30 INFO Waiting for model:
+  test-xfozi0dd/0 [idle] active: 
+18:23:00 INFO Waiting for model:
+  test-xfozi0dd/0 [idle] active: 
+18:23:02 INFO Current reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:23:02 INFO Waiting for reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:24:03 INFO Current reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:24:03 INFO Current reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb, expected reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:24:03 INFO Waiting for reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:25:04 INFO Current reconcile ID: a58fad4c-0210-48e2-bc36-d5c8877a5523
+18:25:04 INFO Current reconcile ID: a58fad4c-0210-48e2-bc36-d5c8877a5523, expected reconcile ID: a2dc6aed-07bd-4e98-baa0-5e0800ac17bb
+18:25:08 INFO Waiting for model:
+  test-xfozi0dd/0 [idle] active: 
+18:25:38 INFO Waiting for model:
+  test-xfozi0dd/0 [idle] active: 
+18:25:41 INFO Current reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:25:41 INFO Waiting for reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:26:42 INFO Current reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:26:42 INFO Current reconcile ID: 300fea03-2b28-427a-a664-037574e13e38, expected reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:26:42 INFO Waiting for reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:27:43 INFO Current reconcile ID: ca9d4986-4558-4831-91b5-74ed8a1a271b
+18:27:43 INFO Current reconcile ID: ca9d4986-4558-4831-91b5-74ed8a1a271b, expected reconcile ID: 300fea03-2b28-427a-a664-037574e13e38
+18:27:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1768674158.6206186, "event": "reconciliation", "flavor": "test-xfozi0dd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.625085115432739}
+{"timestamp": 1768674285.2784846, "event": "reconciliation", "flavor": "test-xfozi0dd", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.588925361633301}
+{"timestamp": 1768674263.0, "event": "runner_installed", "flavor": "test-xfozi0dd", "duration": 106.0}
+{"timestamp": 1768674321.5862522, "event": "reconciliation", "flavor": "test-xfozi0dd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.888899326324463}
+{"timestamp": 1768674447.672767, "event": "reconciliation", "flavor": "test-xfozi0dd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.9413275718688965}
