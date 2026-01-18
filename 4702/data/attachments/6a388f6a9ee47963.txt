@@ -1,0 +1,28 @@
+06:21:10 INFO GitHub token rate limit: Rate(reset=2026-01-18 06:50:32+00:00, remaining=4981, limit=5000)
+06:21:13 INFO OpenStack servers: []
+06:21:13 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-jkbw  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  06:21:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ewxrcbbw           active      1  any-charm      latest/beta  124  no       
+test-ewxrcbbw                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ewxrcbbw/0*  active    idle   0        10.173.28.213          
+test-ewxrcbbw/0*                         error     idle   1        10.173.28.193          hook failed: "storage-attached"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.173.28.213  juju-e9d399-0  ubuntu@24.04  github-runner  Running
+1        started  10.173.28.193  juju-e9d399-1  ubuntu@22.04  github-runner  Running
+
+06:21:14 INFO Juju error logs:
+
+machine-0: 06:19:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ewxrcbbw-0: 06:21:09 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:21:14 INFO Forgetting model main...

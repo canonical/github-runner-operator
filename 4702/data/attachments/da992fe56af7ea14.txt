@@ -1,0 +1,27 @@
+06:21:21 INFO OpenStack servers: []
+06:21:21 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-22bt  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  06:21:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-vz95iweh           active      1  any-charm      latest/beta  124  no       
+test-vz95iweh                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vz95iweh/0*  active    idle   0        10.96.235.33           
+test-vz95iweh/0*                         error     idle   1        10.96.235.171          hook failed: "storage-attached"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.96.235.33   juju-02191d-0  ubuntu@24.04  github-runner  Running
+1        started  10.96.235.171  juju-02191d-1  ubuntu@22.04  github-runner  Running
+
+06:21:22 INFO Juju error logs:
+
+machine-0: 06:19:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vz95iweh-0: 06:21:20 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:21:22 INFO Forgetting model main...
