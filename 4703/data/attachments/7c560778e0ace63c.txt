@@ -1,0 +1,27 @@
+18:21:51 INFO OpenStack servers: []
+18:21:51 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-068c  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  18:21:51Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-hf07yvhs           active      1  any-charm      latest/beta  124  no       
+test-hf07yvhs                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hf07yvhs/0*  active    idle   0        10.185.21.66           
+test-hf07yvhs/0*                         error     idle   1        10.185.21.226          hook failed: "storage-attached"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.185.21.66   juju-0a38bd-0  ubuntu@24.04  github-runner  Running
+1        started  10.185.21.226  juju-0a38bd-1  ubuntu@22.04  github-runner  Running
+
+18:21:51 INFO Juju error logs:
+
+machine-0: 18:20:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:20:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hf07yvhs-0: 18:21:47 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:21:51 INFO Forgetting model main...

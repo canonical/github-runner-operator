@@ -1,0 +1,32 @@
+18:21:48 INFO OpenStack servers: []
+18:21:49 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-kqlg  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  18:21:49Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-fb2zw4pa           active      1  any-charm      latest/beta  124  no       
+mongodb                               8.0.10   active      1  mongodb        6/edge       262  no       
+test-fb2zw4pa                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-fb2zw4pa/0*  active       idle       1        10.93.223.53           
+mongodb/0*                               maintenance  executing  0        10.93.223.188          (install) Installing MongoDB...
+test-fb2zw4pa/0*                         error        idle       2        10.93.223.85           hook failed: "storage-attached"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.93.223.188  juju-779c96-0  ubuntu@24.04  github-runner  Running
+1        started  10.93.223.53   juju-779c96-1  ubuntu@24.04  github-runner  Running
+2        started  10.93.223.85   juju-779c96-2  ubuntu@22.04  github-runner  Running
+
+18:21:49 INFO Juju error logs:
+
+machine-1: 18:19:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:21:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:21:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fb2zw4pa-0: 18:21:47 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:21:49 INFO Forgetting model main...

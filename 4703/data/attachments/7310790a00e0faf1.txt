@@ -1,0 +1,28 @@
+18:21:31 INFO GitHub token rate limit: Rate(reset=2026-01-18 19:11:39+00:00, remaining=4986, limit=5000)
+18:21:34 INFO OpenStack servers: []
+18:21:34 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-8yyd  github-pr-bbd2f-lxd  localhost/localhost  3.6.12   unsupported  18:21:34Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-r850hfnp           active      1  any-charm      latest/beta  124  no       
+test-r850hfnp                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-r850hfnp/0*  active    idle   0        10.98.190.78           
+test-r850hfnp/0*                         error     idle   1        10.98.190.52           hook failed: "storage-attached"
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.98.190.78  juju-3db8e1-0  ubuntu@24.04  github-runner  Running
+1        started  10.98.190.52  juju-3db8e1-1  ubuntu@22.04  github-runner  Running
+
+18:21:34 INFO Juju error logs:
+
+machine-0: 18:19:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-r850hfnp-0: 18:21:30 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:21:34 INFO Forgetting model main...
