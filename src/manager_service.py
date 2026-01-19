@@ -101,6 +101,7 @@ def _select_http_port(unit_name: str) -> int:
             continue
         if _port_available(GITHUB_RUNNER_MANAGER_ADDRESS, candidate):
             return candidate
+    logger.warning("No available port found for unit %s, using base port %d", unit_name, base)
     return base
 
 

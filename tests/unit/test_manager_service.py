@@ -191,8 +191,9 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     mock_systemd.service_stop.assert_not_called()
 
 
-# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
-@pytest.mark.noautofixtures
+# 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
+# The mocks fixture (see conftest.py) normally patches this function to return 55555.
+@pytest.mark.nomocks
 def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     """
     Arrange: isolate filesystem via Path monkeypatch and stub ports as available.
@@ -218,8 +219,9 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     assert second_port == first_port, "Expected persisted port to be reused"
 
 
-# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
-@pytest.mark.noautofixtures
+# 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
+# The mocks fixture (see conftest.py) normally patches this function to return 55555.
+@pytest.mark.nomocks
 def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     """
     Arrange: map Path to temp root and stub availability so base and next two are busy.
@@ -262,8 +264,9 @@ def test_get_http_port_collision_scan(tmp_path, monkeypatch):
         ([0, 1, 2], 3),
     ],
 )
-# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
-@pytest.mark.noautofixtures
+# 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
+# The mocks fixture (see conftest.py) normally patches this function to return 55555.
+@pytest.mark.nomocks
 def test_select_http_port_skips_persisted_ports(
     patched_paths: PatchedPaths, monkeypatch, persisted_offsets, expected_offset
 ):
