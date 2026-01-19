@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Common constants for the Openstack cloud module."""
+
 from pathlib import Path
 
 RUNNER_LISTENER_PROCESS = "Runner.Listener"
