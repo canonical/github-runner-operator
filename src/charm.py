@@ -83,6 +83,7 @@ FAILED_RECONCILE_ACTION_ERR_MSG = (
 UPGRADE_MSG = "Upgrading github-runner charm."
 LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
 LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
+LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
 
 
 logger = logging.getLogger(__name__)
@@ -129,11 +130,11 @@ def catch_charm_errors(
         except ImageIntegrationMissingError:
             logger.exception("Missing image integration.")
             self.unit.status = BlockedStatus("Please provide image integration.")
-            manager_service.stop()
+            manager_service.stop(self.unit.name)
         except ImageNotFoundError:
             logger.exception("Missing image in image integration.")
             self.unit.status = WaitingStatus("Waiting for image over integration.")
-            manager_service.stop()
+            manager_service.stop(self.unit.name)
 
     return func_with_catch_errors
 
@@ -190,7 +191,10 @@ class GithubRunnerCharm(CharmBase):
         self._grafana_agent = COSAgentProvider(
             self,
             metrics_endpoints=[
-                {"path": "/metrics", "port": int(manager_service.GITHUB_RUNNER_MANAGER_PORT)}
+                {
+                    "path": "/metrics",
+                    "port": manager_service.ensure_http_port_for_unit(self.unit.name),
+                }
             ],
         )
 
@@ -236,7 +240,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
-            port=manager_service.GITHUB_RUNNER_MANAGER_PORT,
+            port=manager_service.ensure_http_port_for_unit(self.unit.name),
         )
 
     def _setup_state(self) -> CharmState:
@@ -292,7 +296,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            manager_service.install_package()
+            manager_service.install_package(self.unit.name)
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
             # Not re-raising error for until the github-runner-manager service replaces the
@@ -436,7 +440,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
         self._manager_client.flush_runner(busy=True)
-        manager_service.stop()
+        manager_service.stop(self.unit.name)
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
@@ -582,7 +586,8 @@ def _setup_runner_manager_user() -> None:
         )
 
 
-def _disable_legacy_service() -> None:
+# 2025-01-14 Disable too complex errors, this migration function is targeted for deprecation.
+def _disable_legacy_service() -> None:  # noqa: C901
     """Disable any legacy service."""
     logger.info("Attempting to stop legacy services")
     try:
@@ -595,12 +600,22 @@ def _disable_legacy_service() -> None:
         systemd.service_stop(LEGACY_RECONCILE_SERVICE)
     except systemd.SystemdError:
         pass
+    # Stop and disable the pre-instance singleton service if it exists.
+    try:
+        systemd.service_disable(LEGACY_MANAGER_SINGLETON_SERVICE)
+        systemd.service_stop(LEGACY_MANAGER_SINGLETON_SERVICE)
+    except systemd.SystemdError:
+        pass
 
     try:
         timer_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_TIMER_SERVICE
         service_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_SERVICE
+        manager_singleton_path = (
+            pathlib.Path("/etc/systemd/system") / LEGACY_MANAGER_SINGLETON_SERVICE
+        )
         timer_path.unlink(missing_ok=True)
         service_path.unlink(missing_ok=True)
+        manager_singleton_path.unlink(missing_ok=True)
     except OSError:
         logger.warning(
             "Unexpected exception during removal of legacy systemd service files", exc_info=True

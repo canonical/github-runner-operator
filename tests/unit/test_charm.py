@@ -59,9 +59,6 @@ def side_effect_fixture(monkeypatch, tmpdir):
     monkeypatch.setattr("charm.execute_command", MagicMock())
     monkeypatch.setattr("charm.systemd", MagicMock())
     monkeypatch.setattr("manager_service.yaml_safe_dump", MagicMock())
-    monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
-    monkeypatch.setattr("manager_service.Path.mkdir", MagicMock())
-    monkeypatch.setattr("manager_service.Path.touch", MagicMock())
     monkeypatch.setattr("manager_service.systemd", MagicMock())
 
 

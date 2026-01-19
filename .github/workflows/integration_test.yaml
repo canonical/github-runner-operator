@@ -20,7 +20,7 @@ jobs:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_charm_upgrade", "test_reactive"]'
+      modules: '["test_multi_unit_same_machine", "test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_charm_upgrade", "test_reactive"]'
       # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
