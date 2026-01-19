@@ -1,0 +1,51 @@
+09:01:11 WARNING unexpected facade SSHServer received from the controller
+09:01:11 INFO Adding model github-pr-bbd2f-lxd:test-charm-fork-path-change-p5ht on cloud localhost
+09:01:12 WARNING unexpected facade SSHServer received from the controller
+09:01:12 WARNING unexpected facade SSHSession received from the controller
+09:01:12 WARNING unexpected facade SSHTunneler received from the controller
+09:01:12 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+09:01:15 INFO Deploying ch:amd64/noble/any-charm-124
+09:01:42 INFO Deploying local:jammy/github-runner-0
+09:01:43 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:02:13 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:02:43 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:03:13 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:03:44 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:04:14 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: waiting for machine
+09:04:44 INFO Waiting for model:
+  test-cc2q5osu/0 [allocating] waiting: agent initialising
+09:04:47 INFO OpenStack servers: []
+09:04:48 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-p5ht  github-pr-bbd2f-lxd  localhost/localhost  3.6.13   unsupported  09:04:48Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-cc2q5osu           active      1  any-charm      latest/beta  124  no       
+test-cc2q5osu                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-cc2q5osu/0*  active    idle   0        10.79.29.224           
+test-cc2q5osu/0*                         error     idle   1        10.79.29.226           hook failed: "storage-attached"
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.79.29.224  juju-16f420-0  ubuntu@24.04  github-runner  Running
+1        started  10.79.29.226  juju-16f420-1  ubuntu@22.04  github-runner  Running
+
+09:04:48 INFO Juju error logs:
+
+machine-0: 09:02:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:02:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:04:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:04:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cc2q5osu-0: 09:04:46 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+09:04:48 INFO Forgetting model main...

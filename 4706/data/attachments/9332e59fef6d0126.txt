@@ -1,0 +1,27 @@
+09:03:35 INFO OpenStack servers: []
+09:03:35 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-e9t8  github-pr-bbd2f-lxd  localhost/localhost  3.6.13   unsupported  09:03:35Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ed5nou2b           active      1  any-charm      latest/beta  124  no       
+test-ed5nou2b                                  error       1  github-runner                 0  no       hook failed: "storage-attached"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ed5nou2b/0*  active    idle   0        10.203.210.96          
+test-ed5nou2b/0*                         error     idle   1        10.203.210.241         hook failed: "storage-attached"
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.203.210.96   juju-85cd35-0  ubuntu@24.04  github-runner  Running
+1        started  10.203.210.241  juju-85cd35-1  ubuntu@22.04  github-runner  Running
+
+09:03:36 INFO Juju error logs:
+
+machine-0: 09:01:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:01:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:03:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:03:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ed5nou2b-0: 09:03:31 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+09:03:36 INFO Forgetting model main...
