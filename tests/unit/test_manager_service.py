@@ -251,3 +251,35 @@ def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     unit_dir = tmp_path / "var/lib/github-runner-manager" / unit_name.replace("/", "-")
     port_file = unit_dir / "http_port"
     assert int(port_file.read_text(encoding="utf-8").strip()) == selected_port
+
+
+@pytest.mark.parametrize(
+    "persisted_offsets, expected_offset",
+    [
+        ([0], 1),
+        ([0, 1, 2], 3),
+    ],
+)
+@pytest.mark.noautofixtures
+def test_select_http_port_skips_persisted_ports(
+    patched_paths: PatchedPaths, monkeypatch, persisted_offsets, expected_offset
+):
+    """
+    arrange: Persist candidate ports for other units and stub availability to True.
+    act: Request a port for unit "app/0" whose base may collide with persisted ones.
+    assert: Selected port equals base+expected_offset and is persisted for this unit.
+    """
+    monkeypatch.setattr(manager_service, "_port_available", lambda host, port: True)
+
+    base = manager_service._BASE_PORT
+    # Persist the candidate ports under different unit directories to simulate other units.
+    for idx, off in enumerate(persisted_offsets):
+        unit_dir = patched_paths.service_dir / f"other-{idx}"
+        unit_dir.mkdir(parents=True, exist_ok=True)
+        (unit_dir / "http_port").write_text(str(base + off), encoding="utf-8")
+
+    selected = manager_service.ensure_http_port_for_unit("app/0")
+
+    assert selected == base + expected_offset
+    this_unit_dir = patched_paths.service_dir / "app-0"
+    assert int((this_unit_dir / "http_port").read_text(encoding="utf-8").strip()) == selected
