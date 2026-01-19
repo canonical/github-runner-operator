@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Module for unit-testing OpenStack runner manager."""
+
 import logging
 import textwrap
 from unittest.mock import MagicMock
@@ -91,8 +92,7 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
             ["80", "443"],
             ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
             True,
-            textwrap.dedent(
-                """\
+            textwrap.dedent("""\
     table ip aproxy {
           set exclude {
               type ipv4_addr;
@@ -108,16 +108,14 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
-            """
-            ),
+            """),
             id="aproxy default config",
         ),
         pytest.param(
             ["80", "443"],
             [],
             True,
-            textwrap.dedent(
-                """\
+            textwrap.dedent("""\
     table ip aproxy {
           set exclude {
               type ipv4_addr;
@@ -133,8 +131,7 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
-            """
-            ),
+            """),
             id="aproxy with no aproxy_exclude_addresses",
         ),
     ],

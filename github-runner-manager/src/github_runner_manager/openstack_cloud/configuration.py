@@ -3,7 +3,6 @@
 
 """Module containing OpenStack Configuration."""
 
-
 from pydantic import BaseModel
 
 

@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Factory for instantiating platform provider."""
+
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.platform_provider import PlatformProvider
