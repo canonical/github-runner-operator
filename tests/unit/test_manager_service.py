@@ -191,6 +191,7 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     mock_systemd.service_stop.assert_not_called()
 
 
+# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
 @pytest.mark.noautofixtures
 def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     """
@@ -217,6 +218,7 @@ def test_get_http_port_persists_and_reuses(tmp_path, monkeypatch):
     assert second_port == first_port, "Expected persisted port to be reused"
 
 
+# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
 @pytest.mark.noautofixtures
 def test_get_http_port_collision_scan(tmp_path, monkeypatch):
     """
@@ -260,6 +262,7 @@ def test_get_http_port_collision_scan(tmp_path, monkeypatch):
         ([0, 1, 2], 3),
     ],
 )
+# 2026-01-19 prevent patching ensure_http_port_for_unit which is used under test
 @pytest.mark.noautofixtures
 def test_select_http_port_skips_persisted_ports(
     patched_paths: PatchedPaths, monkeypatch, persisted_offsets, expected_offset
