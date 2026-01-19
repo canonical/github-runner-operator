@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
+
 import json
 from asyncio import sleep
 from typing import AsyncIterator

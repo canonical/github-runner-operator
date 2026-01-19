@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Test cases for GithubRunnerCharm."""
+
 import os
 import secrets
 import typing

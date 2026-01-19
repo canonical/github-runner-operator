@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Data classes and type definitions."""
+
 import dataclasses
 from typing import TypedDict
 

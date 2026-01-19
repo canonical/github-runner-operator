@@ -5,6 +5,7 @@
 
 Migrate to PyGithub in the future. PyGithub is still lacking some API such as get runner groups.
 """
+
 import functools
 import logging
 from datetime import datetime

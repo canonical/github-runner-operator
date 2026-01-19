@@ -3,7 +3,6 @@
 
 """Module containing GitHub API related types."""
 
-
 from __future__ import annotations
 
 from datetime import datetime

@@ -369,8 +369,7 @@ def test_charm_config_from_charm_valid():
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
         MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME: "bash -c 'openssl s_client -quiet -connect example.com:2222 -servername %h 2>/dev/null'",
-        CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: (
-            custom_pre_job_script := """
+        CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: (custom_pre_job_script := """
 #!/usr/bin/env bash
 cat > ~/.ssh/config <<EOF
       host github.com
@@ -379,8 +378,7 @@ cat > ~/.ssh/config <<EOF
           port 22
           proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
       EOF
-"""
-        ),
+"""),
         RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME: "INFO",
     }
 

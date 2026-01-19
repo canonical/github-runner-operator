@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Models and functions for the metric events."""
+
 import logging
 import os
 from pathlib import Path

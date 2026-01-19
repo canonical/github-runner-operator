@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """State of the Charm."""
+
 import dataclasses
 import ipaddress
 import json

@@ -3,7 +3,6 @@
 
 """Test the github-runner-manager application configuration."""
 
-
 import json
 from io import StringIO
 from ipaddress import IPv4Address

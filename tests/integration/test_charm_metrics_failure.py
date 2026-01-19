@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
+
 import time
 from asyncio import sleep
 from typing import AsyncIterator

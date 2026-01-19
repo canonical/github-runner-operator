@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+
 import logging
 
 import pytest

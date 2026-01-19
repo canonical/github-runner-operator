@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Functions to calculate metrics from data retrieved from GitHub."""
+
 import logging
 
 from github_runner_manager.errors import GithubMetricsError

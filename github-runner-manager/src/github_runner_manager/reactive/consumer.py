@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Module responsible for consuming jobs from the message queue."""
+
 import contextlib
 import logging
 import signal

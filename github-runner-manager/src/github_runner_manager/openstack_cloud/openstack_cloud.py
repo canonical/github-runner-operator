@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+
 import concurrent.futures
 import contextlib
 import copy
