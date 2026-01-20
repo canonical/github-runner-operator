@@ -1,0 +1,245 @@
+18:20:41 WARNING unexpected facade SSHServer received from the controller
+18:20:41 INFO Adding model github-pr-a4496-lxd:test-charm-upgrade-g3rq on cloud localhost
+18:20:41 WARNING unexpected facade SSHServer received from the controller
+18:20:41 WARNING unexpected facade SSHSession received from the controller
+18:20:41 WARNING unexpected facade SSHTunneler received from the controller
+18:20:41 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:44 INFO Deploying ch:amd64/noble/any-charm-124
+18:21:07 INFO Deploying local:jammy/github-runner-0
+18:21:07 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f3j8mv77/0 [allocating] waiting: waiting for machine
+18:21:37 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f3j8mv77/0 [allocating] waiting: agent initialising
+18:22:07 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f3j8mv77/0 [idle] active: 
+18:22:37 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: waiting for machine
+18:23:07 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: waiting for machine
+18:23:37 INFO Waiting for model:
+  test-f3j8mv77/0 [allocating] waiting: agent initialising
+18:24:07 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] maintenance: installing charm software
+18:24:37 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] blocked: Please provide image integration.
+18:25:07 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] maintenance: Update image for runners
+18:25:37 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] maintenance: Update image for runners
+18:26:07 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] maintenance: Update image for runners
+18:26:37 INFO Waiting for model:
+  test-f3j8mv77/0 [executing] maintenance: Update image for runners
+18:27:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:27:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:28:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:28:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:29:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:29:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:30:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:30:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:31:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:31:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:32:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:32:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:33:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:33:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:34:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:34:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:35:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:35:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:36:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:36:38 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:37:08 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:37:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:38:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:38:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:39:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:39:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:40:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:40:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:41:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:41:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:42:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:42:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:43:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:43:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:44:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:44:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:45:09 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:45:39 INFO Waiting for model:
+  test-f3j8mv77/0 [idle] error: hook failed: "image-relation-changed"
+18:46:10 INFO OpenStack servers: []
+18:46:10 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-g3rq  github-pr-a4496-lxd  localhost/localhost  3.6.13   unsupported  18:46:10Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-f3j8mv77           active      1  any-charm      latest/beta  124  no       
+test-f3j8mv77                                  error       1  github-runner                 0  no       hook failed: "image-relation-changed"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-f3j8mv77/0*  active    idle   0        10.125.69.31           
+test-f3j8mv77/0*                         error     idle   1        10.125.69.159          hook failed: "image-relation-changed"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.125.69.31   juju-281b23-0  ubuntu@24.04  github-runner  Running
+1        started  10.125.69.159  juju-281b23-1  ubuntu@22.04  github-runner  Running
+
+18:46:10 INFO Juju error logs:
+
+machine-0: 18:21:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-f3j8mv77-0: 18:24:37 ERROR unit.test-f3j8mv77/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-f3j8mv77-0: 18:24:38 ERROR unit.test-f3j8mv77/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-f3j8mv77-0: 18:26:41 ERROR unit.test-f3j8mv77/0.juju-log image:1: Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connection.py", line 500, in request
+    self.endheaders()
+  File "/usr/lib/python3.10/http/client.py", line 1298, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.10/http/client.py", line 1058, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.10/http/client.py", line 996, in send
+    self.connect()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connection.py", line 331, in connect
+    self.sock = self._new_conn()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connection.py", line 219, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: HTTPConnection(host='127.0.0.1', port=55555): Failed to establish a new connection: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=55555): Max retries exceeded with url: /health (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=55555): Failed to establish a new connection: [Errno 111] Connection refused"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/src/manager_client.py", line 161, in health_check
+    response = self._request(_HTTPMethod.GET, "/health", timeout=READ_TIMEOUT)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/src/manager_client.py", line 120, in _request
+    response = self._requests.request(method, url, *args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=55555): Max retries exceeded with url: /health (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=55555): Failed to establish a new connection: [Errno 111] Connection refused"))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 616, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/__init__.py", line 360, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/_main.py", line 507, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/_main.py", line 491, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/_main.py", line 426, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/_main.py", line 470, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/framework.py", line 337, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/framework.py", line 910, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/venv/ops/framework.py", line 1028, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 492, in _on_image_relation_changed
+    self._setup_service(state)
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/./src/charm.py", line 398, in _setup_service
+    self._manager_client.wait_till_ready()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/src/manager_client.py", line 181, in wait_till_ready
+    self.health_check()
+  File "/var/lib/juju/agents/unit-test-f3j8mv77-0/charm/src/manager_client.py", line 165, in health_check
+    raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+errors.RunnerManagerServiceNotReadyError: GitHub runner manager service not ready
+unit-test-f3j8mv77-0: 18:26:42 ERROR juju.worker.uniter.operation hook "image-relation-changed" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:46:10 INFO Forgetting model main...

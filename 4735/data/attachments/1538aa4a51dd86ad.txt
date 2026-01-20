@@ -1,0 +1,50 @@
+18:20:39 WARNING unexpected facade SSHServer received from the controller
+18:20:39 INFO Adding model github-pr-a4496-lxd:test-charm-runner-nkq0 on cloud localhost
+18:20:39 WARNING unexpected facade SSHServer received from the controller
+18:20:39 WARNING unexpected facade SSHSession received from the controller
+18:20:39 WARNING unexpected facade SSHTunneler received from the controller
+18:20:39 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:20:41 INFO Deploying ch:amd64/noble/any-charm-124
+18:21:03 INFO Deploying local:jammy/github-runner-0
+18:21:03 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s8jpj8hk/0 [allocating] waiting: waiting for machine
+18:21:33 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s8jpj8hk/0 [allocating] waiting: waiting for machine
+18:22:03 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: waiting for machine
+18:22:33 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: waiting for machine
+18:23:04 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: waiting for machine
+18:23:34 INFO Waiting for model:
+  test-s8jpj8hk/0 [allocating] waiting: agent initialising
+18:24:05 INFO Waiting for model:
+  test-s8jpj8hk/0 [executing] maintenance: installing charm software
+18:24:35 INFO Waiting for model:
+  test-s8jpj8hk/0 [executing] maintenance: installing charm software
+18:25:05 INFO Waiting for model:
+  test-s8jpj8hk/0 [executing] maintenance: Update image for runners
+18:25:26 INFO Waiting for model:
+  test-s8jpj8hk/0 [idle] active: 
+18:25:56 INFO Waiting for model:
+  test-s8jpj8hk/0 [idle] active: 
+18:25:59 INFO Current reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:25:59 INFO Waiting for reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:27:00 INFO Current reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:27:00 INFO Current reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515, expected reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:27:00 INFO Waiting for reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:28:01 INFO Current reconcile ID: 31422bf1-2d3b-4007-a633-30d5fac8a126
+18:28:01 INFO Current reconcile ID: 31422bf1-2d3b-4007-a633-30d5fac8a126, expected reconcile ID: a1d27098-e9da-44cf-a225-a316de95c515
+18:28:09 INFO Waiting for model:
+  test-s8jpj8hk/0 [idle] active: 
+18:28:39 INFO Waiting for model:
+  test-s8jpj8hk/0 [idle] active: 
+18:28:42 INFO Current reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
+18:28:42 INFO Waiting for reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
+18:29:43 INFO Current reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
+18:29:43 INFO Current reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad, expected reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
+18:29:43 INFO Waiting for reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
+18:30:44 INFO Current reconcile ID: ed305453-6220-4865-9a7b-a285b01bcdf5
+18:30:44 INFO Current reconcile ID: ed305453-6220-4865-9a7b-a285b01bcdf5, expected reconcile ID: 58e998eb-1fee-4dea-8bd4-40df01e329ad
