@@ -1,0 +1,117 @@
+06:21:29 WARNING unexpected facade SSHServer received from the controller
+06:21:29 INFO Adding model github-pr-a2a3a-lxd:test-charm-fork-repo-jfyk on cloud localhost
+06:21:29 WARNING unexpected facade SSHServer received from the controller
+06:21:29 WARNING unexpected facade SSHSession received from the controller
+06:21:29 WARNING unexpected facade SSHTunneler received from the controller
+06:21:30 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:21:32 INFO Deploying ch:amd64/noble/any-charm-124
+06:21:59 INFO Deploying local:jammy/github-runner-0
+06:21:59 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:22:29 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:23:00 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lrgshjzz/0 [executing] active: 
+06:23:30 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:24:00 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:24:31 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:25:01 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:25:31 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: waiting for machine
+06:26:02 INFO Waiting for model:
+  test-lrgshjzz/0 [allocating] waiting: agent initialising
+06:26:32 INFO Waiting for model:
+  test-lrgshjzz/0 [executing] maintenance: installing charm software
+06:27:03 INFO Waiting for model:
+  test-lrgshjzz/0 [executing] maintenance: installing charm software
+06:27:33 INFO Waiting for model:
+  test-lrgshjzz/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-lrgshjzz/0 [idle] active: 
+06:28:04 INFO Waiting for model:
+  test-lrgshjzz/0 [idle] active: 
+06:28:07 INFO GitHub token rate limit: Rate(reset=2026-01-20 06:48:47+00:00, remaining=4432, limit=5000)
+06:29:11 INFO Waiting for model:
+  test-lrgshjzz/0 [idle] active: 
+06:29:41 INFO Waiting for model:
+  test-lrgshjzz/0 [idle] active: 
+06:29:45 INFO Current reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:29:45 INFO Waiting for reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:30:46 INFO Current reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:30:46 INFO Current reconcile ID: 583f5511-659d-4964-98a2-367862589de4, expected reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:30:46 INFO Waiting for reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:31:47 INFO Current reconcile ID: f3423c2b-77c4-4540-a2c3-6fa2433398b8
+06:31:47 INFO Current reconcile ID: f3423c2b-77c4-4540-a2c3-6fa2433398b8, expected reconcile ID: 583f5511-659d-4964-98a2-367862589de4
+06:31:53 INFO [TEST SETUP] Exposing port 8080 on test-lrgshjzz-0-n-71b98bc00b87
+06:31:53 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.66', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:9b:c3'}]])
+06:31:54 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-lrgshjzz-0-n-71b98bc00b87.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.66 &
+06:31:55 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.66' (ED25519) to the list of known hosts.
+
+06:31:57 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-lrgshjzz-0-n-71b98bc00b87
+06:31:57 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.66', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:9b:c3'}]])
+06:31:58 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-lrgshjzz-0-n-71b98bc00b87.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.66 nc -z localhost 8080'
+06:31:59 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:32:00 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-lrgshjzz-0-n-71b98bc00b87
+06:32:00 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.66', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:9b:c3'}]])
+06:32:01 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-lrgshjzz-0-n-71b98bc00b87.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.66 curl http://localhost:8080'
+06:32:02 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  56993      0 --:--:-- --:--:-- --:--:-- 69000
+'
+06:32:05 INFO Wait for condition not met, sleeping 10
+06:32:16 INFO Wait for condition not met, sleeping 60
+06:33:21 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-jfyk  github-pr-a2a3a-lxd  localhost/localhost  3.6.13   unsupported  06:33:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-lrgshjzz           active      1  any-charm      latest/beta  124  no       
+test-lrgshjzz                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-lrgshjzz/0*  active    idle   0        10.197.227.227            
+test-lrgshjzz/0*                         active    idle   1        10.197.227.178  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.197.227.227  juju-3102d4-0  ubuntu@24.04  github-runner  Running
+1        started  10.197.227.178  juju-3102d4-1  ubuntu@22.04  github-runner  Running
+
+06:33:21 INFO Juju error logs:
+
+machine-0: 06:22:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:22:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-lrgshjzz-0: 06:27:22 ERROR unit.test-lrgshjzz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-lrgshjzz-0: 06:27:24 ERROR unit.test-lrgshjzz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-lrgshjzz-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:33:21 INFO Forgetting model main...

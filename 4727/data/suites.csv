@@ -1,0 +1,125 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: A working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    ","4033","test_check_runners_no_runners","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_no_runner","",""
+"
+    arrange: A working application with one runner with a custom pre-job script enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed and pre-job script has been executed.
+    ","172314","test_custom_pre_job_script","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_runner","",""
+"
+    arrange: A working application with one runner in a forked repository.
+    act: Change the path configuration to the main repository and reconcile runners.
+    assert: No runners connected to the forked repository and one runner in the main repository.
+    ","480299","test_path_config_change","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_fork_path_change","",""
+"
+    arrange: A working application with one runner with repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed.
+    ","200944","test_repo_policy_enabled","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_runner","",""
+"
+    arrange: Place a message in the queue and dispatch a workflow.
+    act: Call reconcile.
+    assert: A runner is spawned to process the job and the message is removed from the queue.
+        The metrics are logged.
+    ","306259","test_reactive_mode_spawns_runner","tests.integration","2026-01-20","passed","2026-01-20","","test_reactive","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards kill run.sh. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to Abnormal.
+    ","431553","test_charm_issues_metrics_for_abnormal_termination","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_metrics_failure","",""
+"
+    arrange:         1. A forked repository.         2. A working application using repo-policy checks with one runner on the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
+    assert: The workflow that was dispatched failed and the reason is logged.
+    ","300525","test_dispatch_workflow_failure","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_fork_repo","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow that fails the repo-policy check. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to failure.
+    ","440042","test_charm_issues_metrics_for_failed_repo_policy","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_metrics_failure","",""
+"
+    arrange: Place a message in the queue with a non-existent job url.
+    act: Call reconcile.
+    assert: The message is removed from the queue.
+    ","148695","test_reactive_mode_with_not_found_job","tests.integration","2026-01-20","passed","2026-01-20","","test_reactive","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 1.
+        2.  a. Set virtual-machines config to 0.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    ","313471","test_reconcile_runners","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_no_runner","",""
+"
+    arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
+    act: Call reconcile.
+    assert: No runner is spawned and the message is not requeued.
+    ","24231","test_reactive_mode_does_not_consume_jobs_with_unsupported_labels","tests.integration","2026-01-20","passed","2026-01-20","","test_reactive","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1. Check the github runner manager service.
+        2. Force a logrotate
+    assert:
+        1. The service should be running, and logs generated.
+        2. New lines of log should be found, the initialize logs should not be found.
+    ","142193","test_manager_service_started","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_no_runner","",""
+"
+    arrange: A working application with one runner.
+    act: Run check_runner action.
+    assert: Action returns result with one runner.
+    ","162851","test_check_runner","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_runner","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to normal.
+    ","327526","test_charm_issues_metrics_after_reconciliation","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_metrics_success","",""
+"
+    arrange: given latest stable version of the charm.
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","1520251","test_charm_upgrade","tests.integration","2026-01-20","broken","2026-01-20","","test_charm_upgrade","",""
+"
+    arrange: Scale down the number of virtual machines to 2 and spawn a job.
+    act:
+        1. Scale down the number of virtual machines to 0 and call reconcile.
+        2. Spawn a job.
+    assert:
+        1. The job fails.
+        2. The job is queued and there is a message in the queue.
+    ","1067840","test_reactive_mode_scale_down","tests.integration","2026-01-20","failed","2026-01-20","","test_reactive","",""
+"
+    arrange: A charm integrated with grafana-agent using the cos-agent integration.
+    act: Config the charm to contain one runner.
+    assert: The RunnerInstalled metric is logged.
+    ","314482","test_charm_issues_runner_installed_metric","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_metrics_success","",""
+"
+    arrange: A working application with two runners.
+    act:
+        1. Run Check_runner action. Record the runner names for later.
+        2. Flush runners.
+        3. Dispatch a workflow to make runner busy and call flush_runner action.
+
+    assert:
+        1. Two runner exists.
+        2. Runners are recreated.
+        3. The runner is not flushed since by default it flushes idle.
+
+    Test are combined to reduce number of runner spawned.
+    ","405695","test_flush_runner_and_resource_config","tests.integration","2026-01-20","passed","2026-01-20","","test_charm_runner","",""
+"
+    arrange: given a prometheus charm application.
+    act: when GitHub runner is integrated.
+    assert: the datasource is registered and basic metrics are available.
+    ","476550","test_prometheus_metrics","tests.integration","2026-01-20","passed","2026-01-20","","test_prometheus_metrics","",""
