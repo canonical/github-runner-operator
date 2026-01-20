@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Manage the service of github-runner-manager."""
+
 import fcntl
 import json
 import logging
@@ -348,8 +349,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
     http_port = ensure_http_port_for_unit(unit_name)
-    service_file_content = textwrap.dedent(
-        f"""\
+    service_file_content = textwrap.dedent(f"""\
         [Unit]
         Description=Runs the github-runner-manager service
         StartLimitIntervalSec=0
@@ -371,8 +371,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
 
         [Install]
         WantedBy=multi-user.target
-        """
-    )
+        """)
     service_path = (
         SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{instance}.service"
     )
