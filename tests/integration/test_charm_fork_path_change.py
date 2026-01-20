@@ -5,6 +5,7 @@
 
 Tests a path change in the repo.
 """
+
 import logging
 
 import pytest
