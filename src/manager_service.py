@@ -184,8 +184,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         log_level: The log level of the service.
     """
     python_path = Path(os.getcwd()) / "venv"
-    service_file_content = textwrap.dedent(
-        f"""\
+    service_file_content = textwrap.dedent(f"""\
         [Unit]
         Description=Runs the github-runner-manager service
         StartLimitIntervalSec=0
@@ -207,6 +206,5 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
 
         [Install]
         WantedBy=multi-user.target
-        """
-    )
+        """)
     GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH.write_text(service_file_content, "utf-8")

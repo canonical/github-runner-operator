@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+
 from typing import AsyncIterator
 
 import pytest

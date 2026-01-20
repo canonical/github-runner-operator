@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Logrotate setup and configuration."""
+
 from enum import Enum
 from pathlib import Path
 
