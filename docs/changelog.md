@@ -2,6 +2,14 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-01-14
+
+- Add support for running up to 100 multiple GitHub runner applications on a single instance.
+- Backward-incompatible: services for each unit replace the legacy singleton service and
+  remove the previous shared storage layout. Existing deployments must redeploy the
+  application to adopt the new model where each unit has its own service. Upgrades will disable any legacy
+  service during charm upgrade.
+
 ## 2025-01-07
 
 - Add retry to apt-get update in cloud init stage of runner creation. This should improve stability in runner creation during network instability.
