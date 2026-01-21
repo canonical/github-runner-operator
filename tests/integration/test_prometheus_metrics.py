@@ -91,7 +91,7 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
 def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
-    juju.deploy("grafana-agent", channel="1/stable", base="ubuntu@22.04")
+    juju.deploy("grafana-agent", channel="1/stable", base="ubuntu@22.04", revision=603)
     juju.integrate(app_openstack_runner.name, "grafana-agent")
     juju.wait(
         lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, "grafana-agent")
