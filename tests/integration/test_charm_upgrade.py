@@ -47,7 +47,6 @@ async def test_charm_upgrade(
     assert: the charm is upgraded successfully.
     """
     latest_edge_path = tmp_path / "github-runner.charm"
-    latest_edge_revision = 482  # update this value every release to stable.
     # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
@@ -101,7 +100,7 @@ async def test_charm_upgrade(
         branch="deadbeef",
         hash_="hash",
         id_="id",
-        revision=latest_edge_revision,
+        revision=0,  # arbitrary number
         base=client.Base("22.04", "ubuntu"),
     )
 
