@@ -190,10 +190,17 @@ class GithubRunnerCharm(CharmBase):
 
         self._grafana_agent = COSAgentProvider(
             self,
-            metrics_endpoints=[
+            scrape_configs=[
                 {
-                    "path": "/metrics",
-                    "port": manager_service.ensure_http_port_for_unit(self.unit.name),
+                    "job_name": "github-runner",
+                    "metrics_path": "/metrics",
+                    "static_configs": [
+                        {
+                            "targets": [
+                                f"localhost:{manager_service.ensure_http_port_for_unit(self.unit.name)}"
+                            ]
+                        }
+                    ],
                 }
             ],
         )
