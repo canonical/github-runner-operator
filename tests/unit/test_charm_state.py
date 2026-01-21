@@ -581,10 +581,12 @@ def test_reactive_config_from_charm():
     relation_mock = MagicMock()
     app_mock = MagicMock()
     relation_mock.app = app_mock
+    mock_charm.app = app_mock
     relation_mock.data = {
         app_mock: {
             "uris": mongodb_uri,
-        }
+        },
+        mock_charm.model.unit: {},
     }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
     database = DatabaseRequires(
@@ -604,10 +606,6 @@ def test_reactive_config_from_database_returns_none():
     assert: None is returned.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    relation_mock.data = {}
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
 
     database = DatabaseRequires(
@@ -629,7 +627,10 @@ def test_reactive_config_from_database_integration_data_missing():
     relation_mock = MagicMock()
     app_mock = MagicMock()
     relation_mock.app = app_mock
-    relation_mock.data = {}
+    relation_mock.data = {
+        app_mock: {},
+        mock_charm.model.unit: {},
+    }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
 
     database = DatabaseRequires(

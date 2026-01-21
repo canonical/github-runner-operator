@@ -42,7 +42,7 @@ async def test_charm_upgrade(
     image_builder: Application,
 ):
     """
-    arrange: given latest stable version of the charm.
+    arrange: given latest edge version of the charm.
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
@@ -63,7 +63,7 @@ async def test_charm_upgrade(
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
 
-    # deploy latest stable version of the charm
+    # deploy latest edge version of the charm
     application = await deploy_github_runner_charm(
         model=model,
         charm_file=str(latest_edge_path),
