@@ -30,9 +30,6 @@ from tests.integration.helpers.common import (
 pytestmark = pytest.mark.openstack
 
 
-# 2026-01-20: There was an issue with an external dependency , this has been resolved in a2a3a050 .
-# We need to skip this test until the revision 482 is available in the stable channel.
-@pytest.mark.skip(reason="Skipping charm upgrade test until we have a new stable release.")
 @pytest.mark.asyncio
 async def test_charm_upgrade(
     model: Model,
@@ -45,7 +42,7 @@ async def test_charm_upgrade(
     image_builder: Application,
 ):
     """
-    arrange: given latest stable version of the charm.
+    arrange: given latest edge version of the charm.
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
@@ -66,7 +63,7 @@ async def test_charm_upgrade(
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
 
-    # deploy latest stable version of the charm
+    # deploy latest edge version of the charm
     application = await deploy_github_runner_charm(
         model=model,
         charm_file=str(latest_edge_path),
