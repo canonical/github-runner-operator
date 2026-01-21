@@ -5,6 +5,7 @@
 
 import importlib.metadata
 import logging
+import signal
 import sys
 from functools import partial
 from io import StringIO
@@ -15,7 +16,12 @@ import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
-from github_runner_manager.reconcile_service import start_reconcile_service
+from github_runner_manager.manager.pressure_reconciler import (
+    PressureReconciler,
+    PressureReconcilerConfig,
+)
+from github_runner_manager.planner_client import PlannerClient, PlannerConfiguration
+from github_runner_manager.reconcile_service import get_runner_scaler
 from github_runner_manager.thread_manager import ThreadManager
 
 version = importlib.metadata.version("github-runner-manager")
@@ -97,15 +103,33 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     lock = Lock()
     config_str = config_file.read()
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_str))
-    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
+    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
     thread_manager.add_thread(
         target=partial(start_http_server, config, lock, http_server_args), daemon=True
     )
-    thread_manager.add_thread(
-        target=partial(start_reconcile_service, config, python_path_config, lock), daemon=True
-    )
-    thread_manager.start()
 
+    combinations = config.non_reactive_configuration.combinations
+    flavor_name = combinations[0].flavor.name
+    planner_client = PlannerClient(
+        PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+    )
+    runner_scaler = get_runner_scaler(config, python_path=python_path_config)
+    pressure_reconciler = PressureReconciler(
+        manager=runner_scaler._manager,  # type: ignore[attr-defined]
+        planner_client=planner_client,
+        config=PressureReconcilerConfig(flavor_name=flavor_name),
+    )
+
+    def _handle_shutdown(signum: int, _frame) -> None:  # pragma: no cover
+        logging.info("Received signal %s; stopping pressure reconciler", signum)
+        pressure_reconciler.stop()
+
+    signal.signal(signal.SIGTERM, _handle_shutdown)
+    signal.signal(signal.SIGINT, _handle_shutdown)
+    thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
+    thread_manager.add_thread(target=pressure_reconciler.start_delete_loop, daemon=True)
+
+    thread_manager.start()
     thread_manager.raise_on_error()
