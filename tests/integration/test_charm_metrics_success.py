@@ -47,7 +47,7 @@ async def test_charm_issues_runner_installed_metric(
     app: Application, instance_helper: OpenStackInstanceHelper
 ):
     """
-    arrange: A charm integrated with grafana-agent using the cos-agent integration.
+    arrange: A working charm deployment.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """
