@@ -188,7 +188,7 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kwargs)
         self._log_charm_status()
 
-        self._grafana_agent = COSAgentProvider(
+        self._cos_agent = COSAgentProvider(
             self,
             scrape_configs=[
                 {
@@ -197,7 +197,8 @@ class GithubRunnerCharm(CharmBase):
                     "static_configs": [
                         {
                             "targets": [
-                                f"localhost:{manager_service.ensure_http_port_for_unit(self.unit.name)}"
+                                "localhost:"
+                                f"{manager_service.ensure_http_port_for_unit(self.unit.name)}"
                             ]
                         }
                     ],
