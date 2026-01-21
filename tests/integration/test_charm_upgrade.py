@@ -30,6 +30,9 @@ from tests.integration.helpers.common import (
 pytestmark = pytest.mark.openstack
 
 
+# 2026-01-20: There was an issue with an external dependency , this has been resolved in a2a3a050 .
+# We need to skip this test until the revision 482 is available in the stable channel.
+@pytest.mark.skip(reason="Skipping charm upgrade test until we have a new stable release.")
 @pytest.mark.asyncio
 async def test_charm_upgrade(
     model: Model,
