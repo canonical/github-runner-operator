@@ -92,14 +92,11 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
 def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
-    # Use virt-type=virtual-machine to work around snapd 2.73 AppArmor issues in LXD containers.
-    # See: https://github.com/canonical/snapd/pull/16131
     juju.deploy(
         COS_AGENT_CHARM,
         channel="2/candidate",
         base="ubuntu@22.04",
         revision=149,
-        constraints={"virt-type": "virtual-machine"},
     )
     juju.integrate(app_openstack_runner.name, COS_AGENT_CHARM)
     juju.wait(
