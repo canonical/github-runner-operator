@@ -27,7 +27,6 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 logger = logging.getLogger(__name__)
 
 MICROK8S_CONTROLLER_NAME = "microk8s"
-OPENTELEMETRY_COLLECTOR_CHARM = "opentelemetry-collector"
 
 
 @pytest_asyncio.fixture(scope="module", name="k8s_juju")
@@ -92,12 +91,10 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
 def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
-    juju.deploy(OPENTELEMETRY_COLLECTOR_CHARM, channel="2/stable", base="ubuntu@22.04")
-    juju.integrate(app_openstack_runner.name, OPENTELEMETRY_COLLECTOR_CHARM)
+    juju.deploy("grafana-agent", channel="1/stable", base="ubuntu@22.04")
+    juju.integrate(app_openstack_runner.name, "grafana-agent")
     juju.wait(
-        lambda status: jubilant.all_agents_idle(
-            status, app_openstack_runner.name, OPENTELEMETRY_COLLECTOR_CHARM
-        )
+        lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, "grafana-agent")
     )
     return app_openstack_runner
 
@@ -136,11 +133,11 @@ async def test_prometheus_metrics(
         controller=MICROK8S_CONTROLLER_NAME,
     )
 
-    juju.integrate(OPENTELEMETRY_COLLECTOR_CHARM, prometheus_offer_name)
-    juju.integrate(OPENTELEMETRY_COLLECTOR_CHARM, grafana_offer_name)
+    juju.integrate("grafana-agent", prometheus_offer_name)
+    juju.integrate("grafana-agent", grafana_offer_name)
     juju.wait(
         lambda status: jubilant.all_agents_idle(
-            status, openstack_app_cos_agent.name, OPENTELEMETRY_COLLECTOR_CHARM
+            status, openstack_app_cos_agent.name, "grafana-agent"
         )
     )
 
