@@ -42,12 +42,11 @@ async def test_charm_upgrade(
     image_builder: Application,
 ):
     """
-    arrange: given latest stable version of the charm.
+    arrange: given latest edge version of the charm.
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
-    latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 354  # update this value every release to stable.
+    latest_edge_path = tmp_path / "github-runner.charm"
     # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
@@ -55,19 +54,19 @@ async def test_charm_upgrade(
         # do not specify revision
         # --revision cannot be specified together with --arch, --base, --channel
         "--channel",
-        "latest/stable",
+        "latest/edge",
         "--series",
         "jammy",
         "--filepath",
-        str(latest_stable_path),
+        str(latest_edge_path),
         "--no-progress",
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
 
-    # deploy latest stable version of the charm
+    # deploy latest edge version of the charm
     application = await deploy_github_runner_charm(
         model=model,
-        charm_file=str(latest_stable_path),
+        charm_file=str(latest_edge_path),
         app_name=app_name,
         path=github_config.path,
         token=github_config.token,
@@ -97,11 +96,11 @@ async def test_charm_upgrade(
     origin = client.CharmOrigin(
         source="charm-hub",
         track="22.04",
-        risk="latest/stable",
+        risk="latest/edge",
         branch="deadbeef",
         hash_="hash",
         id_="id",
-        revision=latest_stable_revision,
+        revision=0,  # arbitrary number
         base=client.Base("22.04", "ubuntu"),
     )
 
