@@ -139,6 +139,8 @@ def create_default_config(
     proxy_config: ProxyConfig | None = None,
     ssh_debug_connections: list[SSHDebugConfiguration] | None = None,
     test_config: TestConfig | None = None,
+    planner_url: str | None = None,
+    planner_token: str | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -249,5 +251,7 @@ def create_default_config(
                 "region_name": openstack_config.region_name,
             },
         },
+        "planner_url": planner_url or "http://127.0.0.1:8081",
+        "planner_token": planner_token or "stub-token",
         "reconcile_interval": 60,
     }
