@@ -140,7 +140,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         desired_total = self._desired_total_from_pressure(pressure)
         with self._lock:
             self._manager.cleanup_runners()
-            pressure = self._planner.get_pressure(self._flavor).pressure
             current_total = len(self._manager.get_runners())
             if pressure <= current_total:
                 logger.info(
