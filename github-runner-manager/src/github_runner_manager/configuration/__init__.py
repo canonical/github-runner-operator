@@ -23,4 +23,3 @@ from github_runner_manager.configuration.github import (  # noqa: F401
     GitHubPath,
     GitHubRepo,
 )
-from github_runner_manager.configuration.planner import PlannerConfiguration  # noqa: F401
