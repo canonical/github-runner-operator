@@ -1,0 +1,90 @@
+06:20:06 WARNING unexpected facade SSHServer received from the controller
+06:20:06 INFO Adding model github-pr-123c5-lxd:test-reactive-gcrq on cloud localhost
+06:20:06 WARNING unexpected facade SSHServer received from the controller
+06:20:06 WARNING unexpected facade SSHSession received from the controller
+06:20:06 WARNING unexpected facade SSHTunneler received from the controller
+06:20:09 INFO GitHub token rate limit: Rate(reset=2026-01-22 06:24:34+00:00, remaining=4012, limit=5000)
+06:20:15 INFO Deploying ch:amd64/jammy/mongodb-261
+06:20:15 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:18 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:33 INFO Deploying local:jammy/github-runner-0
+06:20:33 INFO Waiting for model:
+  test-w76vvspv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w76vvspv/0 [allocating] waiting: waiting for machine
+06:21:03 INFO Waiting for model:
+  test-w76vvspv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w76vvspv/0 [allocating] waiting: waiting for machine
+06:21:33 INFO Waiting for model:
+  test-w76vvspv/0 [allocating] waiting: waiting for machine
+06:22:04 INFO Waiting for model:
+  test-w76vvspv/0 [allocating] waiting: agent initialising
+06:22:34 INFO Waiting for model:
+  test-w76vvspv/0 [executing] maintenance: installing charm software
+06:23:04 INFO Waiting for model:
+  test-w76vvspv/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-w76vvspv/0 [idle] active: 
+06:23:28 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:23:28 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:23:58 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:24:06 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:24:36 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:24:39 INFO Current reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:24:39 INFO Waiting for reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:25:40 INFO Current reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:25:40 INFO Current reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea, expected reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:25:40 INFO Waiting for reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:26:41 INFO Current reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:26:41 INFO Current reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1, expected reconcile ID: df95bd39-c6ab-4675-8ccd-a3f57780c6ea
+06:26:45 INFO Wait for condition not met, sleeping 10
+06:27:06 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:27:22 INFO Current reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:27:22 INFO Waiting for reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:28:23 INFO Current reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:28:23 INFO Current reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1, expected reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:28:23 INFO Waiting for reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:29:24 INFO Current reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:29:24 INFO Current reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440, expected reconcile ID: 413b6980-0848-483c-b428-da88b126d5c1
+06:29:24 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:29:40 INFO Current reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:29:40 INFO Waiting for reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:30:41 INFO Current reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:30:41 INFO Current reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440, expected reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:30:41 INFO Waiting for reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:31:42 INFO Current reconcile ID: 248391d1-832d-491e-9ea5-c2667820ac27
+06:31:42 INFO Current reconcile ID: 248391d1-832d-491e-9ea5-c2667820ac27, expected reconcile ID: 430a6813-ed95-4182-9b7b-da1e71475440
+06:31:43 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769063291.0, "event": "runner_installed", "flavor": "test-w76vvspv", "duration": 71.0}
+{"timestamp": 1769063298.0, "event": "runner_start", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 90.0}
+{"timestamp": 1769063303.0, "event": "runner_stop", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769063324.481908, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.763635158538818}
+{"timestamp": 1769063455.6700296, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.067219734191895}
+
+06:31:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769063291.0, "event": "runner_installed", "flavor": "test-w76vvspv", "duration": 71.0}
+{"timestamp": 1769063298.0, "event": "runner_start", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 90.0}
+{"timestamp": 1769063303.0, "event": "runner_stop", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769063324.481908, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.763635158538818}
+{"timestamp": 1769063455.6700296, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.067219734191895}
+
+06:31:45 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769063291.0, "event": "runner_installed", "flavor": "test-w76vvspv", "duration": 71.0}
+{"timestamp": 1769063298.0, "event": "runner_start", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 90.0}
+{"timestamp": 1769063303.0, "event": "runner_stop", "flavor": "test-w76vvspv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769063324.481908, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.763635158538818}
+{"timestamp": 1769063455.6700296, "event": "reconciliation", "flavor": "test-w76vvspv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.067219734191895}
+06:31:45 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:32:16 INFO Waiting for model:
+  test-w76vvspv/0 [idle] active: 
+06:32:18 INFO Current reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
+06:32:18 INFO Waiting for reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
+06:33:19 INFO Current reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
+06:33:19 INFO Current reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8, expected reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
+06:33:19 INFO Waiting for reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
+06:34:20 INFO Current reconcile ID: 7b5fb313-b5ee-4fa9-946a-b3f36329504b
+06:34:20 INFO Current reconcile ID: 7b5fb313-b5ee-4fa9-946a-b3f36329504b, expected reconcile ID: 29118368-a704-4284-b1aa-a1f1a251f6e8
