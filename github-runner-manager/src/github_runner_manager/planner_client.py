@@ -10,15 +10,26 @@ from typing import Iterable, Optional
 from urllib.parse import urljoin
 
 import requests
+import requests.adapters
 import urllib3
 from pydantic import AnyHttpUrl, BaseModel
+
+from github_runner_manager.http_util import configure_session
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
 class FlavorInfo:
-    """Flavor information returned by the planner service."""
+    """Flavor information returned by the planner service.
+
+    Attributes:
+        name: Flavor name.
+        labels: Labels associated with the flavor.
+        priority: Optional priority for scheduling.
+        is_disabled: Whether the flavor is disabled.
+        minimum_pressure: Minimum desired runner count for the flavor.
+    """
 
     name: str
     labels: list[str]
@@ -29,7 +40,11 @@ class FlavorInfo:
 
 @dataclass
 class PressureInfo:
-    """Pressure information for a flavor returned by the planner service."""
+    """Pressure information for a flavor returned by the planner service.
+
+    Attributes:
+        pressure: Desired total runner count for the flavor.
+    """
 
     pressure: float
 
@@ -59,6 +74,12 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(self, config: PlannerConfiguration) -> None:
+        """Initialize client with planner configuration.
+
+        Args:
+            config: Planner service configuration containing base URL,
+                authentication token, and default request timeout.
+        """
         self._session = self._create_session()
         self._config = config
 
@@ -90,7 +111,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                 is_disabled=data.get("is_disabled"),
                 minimum_pressure=data.get("minimum_pressure"),
             )
-        except (requests.RequestException, ValueError) as exc:
+        except (requests.RequestException, ValueError, requests.HTTPError) as exc:
             logger.exception("Unable to get flavor '%s' from planner.", name)
             raise PlannerApiError from exc
 
@@ -158,6 +179,11 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             raise PlannerApiError from exc
 
     def _create_session(self) -> requests.Session:
+        """Create a requests session with retries and no env proxies.
+
+        Returns:
+            A configured `requests.Session` instance.
+        """
         adapter = requests.adapters.HTTPAdapter(
             max_retries=urllib3.Retry(
                 total=3,
@@ -166,8 +192,4 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             )
         )
 
-        session = requests.Session()
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
-        session.trust_env = False
-        return session
+        return configure_session(adapter)

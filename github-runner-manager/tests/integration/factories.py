@@ -152,6 +152,8 @@ def create_default_config(
         ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
+        planner_url: Planner service URL. Defaults to local stub.
+        planner_token: Planner service token. Defaults to stub token.
 
     Returns:
         Configuration dictionary for the application.

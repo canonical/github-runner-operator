@@ -7,9 +7,11 @@ import logging
 from urllib.parse import urljoin
 
 import requests
+import requests.adapters
 import urllib3
 
 from github_runner_manager.errors import RunnerCreateError
+from github_runner_manager.http_util import configure_session
 
 logger = logging.getLogger(__name__)
 
@@ -79,8 +81,4 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
             )
         )
 
-        session = requests.Session()
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
-        session.trust_env = False
-        return session
+        return configure_session(adapter)
