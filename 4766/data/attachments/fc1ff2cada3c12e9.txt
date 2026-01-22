@@ -1,0 +1,90 @@
+18:19:14 WARNING unexpected facade SSHServer received from the controller
+18:19:14 INFO Adding model github-pr-9abb4-lxd:test-reactive-5gij on cloud localhost
+18:19:14 WARNING unexpected facade SSHServer received from the controller
+18:19:14 WARNING unexpected facade SSHSession received from the controller
+18:19:14 WARNING unexpected facade SSHTunneler received from the controller
+18:19:15 INFO GitHub token rate limit: Rate(reset=2026-01-22 18:34:07+00:00, remaining=4967, limit=5000)
+18:19:19 INFO Deploying ch:amd64/jammy/mongodb-265
+18:19:19 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:22 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:39 INFO Deploying local:jammy/github-runner-0
+18:19:39 INFO Waiting for model:
+  test-yf3ge498/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yf3ge498/0 [allocating] waiting: waiting for machine
+18:20:09 INFO Waiting for model:
+  test-yf3ge498/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yf3ge498/0 [allocating] waiting: waiting for machine
+18:20:40 INFO Waiting for model:
+  test-yf3ge498/0 [allocating] waiting: waiting for machine
+18:21:10 INFO Waiting for model:
+  test-yf3ge498/0 [allocating] waiting: agent initialising
+18:21:40 INFO Waiting for model:
+  test-yf3ge498/0 [executing] maintenance: installing charm software
+18:22:10 INFO Waiting for model:
+  test-yf3ge498/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-yf3ge498/0 [idle] active: 
+18:22:35 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:35 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:05 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:14 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:23:44 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:23:47 INFO Current reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:23:47 INFO Waiting for reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:24:48 INFO Current reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:24:48 INFO Current reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9, expected reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:24:48 INFO Waiting for reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:25:49 INFO Current reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:25:49 INFO Current reconcile ID: 41514642-892f-4c29-9408-cbf458a31632, expected reconcile ID: add70b60-6d3b-4ad2-9ac7-d4c349f94ef9
+18:25:53 INFO Wait for condition not met, sleeping 10
+18:26:14 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:26:30 INFO Current reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:26:30 INFO Waiting for reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:27:31 INFO Current reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:27:31 INFO Current reconcile ID: 41514642-892f-4c29-9408-cbf458a31632, expected reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:27:31 INFO Waiting for reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:28:32 INFO Current reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:28:32 INFO Current reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc, expected reconcile ID: 41514642-892f-4c29-9408-cbf458a31632
+18:28:32 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:28:48 INFO Current reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:28:48 INFO Waiting for reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:29:49 INFO Current reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:29:49 INFO Current reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc, expected reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:29:49 INFO Waiting for reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:30:50 INFO Current reconcile ID: defd1633-2a9f-4c1d-beb0-a2fa3fce61af
+18:30:50 INFO Current reconcile ID: defd1633-2a9f-4c1d-beb0-a2fa3fce61af, expected reconcile ID: b961d707-f5cc-4948-8102-61a30d4724dc
+18:30:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769106442.0, "event": "runner_installed", "flavor": "test-yf3ge498", "duration": 74.0}
+{"timestamp": 1769106448.0, "event": "runner_start", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 93.0}
+{"timestamp": 1769106453.0, "event": "runner_stop", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769106469.2519321, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.38399887084961}
+{"timestamp": 1769106598.8124163, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.440649032592773}
+
+18:30:52 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769106442.0, "event": "runner_installed", "flavor": "test-yf3ge498", "duration": 74.0}
+{"timestamp": 1769106448.0, "event": "runner_start", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 93.0}
+{"timestamp": 1769106453.0, "event": "runner_stop", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769106469.2519321, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.38399887084961}
+{"timestamp": 1769106598.8124163, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.440649032592773}
+
+18:30:53 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769106442.0, "event": "runner_installed", "flavor": "test-yf3ge498", "duration": 74.0}
+{"timestamp": 1769106448.0, "event": "runner_start", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 93.0}
+{"timestamp": 1769106453.0, "event": "runner_stop", "flavor": "test-yf3ge498", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769106469.2519321, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.38399887084961}
+{"timestamp": 1769106598.8124163, "event": "reconciliation", "flavor": "test-yf3ge498", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.440649032592773}
+18:30:53 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:31:24 INFO Waiting for model:
+  test-yf3ge498/0 [idle] active: 
+18:31:26 INFO Current reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
+18:31:26 INFO Waiting for reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
+18:32:27 INFO Current reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
+18:32:27 INFO Current reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf, expected reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
+18:32:27 INFO Waiting for reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
+18:33:28 INFO Current reconcile ID: 470fbacd-d224-4ff9-9f5a-d559c579a52e
+18:33:28 INFO Current reconcile ID: 470fbacd-d224-4ff9-9f5a-d559c579a52e, expected reconcile ID: aadb44ff-0f99-4f92-8635-c119ccc65bcf
