@@ -18,7 +18,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
 
       - name: Ensure .trivyignore exists
         run: |
@@ -48,7 +48,7 @@ jobs:
           output: "trivy-results.sarif"
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4.31.10
+        uses: github/codeql-action/upload-sarif@v4.31.11
         with:
           sarif_file: "trivy-results.sarif"
 
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
 
       - name: Ensure .trivyignore exists
         run: |
