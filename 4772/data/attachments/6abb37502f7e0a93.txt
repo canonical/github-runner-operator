@@ -1,0 +1,56 @@
+18:19:22 WARNING unexpected facade SSHServer received from the controller
+18:19:22 INFO Adding model github-pr-9abb4-lxd:test-charm-metrics-success-i6u1 on cloud localhost
+18:19:22 WARNING unexpected facade SSHServer received from the controller
+18:19:22 WARNING unexpected facade SSHSession received from the controller
+18:19:22 WARNING unexpected facade SSHTunneler received from the controller
+18:19:23 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:24 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:38 INFO Deploying local:jammy/github-runner-0
+18:19:38 INFO Waiting for model:
+  test-hm3webom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hm3webom/0 [allocating] waiting: waiting for machine
+18:20:09 INFO Waiting for model:
+  test-hm3webom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hm3webom/0 [allocating] waiting: waiting for machine
+18:20:39 INFO Waiting for model:
+  test-hm3webom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hm3webom/0 [allocating] waiting: waiting for machine
+18:21:09 INFO Waiting for model:
+  test-hm3webom/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hm3webom/0 [allocating] waiting: waiting for machine
+18:21:39 INFO Waiting for model:
+  test-hm3webom/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-hm3webom/0 [allocating] waiting: waiting for machine
+18:22:09 INFO Waiting for model:
+  test-hm3webom/0 [executing] maintenance: installing charm software
+18:22:40 INFO Waiting for model:
+  test-hm3webom/0 [executing] maintenance: installing charm software
+18:23:10 INFO Waiting for model:
+  test-hm3webom/0 [idle] active:
+18:23:23 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:23:53 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:23:55 INFO Current reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:23:55 INFO Waiting for reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:24:56 INFO Current reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:24:56 INFO Current reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec, expected reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:24:56 INFO Waiting for reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:25:57 INFO Current reconcile ID: f7346b88-489f-42c5-9ad9-b120201e0d49
+18:25:57 INFO Current reconcile ID: f7346b88-489f-42c5-9ad9-b120201e0d49, expected reconcile ID: 66b13eab-4245-4aa8-bac4-87f6d70809ec
+18:26:02 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:26:32 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:26:35 INFO Current reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:26:35 INFO Waiting for reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:27:36 INFO Current reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:27:36 INFO Current reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd, expected reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:27:36 INFO Waiting for reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:28:37 INFO Current reconcile ID: 09e144f4-2f3e-4da2-8c94-a8e728d6eff1
+18:28:37 INFO Current reconcile ID: 09e144f4-2f3e-4da2-8c94-a8e728d6eff1, expected reconcile ID: 19481618-3b77-4088-a2b4-58ec0ee39ffd
+18:28:38 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769192613.465594, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.211359739303589}
+{"timestamp": 1769192742.1414273, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.560312986373901}
+{"timestamp": 1769192700.0, "event": "runner_installed", "flavor": "test-hm3webom", "duration": 88.0}
+{"timestamp": 1769192777.382872, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.503138303756714}
+{"timestamp": 1769192905.142261, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.676357746124268}

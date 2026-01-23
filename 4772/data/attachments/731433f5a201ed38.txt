@@ -1,0 +1,72 @@
+18:28:39 INFO GitHub token rate limit: Rate(reset=2026-01-23 18:54:01+00:00, remaining=4433, limit=5000)
+18:28:42 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:29:12 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:29:15 INFO Current reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:29:15 INFO Waiting for reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:30:16 INFO Current reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:30:16 INFO Current reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa, expected reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:30:16 INFO Waiting for reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:31:17 INFO Current reconcile ID: 0aa57a5e-8645-405d-9d04-6196688a0829
+18:31:17 INFO Current reconcile ID: 0aa57a5e-8645-405d-9d04-6196688a0829, expected reconcile ID: 1e645273-1929-4562-af99-108ce9ee63aa
+18:31:58 INFO Wait for condition not met, sleeping 10
+18:32:09 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:32:39 INFO Waiting for model:
+  test-hm3webom/0 [idle] active: 
+18:32:41 INFO Current reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:32:41 INFO Waiting for reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:33:42 INFO Current reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:33:42 INFO Current reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0, expected reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:33:42 INFO Waiting for reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:34:43 INFO Current reconcile ID: 8d2cadc6-49e0-4926-a615-3e5491555090
+18:34:43 INFO Current reconcile ID: 8d2cadc6-49e0-4926-a615-3e5491555090, expected reconcile ID: 8325a87b-6da6-445c-a892-1cf0f8e013c0
+18:34:45 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769193104.0, "event": "runner_installed", "flavor": "test-hm3webom", "duration": 171.0}
+{"timestamp": 1769193123.0, "event": "runner_start", "flavor": "test-hm3webom", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 19.0, "queue_duration": 2.0}
+{"timestamp": 1769193127.0, "event": "runner_stop", "flavor": "test-hm3webom", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1769193143.7470877, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.580235719680786}
+{"timestamp": 1769193272.009678, "event": "reconciliation", "flavor": "test-hm3webom", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.108089923858643}
+18:34:46 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-i6u1  github-pr-9abb4-lxd  localhost/localhost  3.6.13   unsupported  18:34:46Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-hm3webom           active      1  any-charm      latest/beta  124  no       
+test-hm3webom                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hm3webom/0*  active    idle   0        10.208.59.29           
+test-hm3webom/0*                         active    idle   1        10.208.59.158          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.208.59.29   juju-a0a23e-0  ubuntu@24.04  github-runner  Running
+1        started  10.208.59.158  juju-a0a23e-1  ubuntu@22.04  github-runner  Running
+
+18:34:46 INFO Juju error logs:
+
+machine-1: 18:21:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:21:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hm3webom-0: 18:22:42 ERROR unit.test-hm3webom/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hm3webom-0: 18:22:43 ERROR unit.test-hm3webom/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hm3webom-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:34:46 INFO Forgetting model main...

@@ -1,0 +1,98 @@
+18:19:18 WARNING unexpected facade SSHServer received from the controller
+18:19:18 INFO Adding model github-pr-9abb4-lxd:test-multi-unit-same-machine-h8hx on cloud localhost
+18:19:18 WARNING unexpected facade SSHServer received from the controller
+18:19:18 WARNING unexpected facade SSHSession received from the controller
+18:19:18 WARNING unexpected facade SSHTunneler received from the controller
+18:19:18 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:20 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:33 INFO Deploying local:jammy/github-runner-0
+18:19:33 INFO Waiting for model:
+  test-peqbtcxv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-peqbtcxv/0 [allocating] waiting: waiting for machine
+18:20:03 INFO Waiting for model:
+  test-peqbtcxv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-peqbtcxv/0 [executing] maintenance: installing charm software
+18:20:33 INFO Waiting for model:
+  test-peqbtcxv/0 [allocating] waiting: waiting for machine
+18:21:03 INFO Waiting for model:
+  test-peqbtcxv/0 [allocating] waiting: agent initialising
+18:21:34 INFO Waiting for model:
+  test-peqbtcxv/0 [executing] maintenance: installing charm software
+18:22:04 INFO Waiting for model:
+  test-peqbtcxv/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-peqbtcxv/0 [idle] active:
+18:22:33 INFO Waiting for model:
+  test-peqbtcxv/0 [idle] active: 
+  test-peqbtcxv/1 [allocating] waiting: installing agent
+18:23:03 INFO Waiting for model:
+  test-peqbtcxv/0 [idle] active: 
+  test-peqbtcxv/1 [executing] maintenance: installing charm software
+18:23:33 INFO Waiting for model:
+  test-peqbtcxv/0 [idle] active: 
+  test-peqbtcxv/1 [idle] active: 
+18:23:50 INFO File content of /var/lib/github-runner-manager/test-peqbtcxv-0/http_port: 55555
+18:23:51 INFO File content of /var/lib/github-runner-manager/test-peqbtcxv-1/http_port: 55556
+18:23:55 INFO File content of /var/lib/github-runner-manager/test-peqbtcxv-1/http_port: 55556
+18:23:58 INFO File content of /var/lib/github-runner-manager/test-peqbtcxv-1/http_port: 55556
+18:23:58 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-h8hx  github-pr-9abb4-lxd  localhost/localhost  3.6.13   unsupported  18:23:58Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-peqbtcxv           active      1  any-charm      latest/beta  124  no       
+test-peqbtcxv                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-peqbtcxv/0*  active    idle   0        10.210.37.243          
+test-peqbtcxv/0*                         active    idle   1        10.210.37.153          
+test-peqbtcxv/1                          active    idle   1        10.210.37.153          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.210.37.243  juju-a3507b-0  ubuntu@24.04  github-runner  Running
+1        started  10.210.37.153  juju-a3507b-1  ubuntu@22.04  github-runner  Running
+
+18:23:59 INFO Juju error logs:
+
+machine-0: 18:19:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-peqbtcxv-0: 18:21:53 ERROR unit.test-peqbtcxv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-peqbtcxv-0: 18:21:54 ERROR unit.test-peqbtcxv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-peqbtcxv-1: 18:23:07 ERROR unit.test-peqbtcxv/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-peqbtcxv-1: 18:23:09 ERROR unit.test-peqbtcxv/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-peqbtcxv-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:23:59 INFO Forgetting model main...
