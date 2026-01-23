@@ -48,3 +48,9 @@ variable "units" {
   type        = number
   default     = 1
 }
+
+variable "machines" {
+  description = "Optional set of target machine IDs to place units on. Mutually exclusive with units; if set, units is ignored."
+  type        = set(string)
+  default     = null
+}
