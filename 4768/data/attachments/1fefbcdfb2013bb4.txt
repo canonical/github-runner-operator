@@ -1,0 +1,103 @@
+06:19:58 WARNING unexpected facade SSHServer received from the controller
+06:19:58 INFO Adding model github-pr-9abb4-lxd:test-charm-fork-path-change-xtjg on cloud localhost
+06:19:58 WARNING unexpected facade SSHServer received from the controller
+06:19:58 WARNING unexpected facade SSHSession received from the controller
+06:19:58 WARNING unexpected facade SSHTunneler received from the controller
+06:19:58 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:01 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:14 INFO Deploying local:jammy/github-runner-0
+06:20:14 INFO Waiting for model:
+  test-ku4s7v1n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ku4s7v1n/0 [allocating] waiting: waiting for machine
+06:20:45 INFO Waiting for model:
+  test-ku4s7v1n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ku4s7v1n/0 [allocating] waiting: waiting for machine
+06:21:15 INFO Waiting for model:
+  test-ku4s7v1n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ku4s7v1n/0 [idle] active: 
+06:21:45 INFO Waiting for model:
+  test-ku4s7v1n/0 [allocating] waiting: agent initialising
+06:22:15 INFO Waiting for model:
+  test-ku4s7v1n/0 [executing] maintenance: installing charm software
+06:22:46 INFO Waiting for model:
+  test-ku4s7v1n/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-ku4s7v1n/0 [idle] active: 
+06:23:16 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:23:29 INFO GitHub token rate limit: Rate(reset=2026-01-23 06:45:06+00:00, remaining=4910, limit=5000)
+06:23:41 INFO test_path_config_change
+06:23:41 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:24:11 INFO Waiting for model:
+  test-ku4s7v1n/0 [executing] active: 
+06:24:41 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:24:49 INFO Ensure there is a runner (this calls reconcile)
+06:24:49 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:25:19 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:25:22 INFO Current reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:25:22 INFO Waiting for reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:26:23 INFO Current reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:26:23 INFO Current reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d, expected reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:26:23 INFO Waiting for reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:27:24 INFO Current reconcile ID: 824dd2dd-6e4a-4b3c-963b-20e0ed8fef6e
+06:27:24 INFO Current reconcile ID: 824dd2dd-6e4a-4b3c-963b-20e0ed8fef6e, expected reconcile ID: 49199ab5-4e46-49a8-bc28-39908e7c096d
+06:27:32 INFO Reconciling (again)
+06:27:32 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:28:02 INFO Waiting for model:
+  test-ku4s7v1n/0 [idle] active: 
+06:28:16 INFO Current reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:28:16 INFO Waiting for reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:29:17 INFO Current reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:29:17 INFO Current reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b, expected reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:29:17 INFO Waiting for reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:30:18 INFO Current reconcile ID: 64b73722-c7a9-459c-b15f-61dd79808b38
+06:30:18 INFO Current reconcile ID: 64b73722-c7a9-459c-b15f-61dd79808b38, expected reconcile ID: 01c23920-9ac7-44b9-8191-8021dfc0164b
+06:31:36 INFO runners: ['test-ku4s7v1n-0-n-98e46311ccf7']
+06:31:36 INFO runners in github repo: [SelfHostedActionsRunner(name="test-aykqg6g9-0-n-023683d06d2c"), SelfHostedActionsRunner(name="test-b4k8j0qr-0-n-421b325ab75f"), SelfHostedActionsRunner(name="test-c6wfu26v-0-n-c081222ff6a8"), SelfHostedActionsRunner(name="test-dpgpximz-0-n-867625ba524a"), SelfHostedActionsRunner(name="test-he8681pg-0-n-c537eff0becd"), SelfHostedActionsRunner(name="test-i3czn7v1-0-n-eeaa2c889557"), SelfHostedActionsRunner(name="test-kgkq5ocr-0-n-5f9880d35ee9"), SelfHostedActionsRunner(name="test-ku4s7v1n-0-n-98e46311ccf7"), SelfHostedActionsRunner(name="test-neu1zbe1-0-n-f69087103a43"), SelfHostedActionsRunner(name="test-olgjs47n-0-n-4317b0884316"), SelfHostedActionsRunner(name="test-r48zg6pz-0-n-700f1997531b"), SelfHostedActionsRunner(name="test-rk1t333u-0-n-627bfbf7c259"), SelfHostedActionsRunner(name="test-tlwvjo0s-0-n-a47f7096fd05"), SelfHostedActionsRunner(name="test-vpc3jc8t-0-n-a553e098d136"), SelfHostedActionsRunner(name="test-vs95ueb6-0-n-e23d22c69199"), SelfHostedActionsRunner(name="test-xsx3jevh-0-n-ed6c1a415ea2"), SelfHostedActionsRunner(name="test-xtmrbo5j-0-n-6d972152a8e9")]
+06:31:37 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-xtjg  github-pr-9abb4-lxd  localhost/localhost  3.6.13   unsupported  06:31:37Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ku4s7v1n           active      1  any-charm      latest/beta  124  no       
+test-ku4s7v1n                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ku4s7v1n/0*  active    idle   0        10.116.45.99           
+test-ku4s7v1n/0*                         active    idle   1        10.116.45.219          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.116.45.99   juju-2ead82-0  ubuntu@24.04  github-runner  Running
+1        started  10.116.45.219  juju-2ead82-1  ubuntu@22.04  github-runner  Running
+
+06:31:37 INFO Juju error logs:
+
+machine-0: 06:20:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:20:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ku4s7v1n-0: 06:22:44 ERROR unit.test-ku4s7v1n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ku4s7v1n-0: 06:22:45 ERROR unit.test-ku4s7v1n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ku4s7v1n-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:31:37 INFO Forgetting model main...
