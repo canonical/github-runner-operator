@@ -1,0 +1,110 @@
+06:19:12 WARNING unexpected facade SSHServer received from the controller
+06:19:12 INFO Adding model github-pr-9abb4-lxd:test-charm-fork-repo-ewgw on cloud localhost
+06:19:13 WARNING unexpected facade SSHServer received from the controller
+06:19:13 WARNING unexpected facade SSHSession received from the controller
+06:19:13 WARNING unexpected facade SSHTunneler received from the controller
+06:19:13 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:15 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:31 INFO Deploying local:jammy/github-runner-0
+06:19:31 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfdedxrj/0 [allocating] waiting: waiting for machine
+06:20:01 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfdedxrj/0 [allocating] waiting: waiting for machine
+06:20:31 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfdedxrj/0 [allocating] waiting: waiting for machine
+06:21:02 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfdedxrj/0 [allocating] waiting: waiting for machine
+06:21:32 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: waiting for machine
+06:22:02 INFO Waiting for model:
+  test-kfdedxrj/0 [allocating] waiting: agent initialising
+06:22:32 INFO Waiting for model:
+  test-kfdedxrj/0 [executing] maintenance: installing charm software
+06:23:02 INFO Waiting for model:
+  test-kfdedxrj/0 [executing] maintenance: installing charm software
+06:23:32 INFO Waiting for model:
+  test-kfdedxrj/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kfdedxrj/0 [idle] active: 
+06:23:54 INFO GitHub token rate limit: Rate(reset=2026-01-24 07:10:58+00:00, remaining=4868, limit=5000)
+06:24:44 INFO Waiting for model:
+  test-kfdedxrj/0 [idle] active: 
+06:25:14 INFO Waiting for model:
+  test-kfdedxrj/0 [idle] active: 
+06:25:17 INFO Current reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:25:17 INFO Waiting for reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:26:18 INFO Current reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:26:18 INFO Current reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062, expected reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:26:18 INFO Waiting for reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:27:19 INFO Current reconcile ID: d38956c8-5e42-41f0-ba16-8c1c4c60ee56
+06:27:19 INFO Current reconcile ID: d38956c8-5e42-41f0-ba16-8c1c4c60ee56, expected reconcile ID: 9d52b2ed-3c84-40b3-847c-91d9d9928062
+06:28:29 INFO [TEST SETUP] Exposing port 8080 on test-kfdedxrj-0-n-0ba235493d9d
+06:28:29 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.70', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1d:d1:99'}]])
+06:28:30 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-kfdedxrj-0-n-0ba235493d9d.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.70 &
+06:28:31 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.70' (ED25519) to the list of known hosts.
+
+06:28:32 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-kfdedxrj-0-n-0ba235493d9d
+06:28:32 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.70', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1d:d1:99'}]])
+06:28:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kfdedxrj-0-n-0ba235493d9d.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.70 nc -z localhost 8080'
+06:28:34 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:28:35 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-kfdedxrj-0-n-0ba235493d9d
+06:28:35 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.70', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1d:d1:99'}]])
+06:28:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kfdedxrj-0-n-0ba235493d9d.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.70 curl http://localhost:8080'
+06:28:37 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  85360      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:28:40 INFO Wait for condition not met, sleeping 10
+06:28:51 INFO Wait for condition not met, sleeping 60
+06:29:55 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-ewgw  github-pr-9abb4-lxd  localhost/localhost  3.6.13   unsupported  06:29:55Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-kfdedxrj           active      1  any-charm      latest/beta  124  no       
+test-kfdedxrj                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-kfdedxrj/0*  active    idle   0        10.214.119.128            
+test-kfdedxrj/0*                         active    idle   1        10.214.119.155  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.214.119.128  juju-4621bb-0  ubuntu@24.04  github-runner  Running
+1        started  10.214.119.155  juju-4621bb-1  ubuntu@22.04  github-runner  Running
+
+06:29:55 INFO Juju error logs:
+
+machine-0: 06:21:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:21:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:21:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kfdedxrj-0: 06:23:15 ERROR unit.test-kfdedxrj/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kfdedxrj-0: 06:23:16 ERROR unit.test-kfdedxrj/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kfdedxrj-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:29:55 INFO Forgetting model main...
