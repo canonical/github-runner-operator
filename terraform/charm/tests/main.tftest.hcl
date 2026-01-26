@@ -3,9 +3,7 @@
 
 run "two_apps_one_machine" {
   module {
-    # Load the test harness configuration that declares juju_machine.m0 and
-    # the two module instances: runner_a and runner_b.
-    source = "./tests"
+    source = "./."
   }
   command = apply
 
