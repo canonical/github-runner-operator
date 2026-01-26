@@ -13,9 +13,13 @@ terraform {
 
 provider "juju" {}
 
+resource "juju_model" "test_model" {
+  name = "test-model"
+}
+
 # Provision a machine and reuse its ID in module placements
 resource "juju_machine" "m0" {
-  model = "test-model"
+  model = juju_model.test_model.name
   base  = "ubuntu@22.04"
   name  = "machine_0"
 }
@@ -24,7 +28,7 @@ resource "juju_machine" "m0" {
 module "runner_a" {
   source      = "./.."
   app_name    = "github-runner-a"
-  model       = "test-model"
+  model       = juju_model.test_model.name
   channel     = "latest/edge"
   revision    = null
   base        = "ubuntu@22.04"
@@ -37,7 +41,7 @@ module "runner_a" {
 module "runner_b" {
   source      = "./.."
   app_name    = "github-runner-b"
-  model       = "test-model"
+  model       = juju_model.test_model.name
   channel     = "latest/edge"
   revision    = null
   base        = "ubuntu@22.04"
