@@ -1,0 +1,106 @@
+06:21:27 WARNING unexpected facade SSHServer received from the controller
+06:21:27 INFO Adding model github-pr-9abb4-lxd:test-multi-unit-same-machine-b972 on cloud localhost
+06:21:28 WARNING unexpected facade SSHServer received from the controller
+06:21:28 WARNING unexpected facade SSHSession received from the controller
+06:21:28 WARNING unexpected facade SSHTunneler received from the controller
+06:21:28 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:21:30 INFO Deploying ch:amd64/noble/any-charm-124
+06:21:46 INFO Deploying local:jammy/github-runner-0
+06:21:46 INFO Waiting for model:
+  test-owzvomo8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-owzvomo8/0 [allocating] waiting: waiting for machine
+06:22:17 INFO Waiting for model:
+  test-owzvomo8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-owzvomo8/0 [allocating] waiting: waiting for machine
+06:22:47 INFO Waiting for model:
+  test-owzvomo8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-owzvomo8/0 [idle] active: 
+06:23:17 INFO Waiting for model:
+  test-owzvomo8/0 [allocating] waiting: agent initialising
+06:23:47 INFO Waiting for model:
+  test-owzvomo8/0 [executing] maintenance: installing charm software
+06:24:18 INFO Waiting for model:
+  test-owzvomo8/0 [executing] maintenance: installing charm software
+06:24:48 INFO Waiting for model:
+  test-owzvomo8/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-owzvomo8/0 [idle] active: 
+06:25:18 INFO Waiting for model:
+  test-owzvomo8/0 [idle] active:
+06:25:23 INFO Waiting for model:
+  test-owzvomo8/0 [idle] active: 
+  test-owzvomo8/1 [allocating] waiting: installing agent
+06:25:54 INFO Waiting for model:
+  test-owzvomo8/0 [idle] active: 
+  test-owzvomo8/1 [executing] maintenance: installing charm software
+06:26:24 INFO Waiting for model:
+  test-owzvomo8/0 [idle] active: 
+  test-owzvomo8/1 [executing] maintenance: installing charm software
+06:26:54 INFO Waiting for model:
+  test-owzvomo8/0 [idle] active: 
+  test-owzvomo8/1 [idle] active: 
+06:27:08 INFO File content of /var/lib/github-runner-manager/test-owzvomo8-0/http_port: 55555
+06:27:09 INFO File content of /var/lib/github-runner-manager/test-owzvomo8-1/http_port: 55556
+06:27:12 INFO File content of /var/lib/github-runner-manager/test-owzvomo8-1/http_port: 55556
+06:27:15 INFO File content of /var/lib/github-runner-manager/test-owzvomo8-1/http_port: 55556
+06:27:16 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-b972  github-pr-9abb4-lxd  localhost/localhost  3.6.13   unsupported  06:27:16Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-owzvomo8           active      1  any-charm      latest/beta  124  no       
+test-owzvomo8                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-owzvomo8/0*  active    idle   0        10.18.158.102          
+test-owzvomo8/0*                         active    idle   1        10.18.158.28           
+test-owzvomo8/1                          active    idle   1        10.18.158.28           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.18.158.102  juju-64b626-0  ubuntu@24.04  github-runner  Running
+1        started  10.18.158.28   juju-64b626-1  ubuntu@22.04  github-runner  Running
+
+06:27:16 INFO Juju error logs:
+
+machine-0: 06:22:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:22:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:23:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:23:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-owzvomo8-0: 06:24:43 ERROR unit.test-owzvomo8/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-owzvomo8-0: 06:24:44 ERROR unit.test-owzvomo8/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-owzvomo8-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-owzvomo8-1: 06:26:25 ERROR unit.test-owzvomo8/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-owzvomo8-1: 06:26:26 ERROR unit.test-owzvomo8/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-owzvomo8-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:27:16 INFO Forgetting model main...
