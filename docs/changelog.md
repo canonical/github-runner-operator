@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-01-26
+
+- Add machine input paramter for terraform charm module to allow targeting specific machines for
+  GitHub runner application deployment.
+
 ## 2025-01-14
 
 - Add support for running up to 100 multiple GitHub runner applications on a single instance.
