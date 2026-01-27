@@ -6,6 +6,21 @@ output "app_name" {
   value       = juju_application.github_runner.name
 }
 
+output "model" {
+  description = "Model the application is deployed to."
+  value       = juju_application.github_runner.model
+}
+
+output "machines" {
+  description = "Set of machine IDs the application is placed on (if any)."
+  value       = juju_application.github_runner.machines
+}
+
+output "units" {
+  description = "Number of units to deploy when machines are not provided."
+  value       = juju_application.github_runner.units
+}
+
 output "requires" {
   value = {
     debug_ssh              = "debug-ssh"
