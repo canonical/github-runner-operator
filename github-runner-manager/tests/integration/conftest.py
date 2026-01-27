@@ -17,6 +17,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
+from .planner_stub import PlannerStub, PlannerStubConfig
 
 logger = logging.getLogger(__name__)
 
@@ -338,3 +339,18 @@ def tmp_test_dir(tmp_path_factory) -> Path:
     """
     test_dir = tmp_path_factory.mktemp("integration_test")
     return test_dir
+
+
+@pytest.fixture(scope="module")
+def planner_stub() -> Generator[PlannerStub, None, None]:
+    """Start a lightweight planner stub for integration tests.
+
+    Yields:
+        A running PlannerStub instance with ``base_url`` and ``token`` attributes.
+    """
+    stub = PlannerStub(PlannerStubConfig())
+    stub.start()
+    try:
+        yield stub
+    finally:
+        stub.stop()

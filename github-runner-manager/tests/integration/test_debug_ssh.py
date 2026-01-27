@@ -38,6 +38,7 @@ from .github_helpers import (
     get_workflow_dispatch_run,
     wait_for_workflow_completion,
 )
+from .planner_stub import PlannerStub
 
 logger = logging.getLogger(__name__)
 
@@ -403,6 +404,7 @@ def application_with_tmate_ssh_server(
     test_config: TestConfig,
     proxy_config: ProxyConfig | None,
     tmate_ssh_server: TmateServer,
+    planner_stub: PlannerStub,
 ) -> Iterator[RunningApplication]:
     """Start application with tmate SSH server and reverse proxy for runner access.
 
@@ -414,6 +416,7 @@ def application_with_tmate_ssh_server(
         test_config: Test-specific configuration for unique identification.
         proxy_config: Proxy configuration object or None.
         tmate_ssh_server: Tmate SSH server fixture.
+        planner_stub: Planner stub server fixture.
 
     Yields:
         A running application instance.
@@ -423,6 +426,8 @@ def application_with_tmate_ssh_server(
         openstack_config=openstack_config,
         proxy_config=proxy_config,
         test_config=test_config,
+        planner_url=planner_stub.base_url,
+        planner_token=planner_stub.token,
         ssh_debug_connections=[
             SSHDebugConfiguration(
                 host=tmate_ssh_server.host,
