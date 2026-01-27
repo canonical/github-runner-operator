@@ -1,0 +1,53 @@
+06:20:32 WARNING unexpected facade SSHServer received from the controller
+06:20:32 INFO Adding model github-pr-f69fb-lxd:test-charm-metrics-success-3yu4 on cloud localhost
+06:20:32 WARNING unexpected facade SSHServer received from the controller
+06:20:32 WARNING unexpected facade SSHSession received from the controller
+06:20:32 WARNING unexpected facade SSHTunneler received from the controller
+06:20:32 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:20:34 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:50 INFO Deploying local:jammy/github-runner-0
+06:20:50 INFO Waiting for model:
+  test-dpdi655p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dpdi655p/0 [allocating] waiting: waiting for machine
+06:21:20 INFO Waiting for model:
+  test-dpdi655p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dpdi655p/0 [allocating] waiting: waiting for machine
+06:21:51 INFO Waiting for model:
+  test-dpdi655p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dpdi655p/0 [executing] active: 
+06:22:21 INFO Waiting for model:
+  test-dpdi655p/0 [allocating] waiting: agent initialising
+06:22:51 INFO Waiting for model:
+  test-dpdi655p/0 [executing] maintenance: installing charm software
+06:23:21 INFO Waiting for model:
+  test-dpdi655p/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-dpdi655p/0 [idle] active: 
+06:23:52 INFO Waiting for model:
+  test-dpdi655p/0 [idle] active:
+06:23:53 INFO Waiting for model:
+  test-dpdi655p/0 [idle] active: 
+06:24:23 INFO Waiting for model:
+  test-dpdi655p/0 [idle] active: 
+06:24:26 INFO Current reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:24:26 INFO Waiting for reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:25:27 INFO Current reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:25:27 INFO Current reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f, expected reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:25:27 INFO Waiting for reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:26:28 INFO Current reconcile ID: 5c232b57-3dbd-4768-848c-3123e72533ba
+06:26:28 INFO Current reconcile ID: 5c232b57-3dbd-4768-848c-3123e72533ba, expected reconcile ID: 993ceb48-6ad6-43a8-be28-2a8f5217f85f
+06:26:32 INFO Waiting for model:
+  test-dpdi655p/0 [idle] active: 
+06:27:02 INFO Waiting for model:
+  test-dpdi655p/0 [idle] active: 
+06:27:05 INFO Current reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:27:05 INFO Waiting for reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:28:06 INFO Current reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:28:06 INFO Current reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd, expected reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:28:06 INFO Waiting for reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:29:07 INFO Current reconcile ID: f054aae2-816e-499d-8ec8-953fdadcc23b
+06:29:07 INFO Current reconcile ID: f054aae2-816e-499d-8ec8-953fdadcc23b, expected reconcile ID: 8291834a-be25-485f-8b2c-f1ed48e0afdd
+06:29:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769495044.738043, "event": "reconciliation", "flavor": "test-dpdi655p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.040176391601562}
+{"timestamp": 1769495181.876031, "event": "reconciliation", "flavor": "test-dpdi655p", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 16.995296239852905}
+{"timestamp": 1769495152.0, "event": "runner_installed", "flavor": "test-dpdi655p", "duration": 109.0}
+{"timestamp": 1769495209.5777452, "event": "reconciliation", "flavor": "test-dpdi655p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.17361354827881}
+{"timestamp": 1769495339.1171365, "event": "reconciliation", "flavor": "test-dpdi655p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.495409488677979}
