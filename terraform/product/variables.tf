@@ -27,6 +27,7 @@ variable "github_runners" {
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)
+    machines    = optional(set(string))
   }))
 
   validation {
