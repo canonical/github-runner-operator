@@ -26,13 +26,14 @@ the bundle deployment onto any Kubernetes environment managed by [Juju][Juju].
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_juju"></a> [juju](#requirement\_juju) | >= 0.11.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_juju"></a> [juju](#requirement\_juju) | >= 0.11.0, < 1.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_juju"></a> [juju](#provider\_juju) | >= 0.11.0 |
+| <a name="provider_juju"></a> [juju](#provider\_juju) | >= 0.11.0, < 1.0.0 |
 
 ## Modules
 
@@ -53,7 +54,7 @@ the bundle deployment onto any Kubernetes environment managed by [Juju][Juju].
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_github_runner_image_builder"></a> [github\_runner\_image\_builder](#input\_github\_runner\_image\_builder) | n/a | <pre>object({<br/>    app_name    = optional(string, "github-runner-image-builder")<br/>    channel     = optional(string, "latest/stable")<br/>    config      = optional(map(string), {})<br/>    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=20000M")<br/>    revision    = optional(number)<br/>    base        = optional(string, "ubuntu@22.04")<br/>    units       = optional(number, 1)<br/>  })</pre> | n/a | yes |
-| <a name="input_github_runners"></a> [github\_runners](#input\_github\_runners) | n/a | <pre>list(object({<br/>    app_name    = optional(string, "github-runner")<br/>    channel     = optional(string, "latest/stable")<br/>    config      = optional(map(string), {})<br/>    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=20000M")<br/>    revision    = optional(number)<br/>    base        = optional(string, "ubuntu@22.04")<br/>    units       = optional(number, 1)<br/>  }))</pre> | n/a | yes |
+| <a name="input_github_runners"></a> [github\_runners](#input\_github\_runners) | n/a | <pre>list(object({<br/>    app_name    = optional(string, "github-runner")<br/>    channel     = optional(string, "latest/stable")<br/>    config      = optional(map(string), {})<br/>    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=20000M")<br/>    revision    = optional(number)<br/>    base        = optional(string, "ubuntu@22.04")<br/>    units       = optional(number, 1)<br/>    machines    = optional(set(string))<br/>  }))</pre> | n/a | yes |
 | <a name="input_model"></a> [model](#input\_model) | Reference to the Juju model to deploy the github-runner and github-runner-image-builder operators. | `string` | n/a | yes |
 
 ## Outputs
