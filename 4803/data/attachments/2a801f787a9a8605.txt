@@ -1,0 +1,53 @@
+18:21:41 WARNING unexpected facade SSHServer received from the controller
+18:21:41 INFO Adding model github-pr-d4b60-lxd:test-charm-metrics-success-bwc4 on cloud localhost
+18:21:41 WARNING unexpected facade SSHServer received from the controller
+18:21:41 WARNING unexpected facade SSHSession received from the controller
+18:21:41 WARNING unexpected facade SSHTunneler received from the controller
+18:21:41 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:21:43 INFO Deploying ch:amd64/noble/any-charm-133
+18:22:01 INFO Deploying local:jammy/github-runner-0
+18:22:01 INFO Waiting for model:
+  test-j5t4orer/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j5t4orer/0 [allocating] waiting: waiting for machine
+18:22:31 INFO Waiting for model:
+  test-j5t4orer/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j5t4orer/0 [allocating] waiting: waiting for machine
+18:23:02 INFO Waiting for model:
+  test-j5t4orer/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j5t4orer/0 [idle] active: 
+18:23:32 INFO Waiting for model:
+  test-j5t4orer/0 [allocating] waiting: agent initialising
+18:24:02 INFO Waiting for model:
+  test-j5t4orer/0 [executing] maintenance: installing charm software
+18:24:32 INFO Waiting for model:
+  test-j5t4orer/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-j5t4orer/0 [idle] active: 
+18:25:02 INFO Waiting for model:
+  test-j5t4orer/0 [idle] active:
+18:25:14 INFO Waiting for model:
+  test-j5t4orer/0 [idle] active: 
+18:25:44 INFO Waiting for model:
+  test-j5t4orer/0 [idle] active: 
+18:25:46 INFO Current reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:25:46 INFO Waiting for reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:26:47 INFO Current reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:26:47 INFO Current reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905, expected reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:26:47 INFO Waiting for reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:27:48 INFO Current reconcile ID: 7353b0bb-61bd-40e0-852d-ad8401db0955
+18:27:48 INFO Current reconcile ID: 7353b0bb-61bd-40e0-852d-ad8401db0955, expected reconcile ID: bc6ea45f-7dfd-47ae-8feb-1e6ad571c905
+18:28:26 INFO Waiting for model:
+  test-j5t4orer/0 [idle] active: 
+18:28:56 INFO Waiting for model:
+  test-j5t4orer/0 [idle] active: 
+18:28:59 INFO Current reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:28:59 INFO Waiting for reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:30:00 INFO Current reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:30:00 INFO Current reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214, expected reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:30:00 INFO Waiting for reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:31:01 INFO Current reconcile ID: 522b69b4-2204-4d2c-8dc4-3555d3437e26
+18:31:01 INFO Current reconcile ID: 522b69b4-2204-4d2c-8dc4-3555d3437e26, expected reconcile ID: 25ac2249-9ec9-4186-94fd-2467ed28f214
+18:31:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769538327.321631, "event": "reconciliation", "flavor": "test-j5t4orer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.39557147026062}
+{"timestamp": 1769538459.0514631, "event": "reconciliation", "flavor": "test-j5t4orer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.581087589263916}
+{"timestamp": 1769538495.0, "event": "runner_installed", "flavor": "test-j5t4orer", "duration": 170.0}
+{"timestamp": 1769538524.2184668, "event": "reconciliation", "flavor": "test-j5t4orer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.603638410568237}
+{"timestamp": 1769538653.3832588, "event": "reconciliation", "flavor": "test-j5t4orer", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.076557874679565}

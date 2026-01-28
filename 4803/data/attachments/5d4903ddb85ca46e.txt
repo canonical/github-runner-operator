@@ -1,0 +1,101 @@
+18:21:44 WARNING unexpected facade SSHServer received from the controller
+18:21:44 INFO Adding model github-pr-d4b60-lxd:test-multi-unit-same-machine-398q on cloud localhost
+18:21:44 WARNING unexpected facade SSHServer received from the controller
+18:21:44 WARNING unexpected facade SSHSession received from the controller
+18:21:44 WARNING unexpected facade SSHTunneler received from the controller
+18:21:45 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:21:46 INFO Deploying ch:amd64/noble/any-charm-133
+18:22:04 INFO Deploying local:jammy/github-runner-0
+18:22:04 INFO Waiting for model:
+  test-fkhf8039/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkhf8039/0 [allocating] waiting: waiting for machine
+18:22:34 INFO Waiting for model:
+  test-fkhf8039/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkhf8039/0 [allocating] waiting: waiting for machine
+18:23:05 INFO Waiting for model:
+  test-fkhf8039/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkhf8039/0 [idle] active: 
+18:23:35 INFO Waiting for model:
+  test-fkhf8039/0 [allocating] waiting: agent initialising
+18:24:05 INFO Waiting for model:
+  test-fkhf8039/0 [executing] maintenance: installing charm software
+18:24:35 INFO Waiting for model:
+  test-fkhf8039/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-fkhf8039/0 [idle] active: 
+18:25:05 INFO Waiting for model:
+  test-fkhf8039/0 [idle] active:
+18:25:11 INFO Waiting for model:
+  test-fkhf8039/0 [idle] active: 
+  test-fkhf8039/1 [allocating] waiting: installing agent
+18:25:41 INFO Waiting for model:
+  test-fkhf8039/0 [idle] active: 
+  test-fkhf8039/1 [executing] maintenance: installing charm software
+18:26:11 INFO Waiting for model:
+  test-fkhf8039/0 [idle] active: 
+  test-fkhf8039/1 [executing] maintenance: Update image for runners
+18:26:33 INFO File content of /var/lib/github-runner-manager/test-fkhf8039-0/http_port: 55555
+18:26:34 INFO File content of /var/lib/github-runner-manager/test-fkhf8039-1/http_port: 55556
+18:26:37 INFO File content of /var/lib/github-runner-manager/test-fkhf8039-1/http_port: 55556
+18:26:41 INFO File content of /var/lib/github-runner-manager/test-fkhf8039-1/http_port: 55556
+18:26:41 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-398q  github-pr-d4b60-lxd  localhost/localhost  3.6.13   unsupported  18:26:41Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-fkhf8039           active      1  any-charm      latest/beta  133  no       
+test-fkhf8039                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-fkhf8039/0*  active    idle   0        10.230.73.64           
+test-fkhf8039/0*                         active    idle   1        10.230.73.135          
+test-fkhf8039/1                          active    idle   1        10.230.73.135          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.230.73.64   juju-224a2d-0  ubuntu@24.04  github-runner  Running
+1        started  10.230.73.135  juju-224a2d-1  ubuntu@22.04  github-runner  Running
+
+18:26:41 INFO Juju error logs:
+
+machine-0: 18:22:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:22:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:23:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fkhf8039-0: 18:24:28 ERROR unit.test-fkhf8039/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fkhf8039-0: 18:24:29 ERROR unit.test-fkhf8039/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fkhf8039-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fkhf8039-1: 18:25:48 ERROR unit.test-fkhf8039/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fkhf8039-1: 18:25:49 ERROR unit.test-fkhf8039/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fkhf8039-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:26:41 INFO Forgetting model main...

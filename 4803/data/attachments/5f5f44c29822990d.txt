@@ -1,0 +1,106 @@
+18:21:44 WARNING unexpected facade SSHServer received from the controller
+18:21:44 INFO Adding model github-pr-d4b60-lxd:test-charm-fork-path-change-hspo on cloud localhost
+18:21:44 WARNING unexpected facade SSHServer received from the controller
+18:21:44 WARNING unexpected facade SSHSession received from the controller
+18:21:44 WARNING unexpected facade SSHTunneler received from the controller
+18:21:44 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:21:47 INFO Deploying ch:amd64/noble/any-charm-133
+18:22:03 INFO Deploying local:jammy/github-runner-0
+18:22:03 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gaqaruon/0 [allocating] waiting: waiting for machine
+18:22:33 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gaqaruon/0 [executing] maintenance: installing charm software
+18:23:04 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+18:23:34 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+18:24:04 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+18:24:34 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: waiting for machine
+18:25:05 INFO Waiting for model:
+  test-gaqaruon/0 [allocating] waiting: agent initialising
+18:25:35 INFO Waiting for model:
+  test-gaqaruon/0 [executing] maintenance: installing charm software
+18:26:05 INFO Waiting for model:
+  test-gaqaruon/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-gaqaruon/0 [idle] active: 
+18:26:35 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:26:41 INFO GitHub token rate limit: Rate(reset=2026-01-27 18:28:57+00:00, remaining=2815, limit=5000)
+18:26:53 INFO test_path_config_change
+18:26:53 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:27:23 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:27:48 INFO Ensure there is a runner (this calls reconcile)
+18:27:48 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:28:18 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:28:21 INFO Current reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:28:21 INFO Waiting for reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:29:22 INFO Current reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:29:22 INFO Current reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a, expected reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:29:22 INFO Waiting for reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:30:23 INFO Current reconcile ID: f61f14cc-1ca1-464c-aaff-31e344e55f3b
+18:30:23 INFO Current reconcile ID: f61f14cc-1ca1-464c-aaff-31e344e55f3b, expected reconcile ID: b0cb9f3c-cc22-4608-bbeb-bd80fa4e065a
+18:30:27 INFO Reconciling (again)
+18:30:27 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:30:57 INFO Waiting for model:
+  test-gaqaruon/0 [idle] active: 
+18:31:09 INFO Current reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:31:09 INFO Waiting for reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:32:10 INFO Current reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:32:10 INFO Current reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c, expected reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:32:10 INFO Waiting for reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:33:11 INFO Current reconcile ID: 891e6f01-d91e-4940-baef-56cfdc8977ca
+18:33:11 INFO Current reconcile ID: 891e6f01-d91e-4940-baef-56cfdc8977ca, expected reconcile ID: 8220acab-a324-450e-880c-c36ee575a90c
+18:34:27 INFO runners: ['test-gaqaruon-0-n-7bcd64b827df']
+18:34:28 INFO runners in github repo: [SelfHostedActionsRunner(name="test-k51i6o9i-0-n-d7695e792221"), SelfHostedActionsRunner(name="test-dddojg63-0-n-972e062d27a9"), SelfHostedActionsRunner(name="test-ovai5kkt-0-n-4b86b553edce"), SelfHostedActionsRunner(name="test-ils1ko07-0-n-25460ac5f1de"), SelfHostedActionsRunner(name="test-ns0nelyr-0-n-1cea167e7069"), SelfHostedActionsRunner(name="test-dleuyh0j-0-n-6fa804e3c7e7"), SelfHostedActionsRunner(name="test-dponc8zp-0-n-ed62c999fbd4"), SelfHostedActionsRunner(name="test-lg6mn6yn-0-n-c2ce07b38a3a"), SelfHostedActionsRunner(name="test-p1g1h58i-0-n-dc0b621f3252"), SelfHostedActionsRunner(name="test-n6vz0if6-0-n-9eb50bf3b2b2"), SelfHostedActionsRunner(name="test-grm7311c-0-n-76e162fb53b7"), SelfHostedActionsRunner(name="test-oqfwwudg-0-n-9315c5db95c3"), SelfHostedActionsRunner(name="test-jsz2zklj-0-n-dbbddfa73276"), SelfHostedActionsRunner(name="test-j1tm1osq-0-n-a9d9807430a6"), SelfHostedActionsRunner(name="test-hplo9uy5-0-n-6950b3884096"), SelfHostedActionsRunner(name="test-h8j05bzp-0-n-d5af9c27ebcc"), SelfHostedActionsRunner(name="test-nt3m1o4m-0-n-c9ccdaa4e8dd"), SelfHostedActionsRunner(name="test-h2up59jm-0-n-3b9deb6d46d1"), SelfHostedActionsRunner(name="test-o0drh8cp-0-n-f69962afbdd1"), SelfHostedActionsRunner(name="test-iyh7ju1e-0-n-614696d0a0ac"), SelfHostedActionsRunner(name="test-pm21ju1w-0-n-216f38293a96"), SelfHostedActionsRunner(name="test-b4u3r3cx-0-n-5fa674e3f845"), SelfHostedActionsRunner(name="test-nzms4vfg-0-n-702f7d40f524"), SelfHostedActionsRunner(name="test-g4vnndg4-0-n-1cd63fdbbe45"), SelfHostedActionsRunner(name="test-alta2jlx-0-n-6109e018bbaf"), SelfHostedActionsRunner(name="test-ogml2q1x-0-n-4eeb906fd117"), SelfHostedActionsRunner(name="test-ddjb08vi-0-n-b2fc056dceee"), SelfHostedActionsRunner(name="test-dyp0elkz-0-n-8cd6f52f9b96"), SelfHostedActionsRunner(name="test-j5t4orer-0-n-46258c21d927"), SelfHostedActionsRunner(name="test-gaqaruon-0-n-7bcd64b827df"), SelfHostedActionsRunner(name="test-zif26byx-0-n-03bf329c59c4"), SelfHostedActionsRunner(name="test-tw7161rq-0-n-13e030de5c25"), SelfHostedActionsRunner(name="test-ss415wly-0-n-f3972b3c096d"), SelfHostedActionsRunner(name="test-rsth07jc-0-n-e9b3952e7b78"), SelfHostedActionsRunner(name="test-w34d23fd-0-n-88ee82f3300e"), SelfHostedActionsRunner(name="test-qxw2cxzh-0-n-8cae266df11d"), SelfHostedActionsRunner(name="test-y7wfzhhk-0-n-31b0d247d9a5"), SelfHostedActionsRunner(name="test-szckitw6-0-n-e1e68da17129"), SelfHostedActionsRunner(name="test-z7h0edk6-0-n-cadc901f20b5"), SelfHostedActionsRunner(name="test-zbr23gpk-0-n-61efbce97bfe"), SelfHostedActionsRunner(name="test-ydhlex2b-0-n-f6e1766f1c24"), SelfHostedActionsRunner(name="test-zui59c3v-0-n-31c18d48848d"), SelfHostedActionsRunner(name="test-rxp8vjun-0-n-61767033d8ae"), SelfHostedActionsRunner(name="test-wxy76woi-0-n-8dad182f6a6f"), SelfHostedActionsRunner(name="test-z0na88x6-0-n-578aa76291bd"), SelfHostedActionsRunner(name="test-tplmmjmx-0-n-aea555e76f79")]
+18:34:29 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-hspo  github-pr-d4b60-lxd  localhost/localhost  3.6.13   unsupported  18:34:29Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-gaqaruon           active      1  any-charm      latest/beta  133  no       
+test-gaqaruon                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-gaqaruon/0*  active    idle   0        10.218.43.71           
+test-gaqaruon/0*                         active    idle   1        10.218.43.214          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.218.43.71   juju-d99f67-0  ubuntu@24.04  github-runner  Running
+1        started  10.218.43.214  juju-d99f67-1  ubuntu@22.04  github-runner  Running
+
+18:34:29 INFO Juju error logs:
+
+machine-0: 18:22:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:22:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-gaqaruon-0: 18:25:58 ERROR unit.test-gaqaruon/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-gaqaruon-0: 18:26:00 ERROR unit.test-gaqaruon/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-gaqaruon-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:34:29 INFO Forgetting model main...
