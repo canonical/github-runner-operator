@@ -15,7 +15,7 @@ jobs:
     outputs:
       terraform: ${{ steps.filter.outputs.terraform }}
     steps:
-      - uses: actions/checkout@v6.0.1
+      - uses: actions/checkout@v6.0.2
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -31,7 +31,7 @@ jobs:
     env:
       WORKING_DIR: "terraform/charm/tests"
     steps:
-      - uses: actions/checkout@v6.0.1
+      - uses: actions/checkout@v6.0.2
       - uses: charmed-kubernetes/actions-operator@main
         with:
           provider: "lxd"
