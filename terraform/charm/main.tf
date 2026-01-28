@@ -15,5 +15,5 @@ resource "juju_application" "github_runner" {
   config      = var.config
   constraints = var.constraints
   machines    = var.machines
-  units       = var.machines == null ? var.units : length(var.machines)
+  units       = var.machines == null ? var.units : null
 }
