@@ -1,0 +1,81 @@
+06:22:13 WARNING unexpected facade SSHServer received from the controller
+06:22:13 INFO Adding model github-pr-d4b60-lxd:test-charm-upgrade-01cq on cloud localhost
+06:22:14 WARNING unexpected facade SSHServer received from the controller
+06:22:14 WARNING unexpected facade SSHSession received from the controller
+06:22:14 WARNING unexpected facade SSHTunneler received from the controller
+06:22:14 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:22:16 INFO Deploying ch:amd64/noble/any-charm-133
+06:22:49 INFO Deploying local:jammy/github-runner-0
+06:22:50 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bsnqze15/0 [allocating] waiting: waiting for machine
+06:23:20 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bsnqze15/0 [allocating] waiting: waiting for machine
+06:23:50 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bsnqze15/0 [allocating] waiting: agent initialising
+06:24:20 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bsnqze15/0 [idle] active: 
+06:24:50 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: waiting for machine
+06:25:20 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: agent initialising
+06:25:50 INFO Waiting for model:
+  test-bsnqze15/0 [allocating] waiting: agent initialising
+06:26:20 INFO Waiting for model:
+  test-bsnqze15/0 [executing] maintenance: installing charm software
+06:26:50 INFO Waiting for model:
+  test-bsnqze15/0 [executing] maintenance: installing charm software
+06:27:20 INFO Waiting for model:
+  test-bsnqze15/0 [executing] maintenance: installing charm software
+06:27:50 INFO Waiting for model:
+  test-bsnqze15/0 [executing] maintenance: Update image for runners
+06:28:20 INFO Waiting for model:
+  test-bsnqze15/0 [idle] active: 
+06:31:15 INFO Waiting for model:
+  test-bsnqze15/0 [idle] active:
+06:31:47 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-01cq  github-pr-d4b60-lxd  localhost/localhost  3.6.13   unsupported  06:31:47Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-bsnqze15           active      1  any-charm      latest/beta  133  no       
+test-bsnqze15                                  active      1  github-runner                 1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-bsnqze15/0*  active    idle   0        10.156.215.93          
+test-bsnqze15/0*                         active    idle   1        10.156.215.38          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.156.215.93  juju-091918-0  ubuntu@24.04  github-runner  Running
+1        started  10.156.215.38  juju-091918-1  ubuntu@22.04  github-runner  Running
+
+06:31:47 INFO Juju error logs:
+
+machine-0: 06:23:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:23:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-bsnqze15-0: 06:27:40 ERROR unit.test-bsnqze15/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-bsnqze15-0: 06:27:42 ERROR unit.test-bsnqze15/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bsnqze15-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:31:47 INFO Forgetting model main...

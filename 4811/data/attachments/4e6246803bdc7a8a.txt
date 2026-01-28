@@ -1,0 +1,38 @@
+06:22:05 WARNING unexpected facade SSHServer received from the controller
+06:22:05 INFO Adding model github-pr-d4b60-lxd:test-charm-no-runner-t0qu on cloud localhost
+06:22:05 WARNING unexpected facade SSHServer received from the controller
+06:22:05 WARNING unexpected facade SSHSession received from the controller
+06:22:05 WARNING unexpected facade SSHTunneler received from the controller
+06:22:05 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:22:08 INFO Deploying ch:amd64/noble/any-charm-133
+06:22:36 INFO Deploying local:jammy/github-runner-0
+06:22:37 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iirqodij/0 [allocating] waiting: waiting for machine
+06:23:07 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iirqodij/0 [allocating] waiting: waiting for machine
+06:23:37 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iirqodij/0 [allocating] waiting: waiting for machine
+06:24:07 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iirqodij/0 [allocating] waiting: waiting for machine
+06:24:38 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iirqodij/0 [executing] maintenance: installing charm software
+06:25:08 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: agent initialising
+06:25:38 INFO Waiting for model:
+  test-iirqodij/0 [allocating] waiting: agent initialising
+06:26:09 INFO Waiting for model:
+  test-iirqodij/0 [executing] maintenance: installing charm software
+06:26:39 INFO Waiting for model:
+  test-iirqodij/0 [executing] maintenance: installing charm software
+06:27:09 INFO Waiting for model:
+  test-iirqodij/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-iirqodij/0 [executing] active: 
+06:27:39 INFO Waiting for model:
+  test-iirqodij/0 [idle] active: 
+06:27:50 INFO Waiting for model:
+  test-iirqodij/0 [idle] active:

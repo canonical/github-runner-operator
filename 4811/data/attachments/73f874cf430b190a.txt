@@ -1,0 +1,47 @@
+06:21:50 WARNING unexpected facade SSHServer received from the controller
+06:21:50 INFO Adding model github-pr-d4b60-lxd:test-charm-runner-690a on cloud localhost
+06:21:51 WARNING unexpected facade SSHServer received from the controller
+06:21:51 WARNING unexpected facade SSHSession received from the controller
+06:21:51 WARNING unexpected facade SSHTunneler received from the controller
+06:21:51 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:21:56 INFO Deploying ch:amd64/noble/any-charm-133
+06:22:11 INFO Deploying local:jammy/github-runner-0
+06:22:11 INFO Waiting for model:
+  test-yg9a3s22/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yg9a3s22/0 [allocating] waiting: waiting for machine
+06:22:41 INFO Waiting for model:
+  test-yg9a3s22/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yg9a3s22/0 [allocating] waiting: waiting for machine
+06:23:12 INFO Waiting for model:
+  test-yg9a3s22/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yg9a3s22/0 [idle] active: 
+06:23:42 INFO Waiting for model:
+  test-yg9a3s22/0 [allocating] waiting: agent initialising
+06:24:13 INFO Waiting for model:
+  test-yg9a3s22/0 [executing] maintenance: installing charm software
+06:24:43 INFO Waiting for model:
+  test-yg9a3s22/0 [executing] maintenance: installing charm software
+06:25:13 INFO Waiting for model:
+  test-yg9a3s22/0 [idle] active:
+06:25:26 INFO Waiting for model:
+  test-yg9a3s22/0 [idle] active: 
+06:25:56 INFO Waiting for model:
+  test-yg9a3s22/0 [idle] active: 
+06:25:59 INFO Current reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:25:59 INFO Waiting for reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:27:00 INFO Current reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:27:00 INFO Current reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9, expected reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:27:00 INFO Waiting for reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:28:01 INFO Current reconcile ID: ccd2d6db-03ff-437d-bb7c-a29381416ba0
+06:28:01 INFO Current reconcile ID: ccd2d6db-03ff-437d-bb7c-a29381416ba0, expected reconcile ID: b5b58800-b5c6-4fd6-99f6-50eb3d2d9cd9
+06:28:10 INFO Waiting for model:
+  test-yg9a3s22/0 [idle] active: 
+06:28:40 INFO Waiting for model:
+  test-yg9a3s22/0 [idle] active: 
+06:28:43 INFO Current reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
+06:28:43 INFO Waiting for reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
+06:29:44 INFO Current reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
+06:29:44 INFO Current reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea, expected reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
+06:29:44 INFO Waiting for reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
+06:30:45 INFO Current reconcile ID: c77a7d5e-1f22-4d48-a653-aad8da74a7c0
+06:30:45 INFO Current reconcile ID: c77a7d5e-1f22-4d48-a653-aad8da74a7c0, expected reconcile ID: f517619e-4650-4e4b-ac8d-d69d8e7145ea
