@@ -1,0 +1,100 @@
+10:42:15 WARNING unexpected facade SSHServer received from the controller
+10:42:15 INFO Adding model github-pr-b87fd-lxd:test-multi-unit-same-machine-mj5s on cloud localhost
+10:42:15 WARNING unexpected facade SSHServer received from the controller
+10:42:15 WARNING unexpected facade SSHSession received from the controller
+10:42:15 WARNING unexpected facade SSHTunneler received from the controller
+10:42:15 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+10:42:18 INFO Deploying ch:amd64/noble/any-charm-133
+10:42:32 INFO Deploying local:jammy/github-runner-0
+10:42:32 INFO Waiting for model:
+  test-z2jefusz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z2jefusz/0 [allocating] waiting: waiting for machine
+10:43:02 INFO Waiting for model:
+  test-z2jefusz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z2jefusz/0 [allocating] waiting: waiting for machine
+10:43:32 INFO Waiting for model:
+  test-z2jefusz/0 [allocating] waiting: waiting for machine
+10:44:02 INFO Waiting for model:
+  test-z2jefusz/0 [allocating] waiting: agent initialising
+10:44:32 INFO Waiting for model:
+  test-z2jefusz/0 [executing] maintenance: installing charm software
+10:45:02 INFO Waiting for model:
+  test-z2jefusz/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-z2jefusz/0 [idle] active: 
+10:45:33 INFO Waiting for model:
+  test-z2jefusz/0 [idle] active:
+10:45:34 INFO Waiting for model:
+  test-z2jefusz/0 [idle] active: 
+  test-z2jefusz/1 [allocating] waiting: installing agent
+10:46:04 INFO Waiting for model:
+  test-z2jefusz/0 [idle] active: 
+  test-z2jefusz/1 [executing] maintenance: installing charm software
+10:46:34 INFO Waiting for model:
+  test-z2jefusz/0 [idle] active: 
+  test-z2jefusz/1 [executing] maintenance: Update image for runners
+10:46:56 INFO File content of /var/lib/github-runner-manager/test-z2jefusz-0/http_port: 55555
+10:46:57 INFO File content of /var/lib/github-runner-manager/test-z2jefusz-1/http_port: 55556
+10:47:01 INFO File content of /var/lib/github-runner-manager/test-z2jefusz-1/http_port: 55556
+10:47:04 INFO File content of /var/lib/github-runner-manager/test-z2jefusz-1/http_port: 55556
+10:47:04 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-mj5s  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  10:47:04Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-z2jefusz           active      1  any-charm      latest/beta  133  no       
+test-z2jefusz                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-z2jefusz/0*  active    idle   0        10.23.102.251          
+test-z2jefusz/0*                         active    idle   1        10.23.102.175          
+test-z2jefusz/1                          active    idle   1        10.23.102.175          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.23.102.251  juju-3ebd89-0  ubuntu@24.04  github-runner  Running
+1        started  10.23.102.175  juju-3ebd89-1  ubuntu@22.04  github-runner  Running
+
+10:47:04 INFO Juju error logs:
+
+machine-0: 10:43:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:43:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:43:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:43:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-z2jefusz-0: 10:44:51 ERROR unit.test-z2jefusz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-z2jefusz-0: 10:44:53 ERROR unit.test-z2jefusz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z2jefusz-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-z2jefusz-1: 10:46:12 ERROR unit.test-z2jefusz/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-z2jefusz-1: 10:46:14 ERROR unit.test-z2jefusz/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z2jefusz-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+10:47:04 INFO Forgetting model main...

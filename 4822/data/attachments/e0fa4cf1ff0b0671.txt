@@ -1,0 +1,61 @@
+10:52:09 WARNING unexpected facade SSHServer received from the controller
+10:52:09 INFO Adding model github-pr-b87fd-lxd:test-charm-metrics-success-byrc on cloud localhost
+10:52:09 WARNING unexpected facade SSHServer received from the controller
+10:52:09 WARNING unexpected facade SSHSession received from the controller
+10:52:09 WARNING unexpected facade SSHTunneler received from the controller
+10:52:10 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+10:52:12 INFO Deploying ch:amd64/noble/any-charm-133
+10:52:39 INFO Deploying local:jammy/github-runner-0
+10:52:39 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nv9sq0oh/0 [allocating] waiting: waiting for machine
+10:53:09 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nv9sq0oh/0 [allocating] waiting: waiting for machine
+10:53:40 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nv9sq0oh/0 [allocating] waiting: waiting for machine
+10:54:10 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nv9sq0oh/0 [idle] active: 
+10:54:40 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: waiting for machine
+10:55:10 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: agent initialising
+10:55:41 INFO Waiting for model:
+  test-nv9sq0oh/0 [allocating] waiting: agent initialising
+10:56:11 INFO Waiting for model:
+  test-nv9sq0oh/0 [executing] maintenance: installing charm software
+10:56:41 INFO Waiting for model:
+  test-nv9sq0oh/0 [executing] maintenance: installing charm software
+10:57:11 INFO Waiting for model:
+  test-nv9sq0oh/0 [executing] maintenance: installing charm software
+10:57:42 INFO Waiting for model:
+  test-nv9sq0oh/0 [executing] maintenance: Update image for runners
+10:58:06 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+10:58:37 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+10:58:40 INFO Current reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+10:58:40 INFO Waiting for reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+10:59:41 INFO Current reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+10:59:41 INFO Current reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460, expected reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+10:59:41 INFO Waiting for reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+11:00:42 INFO Current reconcile ID: 28595af2-e355-4ecb-97da-aa413cf340b9
+11:00:42 INFO Current reconcile ID: 28595af2-e355-4ecb-97da-aa413cf340b9, expected reconcile ID: bbd288a4-70b5-48f7-8ad5-0c25c0aed460
+11:00:48 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:01:18 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:01:21 INFO Current reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:01:21 INFO Waiting for reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:02:22 INFO Current reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:02:22 INFO Current reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad, expected reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:02:22 INFO Waiting for reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:03:23 INFO Current reconcile ID: 54b4270a-5f0e-4177-9878-fbce78cb3eb3
+11:03:23 INFO Current reconcile ID: 54b4270a-5f0e-4177-9878-fbce78cb3eb3, expected reconcile ID: 25ed123f-28cf-43a3-967c-0f2a9133faad
+11:03:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769684302.8786, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 14.734026193618774}
+{"timestamp": 1769684436.2118597, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 13.19236135482788}
+{"timestamp": 1769684407.0, "event": "runner_installed", "flavor": "test-nv9sq0oh", "duration": 106.0}
+{"timestamp": 1769684470.837708, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.052905321121216}
+{"timestamp": 1769684601.7506924, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.773921728134155}

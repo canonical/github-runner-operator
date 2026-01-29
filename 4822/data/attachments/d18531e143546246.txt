@@ -1,0 +1,75 @@
+11:03:25 INFO GitHub token rate limit: Rate(reset=2026-01-29 11:12:12+00:00, remaining=3402, limit=5000)
+11:03:28 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:03:58 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:04:02 INFO Current reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:04:02 INFO Waiting for reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:05:03 INFO Current reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:05:03 INFO Current reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9, expected reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:05:03 INFO Waiting for reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:06:05 INFO Current reconcile ID: cc7e14fb-2978-4ce6-8cc9-e9bf5ee48413
+11:06:05 INFO Current reconcile ID: cc7e14fb-2978-4ce6-8cc9-e9bf5ee48413, expected reconcile ID: 04c45a0a-0299-49fa-aa08-3d3a7c546ce9
+11:06:13 INFO Wait for condition not met, sleeping 10
+11:06:24 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:06:54 INFO Waiting for model:
+  test-nv9sq0oh/0 [idle] active: 
+11:06:58 INFO Current reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:06:58 INFO Waiting for reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:07:59 INFO Current reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:07:59 INFO Current reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6, expected reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:07:59 INFO Waiting for reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:09:00 INFO Current reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:09:00 INFO Current reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6, expected reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:09:00 INFO Waiting for reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:10:01 INFO Current reconcile ID: cc6e72d1-6dd8-45e4-ab22-fec4bf5b17fa
+11:10:01 INFO Current reconcile ID: cc6e72d1-6dd8-45e4-ab22-fec4bf5b17fa, expected reconcile ID: b83200e8-2738-4d3f-83a7-5e0269efa6e6
+11:10:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769684720.0, "event": "runner_installed", "flavor": "test-nv9sq0oh", "duration": 98.0}
+{"timestamp": 1769684779.0, "event": "runner_start", "flavor": "test-nv9sq0oh", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 59.0, "queue_duration": 2.0}
+{"timestamp": 1769684783.0, "event": "runner_stop", "flavor": "test-nv9sq0oh", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1769684805.8940523, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.921215534210205}
+{"timestamp": 1769684939.514993, "event": "reconciliation", "flavor": "test-nv9sq0oh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.49106216430664}
+11:10:04 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-byrc  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  11:10:04Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-nv9sq0oh           active      1  any-charm      latest/beta  133  no       
+test-nv9sq0oh                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-nv9sq0oh/0*  active    idle   0        10.129.91.161          
+test-nv9sq0oh/0*                         active    idle   1        10.129.91.185          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.129.91.161  juju-51cf25-0  ubuntu@24.04  github-runner  Running
+1        started  10.129.91.185  juju-51cf25-1  ubuntu@22.04  github-runner  Running
+
+11:10:04 INFO Juju error logs:
+
+machine-0: 10:53:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 10:53:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:55:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 10:55:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nv9sq0oh-0: 10:57:18 ERROR unit.test-nv9sq0oh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nv9sq0oh-0: 10:57:20 ERROR unit.test-nv9sq0oh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nv9sq0oh-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+11:10:04 INFO Forgetting model main...
