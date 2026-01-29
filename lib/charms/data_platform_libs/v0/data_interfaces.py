@@ -453,7 +453,7 @@ LIBAPI = 0
 
 # Increment this PATCH version before using `charmcraft publish-lib` or reset
 # to 0 if you are raising the major API version
-LIBPATCH = 56
+LIBPATCH = 57
 
 PYDEPS = ["ops>=2.0.0"]
 
@@ -842,6 +842,11 @@ class CachedSecret:
                 self._secret_meta = self._model.get_secret(label=label)
             except SecretNotFoundError:
                 pass
+            except ModelError as e:
+                # Permission denied can be raised if the secret exists but is not yet granted to us.
+                if "permission denied" in str(e):
+                    return
+                raise
             else:
                 if label != self.label:
                     self.current_label = label
@@ -875,6 +880,8 @@ class CachedSecret:
             self._secret_meta = self.add_secret(content, label=self.label)
         except ModelError as err:
             if MODEL_ERRORS["not_leader"] not in str(err):
+                raise
+            if "permission denied" not in str(err):
                 raise
         self.current_label = None
 
