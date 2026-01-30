@@ -1,0 +1,67 @@
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 INFO Adding model github-pr-b87fd-lxd:test-charm-metrics-success-qkgi on cloud localhost
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 WARNING unexpected facade SSHSession received from the controller
+18:25:26 WARNING unexpected facade SSHTunneler received from the controller
+18:25:27 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:25:28 INFO Deploying ch:amd64/noble/any-charm-133
+18:26:01 INFO Deploying local:jammy/github-runner-0
+18:26:01 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:26:32 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:27:02 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u20rwhgu/0 [executing] maintenance: installing charm software
+18:27:32 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:28:02 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:28:32 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:29:03 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:29:33 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: waiting for machine
+18:30:03 INFO Waiting for model:
+  test-u20rwhgu/0 [allocating] waiting: agent initialising
+18:30:33 INFO Waiting for model:
+  test-u20rwhgu/0 [executing] maintenance: installing charm software
+18:31:04 INFO Waiting for model:
+  test-u20rwhgu/0 [executing] maintenance: installing charm software
+18:31:34 INFO Waiting for model:
+  test-u20rwhgu/0 [executing] maintenance: installing charm software
+18:32:04 INFO Waiting for model:
+  test-u20rwhgu/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-u20rwhgu/0 [executing] active: 
+18:32:35 INFO Waiting for model:
+  test-u20rwhgu/0 [executing] maintenance: Update image for runners
+18:32:54 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:33:24 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:33:28 INFO Current reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:33:28 INFO Waiting for reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:34:29 INFO Current reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:34:29 INFO Current reconcile ID: f390808f-f209-4661-b9df-d21e33b59848, expected reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:34:29 INFO Waiting for reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:35:30 INFO Current reconcile ID: ef3dec1a-a26d-4803-8a85-79c7b9ccdbc9
+18:35:30 INFO Current reconcile ID: ef3dec1a-a26d-4803-8a85-79c7b9ccdbc9, expected reconcile ID: f390808f-f209-4661-b9df-d21e33b59848
+18:35:35 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:36:05 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:36:09 INFO Current reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:36:09 INFO Waiting for reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:37:10 INFO Current reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:37:10 INFO Current reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d, expected reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:37:10 INFO Waiting for reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:38:11 INFO Current reconcile ID: fd6beb84-72a3-4c7f-9f33-1efc99a61cc1
+18:38:11 INFO Current reconcile ID: fd6beb84-72a3-4c7f-9f33-1efc99a61cc1, expected reconcile ID: a5b55437-979b-447b-b02e-2f992e96ab0d
+18:38:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769711588.6630409, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.47218632698059}
+{"timestamp": 1769711718.2317183, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 9.373643398284912}
+{"timestamp": 1769711666.0, "event": "runner_installed", "flavor": "test-u20rwhgu", "duration": 79.0}
+{"timestamp": 1769711753.8508778, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.6703040599823}
+{"timestamp": 1769711883.423141, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.357301950454712}

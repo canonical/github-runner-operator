@@ -1,0 +1,72 @@
+18:38:12 INFO GitHub token rate limit: Rate(reset=2026-01-29 19:15:04+00:00, remaining=4482, limit=5000)
+18:38:16 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:38:46 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:38:51 INFO Current reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:38:51 INFO Waiting for reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:39:52 INFO Current reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:39:52 INFO Current reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896, expected reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:39:52 INFO Waiting for reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:40:53 INFO Current reconcile ID: 88ca79b7-9c98-4c79-a9c9-80a9f6453289
+18:40:53 INFO Current reconcile ID: 88ca79b7-9c98-4c79-a9c9-80a9f6453289, expected reconcile ID: 2a0cca4b-8e60-49fe-8bc0-03b0622ff896
+18:41:01 INFO Wait for condition not met, sleeping 10
+18:41:12 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:41:42 INFO Waiting for model:
+  test-u20rwhgu/0 [idle] active: 
+18:41:46 INFO Current reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:41:46 INFO Waiting for reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:42:47 INFO Current reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:42:47 INFO Current reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022, expected reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:42:47 INFO Waiting for reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:43:48 INFO Current reconcile ID: 37ffefad-dd47-4bbd-bbfb-50526200cb56
+18:43:48 INFO Current reconcile ID: 37ffefad-dd47-4bbd-bbfb-50526200cb56, expected reconcile ID: 256dcc33-1f90-4d82-8797-94f0bd7ed022
+18:43:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1769711988.0, "event": "runner_installed", "flavor": "test-u20rwhgu", "duration": 77.0}
+{"timestamp": 1769712065.0, "event": "runner_start", "flavor": "test-u20rwhgu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 77.0, "queue_duration": 2.0}
+{"timestamp": 1769712070.0, "event": "runner_stop", "flavor": "test-u20rwhgu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1769712089.706721, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.491817474365234}
+{"timestamp": 1769712220.139977, "event": "reconciliation", "flavor": "test-u20rwhgu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.235741376876831}
+18:43:51 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-qkgi  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  18:43:51Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-u20rwhgu           active      1  any-charm      latest/beta  133  no       
+test-u20rwhgu                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-u20rwhgu/0*  active    idle   0        10.55.138.93           
+test-u20rwhgu/0*                         active    idle   1        10.55.138.127          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.55.138.93   juju-dd0c85-0  ubuntu@24.04  github-runner  Running
+1        started  10.55.138.127  juju-dd0c85-1  ubuntu@22.04  github-runner  Running
+
+18:43:51 INFO Juju error logs:
+
+machine-0: 18:26:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-u20rwhgu-0: 18:32:07 ERROR unit.test-u20rwhgu/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-u20rwhgu-0: 18:32:10 ERROR unit.test-u20rwhgu/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u20rwhgu-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:43:51 INFO Forgetting model main...

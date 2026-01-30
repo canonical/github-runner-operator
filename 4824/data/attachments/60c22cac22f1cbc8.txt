@@ -1,0 +1,35 @@
+18:25:37 WARNING unexpected facade SSHServer received from the controller
+18:25:37 INFO Adding model github-pr-b87fd-lxd:test-charm-no-runner-bwnp on cloud localhost
+18:25:38 WARNING unexpected facade SSHServer received from the controller
+18:25:38 WARNING unexpected facade SSHSession received from the controller
+18:25:38 WARNING unexpected facade SSHTunneler received from the controller
+18:25:38 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:25:40 INFO Deploying ch:amd64/noble/any-charm-133
+18:26:12 INFO Deploying local:jammy/github-runner-0
+18:26:12 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a80z6fqr/0 [allocating] waiting: waiting for machine
+18:26:43 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a80z6fqr/0 [allocating] waiting: waiting for machine
+18:27:13 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a80z6fqr/0 [allocating] waiting: agent initialising
+18:27:43 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: waiting for machine
+18:28:13 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: waiting for machine
+18:28:44 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: agent initialising
+18:29:14 INFO Waiting for model:
+  test-a80z6fqr/0 [allocating] waiting: agent initialising
+18:29:44 INFO Waiting for model:
+  test-a80z6fqr/0 [executing] maintenance: installing charm software
+18:30:15 INFO Waiting for model:
+  test-a80z6fqr/0 [executing] maintenance: installing charm software
+18:30:45 INFO Waiting for model:
+  test-a80z6fqr/0 [executing] maintenance: installing charm software
+18:31:15 INFO Waiting for model:
+  test-a80z6fqr/0 [executing] maintenance: Update image for runners
+18:31:36 INFO Waiting for model:
+  test-a80z6fqr/0 [idle] active:
