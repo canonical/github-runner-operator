@@ -52,6 +52,7 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
@@ -233,6 +234,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
+        )
+        self.framework.observe(
+            self.on[PLANNER_INTEGRATION_NAME].relation_changed,
+            self._on_planner_relation_changed,
         )
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
@@ -505,6 +510,12 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+    
+    @catch_charm_errors
+    def _on_planner_relation_changed(self, _: ops.RelationChangedEvent) -> None
+        """Handle planner relation changed event."""
+        state = self._setup_state()
+        self._setup_service(state)
 
     @catch_charm_errors
     def _on_database_created(self, _: ops.RelationEvent) -> None:

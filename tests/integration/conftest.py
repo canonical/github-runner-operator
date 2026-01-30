@@ -3,6 +3,7 @@
 
 """Fixtures for github runner charm integration tests."""
 
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import logging
 import random
@@ -461,7 +462,8 @@ async def image_builder_fixture(
 
     # Use any-charm to mock the image relation provider
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(f"""\
+        "any_charm.py": textwrap.dedent(
+            f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -474,7 +476,8 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
-            """),
+            """
+        ),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -845,3 +848,57 @@ async def juju(
         yield juju
         show_debug_log(juju)
         return
+
+
+class MockPlannerHandler(BaseHTTPRequestHandler):
+
+    def __init__(self):
+        super().__init__()
+        self.last_flavor = ""
+
+    def do_POST(self):
+        if self.path.startswith("/api/v1/auth/token/"):
+            self.last_flavor = self.path.split("/")[-1]
+            self.send_response(200)
+            self.end_headers()
+            return
+        self.send_response(404)
+        self.end_headers()
+
+
+@pytest_asyncio.fixture(scope="module")
+async def mock_planner_app(model: Model) -> AsyncIterator[Application]:
+    planner_secret_name = "mock-planner"
+    port = 8888
+    server = HTTPServer(("localhost", port), MockPlannerHandler)
+    server.serve_forever()
+    
+    planner_secret_id = await model.add_secret(name=planner_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"])
+
+    any_charm_src_overwrite = {
+        "any_charm.py": textwrap.dedent(
+            f"""\
+            from any_charm_base import AnyCharmBase
+
+            class AnyCharm(AnyCharmBase):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.framework.observe(self.on['provide-github-runner-planner-v0'].\
+relation_changed, self._image_relation_changed)
+
+                def _image_relation_changed(self, event):
+                    # Provide mock planner relation data
+                    event.relation.data[self.unit]['endpoint'] = 'http://localhost:{port}'
+                    event.relation.data[self.unit]['token'] = '{planner_secret_id}'
+            """
+        ),
+    }
+
+    planner_app: Application = await model.deploy(
+        "any-charm",
+        channel="latest/beta",
+    )
+    
+    await model.grant_secret(planner_secret_name, planner_app.name)
+    await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
+    return planner_app

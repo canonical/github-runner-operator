@@ -32,3 +32,12 @@ requires:
   mongodb:
     interface: mongodb_client
     limit: 1
+  planner:
+    interface: github_runner_planner_v0
+    optional: false
+
+storage:
+  runner:
+    description: Storage for the root disk of LXD instances hosting the runner application.
+    type: filesystem
+    location: /storage/juju

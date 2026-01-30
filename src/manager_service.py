@@ -11,6 +11,8 @@ import socket
 import textwrap
 from pathlib import Path
 
+import requests
+
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
@@ -206,6 +208,16 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
 
+    if state.charm_config.planner is not None:
+        planner_config = state.charm_config.planner
+        add_flavor_to_planner(
+            planner_config.endpoint,
+            planner_config.token,
+            planner_config.flavor,
+            state.charm_config.labels,
+            min_pressure=state.runner_config.base_virtual_machines,
+        )
+
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config, unit_name)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -222,6 +234,18 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     _enable_service(unit_name)
+
+
+def add_flavor_to_planner(endpoint: str, token: str, name: str, labels: list[str]) -> None:
+    url = endpoint + f"/api/v1/auth/token/{name}"
+    headers = {f"Authorization": f"Bearer {token}"}
+    json = {
+        "platform": "github",
+        "labels": labels,
+        "priority": 50,
+        "minimum_pressure": 0,
+    }
+    requests.post(url, headers=headers, json=json)
 
 
 def install_package(unit_name: str) -> None:
@@ -349,7 +373,8 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
     http_port = ensure_http_port_for_unit(unit_name)
-    service_file_content = textwrap.dedent(f"""\
+    service_file_content = textwrap.dedent(
+        f"""\
         [Unit]
         Description=Runs the github-runner-manager service
         StartLimitIntervalSec=0
@@ -371,7 +396,8 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
 
         [Install]
         WantedBy=multi-user.target
-        """)
+        """
+    )
     service_path = (
         SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{instance}.service"
     )
