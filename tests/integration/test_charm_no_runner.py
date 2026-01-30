@@ -6,11 +6,14 @@
 import logging
 
 import pytest
+import requests
 from github_runner_manager.reconcile_service import (
     RECONCILE_SERVICE_START_MSG,
     RECONCILE_START_MSG,
 )
 from juju.application import Application
+from juju.model import Model
+from ops import ActiveStatus
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
@@ -139,3 +142,28 @@ async def test_manager_service_started(
     log = await get_github_runner_manager_service_log(unit)
     assert RECONCILE_SERVICE_START_MSG not in log
     assert RECONCILE_START_MSG in log
+
+
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_planner_integration(
+    model: Model,
+    app_no_runner: Application,
+    mock_planner_app: Application,
+    mock_planner_server: str,
+) -> None:
+    """
+    arrange: A working application with no runners and a mock planner.
+    act: Integrate the application with the mock planner.
+    assert: The mock planner HTTP server receives a flavor registration.
+    """
+    await model.relate(f"{app_no_runner.name}:planner", mock_planner_app.name)
+    await model.wait_for_idle(
+        apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+    )
+
+    response = requests.get(mock_planner_server, timeout=10)
+    data = response.json()
+    print("############################################################################")
+    print(data)
+    print("############################################################################")

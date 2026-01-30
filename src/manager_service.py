@@ -12,7 +12,6 @@ import textwrap
 from pathlib import Path
 
 import requests
-
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
@@ -215,7 +214,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
             planner_config.token,
             planner_config.flavor,
             state.charm_config.labels,
-            min_pressure=state.runner_config.base_virtual_machines,
+            minimum_pressure=state.runner_config.base_virtual_machines,
         )
 
     config = create_application_configuration(state, app_name, unit_name)
@@ -236,16 +235,28 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service(unit_name)
 
 
-def add_flavor_to_planner(endpoint: str, token: str, name: str, labels: list[str]) -> None:
+def add_flavor_to_planner(
+    endpoint: str, token: str, name: str, labels: list[str], minimum_pressure: int
+) -> None:
+    """Add flavor to planner service.
+
+    Args:
+        endpoint: The planner service endpoint.
+        token: The authentication token for the planner service.
+        name: The flavor name.
+        labels: The list of labels associated with the flavor.
+        minimum_pressure: The minimum pressure for the flavor.
+    """
     url = endpoint + f"/api/v1/auth/token/{name}"
-    headers = {f"Authorization": f"Bearer {token}"}
-    json = {
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "name": name,
         "platform": "github",
         "labels": labels,
         "priority": 50,
-        "minimum_pressure": 0,
+        "minimum_pressure": minimum_pressure,
     }
-    requests.post(url, headers=headers, json=json)
+    requests.post(url, headers=headers, json=payload, timeout=10)
 
 
 def install_package(unit_name: str) -> None:
@@ -373,8 +384,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
     http_port = ensure_http_port_for_unit(unit_name)
-    service_file_content = textwrap.dedent(
-        f"""\
+    service_file_content = textwrap.dedent(f"""\
         [Unit]
         Description=Runs the github-runner-manager service
         StartLimitIntervalSec=0
@@ -396,8 +406,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
 
         [Install]
         WantedBy=multi-user.target
-        """
-    )
+        """)
     service_path = (
         SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{instance}.service"
     )

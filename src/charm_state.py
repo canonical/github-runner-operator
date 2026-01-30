@@ -167,28 +167,26 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
 
     return tuple(valid_labels)
 
+
 class PlannerConfig(BaseModel):
     """Configuration for the planner service.
-    
+
     Attributes:
         token: Token for the planner service.
-        url: URL of the planner service.
+        endpoint: The endpoint of the planner service.
         flavor: The name of the flavor to register with the planner.
     """
 
     token: str
     endpoint: AnyHttpUrl
     flavor: str
-    
+
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "PlannerConfig" | None:
+    def from_charm(cls, charm: CharmBase) -> "PlannerConfig | None":
         """Initialize the config from charm.
 
         Args:
             charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: If an invalid configuration was set.
 
         Returns:
             Current planner config.
@@ -203,12 +201,14 @@ class PlannerConfig(BaseModel):
             token_secret_id = relation_data.get("token", None)
             if token_secret_id is None:
                 return None
-            token_secret = charm.model.get_secret(token_secret_id)
+            token_secret = charm.model.get_secret(id=token_secret_id)
             return PlannerConfig(
                 token=token_secret.get_content()["token"],
-                endpoint=relation_data.get("endpoint", None),
-                flavor=relation.id,
+                endpoint=relation_data["endpoint"],  # type: ignore
+                flavor=charm.app.name,
             )
+        return None
+
 
 class RepoPolicyComplianceConfig(BaseModel):
     """Configuration for the repo policy compliance service.
@@ -279,6 +279,7 @@ class CharmConfig(BaseModel):
         aproxy_redirect_ports: a list of ports to redirect to the aproxy proxy.
         custom_pre_job_script: Custom pre-job script to run before the job.
         runner_manager_log_level: The log level of the runner manager application.
+        planner: The configuration for the planner service.
     """
 
     allow_external_contributor: bool
@@ -591,7 +592,7 @@ class CharmConfig(BaseModel):
             ),
             custom_pre_job_script=custom_pre_job_script,
             runner_manager_log_level=runner_manager_log_level,
-            planner=planner
+            planner=planner,
         )
 
 

@@ -3,7 +3,6 @@
 
 """Fixtures for github runner charm integration tests."""
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import logging
 import random
@@ -11,6 +10,7 @@ import secrets
 import string
 import textwrap
 from dataclasses import dataclass
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -462,8 +462,7 @@ async def image_builder_fixture(
 
     # Use any-charm to mock the image relation provider
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -476,8 +475,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -851,33 +849,63 @@ async def juju(
 
 
 class MockPlannerHandler(BaseHTTPRequestHandler):
+    """Handler for mock planner HTTP server."""
 
-    def __init__(self):
-        super().__init__()
-        self.last_flavor = ""
+    def __init__(self, *args, **kwargs):
+        """Initialize the mock planner handler.
 
-    def do_POST(self):
+        Args:
+            args: Positional arguments.
+            kwargs: Keyword arguments.
+        """
+        super().__init__(*args, **kwargs)
+        self.last_payload = None
+
+    # Ignore function name lint as do_POST is the name used by BaseHTTPRequestHandler
+    def do_POST(self):  # noqa: N802
+        """Handle all POST request."""
         if self.path.startswith("/api/v1/auth/token/"):
-            self.last_flavor = self.path.split("/")[-1]
+            content_length = int(self.headers["Content-Length"])
+            self.last_payload = self.rfile.read(content_length)
+
             self.send_response(200)
             self.end_headers()
             return
         self.send_response(404)
         self.end_headers()
 
+    # Ignore function name lint as do_GET is the name used by BaseHTTPRequestHandler
+    def do_GET(self):  # noqa: N802
+        """Handle all GET request."""
+        if self.last_payload is None:
+            self.send_response(404)
+            self.end_headers()
+            return
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(self.last_payload)
+
+
+@pytest.fixture(scope="module")
+def mock_planner_server() -> str:
+    port = 8888
+    server = HTTPServer(server_address=("localhost", port), RequestHandlerClass=MockPlannerHandler)
+    server.serve_forever()
+    return "http://localhost:{port}"
+
 
 @pytest_asyncio.fixture(scope="module")
-async def mock_planner_app(model: Model) -> AsyncIterator[Application]:
+async def mock_planner_app(model: Model, mock_planner_server: str) -> AsyncIterator[Application]:
+    planner_name = "planner"
     planner_secret_name = "mock-planner"
-    port = 8888
-    server = HTTPServer(("localhost", port), MockPlannerHandler)
-    server.serve_forever()
-    
-    planner_secret_id = await model.add_secret(name=planner_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"])
+
+    planner_secret_id = await model.add_secret(
+        name=planner_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
+    )
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -888,17 +916,18 @@ relation_changed, self._image_relation_changed)
 
                 def _image_relation_changed(self, event):
                     # Provide mock planner relation data
-                    event.relation.data[self.unit]['endpoint'] = 'http://localhost:{port}'
+                    event.relation.data[self.unit]['endpoint'] = '{mock_planner_server}'
                     event.relation.data[self.unit]['token'] = '{planner_secret_id}'
-            """
-        ),
+            """),
     }
 
     planner_app: Application = await model.deploy(
         "any-charm",
+        planner_name,
         channel="latest/beta",
+        config={"src-overwrite": any_charm_src_overwrite},
     )
-    
+
     await model.grant_secret(planner_secret_name, planner_app.name)
     await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
-    return planner_app
+    yield planner_app

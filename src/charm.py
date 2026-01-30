@@ -510,9 +510,9 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
-    
+
     @catch_charm_errors
-    def _on_planner_relation_changed(self, _: ops.RelationChangedEvent) -> None
+    def _on_planner_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle planner relation changed event."""
         state = self._setup_state()
         self._setup_service(state)
