@@ -1,0 +1,111 @@
+18:24:41 WARNING unexpected facade SSHServer received from the controller
+18:24:41 INFO Adding model github-pr-b87fd-lxd:test-charm-fork-repo-iz9m on cloud localhost
+18:24:41 WARNING unexpected facade SSHServer received from the controller
+18:24:41 WARNING unexpected facade SSHSession received from the controller
+18:24:41 WARNING unexpected facade SSHTunneler received from the controller
+18:24:41 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:24:44 INFO Deploying ch:amd64/noble/any-charm-133
+18:24:58 INFO Deploying local:jammy/github-runner-0
+18:24:58 INFO Waiting for model:
+  test-m996u0ws/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m996u0ws/0 [allocating] waiting: waiting for machine
+18:25:29 INFO Waiting for model:
+  test-m996u0ws/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m996u0ws/0 [allocating] waiting: waiting for machine
+18:25:59 INFO Waiting for model:
+  test-m996u0ws/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m996u0ws/0 [idle] active: 
+18:26:29 INFO Waiting for model:
+  test-m996u0ws/0 [allocating] waiting: waiting for machine
+18:27:00 INFO Waiting for model:
+  test-m996u0ws/0 [executing] maintenance: installing charm software
+18:27:30 INFO Waiting for model:
+  test-m996u0ws/0 [executing] maintenance: installing charm software
+18:28:00 INFO Waiting for model:
+  test-m996u0ws/0 [executing] maintenance: installing charm software
+18:28:31 INFO Waiting for model:
+  test-m996u0ws/0 [executing] maintenance: installing charm software
+18:29:01 INFO Waiting for model:
+  test-m996u0ws/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-m996u0ws/0 [idle] active: 
+18:29:32 INFO Waiting for model:
+  test-m996u0ws/0 [idle] active: 
+18:29:41 INFO GitHub token rate limit: Rate(reset=2026-01-30 18:58:07+00:00, remaining=4821, limit=5000)
+18:30:33 INFO Waiting for model:
+  test-m996u0ws/0 [idle] active: 
+18:31:03 INFO Waiting for model:
+  test-m996u0ws/0 [idle] active: 
+18:31:06 INFO Current reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:31:06 INFO Waiting for reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:32:07 INFO Current reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:32:07 INFO Current reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88, expected reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:32:07 INFO Waiting for reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:33:08 INFO Current reconcile ID: bc69705f-8495-4555-8af8-9caaf455e964
+18:33:08 INFO Current reconcile ID: bc69705f-8495-4555-8af8-9caaf455e964, expected reconcile ID: 56f90970-5a7d-489d-934d-1c6807fcbd88
+18:33:46 INFO [TEST SETUP] Exposing port 8080 on test-m996u0ws-0-n-69f08a5ecdc6
+18:33:46 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.32', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:48:4f:39'}]])
+18:33:47 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-m996u0ws-0-n-69f08a5ecdc6.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.32 &
+18:33:48 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.32' (ED25519) to the list of known hosts.
+
+18:33:50 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-m996u0ws-0-n-69f08a5ecdc6
+18:33:50 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.32', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:48:4f:39'}]])
+18:33:51 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m996u0ws-0-n-69f08a5ecdc6.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.32 nc -z localhost 8080'
+18:33:52 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:33:52 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-m996u0ws-0-n-69f08a5ecdc6
+18:33:52 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.32', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:48:4f:39'}]])
+18:33:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m996u0ws-0-n-69f08a5ecdc6.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.32 curl http://localhost:8080'
+18:33:54 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  72657      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:33:57 INFO Wait for condition not met, sleeping 10
+18:34:08 INFO Wait for condition not met, sleeping 60
+18:35:11 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-iz9m  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  18:35:11Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-m996u0ws           active      1  any-charm      latest/beta  133  no       
+test-m996u0ws                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-m996u0ws/0*  active    idle   0        10.174.52.97              
+test-m996u0ws/0*                         active    idle   1        10.174.52.131   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.174.52.97   juju-235d77-0  ubuntu@24.04  github-runner  Running
+1        started  10.174.52.131  juju-235d77-1  ubuntu@22.04  github-runner  Running
+
+18:35:11 INFO Juju error logs:
+
+machine-0: 18:25:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-m996u0ws-0: 18:29:02 ERROR unit.test-m996u0ws/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-m996u0ws-0: 18:29:03 ERROR unit.test-m996u0ws/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m996u0ws-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:35:11 INFO Forgetting model main...
