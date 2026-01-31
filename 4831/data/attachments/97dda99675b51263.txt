@@ -1,0 +1,100 @@
+06:23:50 WARNING unexpected facade SSHServer received from the controller
+06:23:50 INFO Adding model github-pr-b87fd-lxd:test-multi-unit-same-machine-u3qv on cloud localhost
+06:23:50 WARNING unexpected facade SSHServer received from the controller
+06:23:50 WARNING unexpected facade SSHSession received from the controller
+06:23:50 WARNING unexpected facade SSHTunneler received from the controller
+06:23:50 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:23:52 INFO Deploying ch:amd64/noble/any-charm-133
+06:24:06 INFO Deploying local:jammy/github-runner-0
+06:24:06 INFO Waiting for model:
+  test-dx6poeb1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dx6poeb1/0 [allocating] waiting: waiting for machine
+06:24:36 INFO Waiting for model:
+  test-dx6poeb1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dx6poeb1/0 [allocating] waiting: waiting for machine
+06:25:06 INFO Waiting for model:
+  test-dx6poeb1/0 [allocating] waiting: waiting for machine
+06:25:37 INFO Waiting for model:
+  test-dx6poeb1/0 [allocating] waiting: waiting for machine
+06:26:07 INFO Waiting for model:
+  test-dx6poeb1/0 [allocating] waiting: agent initialising
+06:26:37 INFO Waiting for model:
+  test-dx6poeb1/0 [executing] maintenance: installing charm software
+06:27:07 INFO Waiting for model:
+  test-dx6poeb1/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-dx6poeb1/0 [idle] active:
+06:27:37 INFO Waiting for model:
+  test-dx6poeb1/0 [idle] active: 
+  test-dx6poeb1/1 [allocating] waiting: installing agent
+06:28:07 INFO Waiting for model:
+  test-dx6poeb1/0 [idle] active: 
+  test-dx6poeb1/1 [executing] maintenance: installing charm software
+06:28:37 INFO Waiting for model:
+  test-dx6poeb1/0 [idle] active: 
+  test-dx6poeb1/1 [executing] maintenance: Update image for runners
+06:29:06 INFO File content of /var/lib/github-runner-manager/test-dx6poeb1-0/http_port: 55555
+06:29:07 INFO File content of /var/lib/github-runner-manager/test-dx6poeb1-1/http_port: 55556
+06:29:10 INFO File content of /var/lib/github-runner-manager/test-dx6poeb1-1/http_port: 55556
+06:29:13 INFO File content of /var/lib/github-runner-manager/test-dx6poeb1-1/http_port: 55556
+06:29:13 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-u3qv  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  06:29:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-dx6poeb1           active      1  any-charm      latest/beta  133  no       
+test-dx6poeb1                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dx6poeb1/0*  active    idle   0        10.235.29.206          
+test-dx6poeb1/0*                         active    idle   1        10.235.29.66           
+test-dx6poeb1/1                          active    idle   1        10.235.29.66           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.235.29.206  juju-bad31a-0  ubuntu@24.04  github-runner  Running
+1        started  10.235.29.66   juju-bad31a-1  ubuntu@22.04  github-runner  Running
+
+06:29:13 INFO Juju error logs:
+
+machine-0: 06:24:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dx6poeb1-0: 06:26:58 ERROR unit.test-dx6poeb1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dx6poeb1-0: 06:27:00 ERROR unit.test-dx6poeb1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dx6poeb1-1: 06:28:11 ERROR unit.test-dx6poeb1/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dx6poeb1-1: 06:28:13 ERROR unit.test-dx6poeb1/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dx6poeb1-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:29:13 INFO Forgetting model main...
