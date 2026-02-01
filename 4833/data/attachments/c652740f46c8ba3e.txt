@@ -1,0 +1,100 @@
+06:31:10 WARNING unexpected facade SSHServer received from the controller
+06:31:10 INFO Adding model github-pr-b87fd-lxd:test-charm-fork-path-change-f7uf on cloud localhost
+06:31:10 WARNING unexpected facade SSHServer received from the controller
+06:31:10 WARNING unexpected facade SSHSession received from the controller
+06:31:10 WARNING unexpected facade SSHTunneler received from the controller
+06:31:11 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:31:13 INFO Deploying ch:amd64/noble/any-charm-133
+06:31:26 INFO Deploying local:jammy/github-runner-0
+06:31:26 INFO Waiting for model:
+  test-urz53cng/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-urz53cng/0 [allocating] waiting: waiting for machine
+06:31:56 INFO Waiting for model:
+  test-urz53cng/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-urz53cng/0 [allocating] waiting: waiting for machine
+06:32:27 INFO Waiting for model:
+  test-urz53cng/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-urz53cng/0 [idle] active: 
+06:32:57 INFO Waiting for model:
+  test-urz53cng/0 [allocating] waiting: waiting for machine
+06:33:28 INFO Waiting for model:
+  test-urz53cng/0 [executing] maintenance: installing charm software
+06:33:58 INFO Waiting for model:
+  test-urz53cng/0 [executing] maintenance: installing charm software
+06:34:28 INFO Waiting for model:
+  test-urz53cng/0 [executing] maintenance: Update image for runners
+06:34:46 INFO GitHub token rate limit: Rate(reset=2026-02-01 07:15:01+00:00, remaining=4895, limit=5000)
+06:34:57 INFO test_path_config_change
+06:34:57 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:35:27 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:35:49 INFO Ensure there is a runner (this calls reconcile)
+06:35:49 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:36:19 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:36:21 INFO Current reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:36:21 INFO Waiting for reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:37:22 INFO Current reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:37:22 INFO Current reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65, expected reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:37:22 INFO Waiting for reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:38:23 INFO Current reconcile ID: 6458e4aa-5e9f-4148-9b59-e8231f7fd657
+06:38:23 INFO Current reconcile ID: 6458e4aa-5e9f-4148-9b59-e8231f7fd657, expected reconcile ID: 5a11634b-5cfe-4b7e-b839-6e9facf29a65
+06:38:26 INFO Reconciling (again)
+06:38:26 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:38:57 INFO Waiting for model:
+  test-urz53cng/0 [idle] active: 
+06:39:04 INFO Current reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:39:04 INFO Waiting for reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:40:05 INFO Current reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:40:05 INFO Current reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d, expected reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:40:05 INFO Waiting for reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:41:06 INFO Current reconcile ID: fc52a09f-7067-45f2-823d-40be32719141
+06:41:06 INFO Current reconcile ID: fc52a09f-7067-45f2-823d-40be32719141, expected reconcile ID: 0323bbd6-44ef-4a31-ad28-1d5d66eed36d
+06:42:20 INFO runners: ['test-urz53cng-0-n-c5caa6ce4810']
+06:42:20 INFO runners in github repo: [SelfHostedActionsRunner(name="test-aks5zogg-0-n-902aa484b404"), SelfHostedActionsRunner(name="test-aozwvaqi-0-n-bc9aca4ea27f"), SelfHostedActionsRunner(name="test-f2yggw2m-0-n-ec382793085e"), SelfHostedActionsRunner(name="test-k3vt1bjy-0-n-2a07a1a2b00e"), SelfHostedActionsRunner(name="test-m0495q3m-0-n-c1d320c9626d"), SelfHostedActionsRunner(name="test-r7pr894b-0-n-c93997fbc3f6"), SelfHostedActionsRunner(name="test-t7zsgtql-0-n-9a8616797799"), SelfHostedActionsRunner(name="test-urz53cng-0-n-c5caa6ce4810")]
+06:42:21 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-f7uf  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  06:42:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-urz53cng           active      1  any-charm      latest/beta  133  no       
+test-urz53cng                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-urz53cng/0*  active    idle   0        10.226.195.84          
+test-urz53cng/0*                         active    idle   1        10.226.195.223         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.226.195.84   juju-48fbb1-0  ubuntu@24.04  github-runner  Running
+1        started  10.226.195.223  juju-48fbb1-1  ubuntu@22.04  github-runner  Running
+
+06:42:21 INFO Juju error logs:
+
+machine-0: 06:32:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:32:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-urz53cng-0: 06:34:06 ERROR unit.test-urz53cng/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-urz53cng-0: 06:34:08 ERROR unit.test-urz53cng/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-urz53cng-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:42:21 INFO Forgetting model main...
