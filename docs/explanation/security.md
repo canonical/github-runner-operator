@@ -14,6 +14,37 @@ For external contributor security, see [How to manage external contributors secu
 - For outside collaborators: Use the `allow-external-contributor` configuration option (set to `false`) to restrict workflow execution to users with COLLABORATOR, MEMBER, or OWNER status. This prevents unauthorized code execution from external contributors.
 - Configure appropriate repository settings and protection rules to ensure the code executed in runners are reviewed by a trusted user.
 
+### Recommended security practices
+
+When working with external contributors, consider the following security practices:
+
+#### Repository configuration
+
+- For outside collaborators, set permissions to read-only. See [here](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-teams-and-people-with-access-to-your-repository#changing-permissions-for-a-team-or-person) for instructions to change collaborator permissions.
+
+#### Branch protection rules
+
+Create the following branch protection rules using the instructions [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule):
+
+- Branch name pattern `**` with `Require signed commits` enabled.
+- Branch name pattern matching only the default branch of the repository, such as `main`, with the following enabled:
+  - `Dismiss stale pull request approvals when new commits are pushed`
+  - `Required signed commits`
+  - `Do not allow bypassing the above settings`
+
+#### Working with external contributors
+
+When `allow-external-contributor` is set to `false`, external contributors can still contribute through the following workflow:
+
+1. External contributors create pull requests as usual
+2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
+3. If the code is safe, the maintainer can:
+
+- Approve and merge the pull request to another branch (workflows will run with maintainer permissions)
+- Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
+
+This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
+
 ## Permission for GitHub app or personal access token
 
 The charm interacts with GitHub via RESTful API. This requires a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
