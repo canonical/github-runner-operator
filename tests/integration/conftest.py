@@ -902,11 +902,17 @@ def mock_planner_server() -> str:
     return "http://localhost:{port}"
 
 
+@pytest.fixture(scope="module")
+def planner_token_secret_name() -> str:
+    """Planner token secret name."""
+    return "planner-token-secret"
+
+
 @pytest_asyncio.fixture(scope="module")
-async def planner_token_secret(model: Model) -> AsyncIterator[str]:
+async def planner_token_secret(model: Model, planner_token_secret_name: str) -> AsyncIterator[str]:
     """Create a planner token secret."""
     return await model.add_secret(
-        name="planner-token-secret", data_args=["token=MOCK_PLANNER_TOKEN"])
+        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"])
 
 @pytest_asyncio.fixture(scope="module")
 async def mock_planner_app(model: Model, mock_planner_server: str, planner_token_secret) -> AsyncIterator[Application]:

@@ -151,15 +151,15 @@ async def test_planner_integration(
     app_no_runner: Application,
     mock_planner_app: Application,
     mock_planner_server: str,
-    planner_token_secret: str,
+    planner_token_secret_name: str,
 ) -> None:
     """
     arrange: A working application with no runners and a mock planner, and the secret granted.
     act: Integrate the application with the mock planner.
     assert: The mock planner HTTP server receives a flavor registration.
     """
-    await model.grant_secret(planner_token_secret, app_no_runner.name)
-    await model.grant_secret(planner_token_secret, mock_planner_app.name)
+    await model.grant_secret(planner_token_secret_name, app_no_runner.name)
+    await model.grant_secret(planner_token_secret_name, mock_planner_app.name)
 
     await model.relate(f"{app_no_runner.name}:planner", mock_planner_app.name)
     await model.wait_for_idle(
