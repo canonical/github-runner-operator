@@ -903,13 +903,14 @@ def mock_planner_server() -> str:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def mock_planner_app(model: Model, mock_planner_server: str) -> AsyncIterator[Application]:
-    planner_name = "planner"
-    planner_secret_name = "mock-planner"
+async def planner_token_secret(model: Model) -> AsyncIterator[str]:
+    """Create a planner token secret."""
+    return await model.add_secret(
+        name="planner-token-secret", data_args=["token=MOCK_PLANNER_TOKEN"])
 
-    planner_secret_id = await model.add_secret(
-        name=planner_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
-    )
+@pytest_asyncio.fixture(scope="module")
+async def mock_planner_app(model: Model, mock_planner_server: str, planner_token_secret) -> AsyncIterator[Application]:
+    planner_name = "planner"
 
     any_charm_src_overwrite = {
         "any_charm.py": textwrap.dedent(f"""\
@@ -924,7 +925,7 @@ relation_changed, self._image_relation_changed)
                 def _image_relation_changed(self, event):
                     # Provide mock planner relation data
                     event.relation.data[self.unit]['endpoint'] = '{mock_planner_server}'
-                    event.relation.data[self.unit]['token'] = '{planner_secret_id}'
+                    event.relation.data[self.unit]['token'] = '{planner_token_secret}'
             """),
     }
 
@@ -935,6 +936,5 @@ relation_changed, self._image_relation_changed)
         config={"src-overwrite": any_charm_src_overwrite},
     )
 
-    await model.grant_secret(planner_secret_name, planner_app.name)
     await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
     yield planner_app
