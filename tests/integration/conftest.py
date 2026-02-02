@@ -9,6 +9,7 @@ import random
 import secrets
 import string
 import textwrap
+import threading
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -887,11 +888,17 @@ class MockPlannerHandler(BaseHTTPRequestHandler):
         self.wfile.write(self.last_payload)
 
 
-@pytest.fixture(scope="module")
-def mock_planner_server() -> str:
-    port = 8888
+def run_server(port: int) -> None:
+    """Run the mock planner HTTP server."""
     server = HTTPServer(server_address=("localhost", port), RequestHandlerClass=MockPlannerHandler)
     server.serve_forever()
+
+
+@pytest.fixture(scope="module")
+def mock_planner_server() -> str:
+    """Start a mock planner HTTP server."""
+    port = 8888
+    threading.Thread(target=run_server, args=(port,), daemon=True).start()
     return "http://localhost:{port}"
 
 
