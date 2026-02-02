@@ -47,7 +47,7 @@ GitHub runner image builder side.
 
 ## 2025-12-01
 
-- Added timeouts to API calls (Openstack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application.
+- Added timeouts to API calls (OpenStack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application.
 
 ## 2025-11-30
 
