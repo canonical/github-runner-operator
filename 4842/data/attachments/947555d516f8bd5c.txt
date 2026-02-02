@@ -1,0 +1,71 @@
+07:10:12 WARNING unexpected facade SSHServer received from the controller
+07:10:12 INFO Adding model github-pr-b87fd-lxd:test-charm-upgrade-wv96 on cloud localhost
+07:10:12 WARNING unexpected facade SSHServer received from the controller
+07:10:12 WARNING unexpected facade SSHSession received from the controller
+07:10:12 WARNING unexpected facade SSHTunneler received from the controller
+07:10:13 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+07:10:16 INFO Deploying ch:amd64/noble/any-charm-133
+07:10:32 INFO Deploying local:jammy/github-runner-0
+07:10:33 INFO Waiting for model:
+  test-jf3foazm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jf3foazm/0 [allocating] waiting: waiting for machine
+07:11:03 INFO Waiting for model:
+  test-jf3foazm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jf3foazm/0 [allocating] waiting: waiting for machine
+07:11:33 INFO Waiting for model:
+  test-jf3foazm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jf3foazm/0 [allocating] waiting: waiting for machine
+07:12:03 INFO Waiting for model:
+  test-jf3foazm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jf3foazm/0 [idle] active: 
+07:12:33 INFO Waiting for model:
+  test-jf3foazm/0 [executing] maintenance: installing charm software
+07:13:03 INFO Waiting for model:
+  test-jf3foazm/0 [executing] maintenance: installing charm software
+07:13:33 INFO Waiting for model:
+  test-jf3foazm/0 [idle] active: 
+07:15:35 INFO Waiting for model:
+  test-jf3foazm/0 [idle] active:
+07:16:06 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-wv96  github-pr-b87fd-lxd  localhost/localhost  3.6.14   unsupported  07:16:06Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-jf3foazm           active      1  any-charm      latest/beta  133  no       
+test-jf3foazm                                  active      1  github-runner                 1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-jf3foazm/0*  active    idle   0        10.102.124.134         
+test-jf3foazm/0*                         active    idle   1        10.102.124.70          
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.102.124.134  juju-639d35-0  ubuntu@24.04  github-runner  Running
+1        started  10.102.124.70   juju-639d35-1  ubuntu@22.04  github-runner  Running
+
+07:16:06 INFO Juju error logs:
+
+machine-0: 07:11:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:11:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:12:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:12:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jf3foazm-0: 07:13:05 ERROR unit.test-jf3foazm/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-jf3foazm-0: 07:13:07 ERROR unit.test-jf3foazm/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jf3foazm-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:16:06 INFO Forgetting model main...

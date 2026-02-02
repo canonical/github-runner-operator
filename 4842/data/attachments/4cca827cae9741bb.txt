@@ -1,0 +1,53 @@
+06:58:23 WARNING unexpected facade SSHServer received from the controller
+06:58:23 INFO Adding model github-pr-b87fd-lxd:test-charm-metrics-success-x691 on cloud localhost
+06:58:23 WARNING unexpected facade SSHServer received from the controller
+06:58:23 WARNING unexpected facade SSHSession received from the controller
+06:58:23 WARNING unexpected facade SSHTunneler received from the controller
+06:58:23 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:58:25 INFO Deploying ch:amd64/noble/any-charm-133
+06:58:38 INFO Deploying local:jammy/github-runner-0
+06:58:39 INFO Waiting for model:
+  test-bcmg2xq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bcmg2xq4/0 [allocating] waiting: waiting for machine
+06:59:09 INFO Waiting for model:
+  test-bcmg2xq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bcmg2xq4/0 [allocating] waiting: agent initialising
+06:59:39 INFO Waiting for model:
+  test-bcmg2xq4/0 [allocating] waiting: waiting for machine
+07:00:10 INFO Waiting for model:
+  test-bcmg2xq4/0 [allocating] waiting: waiting for machine
+07:00:40 INFO Waiting for model:
+  test-bcmg2xq4/0 [executing] maintenance: installing charm software
+07:01:10 INFO Waiting for model:
+  test-bcmg2xq4/0 [executing] maintenance: installing charm software
+07:01:40 INFO Waiting for model:
+  test-bcmg2xq4/0 [executing] maintenance: installing charm software
+07:02:11 INFO Waiting for model:
+  test-bcmg2xq4/0 [idle] active:
+07:02:24 INFO Waiting for model:
+  test-bcmg2xq4/0 [idle] active: 
+07:02:54 INFO Waiting for model:
+  test-bcmg2xq4/0 [idle] active: 
+07:02:57 INFO Current reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:02:57 INFO Waiting for reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:03:58 INFO Current reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:03:58 INFO Current reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80, expected reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:03:58 INFO Waiting for reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:04:59 INFO Current reconcile ID: 6773f131-43e5-47db-ba38-ee39c2eb3c7c
+07:04:59 INFO Current reconcile ID: 6773f131-43e5-47db-ba38-ee39c2eb3c7c, expected reconcile ID: 3fbca55d-98f0-4b6b-b985-104f45128a80
+07:05:03 INFO Waiting for model:
+  test-bcmg2xq4/0 [idle] active: 
+07:05:34 INFO Waiting for model:
+  test-bcmg2xq4/0 [idle] active: 
+07:05:36 INFO Current reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:05:36 INFO Waiting for reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:06:37 INFO Current reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:06:37 INFO Current reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2, expected reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:06:37 INFO Waiting for reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:07:38 INFO Current reconcile ID: 06bae89f-f94e-4bb6-9ac5-9e0af82f6298
+07:07:38 INFO Current reconcile ID: 06bae89f-f94e-4bb6-9ac5-9e0af82f6298, expected reconcile ID: 683680c0-3093-4f8c-8774-9237bbf51fb2
+07:07:39 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770015753.6535108, "event": "reconciliation", "flavor": "test-bcmg2xq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.394941091537476}
+{"timestamp": 1770015880.9596615, "event": "reconciliation", "flavor": "test-bcmg2xq4", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.163413763046265}
+{"timestamp": 1770015839.0, "event": "runner_installed", "flavor": "test-bcmg2xq4", "duration": 87.0}
+{"timestamp": 1770015915.991003, "event": "reconciliation", "flavor": "test-bcmg2xq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.539430856704712}
+{"timestamp": 1770016043.3670049, "event": "reconciliation", "flavor": "test-bcmg2xq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.2340521812438965}
