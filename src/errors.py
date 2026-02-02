@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Errors used by the charm."""
+
 from __future__ import annotations
 
 from typing import Union

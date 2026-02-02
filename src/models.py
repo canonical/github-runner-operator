@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Data classes and type definitions."""
+
 import dataclasses
 from typing import TypedDict
 

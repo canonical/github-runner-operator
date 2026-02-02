@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Script to spawn a reactive runner process."""
+
 import getpass
 import grp
 import logging

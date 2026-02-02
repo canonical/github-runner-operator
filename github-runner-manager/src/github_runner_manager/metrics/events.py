@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Models and functions for the metric events."""
+
 import logging
 import os
 from pathlib import Path

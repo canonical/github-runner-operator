@@ -1,4 +1,4 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming no Github workflow failures."""
@@ -47,7 +47,7 @@ async def test_charm_issues_runner_installed_metric(
     app: Application, instance_helper: OpenStackInstanceHelper
 ):
     """
-    arrange: A charm integrated with grafana-agent using the cos-agent integration.
+    arrange: A working charm deployment.
     act: Config the charm to contain one runner.
     assert: The RunnerInstalled metric is logged.
     """

@@ -1,7 +1,8 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Logrotate setup and configuration."""
+
 from enum import Enum
 from pathlib import Path
 

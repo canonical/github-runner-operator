@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
+
 import json
 import logging
 import random
@@ -460,8 +461,7 @@ async def image_builder_fixture(
 
     # Use any-charm to mock the image relation provider
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -474,8 +474,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -559,20 +558,6 @@ async def app_scheduled_events_fixture(
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
     await wait_for_runner_ready(app=application)
-    return application
-
-
-@pytest_asyncio.fixture(scope="module", name="app_no_wait_tmate")
-async def app_no_wait_tmate_fixture(
-    model: Model,
-    app_openstack_runner,
-    tmate_ssh_server_app: Application,
-):
-    """Application to check tmate ssh with openstack without waiting for active."""
-    application = app_openstack_runner
-    await application.relate("debug-ssh", f"{tmate_ssh_server_app.name}:debug-ssh")
-    await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[tmate_ssh_server_app.name], status=ACTIVE, timeout=60 * 30)
     return application
 
 

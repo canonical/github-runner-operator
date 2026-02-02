@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Test infrastructure for managing running application instances."""
@@ -53,18 +53,20 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         host: Host to listen on.
     """
     runner = CliRunner()
+    args = [
+        "--config-file",
+        str(config_file_path),
+        "--host",
+        host,
+        "--port",
+        str(port),
+        "--log-level",
+        "DEBUG",
+    ]
+
     result = runner.invoke(
         main,
-        [
-            "--config-file",
-            str(config_file_path),
-            "--host",
-            host,
-            "--port",
-            str(port),
-            "--log-level",
-            "DEBUG",
-        ],
+        args,
         catch_exceptions=False,
     )
     if result.exit_code != 0:
@@ -141,6 +143,7 @@ class RunningApplication:
         host: str = "127.0.0.1",
         port: int = 8080,
         metrics_log_path: Path | None = None,
+        log_file_path: Path | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -150,6 +153,7 @@ class RunningApplication:
             port: Port to listen on. If None, an available port is automatically selected.
             metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
                 environment variable for the application process.
+            log_file_path: Path to the application log file. If None, logs to stderr.
 
         Returns:
             A RunningApplication instance with the application running.

@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 resource "juju_application" "github_runner" {
@@ -14,5 +14,6 @@ resource "juju_application" "github_runner" {
 
   config      = var.config
   constraints = var.constraints
-  units       = var.units
+  machines    = var.machines
+  units       = var.machines == null ? var.units : null
 }

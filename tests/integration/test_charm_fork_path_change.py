@@ -1,10 +1,11 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with a fork repo.
 
 Tests a path change in the repo.
 """
+
 import logging
 
 import pytest

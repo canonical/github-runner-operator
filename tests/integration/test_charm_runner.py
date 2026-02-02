@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+
 from typing import AsyncIterator
 
 import pytest

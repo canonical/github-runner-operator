@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 data "juju_model" "github_runner" {
@@ -17,6 +17,7 @@ module "github_runner" {
   revision    = each.value.revision
   base        = each.value.base
   units       = each.value.units
+  machines    = lookup(each.value, "machines", null)
 }
 
 module "github_runner_image_builder" {

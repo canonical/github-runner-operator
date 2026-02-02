@@ -1,7 +1,8 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+
 import concurrent.futures
 import contextlib
 import copy

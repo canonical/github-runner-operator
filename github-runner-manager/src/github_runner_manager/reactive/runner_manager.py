@@ -1,7 +1,8 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Module for reconciling amount of runner and reactive runner processes."""
+
 import logging
 from dataclasses import dataclass
 

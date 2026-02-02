@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 variable "model" {
@@ -27,6 +27,7 @@ variable "github_runners" {
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)
+    machines    = optional(set(string))
   }))
 
   validation {

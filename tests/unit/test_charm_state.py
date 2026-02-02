@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 import json
 import logging
@@ -369,8 +369,7 @@ def test_charm_config_from_charm_valid():
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
         MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME: "bash -c 'openssl s_client -quiet -connect example.com:2222 -servername %h 2>/dev/null'",
-        CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: (
-            custom_pre_job_script := """
+        CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: (custom_pre_job_script := """
 #!/usr/bin/env bash
 cat > ~/.ssh/config <<EOF
       host github.com
@@ -379,8 +378,7 @@ cat > ~/.ssh/config <<EOF
           port 22
           proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
       EOF
-"""
-        ),
+"""),
         RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME: "INFO",
     }
 
@@ -583,10 +581,12 @@ def test_reactive_config_from_charm():
     relation_mock = MagicMock()
     app_mock = MagicMock()
     relation_mock.app = app_mock
+    mock_charm.app = app_mock
     relation_mock.data = {
         app_mock: {
             "uris": mongodb_uri,
-        }
+        },
+        mock_charm.model.unit: {},
     }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
     database = DatabaseRequires(
@@ -606,10 +606,6 @@ def test_reactive_config_from_database_returns_none():
     assert: None is returned.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    relation_mock.data = {}
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
 
     database = DatabaseRequires(
@@ -631,7 +627,10 @@ def test_reactive_config_from_database_integration_data_missing():
     relation_mock = MagicMock()
     app_mock = MagicMock()
     relation_mock.app = app_mock
-    relation_mock.data = {}
+    relation_mock.data = {
+        app_mock: {},
+        mock_charm.model.unit: {},
+    }
     mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
 
     database = DatabaseRequires(

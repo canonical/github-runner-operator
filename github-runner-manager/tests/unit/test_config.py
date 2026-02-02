@@ -1,8 +1,7 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Test the github-runner-manager application configuration."""
-
 
 import json
 from io import StringIO

@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 import copy
@@ -36,9 +36,15 @@ def disk_usage_mock(total_disk: int):
 
 
 @pytest.fixture(autouse=True)
-def mocks(monkeypatch, tmp_path, exec_command):
+def mocks(monkeypatch, tmp_path, exec_command, request):
+    if "nomocks" in request.keywords:
+        return
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
+    monkeypatch.setattr(
+        "manager_service.ensure_http_port_for_unit",
+        unittest.mock.MagicMock(return_value=55555),
+    )
 
 
 @pytest.fixture(autouse=True, name="cloud_name")

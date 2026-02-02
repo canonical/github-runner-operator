@@ -1,4 +1,4 @@
-# Copyright 2025 Canonical Ltd.
+# Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 name: Security Scan
@@ -18,7 +18,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.3.1
+        uses: actions/checkout@v6.0.2
 
       - name: Ensure .trivyignore exists
         run: |
@@ -48,12 +48,12 @@ jobs:
           output: "trivy-results.sarif"
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3.31.6
+        uses: github/codeql-action/upload-sarif@v4.32.0
         with:
           sarif_file: "trivy-results.sarif"
 
       - name: Upload diagnostic SARIF artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: sarif-report
           path: "trivy-results.sarif"
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.3.1
+        uses: actions/checkout@v6.0.2
 
       - name: Ensure .trivyignore exists
         run: |
@@ -87,7 +87,7 @@ jobs:
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SBOM as an artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: sbom
           path: "dependency-results.sbom.json"

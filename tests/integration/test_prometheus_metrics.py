@@ -1,4 +1,4 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Module for collecting metrics related to the reconciliation process."""
@@ -27,6 +27,7 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 logger = logging.getLogger(__name__)
 
 MICROK8S_CONTROLLER_NAME = "microk8s"
+COS_AGENT_CHARM = "opentelemetry-collector"
 
 
 @pytest_asyncio.fixture(scope="module", name="k8s_juju")
@@ -91,10 +92,15 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
 def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
-    juju.deploy("grafana-agent", channel="1/stable", base="ubuntu@22.04")
-    juju.integrate(app_openstack_runner.name, "grafana-agent")
+    juju.deploy(
+        COS_AGENT_CHARM,
+        channel="2/candidate",
+        base="ubuntu@22.04",
+        revision=149,
+    )
+    juju.integrate(app_openstack_runner.name, COS_AGENT_CHARM)
     juju.wait(
-        lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, "grafana-agent")
+        lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, COS_AGENT_CHARM)
     )
     return app_openstack_runner
 
@@ -133,11 +139,11 @@ async def test_prometheus_metrics(
         controller=MICROK8S_CONTROLLER_NAME,
     )
 
-    juju.integrate("grafana-agent", prometheus_offer_name)
-    juju.integrate("grafana-agent", grafana_offer_name)
+    juju.integrate(COS_AGENT_CHARM, prometheus_offer_name)
+    juju.integrate(COS_AGENT_CHARM, grafana_offer_name)
     juju.wait(
         lambda status: jubilant.all_agents_idle(
-            status, openstack_app_cos_agent.name, "grafana-agent"
+            status, openstack_app_cos_agent.name, COS_AGENT_CHARM
         )
     )
 

@@ -2,9 +2,44 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2025-12-09
+## 2026-02-02
 
 - Deprecate `repo-policy-compliance` service.
+
+## 2025-01-26
+
+- Add machine input parameter for terraform charm module to allow targeting specific machines for
+  GitHub runner application deployment.
+
+## 2025-01-14
+
+- Add support for running up to 100 multiple GitHub runner applications on a single instance.
+- Backward-incompatible: services for each unit replace the legacy singleton service and
+  remove the previous shared storage layout. Existing deployments must redeploy the
+  application to adopt the new model where each unit has its own service. Upgrades will disable any legacy
+  service during charm upgrade.
+
+## 2025-01-07
+
+- Add retry to apt-get update in cloud init stage of runner creation. This should improve stability in runner creation during network instability.
+
+## 2025-12-19
+
+- Revert deletion of apt-get update due to the impact on existing workflows.
+
+## 2025-12-17
+
+- Extend contributor check on private-repositories to contributors.
+- Moved charm-architecture documents from Explanation to Reference category.
+
+## 2025-12-16
+
+- Implemented exponential backoff strategy for reactive consumer message retries to reduce load on dependencies during sustained failures. The backoff starts at 60 seconds and doubles with each retry, capped at 1800 seconds (30 minutes).
+
+## 2025-12-10
+
+- Removed apt update step in cloud-init of the VM creation step since it is now applied in the
+GitHub runner image builder side.
 
 ## 2025-12-05
 

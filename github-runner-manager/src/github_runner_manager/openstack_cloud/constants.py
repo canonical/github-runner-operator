@@ -1,7 +1,8 @@
-#  Copyright 2025 Canonical Ltd.
+#  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Common constants for the Openstack cloud module."""
+
 from pathlib import Path
 
 RUNNER_LISTENER_PROCESS = "Runner.Listener"

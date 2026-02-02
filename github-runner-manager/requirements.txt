@@ -1,10 +1,11 @@
 click==8.3.1
-fabric >=3,<4
+fabric==3.2.2
+fastcore==1.12.5
 flask==3.1.2
-ghapi
-jinja2
-kombu==5.6.1
-openstacksdk==4.8.0
-prometheus-client==0.23.1
-pydantic < 2
-pymongo==4.15.5
+ghapi==1.0.10
+jinja2==3.1.6
+kombu==5.6.2
+openstacksdk==4.9.0
+prometheus-client==0.24.1
+pydantic==1.10.26
+pymongo==4.16.0
