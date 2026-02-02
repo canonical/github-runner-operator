@@ -15,9 +15,9 @@ juju config github-runner allow-external-contributor=false
 ```
 
 With this setting, workflows will only run for users with the following GitHub author associations:
-- `OWNER` - Repository or organization owners
-- `MEMBER` - Organization members  
-- `COLLABORATOR` - Users with explicit collaborator access
+- OWNER - Repository or organization owners
+- MEMBER - Organization members  
+- COLLABORATOR - Users with explicit collaborator access
 
 The charm checks author associations for these events:
 - `pull_request` - Pull requests from external contributors
@@ -45,7 +45,7 @@ When `allow-external-contributor` is set to `false`, outside collaborators can s
 1. External contributors create pull requests as usual
 2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
 3. If the code is safe, the maintainer can:
-  - Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
+  - Approve and merge the pull request to another branch (workflows will run with the permissions of the maintainer)
   - Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners, eliminating the need for manual comment-based approval workflows.

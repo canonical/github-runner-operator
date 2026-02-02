@@ -8,6 +8,8 @@ In this guide, we'll explain how to configure external contributor access and re
 
 ## External contributor access control
 
+An external contributor is anyone whose GitHub author association is not OWNER, MEMBER, or COLLABORATOR. For internal pull requests (where the head and base repositories are the same), the association check is not applied; those runs are treated as internal.
+
 The charm checks the GitHub author association for the following events that can be triggered by external contributors:
 
 - `pull_request` - Pull requests from external contributors
@@ -16,9 +18,9 @@ The charm checks the GitHub author association for the following events that can
 - `pull_request_review_comment` - Comments on pull request diffs from external contributors
 - `issue_comment` - Comments on issues or pull requests from external contributors
 
-### Disabling external contributor access
+### Disable external contributor access
 
-To prevent external contributors from triggering workflows:
+Prevent external contributors from triggering workflows. Run:
 
 ```bash
 juju config github-runner allow-external-contributor=false
@@ -26,13 +28,13 @@ juju config github-runner allow-external-contributor=false
 
 With this setting, only users with the following GitHub author associations can trigger workflows:
 
-- `OWNER` - Repository or organization owners
-- `MEMBER` - Organization members
-- `COLLABORATOR` - Users with explicit collaborator access
+- OWNER - Repository or organization owners
+- MEMBER - Organization members
+- COLLABORATOR - Users with explicit collaborator access
 
-### Enabling external contributor access
+### Enable external contributor access
 
-To allow all external contributors to trigger workflows:
+Allow all external contributors to trigger workflows. Run:
 
 ```bash
 juju config github-runner allow-external-contributor=true
@@ -66,7 +68,7 @@ When `allow-external-contributor` is set to `false`, external contributors can s
 2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
 3. If the code is safe, the maintainer can:
 
-- Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
+- Approve and merge the pull request to another branch (workflows will run with maintainer permissions)
 - Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
@@ -82,7 +84,7 @@ If workflows are not running for external contributors when `allow-external-cont
 1. Check the runner logs for authorization errors
 2. Verify the user's author association in the GitHub repository
 
-### Workflows running for untrusted users
+### Workflows running for unexpected users
 
 If you notice workflows running for users who shouldn't have access:
 
