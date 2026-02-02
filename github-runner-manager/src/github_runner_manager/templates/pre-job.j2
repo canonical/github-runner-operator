@@ -119,8 +119,9 @@ jq -n \
   check_author_association "$GITHUB_EVENT_NAME" "$GITHUB_EVENT_PATH"
   if [[ $? -ne 0 ]]; then
     logger -s "Contributor check failed - aborting job execution"
+    post_job_timestamp=$(date +%s)
     jq -n \
-        --argjson timestamp "$timestamp" \
+        --argjson timestamp "$post_job_timestamp" \
         '{
           "timestamp": $timestamp,
           "status": "external-contributor-check-failure"
