@@ -899,7 +899,7 @@ def mock_planner_server() -> str:
     """Start a mock planner HTTP server."""
     port = 8888
     threading.Thread(target=run_server, args=(port,), daemon=True).start()
-    return "http://localhost:{port}"
+    return f"http://localhost:{port}"
 
 
 @pytest.fixture(scope="module")
