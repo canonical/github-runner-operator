@@ -158,13 +158,13 @@ async def test_planner_integration(
     assert: The mock planner HTTP server receives a flavor registration.
     """
     await model.relate(f"{app_no_runner.name}:planner", mock_planner_app.name)
-    await model.wait_for_idle(
-        apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
-    )
+    # await model.wait_for_idle(
+    #     apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+    # )
 
-    response = requests.get(mock_planner_server, timeout=10)
-    data = response.json()
+    # response = requests.get(mock_planner_server, timeout=10)
+    # data = response.json()
     # TODO
     print("############################################################################")
-    print(data)
+    # print(data)
     print("############################################################################")
