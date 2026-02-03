@@ -93,7 +93,6 @@ class SupportServiceConfig(BaseModel):
         aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_compliance: The configuration of the repo policy compliance service.
         custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
@@ -105,7 +104,6 @@ class SupportServiceConfig(BaseModel):
     aproxy_redirect_ports: list[str] = []
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
-    repo_policy_compliance: "RepoPolicyComplianceConfig | None"
     custom_pre_job_script: str | None
 
     @root_validator(pre=False, skip_on_failure=True)
@@ -197,18 +195,6 @@ class SSHDebugConnection(BaseModel):
     use_runner_http_proxy: bool = False
     local_proxy_host: str = "127.0.0.1"
     local_proxy_port: int = 3129
-
-
-class RepoPolicyComplianceConfig(BaseModel):
-    """Configuration for the repo policy compliance service.
-
-    Attributes:
-        token: Token for the repo policy compliance service.
-        url: URL of the repo policy compliance service.
-    """
-
-    token: str
-    url: AnyHttpUrl
 
 
 class NonReactiveConfiguration(BaseModel):

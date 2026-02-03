@@ -2,9 +2,18 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-01-02
+## 2026-02-03
 
 - Introduce planner-driven pressure reconciler.
+
+## 2026-02-02
+
+- Deprecated `repo-policy-compliance` service.
+
+## 2025-01-26
+
+- Add machine input parameter for terraform charm module to allow targeting specific machines for
+  GitHub runner application deployment.
 
 ## 2025-01-14
 
@@ -42,7 +51,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-12-01
 
-- Added timeouts to API calls (Openstack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application.
+- Added timeouts to API calls (OpenStack, GitHub, repo-policy-compliance) to fix a hanging GitHub runner manager application.
 
 ## 2025-11-30
 

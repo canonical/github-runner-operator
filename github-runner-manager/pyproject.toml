@@ -38,11 +38,7 @@ skips = ["*/*test.py", "*/test_*.py", "*tests/*.py"]
 # Testing tools configuration
 [tool.coverage.run]
 branch = true
-omit = [
-    # Contains interface for calling repo policy compliance service. Tested in integration test
-    # and end to end tests.
-    "src/github_runner_manager/repo_policy_compliance_client.py",
-]
+omit = []
 
 [tool.coverage.report]
 fail_under = 73
