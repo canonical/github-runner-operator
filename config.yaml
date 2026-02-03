@@ -85,20 +85,6 @@ options:
       Minutes between each reconciliation of the current runners state and their targeted state.
       On reconciliation, the charm polls the state of runners and see if actions are needed. The
       value should be kept low, unless Github API rate limiting is encountered.
-  repo-policy-compliance-token:
-    type: string
-    description: >-
-      DEPRECATED, please use allow-external-contributor configuration option instead.
-      The token to authenticate with the repository-policy-compliance service in order to
-      generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
-      If not set, the repository-policy-compliance service will not be used.
-  repo-policy-compliance-url:
-    type: string
-    description: >-
-      DEPRECATED, please use allow-external-contributor configuration option instead
-      The URL to the repository-policy-compliance service. This option requires the
-      repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
-      will not be used. This option is only supported when using OpenStack Cloud.
   allow-external-contributor:
     type: boolean
     default: True

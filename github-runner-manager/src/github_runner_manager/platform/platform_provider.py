@@ -191,8 +191,7 @@ class PlatformRunnerState(str, Enum):
 
     Attributes:
         BUSY: Runner is working on a job assigned.
-        IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e.
-            repo-policy-compliance check).
+        IDLE: Runner is waiting to take a job or is running pre-job tasks.
         OFFLINE: Runner is not connected.
     """
 

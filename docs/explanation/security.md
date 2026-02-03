@@ -4,14 +4,46 @@ This document describes the security design of the GitHub runner charm. The char
 
 ## Remote code execution risk
 
-The charm manages GitHub self-hosted runners to run GitHub Actions jobs. This allows users on GitHub to execute code on the servers hosting the runners, which poses a remote code execution risk if the code is not trusted. Therefore, the charm should only spawn runners to trusted organizations or repositories.
+The charm manages GitHub self-hosted runners to run GitHub Actions jobs. This allows users on GitHub to execute code on the servers hosting the runners, which poses a remote code execution risk if the code has not been reviewed or authorized. Therefore, the charm should only spawn runners to trusted organizations or repositories.
 
-For third-party contributions, the charm can integrate with the [Repo Policy Compliance charm](https://charmhub.io/repo-policy-compliance) to manage the repository policy. With this integration, the self-hosted runner will not execute the GitHub jobs if the policy is not met. See [working with outside collaborators](https://charmhub.io/github-runner/docs/how-to-comply-security#working-with-outside-collaborators) for the recommended settings to ensure the code is reviewed by a trusted user prior to execution in the runner.
+For external contributor security, see [How to manage external contributors securely](../how-to/manage-external-contributors.md) for configuration options and recommended practices.
 
 ### Good practices
 
 - Only register the GitHub self-hosted runners to a trusted organization or repository so that only workflows from trusted users are able to run on the runners.
-- For outside collaborators: Use the [`repo-policy-compliance` charm](https://charmhub.io/repo-policy-compliance) with [policy for outside collaborators](https://charmhub.io/github-runner/docs/how-to-comply-security#working-with-outside-collaborators) to ensure the code executed in runners are reviewed by a trusted user.
+- For outside collaborators: Use the `allow-external-contributor` configuration option (set to `false`) to restrict workflow execution to users with COLLABORATOR, MEMBER, or OWNER status. This prevents unauthorized code execution from external contributors.
+- Configure appropriate repository settings and protection rules to ensure the code executed in runners are reviewed by a trusted user.
+
+### Recommended security practices
+
+When working with external contributors, consider the following security practices:
+
+#### Repository configuration
+
+- For outside collaborators, set permissions to read-only. See [here](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-teams-and-people-with-access-to-your-repository#changing-permissions-for-a-team-or-person) for instructions to change collaborator permissions.
+
+#### Branch protection rules
+
+Create the following branch protection rules using the instructions [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule):
+
+- Branch name pattern `**` with `Require signed commits` enabled.
+- Branch name pattern matching only the default branch of the repository, such as `main`, with the following enabled:
+  - `Dismiss stale pull request approvals when new commits are pushed`
+  - `Required signed commits`
+  - `Do not allow bypassing the above settings`
+
+#### Working with external contributors
+
+When `allow-external-contributor` is set to `false`, external contributors can still contribute through the following workflow:
+
+1. External contributors create pull requests as usual
+2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
+3. If the code is safe, the maintainer can:
+
+- Approve and merge the pull request to another branch (workflows will run with maintainer permissions)
+- Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
+
+This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
 
 ## Permission for GitHub app or personal access token
 
