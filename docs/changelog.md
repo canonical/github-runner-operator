@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-02-02
 
-- Deprecate `repo-policy-compliance` service.
+- Deprecated `repo-policy-compliance` service.
 
 ## 2025-01-26
 
