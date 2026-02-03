@@ -1,0 +1,99 @@
+06:30:07 WARNING unexpected facade SSHServer received from the controller
+06:30:07 INFO Adding model github-pr-71b2f-lxd:test-multi-unit-same-machine-u8j2 on cloud localhost
+06:30:07 WARNING unexpected facade SSHServer received from the controller
+06:30:07 WARNING unexpected facade SSHSession received from the controller
+06:30:07 WARNING unexpected facade SSHTunneler received from the controller
+06:30:07 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:30:09 INFO Deploying ch:amd64/noble/any-charm-133
+06:30:23 INFO Deploying local:jammy/github-runner-0
+06:30:23 INFO Waiting for model:
+  test-ii5929ys/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ii5929ys/0 [allocating] waiting: waiting for machine
+06:30:53 INFO Waiting for model:
+  test-ii5929ys/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ii5929ys/0 [allocating] waiting: waiting for machine
+06:31:24 INFO Waiting for model:
+  test-ii5929ys/0 [allocating] waiting: waiting for machine
+06:31:54 INFO Waiting for model:
+  test-ii5929ys/0 [allocating] waiting: waiting for machine
+06:32:24 INFO Waiting for model:
+  test-ii5929ys/0 [allocating] waiting: agent initialising
+06:32:54 INFO Waiting for model:
+  test-ii5929ys/0 [executing] maintenance: installing charm software
+06:33:24 INFO Waiting for model:
+  test-ii5929ys/0 [executing] maintenance: Update image for runners
+06:33:41 INFO Waiting for model:
+  test-ii5929ys/0 [idle] active: 
+  test-ii5929ys/1 [allocating] waiting: installing agent
+06:34:11 INFO Waiting for model:
+  test-ii5929ys/0 [idle] active: 
+  test-ii5929ys/1 [executing] maintenance: installing charm software
+06:34:41 INFO Waiting for model:
+  test-ii5929ys/0 [idle] active: 
+  test-ii5929ys/1 [executing] maintenance: Update image for runners
+06:35:01 INFO File content of /var/lib/github-runner-manager/test-ii5929ys-0/http_port: 55555
+06:35:02 INFO File content of /var/lib/github-runner-manager/test-ii5929ys-1/http_port: 55556
+06:35:05 INFO File content of /var/lib/github-runner-manager/test-ii5929ys-1/http_port: 55556
+06:35:08 INFO File content of /var/lib/github-runner-manager/test-ii5929ys-1/http_port: 55556
+06:35:09 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-u8j2  github-pr-71b2f-lxd  localhost/localhost  3.6.14   unsupported  06:35:09Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ii5929ys           active      1  any-charm      latest/beta  133  no       
+test-ii5929ys                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ii5929ys/0*  active    idle   0        10.187.10.208          
+test-ii5929ys/0*                         active    idle   1        10.187.10.230          
+test-ii5929ys/1                          active    idle   1        10.187.10.230          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.187.10.208  juju-67aa77-0  ubuntu@24.04  github-runner  Running
+1        started  10.187.10.230  juju-67aa77-1  ubuntu@22.04  github-runner  Running
+
+06:35:09 INFO Juju error logs:
+
+machine-0: 06:30:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:30:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ii5929ys-0: 06:33:00 ERROR unit.test-ii5929ys/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ii5929ys-0: 06:33:01 ERROR unit.test-ii5929ys/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ii5929ys-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ii5929ys-1: 06:34:18 ERROR unit.test-ii5929ys/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ii5929ys-1: 06:34:19 ERROR unit.test-ii5929ys/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ii5929ys-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:35:09 INFO Forgetting model main...
