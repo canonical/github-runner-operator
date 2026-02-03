@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-02
+
+- Deprecate `repo-policy-compliance` service.
+
 ## 2025-01-26
 
 - Add machine input parameter for terraform charm module to allow targeting specific machines for
@@ -43,7 +47,7 @@ GitHub runner image builder side.
 
 ## 2025-12-01
 
-- Added timeouts to API calls (Openstack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application. 
+- Added timeouts to API calls (OpenStack, GitHub, repo-policy-compliance) to fix a hanging GitHub runner manager application.
 
 ## 2025-11-30
 
@@ -73,7 +77,6 @@ GitHub runner image builder side.
 ## 2025-08-25
 
 - Fix issue with scaling down overshooting in deleting runners after cleanup
-
 
 ## 2025-08-20
 
@@ -107,7 +110,7 @@ GitHub runner image builder side.
 ## 2025-07-09
 
 - Specify max supported nova compute API to be 2.91. This fixes an issue where the charm could fail
- due to a bug on the OpenStack side: https://bugs.launchpad.net/nova/+bug/2095364
+  due to a bug on the OpenStack side: https://bugs.launchpad.net/nova/+bug/2095364
 
 ### 2025-06-30
 
@@ -127,8 +130,7 @@ GitHub runner image builder side.
 ### 2025-06-16
 
 - Revert `copytruncate logrotate` method for reactive processes, as `copytruncate` keeps log files on disks and does not remove them, and each process is writing to a new file leading to a huge and increasing amount
-of zero sized files in the reactive log directory. This is a temporary fix until a better solution is implemented, as it has the downside that long lived reactive processes may write to deleted log files.
-
+  of zero sized files in the reactive log directory. This is a temporary fix until a better solution is implemented, as it has the downside that long lived reactive processes may write to deleted log files.
 
 ### 2025-06-12
 
@@ -140,9 +142,9 @@ of zero sized files in the reactive log directory. This is a temporary fix until
 
 ### 2025-06-04
 
-- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
-between reconciling the current and intended number of runners. The value should be kept low, 
-unless GitHub API rate limiting is encountered.
+- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval
+  between reconciling the current and intended number of runners. The value should be kept low,
+  unless GitHub API rate limiting is encountered.
 - Removed the reconcile-runners Juju action.
 
 ### 2025-06-03
@@ -151,9 +153,8 @@ unless GitHub API rate limiting is encountered.
 
 ### 2025-05-22
 
-- Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
-network/infrastructure specific things.
-
+- Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup
+  network/infrastructure specific things.
 
 ### 2025-05-09
 
@@ -162,8 +163,8 @@ network/infrastructure specific things.
 ### 2025-05-06
 
 - The ssh health checks are removed and GitHub is used instead to get the runners health
-information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
-disappear.
+  information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
+  disappear.
 
 ### 2025-04-28
 
@@ -197,7 +198,7 @@ disappear.
 ### 2025-03-24
 
 - New terraform product module. This module is composed of one github-runner-image-builder application and the related
-github-runner applications.
+  github-runner applications.
 
 ### 2024-12-13
 
@@ -243,14 +244,14 @@ github-runner applications.
 ### 2024-10-17
 
 - Use in-memory authentication instead of clouds.yaml on disk for OpenStack. This prevents
-the multi-processing fighting over the file handle for the clouds.yaml file in the `github-runner-manager`.
+  the multi-processing fighting over the file handle for the clouds.yaml file in the `github-runner-manager`.
 
 - Fixed a bug where metrics storage for unmatched runners could not get cleaned up.
 
 ### 2024-10-11
 
 - Added support for COS integration with reactive runners.
-- The charm now creates a dedicated user which is used for running the reactive process and 
+- The charm now creates a dedicated user which is used for running the reactive process and
   storing metrics and ssh keys (also for non-reactive mode).
 
 ### 2024-10-07
