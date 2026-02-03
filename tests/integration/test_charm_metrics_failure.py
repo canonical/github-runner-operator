@@ -7,6 +7,7 @@ import time
 from asyncio import sleep
 from typing import AsyncIterator
 
+import jubilant
 import pytest
 import pytest_asyncio
 from github.Branch import Branch
@@ -30,18 +31,16 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]:
+async def app_fixture(
+    juju: jubilant.Juju, app_for_metric: Application
+) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
     unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
-    await app_for_metric.set_config(
-        {
-            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
-        }
-    )
+    juju.config(app_for_metric.name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await wait_for_reconcile(app=app_for_metric)
 
     yield app_for_metric
@@ -51,6 +50,7 @@ async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_abnormal_termination(
+    juju: jubilant.Juju,
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -62,8 +62,8 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to Abnormal.
     """
-    await app.set_config({PATH_CONFIG_NAME: github_repository.full_name})
-    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    juju.config(app.name, values={PATH_CONFIG_NAME: github_repository.full_name})
+    juju.config(app.name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await instance_helper.ensure_charm_has_runner(app)
 
     unit = app.units[0]

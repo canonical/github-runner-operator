@@ -6,11 +6,11 @@
 import functools
 import pathlib
 
+import jubilant
 import pytest
 from juju.application import Application
 from juju.client import client
 from juju.model import Model
-from pytest_operator.plugin import OpsTest
 
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
@@ -32,8 +32,8 @@ pytestmark = pytest.mark.openstack
 
 @pytest.mark.asyncio
 async def test_charm_upgrade(
+    juju: jubilant.Juju,
     model: Model,
-    ops_test: OpsTest,
     charm_file: str,
     app_name: str,
     github_config: GitHubConfig,
@@ -48,20 +48,23 @@ async def test_charm_upgrade(
     """
     latest_edge_path = tmp_path / "github-runner.charm"
     # download the charm
-    retcode, stdout, stderr = await ops_test.juju(
-        "download",
-        "github-runner",
-        # do not specify revision
-        # --revision cannot be specified together with --arch, --base, --channel
-        "--channel",
-        "latest/edge",
-        "--series",
-        "jammy",
-        "--filepath",
-        str(latest_edge_path),
-        "--no-progress",
-    )
-    assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
+    try:
+        juju.cli(
+            "download",
+            "github-runner",
+            # do not specify revision
+            # --revision cannot be specified together with --arch, --base, --channel
+            "--channel",
+            "latest/edge",
+            "--series",
+            "jammy",
+            "--filepath",
+            str(latest_edge_path),
+            "--no-progress",
+            include_model=False,
+        )
+    except jubilant.CLIError as exc:
+        pytest.fail(f"failed to download charm, {exc}")
 
     # deploy latest edge version of the charm
     application = await deploy_github_runner_charm(
