@@ -868,7 +868,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(f"""\
+        "any_charm.py": textwrap.dedent(
+            f"""\
             from http.server import BaseHTTPRequestHandler, HTTPServer
             import threading
 
@@ -926,7 +927,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
             def run_server(address: str):
                 server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
                 server.serve_forever()
-            """),
+            """
+        ),
     }
 
     planner_app: Application = await model.deploy(
