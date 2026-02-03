@@ -878,13 +878,15 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
-                    self.secret = None
 
                     self.framework.observe(self.on.install, self._on_install)
                     self.framework.observe(self.on['provide-github-runner-planner-v0'].relation_changed, self._on_planner_relation_changed)
                 
                 def _on_install(self, _):
-                    threading.Thread(target=run_server, args=(str(self.model.get_binding("juju-info").network.bind_address),), daemon=True).start()
+                    self.address = str(self.model.get_binding("juju-info").network.bind_address)
+                    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                    print(address)
+                    threading.Thread(target=run_server, args=(address,), daemon=True).start()
 
                 def _on_planner_relation_changed(self, event):
                     # Provide mock planner relation data
