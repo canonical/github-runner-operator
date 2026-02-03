@@ -28,11 +28,6 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
-REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
-    "git+https://github.com/canonical/"
-    "repo-policy-compliance@48b36c130b207278d20c3847ce651ac13fb9e9d7"
-)
-
 pytestmark = pytest.mark.openstack
 
 

@@ -17,14 +17,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import (
-    AnyHttpUrl,
-    BaseModel,
-    MongoDsn,
-    ValidationError,
-    create_model_from_typeddict,
-    validator,
-)
+from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -50,9 +43,6 @@ OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
-# bandit thinks this is a hardcoded password
-REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
-REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
@@ -256,6 +246,7 @@ class RepoPolicyComplianceConfig(BaseModel):
         return cls(url=url, token=token)  # type: ignore
 
 
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
@@ -271,7 +262,6 @@ class CharmConfig(BaseModel):
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         reconcile_interval: Time between each reconciliation of runners in minutes.
-        repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
@@ -288,7 +278,6 @@ class CharmConfig(BaseModel):
     openstack_clouds_yaml: OpenStackCloudsYAML
     path: GitHubPath | None
     reconcile_interval: int
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
@@ -546,16 +535,6 @@ class CharmConfig(BaseModel):
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
-        repo_policy_compliance = None
-        if charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME) or charm.config.get(
-            REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME
-        ):
-            if not openstack_clouds_yaml:
-                raise CharmConfigInvalidError(
-                    "Cannot use repo-policy-compliance config without using OpenStack."
-                )
-            repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
-
         manager_proxy_command = (
             cast(str, charm.config.get(MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME, "")) or None
         )
@@ -579,7 +558,6 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml=openstack_clouds_yaml,
             path=github_config.path if github_config else None,
             reconcile_interval=reconcile_interval,
-            repo_policy_compliance=repo_policy_compliance,
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
