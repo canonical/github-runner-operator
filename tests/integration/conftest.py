@@ -880,7 +880,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     super().__init__(*args, **kwargs)
 
                     self.framework.observe(self.on.install, self._on_install)
-                    self.framework.observe(self.on['provide-github-runner-planner-v0'].relation_changed, self._on_planner_relation_changed)
+                    self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
                 
                 def _on_install(self, _):
                     self.address = str(self.model.get_binding("juju-info").network.bind_address)
