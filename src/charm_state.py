@@ -168,7 +168,7 @@ class PlannerConfig(BaseModel):
     """
 
     token: str
-    endpoint: AnyHttpUrl
+    endpoint: AnyHttpsUrl
     flavor: str
 
     @classmethod
@@ -209,7 +209,7 @@ class RepoPolicyComplianceConfig(BaseModel):
     """
 
     token: str
-    url: AnyHttpUrl
+    url: AnyHttpsUrl
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "RepoPolicyComplianceConfig":
