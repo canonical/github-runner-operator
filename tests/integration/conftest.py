@@ -849,59 +849,6 @@ async def juju(
         return
 
 
-class MockPlannerHandler(BaseHTTPRequestHandler):
-    """Handler for mock planner HTTP server."""
-
-    def __init__(self, *args, **kwargs):
-        """Initialize the mock planner handler.
-
-        Args:
-            args: Positional arguments.
-            kwargs: Keyword arguments.
-        """
-        super().__init__(*args, **kwargs)
-        self.last_payload = None
-
-    # Ignore function name lint as do_POST is the name used by BaseHTTPRequestHandler
-    def do_POST(self):  # noqa: N802
-        """Handle all POST request."""
-        if self.path.startswith("/api/v1/auth/token/"):
-            content_length = int(self.headers["Content-Length"])
-            self.last_payload = self.rfile.read(content_length)
-
-            self.send_response(200)
-            self.end_headers()
-            return
-        self.send_response(404)
-        self.end_headers()
-
-    # Ignore function name lint as do_GET is the name used by BaseHTTPRequestHandler
-    def do_GET(self):  # noqa: N802
-        """Handle all GET request."""
-        if self.last_payload is None:
-            self.send_response(404)
-            self.end_headers()
-            return
-
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(self.last_payload)
-
-
-def run_server(port: int) -> None:
-    """Run the mock planner HTTP server."""
-    server = HTTPServer(server_address=("localhost", port), RequestHandlerClass=MockPlannerHandler)
-    server.serve_forever()
-
-
-@pytest.fixture(scope="module")
-def mock_planner_server() -> str:
-    """Start a mock planner HTTP server."""
-    port = 8888
-    threading.Thread(target=run_server, args=(port,), daemon=True).start()
-    return f"http://localhost:{port}"
-
-
 @pytest.fixture(scope="module")
 def planner_token_secret_name() -> str:
     """Planner token secret name."""
@@ -912,26 +859,71 @@ def planner_token_secret_name() -> str:
 async def planner_token_secret(model: Model, planner_token_secret_name: str) -> AsyncIterator[str]:
     """Create a planner token secret."""
     return await model.add_secret(
-        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"])
+        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
+    )
+
 
 @pytest_asyncio.fixture(scope="module")
-async def mock_planner_app(model: Model, mock_planner_server: str, planner_token_secret) -> AsyncIterator[Application]:
+async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
     planner_name = "planner"
 
     any_charm_src_overwrite = {
         "any_charm.py": textwrap.dedent(f"""\
+            from http.server import BaseHTTPRequestHandler, HTTPServer
+            import threading
+
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
+                
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
-                    self.framework.observe(self.on['provide-github-runner-planner-v0'].\
-relation_changed, self._image_relation_changed)
+                    self.secret = None
 
-                def _image_relation_changed(self, event):
+                    self.framework.observe(self.on.install, self._on_install)
+                    self.framework.observe(self.on['provide-github-runner-planner-v0'].relation_changed, self._on_planner_relation_changed)
+                
+                def _on_install(self, _):
+                    threading.Thread(target=run_server, args=(str(self.model.get_binding("juju-info").network.bind_address),), daemon=True).start()
+
+                def _on_planner_relation_changed(self, event):
                     # Provide mock planner relation data
-                    event.relation.data[self.unit]['endpoint'] = '{mock_planner_server}'
-                    event.relation.data[self.unit]['token'] = '{planner_token_secret}'
+                    event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
+                    event.relation.data[self.unit]["token"] = "{planner_token_secret}"
+
+            class MockPlannerHandler(BaseHTTPRequestHandler):
+
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.last_payload = None
+
+                # Ignore function name lint as do_POST is the name used by BaseHTTPRequestHandler
+                def do_POST(self):  # noqa: N802
+                    if self.path.startswith("/api/v1/auth/token/"):
+                        content_length = int(self.headers["Content-Length"])
+                        self.last_payload = self.rfile.read(content_length)
+
+                        self.send_response(200)
+                        self.end_headers()
+                        return
+                    self.send_response(404)
+                    self.end_headers()
+
+                # Ignore function name lint as do_GET is the name used by BaseHTTPRequestHandler
+                def do_GET(self):  # noqa: N802
+                    if self.last_payload is None:
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(self.last_payload)
+
+
+            def run_server(address: str):
+                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
+                server.serve_forever()
             """),
     }
 
