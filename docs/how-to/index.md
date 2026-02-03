@@ -16,6 +16,8 @@ and using the Github Runner charm.
 
 ## Security
 * [Comply with security requirements]
+* [Manage external contributors securely]
+* [Troubleshoot]
 
 ## Development
 * [Contribute]
@@ -30,4 +32,6 @@ and using the Github Runner charm.
 [Spawn OpenStack runner]: openstack-runner.md
 [Set up reactive spawning]: reactive.md
 [Comply with security requirements]: comply-security.md
+[Manage external contributors securely]: manage-external-contributors.md
+[Troubleshoot]: troubleshoot.md
 [Contribute]: contribute.md

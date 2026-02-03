@@ -15,7 +15,6 @@ from github_runner_manager.manager.vm_manager import PostJobStatus
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME
-from tests.integration.conftest import GitHubConfig, ProxyConfig
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     cancel_workflow_run,
@@ -25,11 +24,9 @@ from tests.integration.helpers.charm_metrics import (
 )
 from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
-    DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    dispatch_workflow,
     wait_for_reconcile,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -43,65 +40,11 @@ async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]
     await app_for_metric.set_config(
         {
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
-            "repo-policy-compliance-token": "",
-            "repo-policy-compliance-url": "",
         }
     )
     await wait_for_reconcile(app=app_for_metric)
 
     yield app_for_metric
-
-
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_charm_issues_metrics_for_failed_repo_policy(
-    app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
-    github_config: GitHubConfig,
-    proxy_config: ProxyConfig,
-    instance_helper: OpenStackInstanceHelper,
-):
-    """
-    arrange: A properly integrated charm with a runner registered on the fork repo.
-    act: Dispatch a test workflow that fails the repo-policy check. After completion, reconcile.
-    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
-        The Reconciliation metric has the post job status set to failure.
-    """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-
-    await setup_repo_policy(
-        app=app,
-        openstack_connection=instance_helper.openstack_connection,
-        token=github_config.token,
-        https_proxy=proxy_config.https_proxy,
-    )
-
-    # Clear metrics log to make reconciliation event more predictable
-    unit = app.units[0]
-    await clear_metrics_log(unit)
-    await dispatch_workflow(
-        app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
-        conclusion="failure",
-        workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
-    )
-
-    # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config(
-        {
-            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
-        }
-    )
-    await wait_for_reconcile(app=app)
-
-    await assert_events_after_reconciliation(
-        app=app,
-        github_repository=forked_github_repository,
-        post_job_status=PostJobStatus.REPO_POLICY_CHECK_FAILURE,
-    )
 
 
 @pytest.mark.openstack
