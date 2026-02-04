@@ -925,7 +925,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     subprocess.Popen(["python3", "-m", "planner", self.address], start_new_session=True, cwd=str(Path.cwd() / "src"))
 
                 def _on_planner_relation_changed(self, event):
-                    event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
+                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address)
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
             """
         ),
