@@ -8,11 +8,10 @@ Tests a path change in the repo.
 
 import logging
 
+import jubilant
 import pytest
 from github.Repository import Repository
 from juju.application import Application
-from juju.model import Model
-from ops.model import ActiveStatus
 
 from charm_state import PATH_CONFIG_NAME
 from tests.integration.conftest import GitHubConfig
@@ -26,7 +25,7 @@ logger = logging.getLogger(__name__)
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_path_config_change(
-    model: Model,
+    juju: jubilant.Juju,
     app_with_forked_repo: Application,
     github_repository: Repository,
     github_config: GitHubConfig,
@@ -38,8 +37,10 @@ async def test_path_config_change(
     assert: No runners connected to the forked repository and one runner in the main repository.
     """
     logger.info("test_path_config_change")
-    await model.wait_for_idle(
-        apps=[app_with_forked_repo.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+    juju.wait(
+        lambda status: jubilant.all_active(status, app_with_forked_repo.name),
+        delay=10,
+        timeout=10 * 60,
     )
 
     unit = app_with_forked_repo.units[0]
@@ -47,7 +48,7 @@ async def test_path_config_change(
     logger.info("Ensure there is a runner (this calls reconcile)")
     await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
-    await app_with_forked_repo.set_config({PATH_CONFIG_NAME: github_config.path})
+    juju.config(app_with_forked_repo.name, values={PATH_CONFIG_NAME: github_config.path})
 
     logger.info("Reconciling (again)")
     await wait_for_runner_ready(app=app_with_forked_repo)
