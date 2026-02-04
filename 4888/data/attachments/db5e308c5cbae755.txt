@@ -1,0 +1,63 @@
+06:30:28 WARNING unexpected facade SSHServer received from the controller
+06:30:28 INFO Adding model github-pr-b2ea4-lxd:test-charm-metrics-success-lvf7 on cloud localhost
+06:30:29 WARNING unexpected facade SSHServer received from the controller
+06:30:29 WARNING unexpected facade SSHSession received from the controller
+06:30:29 WARNING unexpected facade SSHTunneler received from the controller
+06:30:29 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:30:32 INFO Deploying ch:amd64/noble/any-charm-133
+06:30:59 INFO Deploying local:jammy/github-runner-0
+06:30:59 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:31:29 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:31:59 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:32:29 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:33:00 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:33:30 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: waiting for machine
+06:34:01 INFO Waiting for model:
+  test-qxvsoi58/0 [allocating] waiting: agent initialising
+06:34:31 INFO Waiting for model:
+  test-qxvsoi58/0 [executing] maintenance: installing charm software
+06:35:01 INFO Waiting for model:
+  test-qxvsoi58/0 [executing] maintenance: installing charm software
+06:35:32 INFO Waiting for model:
+  test-qxvsoi58/0 [executing] maintenance: installing charm software
+06:36:02 INFO Waiting for model:
+  test-qxvsoi58/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-qxvsoi58/0 [idle] active: 
+06:36:32 INFO Waiting for model:
+  test-qxvsoi58/0 [idle] active:
+06:36:42 INFO Waiting for model:
+  test-qxvsoi58/0 [idle] active: 
+06:37:12 INFO Waiting for model:
+  test-qxvsoi58/0 [idle] active: 
+06:37:16 INFO Current reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:37:16 INFO Waiting for reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:38:17 INFO Current reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:38:17 INFO Current reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a, expected reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:38:17 INFO Waiting for reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:39:18 INFO Current reconcile ID: 0f4aa689-9ae6-48e0-a947-e252fa6db2cc
+06:39:18 INFO Current reconcile ID: 0f4aa689-9ae6-48e0-a947-e252fa6db2cc, expected reconcile ID: 2a0abf63-527a-4942-b675-3baa6981107a
+06:39:23 INFO Waiting for model:
+  test-qxvsoi58/0 [idle] active: 
+06:39:54 INFO Waiting for model:
+  test-qxvsoi58/0 [idle] active: 
+06:39:57 INFO Current reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:39:57 INFO Waiting for reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:40:58 INFO Current reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:40:58 INFO Current reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd, expected reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:40:58 INFO Waiting for reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:41:59 INFO Current reconcile ID: 7eec4e04-4413-4809-994b-380277c17db8
+06:41:59 INFO Current reconcile ID: 7eec4e04-4413-4809-994b-380277c17db8, expected reconcile ID: 3d096cc4-77d5-4331-a783-21285817d4dd
+06:42:00 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770187013.271453, "event": "reconciliation", "flavor": "test-qxvsoi58", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.170473575592041}
+{"timestamp": 1770187140.6966238, "event": "reconciliation", "flavor": "test-qxvsoi58", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.349863767623901}
+{"timestamp": 1770187092.0, "event": "runner_installed", "flavor": "test-qxvsoi58", "duration": 80.0}
+{"timestamp": 1770187177.3232594, "event": "reconciliation", "flavor": "test-qxvsoi58", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.072465181350708}
+{"timestamp": 1770187304.9972959, "event": "reconciliation", "flavor": "test-qxvsoi58", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.497057199478149}
