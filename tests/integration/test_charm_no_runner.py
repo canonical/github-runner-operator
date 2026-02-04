@@ -145,7 +145,6 @@ async def test_planner_integration(
     model: Model,
     app_no_runner: Application,
     mock_planner_app: Application,
-    mock_planner_server: str,
     planner_token_secret_name: str,
 ) -> None:
     """
@@ -160,8 +159,10 @@ async def test_planner_integration(
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
     )
+    
+    address = mock_planner_app.units[0].get_public_address()
 
-    response = requests.get(mock_planner_server, timeout=10)
+    response = requests.get(f"http://{address}:8080", timeout=10)
     data = response.json()
     # TODO
     print("############################################################################")

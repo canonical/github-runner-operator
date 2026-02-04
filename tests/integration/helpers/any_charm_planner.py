@@ -1,8 +1,9 @@
+import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-def run_server():
-    server = HTTPServer(server_address=("127.0.0.1", 80), RequestHandlerClass=MockPlannerHandler)
+def run_server(address):
+    server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
     server.serve_forever()
 
 class MockPlannerHandler(BaseHTTPRequestHandler):
@@ -30,4 +31,4 @@ class MockPlannerHandler(BaseHTTPRequestHandler):
         self.wfile.write(self.last_payload)
 
 if __name__ == "__main__":
-    run_server()
+    run_server(sys.argv[1])

@@ -872,10 +872,12 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
     any_charm_src_overwrite = {
         "planner.py": textwrap.dedent(
             """\
+            import sys
             from http.server import BaseHTTPRequestHandler, HTTPServer
 
-            def run_server():
-                server = HTTPServer(server_address=("127.0.0.1", 8080), RequestHandlerClass=MockPlannerHandler)
+
+            def run_server(address):
+                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
                 server.serve_forever()
 
             class MockPlannerHandler(BaseHTTPRequestHandler):
@@ -885,6 +887,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     if self.path.startswith("/api/v1/auth/token/"):
                         content_length = int(self.headers["Content-Length"])
                         MockPlannerHandler.last_payload = self.rfile.read(content_length)
+
                         self.send_response(200)
                         self.end_headers()
                         return
@@ -896,12 +899,13 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                         self.send_response(404)
                         self.end_headers()
                         return
+
                     self.send_response(200)
                     self.end_headers()
                     self.wfile.write(self.last_payload)
 
             if __name__ == "__main__":
-                run_server()
+                run_server(sys.argv[1])
             """
         ),
         "any_charm.py": textwrap.dedent(
@@ -918,7 +922,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def _on_install(self, _):
                     self.address = str(self.model.get_binding("juju-info").network.bind_address)
-                    subprocess.Popen(["python3", "-m", "planner"], start_new_session=True, cwd=str(Path.cwd() / "src"))
+                    subprocess.Popen(["python3", "-m", "planner", self.address], start_new_session=True, cwd=str(Path.cwd() / "src"))
 
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
