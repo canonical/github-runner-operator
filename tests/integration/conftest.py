@@ -884,9 +884,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def _on_install(self, _):
                     self.address = str(self.model.get_binding("juju-info").network.bind_address)
-                    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                    print(address)
-                    threading.Thread(target=run_server, args=(address,), daemon=True).start()
+                    threading.Thread(target=run_server, args=(self.address,), daemon=True).start()
 
                 def _on_planner_relation_changed(self, event):
                     # Provide mock planner relation data
