@@ -869,17 +869,13 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
     any_charm_src_overwrite = {
         "any_charm.py": textwrap.dedent(
-            f"""\
-            from http.server import BaseHTTPRequestHandler, HTTPServer
+            f"""from http.server import BaseHTTPRequestHandler, HTTPServer
             import threading
-
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
-                
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
-
                     self.framework.observe(self.on.install, self._on_install)
                     self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
                 
@@ -899,13 +895,11 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 server.serve_forever()
 
             class MockPlannerHandler(BaseHTTPRequestHandler):
-
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.last_payload = None
 
-                # Ignore function name lint as do_POST is the name used by BaseHTTPRequestHandler
-                def do_POST(self):  # noqa: N802
+                def do_POST(self):
                     if self.path.startswith("/api/v1/auth/token/"):
                         content_length = int(self.headers["Content-Length"])
                         self.last_payload = self.rfile.read(content_length)
@@ -916,8 +910,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.send_response(404)
                     self.end_headers()
 
-                # Ignore function name lint as do_GET is the name used by BaseHTTPRequestHandler
-                def do_GET(self):  # noqa: N802
+                def do_GET(self):
                     if self.last_payload is None:
                         self.send_response(404)
                         self.end_headers()
@@ -925,8 +918,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
                     self.send_response(200)
                     self.end_headers()
-                    self.wfile.write(self.last_payload)
-            """
+                    self.wfile.write(self.last_payload)"""
         ),
     }
 
