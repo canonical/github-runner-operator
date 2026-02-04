@@ -17,7 +17,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
+from pydantic import AnyHttpUrl, BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -168,7 +168,7 @@ class PlannerConfig(BaseModel):
     """
 
     token: str
-    endpoint: AnyHttpsUrl
+    endpoint: AnyHttpUrl
     flavor: str
 
     @classmethod
