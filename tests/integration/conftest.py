@@ -906,6 +906,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
         ),
         "any_charm.py": textwrap.dedent(
             f"""\
+            import subprocess
+            from pathlib import Path
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -916,7 +918,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def _on_install(self, _):
                     self.address = str(self.model.get_binding("juju-info").network.bind_address)
-                    subprocess.Popen(["python3", "-m", "planner"], start_new_session=True, cwd="src/")
+                    subprocess.Popen(["python3", "-m", "planner"], start_new_session=True, cwd=str(Path.cwd() / "src"))
 
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
