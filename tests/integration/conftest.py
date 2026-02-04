@@ -871,7 +871,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
     any_charm_src_overwrite = {
         "any_charm.py": textwrap.dedent(
-            f"""from http.server import BaseHTTPRequestHandler, HTTPServer
+            f"""\
+            from http.server import BaseHTTPRequestHandler, HTTPServer
             import threading
             from any_charm_base import AnyCharmBase
 
@@ -920,7 +921,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
                     self.send_response(200)
                     self.end_headers()
-                    self.wfile.write(self.last_payload)"""
+                    self.wfile.write(self.last_payload)
+            """
         ),
     }
 
