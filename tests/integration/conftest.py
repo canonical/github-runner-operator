@@ -870,10 +870,42 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
     planner_name = "planner"
 
     any_charm_src_overwrite = {
+        "planner.py": textwrap.dedent(
+            """\
+            from http.server import BaseHTTPRequestHandler, HTTPServer
+
+            def run_server():
+                server = HTTPServer(server_address=("127.0.0.1", 8080), RequestHandlerClass=MockPlannerHandler)
+                server.serve_forever()
+
+            class MockPlannerHandler(BaseHTTPRequestHandler):
+                last_payload = None
+
+                def do_POST(self):
+                    if self.path.startswith("/api/v1/auth/token/"):
+                        content_length = int(self.headers["Content-Length"])
+                        MockPlannerHandler.last_payload = self.rfile.read(content_length)
+                        self.send_response(200)
+                        self.end_headers()
+                        return
+                    self.send_response(404)
+                    self.end_headers()
+
+                def do_GET(self):
+                    if MockPlannerHandler.last_payload is None:
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(self.last_payload)
+
+            if __name__ == "__main__":
+                run_server()
+            """
+        ),
         "any_charm.py": textwrap.dedent(
             f"""\
-            from http.server import BaseHTTPRequestHandler, HTTPServer
-            import threading
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -884,42 +916,11 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def _on_install(self, _):
                     self.address = str(self.model.get_binding("juju-info").network.bind_address)
-                    threading.Thread(target=run_server, args=(self.address,), daemon=True).start()
+                    subprocess.Popen(["python3", "-m", "planner"], start_new_session=True, cwd="src/")
 
                 def _on_planner_relation_changed(self, event):
-                    # Provide mock planner relation data
                     event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
-
-            def run_server(address):
-                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
-                server.serve_forever()
-
-            class MockPlannerHandler(BaseHTTPRequestHandler):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-                    self.last_payload = None
-
-                def do_POST(self):
-                    if self.path.startswith("/api/v1/auth/token/"):
-                        content_length = int(self.headers["Content-Length"])
-                        self.last_payload = self.rfile.read(content_length)
-
-                        self.send_response(200)
-                        self.end_headers()
-                        return
-                    self.send_response(404)
-                    self.end_headers()
-
-                def do_GET(self):
-                    if self.last_payload is None:
-                        self.send_response(404)
-                        self.end_headers()
-                        return
-
-                    self.send_response(200)
-                    self.end_headers()
-                    self.wfile.write(self.last_payload)
             """
         ),
     }
