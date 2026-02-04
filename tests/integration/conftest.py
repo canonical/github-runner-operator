@@ -894,6 +894,10 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     event.relation.data[self.unit]["endpoint"] = str(self.model.get_binding("juju-info").network.bind_address)
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
 
+            def run_server(address):
+                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
+                server.serve_forever()
+
             class MockPlannerHandler(BaseHTTPRequestHandler):
 
                 def __init__(self, *args, **kwargs):
@@ -922,11 +926,6 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.send_response(200)
                     self.end_headers()
                     self.wfile.write(self.last_payload)
-
-
-            def run_server(address: str):
-                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
-                server.serve_forever()
             """
         ),
     }
