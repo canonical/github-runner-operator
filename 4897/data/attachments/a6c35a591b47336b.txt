@@ -1,0 +1,124 @@
+18:29:25 WARNING unexpected facade SSHServer received from the controller
+18:29:25 INFO Adding model github-pr-aeaa2-lxd:test-charm-metrics-failure-n135 on cloud localhost
+18:29:25 WARNING unexpected facade SSHServer received from the controller
+18:29:25 WARNING unexpected facade SSHSession received from the controller
+18:29:25 WARNING unexpected facade SSHTunneler received from the controller
+18:29:25 WARNING unexpected facade SSHServer received from the controller
+18:29:26 INFO GitHub token rate limit: Rate(reset=2026-02-04 18:52:03+00:00, remaining=4799, limit=5000)
+18:29:28 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:29:30 INFO Deploying ch:amd64/noble/any-charm-133
+18:29:43 INFO Deploying local:jammy/github-runner-0
+18:29:43 INFO Waiting for model:
+  test-dguposu6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dguposu6/0 [allocating] waiting: waiting for machine
+18:30:14 INFO Waiting for model:
+  test-dguposu6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dguposu6/0 [allocating] waiting: waiting for machine
+18:30:44 INFO Waiting for model:
+  test-dguposu6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dguposu6/0 [idle] active: 
+18:31:14 INFO Waiting for model:
+  test-dguposu6/0 [allocating] waiting: waiting for machine
+18:31:45 INFO Waiting for model:
+  test-dguposu6/0 [allocating] waiting: agent initialising
+18:32:15 INFO Waiting for model:
+  test-dguposu6/0 [executing] maintenance: installing charm software
+18:32:45 INFO Waiting for model:
+  test-dguposu6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-dguposu6/0 [idle] active: 
+18:33:15 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:33:26 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-n135 test-dguposu6 base-virtual-machines=0
+18:33:26 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:33:42 INFO Current reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:33:42 INFO Waiting for reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:34:43 INFO Current reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:34:43 INFO Current reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414, expected reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:34:43 INFO Waiting for reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:35:44 INFO Current reconcile ID: 91a93100-6e34-4206-8efc-dfec46a4f536
+18:35:44 INFO Current reconcile ID: 91a93100-6e34-4206-8efc-dfec46a4f536, expected reconcile ID: 7175dddb-463c-4e5d-bb91-511dce788414
+18:35:44 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-n135 test-dguposu6 path=canonical/github-runner-operator
+18:35:44 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-n135 test-dguposu6 base-virtual-machines=1
+18:35:44 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:36:15 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:36:17 INFO Current reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:36:17 INFO Waiting for reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:37:18 INFO Current reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:37:18 INFO Current reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720, expected reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:37:18 INFO Waiting for reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:38:19 INFO Current reconcile ID: 37c11303-ceca-47d1-8b13-e74c4e0593a7
+18:38:19 INFO Current reconcile ID: 37c11303-ceca-47d1-8b13-e74c4e0593a7, expected reconcile ID: 9db4e3ae-6058-4dc0-9ef0-5028de1a0720
+18:39:35 INFO Wait for condition not met, sleeping 30
+18:40:17 INFO [TEST SETUP] Run command pkill -9 run.sh on test-dguposu6-0-n-9dcf6abe807c
+18:40:17 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.145', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:5e:ca'}]])
+18:40:18 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dguposu6-0-n-9dcf6abe807c.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.145 pkill -9 run.sh'
+18:40:19 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.145' (ED25519) to the list of known hosts.
+'
+18:40:21 INFO Runner test-dguposu6-0-n-9dcf6abe807c status: online
+18:40:21 INFO Runner still marked as online, waiting for it to be marked offline
+18:41:23 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:41:53 INFO Waiting for model:
+  test-dguposu6/0 [idle] active: 
+18:41:55 INFO Current reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:41:55 INFO Waiting for reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:42:56 INFO Current reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:42:56 INFO Current reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568, expected reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:42:56 INFO Waiting for reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:43:57 INFO Current reconcile ID: a0fa8919-9229-4c67-9b16-bc08f5f5c1d8
+18:43:57 INFO Current reconcile ID: a0fa8919-9229-4c67-9b16-bc08f5f5c1d8, expected reconcile ID: be1dcb74-abbd-4053-8301-0d77bc143568
+18:43:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770230105.545661, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.634063005447388}
+{"timestamp": 1770230155.9136403, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.028546571731567}
+{"timestamp": 1770230282.6900072, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.6200270652771}
+{"timestamp": 1770230410.4807916, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 1, "duration": 7.666910648345947}
+{"timestamp": 1770230346.0, "event": "runner_installed", "flavor": "test-dguposu6", "duration": 192.0}
+{"timestamp": 1770230378.0, "event": "runner_start", "flavor": "test-dguposu6", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 32.0, "queue_duration": 2.0}
+{"timestamp": 1770230419.0, "event": "runner_stop", "flavor": "test-dguposu6", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1770230498.3134217, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.224690675735474}
+{"timestamp": 1770230625.418528, "event": "reconciliation", "flavor": "test-dguposu6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.025063753128052}
+18:43:59 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-n135  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  18:43:59Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-dguposu6           active      1  any-charm      latest/beta  133  no       
+test-dguposu6                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dguposu6/0*  active    idle   0        10.201.43.48           
+test-dguposu6/0*                         active    idle   1        10.201.43.171          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.201.43.48   juju-fed095-0  ubuntu@24.04  github-runner  Running
+1        started  10.201.43.171  juju-fed095-1  ubuntu@22.04  github-runner  Running
+
+18:43:59 INFO Juju error logs:
+
+machine-0: 18:30:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:30:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:31:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:31:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dguposu6-0: 18:32:45 ERROR unit.test-dguposu6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dguposu6-0: 18:32:46 ERROR unit.test-dguposu6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dguposu6-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:43:59 INFO Forgetting model main...
