@@ -910,6 +910,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
         "any_charm.py": textwrap.dedent(
             f"""\
             import subprocess
+            import os
             from pathlib import Path
             from any_charm_base import AnyCharmBase
 
@@ -921,14 +922,14 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 
                 def _on_install(self, _):
                     address = str(self.model.get_binding("juju-info").network.bind_address)
-                    pid_file = pathlib.Path("/tmp/any.pid")
+                    pid_file = Path("/tmp/any.pid")
                     if pid_file.exists():
                         try:
                             os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGKILL)
                         except ProcessLookupError:
                             pass
                         pid_file.unlink()
-                    subprocess.Popen(["python3", "-m", "planner", address], start_new_session=True, cwd=str(Path.cwd() / "src"))
+                    proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"))
                     pid_file.write_text(str(proc_http.pid), encoding="utf8")
 
                 def _on_planner_relation_changed(self, event):
