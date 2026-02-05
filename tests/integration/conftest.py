@@ -875,7 +875,6 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
             import sys
             from http.server import BaseHTTPRequestHandler, HTTPServer
 
-
             def run_server(address):
                 server = HTTPServer(server_address=(address, 8080), RequestHandlerClass=MockPlannerHandler)
                 server.serve_forever()
@@ -921,11 +920,19 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
                 
                 def _on_install(self, _):
-                    self.address = str(self.model.get_binding("juju-info").network.bind_address)
-                    subprocess.Popen(["python3", "-m", "planner", self.address], start_new_session=True, cwd=str(Path.cwd() / "src"))
+                    address = str(self.model.get_binding("juju-info").network.bind_address)
+                    pid_file = pathlib.Path("/tmp/any.pid")
+                    if pid_file.exists():
+                        try:
+                            os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        pid_file.unlink()
+                    subprocess.Popen(["python3", "-m", "planner", address], start_new_session=True, cwd=str(Path.cwd() / "src"))
+                    pid_file.write_text(str(proc_http.pid), encoding="utf8")
 
                 def _on_planner_relation_changed(self, event):
-                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address)
+                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address + ":8080")
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
             """
         ),
