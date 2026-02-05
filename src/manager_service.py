@@ -11,13 +11,14 @@ import socket
 import textwrap
 from pathlib import Path
 
+import requests
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
 from github_runner_manager.configuration.base import ApplicationConfiguration
 from yaml import safe_dump as yaml_safe_dump
 
-from charm_state import CharmState
+from charm_state import CharmState, PlannerConfig
 from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerApplicationStartError,
@@ -206,6 +207,16 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
 
+    if state.charm_config.planner is not None:
+        planner_config = state.charm_config.planner
+        _update_flavor(
+            planner_config.endpoint,
+            planner_config.token,
+            planner_config.flavor,
+            state.charm_config.labels,
+            minimum_pressure=state.runner_config.base_virtual_machines,
+        )
+
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config, unit_name)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -222,6 +233,62 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     _enable_service(unit_name)
+
+
+def cleanup_flavor(planner_config: PlannerConfig) -> None:
+    """Clean up flavor from planner service when the relation is broken.
+
+    Args:
+        planner_config: The planner configuration.
+    """
+    if planner_config is not None:
+        _delete_flavor(planner_config.endpoint, planner_config.token, planner_config.flavor)
+
+
+def _delete_flavor(endpoint: str, token: str, name: str) -> None:
+    """Delete flavor from planner service.
+
+    Args:
+        endpoint: The planner service endpoint.
+        token: The authentication token for the planner service.
+        name: The flavor name.
+    """
+    url = endpoint + f"/api/v1/auth/token/{name}"
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        requests.delete(url, headers=headers, timeout=10)
+    except (requests.RequestException, TimeoutError) as err:
+        logger.exception("Failed to delete flavor %s from planner", name)
+        raise RunnerManagerApplicationStartError("Failed to delete flavor from planner") from err
+
+
+def _update_flavor(
+    endpoint: str, token: str, name: str, labels: list[str], minimum_pressure: int
+) -> None:
+    """Update flavor to planner service.
+
+    Args:
+        endpoint: The planner service endpoint.
+        token: The authentication token for the planner service.
+        name: The flavor name.
+        labels: The list of labels associated with the flavor.
+        minimum_pressure: The minimum pressure for the flavor.
+    """
+    _delete_flavor(endpoint, token, name)
+    url = endpoint + f"/api/v1/auth/token/{name}"
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "name": name,
+        "platform": "github",
+        "labels": labels,
+        "priority": 50,
+        "minimum_pressure": minimum_pressure,
+    }
+    try:
+        requests.post(url, headers=headers, json=payload, timeout=10)
+    except (requests.RequestException, TimeoutError) as err:
+        logger.exception("Failed to add flavor %s to planner", name)
+        raise RunnerManagerApplicationStartError("Failed to add flavor to planner") from err
 
 
 def install_package(unit_name: str) -> None:

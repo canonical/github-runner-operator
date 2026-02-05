@@ -17,7 +17,14 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
+from pydantic import (
+    AnyHttpUrl,
+    BaseModel,
+    MongoDsn,
+    ValidationError,
+    create_model_from_typeddict,
+    validator,
+)
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -61,6 +68,7 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
+PLANNER_INTEGRATION_NAME = "planner"
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
@@ -157,6 +165,63 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     return tuple(valid_labels)
 
 
+class PlannerConfig(BaseModel):
+    """Configuration for the planner service.
+
+    Attributes:
+        token: Token for the planner service.
+        endpoint: The endpoint of the planner service.
+        flavor: The name of the flavor to register with the planner.
+    """
+
+    token: str
+    endpoint: AnyHttpUrl
+    flavor: str
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "PlannerConfig | None":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current planner config.
+        """
+        relations = charm.model.relations[PLANNER_INTEGRATION_NAME]
+        if not relations or not (relation := relations[0]).units:
+            return None
+        for unit in relation.units:
+            relation_data = relation.data[unit]
+            if not relation_data:
+                continue
+            return cls.from_relation_data(relation_data, charm)
+        return None
+
+    @classmethod
+    def from_relation_data(
+        cls, relation_data: dict[str, str], charm: CharmBase
+    ) -> "PlannerConfig | None":
+        """Initialize the config from relation data.
+
+        Args:
+            relation_data: The relation data from planner integration.
+            charm: The charm instance.
+
+        Returns:
+            Current planner config.
+        """
+        token_secret_id = relation_data.get("token", None)
+        if token_secret_id is None:
+            return None
+        token_secret = charm.model.get_secret(id=token_secret_id)
+        return PlannerConfig(
+            token=token_secret.get_content()["token"],
+            endpoint=relation_data["endpoint"],  # type: ignore
+            flavor=charm.app.name,
+        )
+
+
 class CharmConfig(BaseModel):
     """General charm configuration.
 
@@ -179,6 +244,7 @@ class CharmConfig(BaseModel):
         aproxy_redirect_ports: a list of ports to redirect to the aproxy proxy.
         custom_pre_job_script: Custom pre-job script to run before the job.
         runner_manager_log_level: The log level of the runner manager application.
+        planner: The configuration for the planner service.
     """
 
     allow_external_contributor: bool
@@ -194,6 +260,7 @@ class CharmConfig(BaseModel):
     aproxy_redirect_ports: list[str] = []
     custom_pre_job_script: str | None
     runner_manager_log_level: LogLevel
+    planner: PlannerConfig | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -455,6 +522,7 @@ class CharmConfig(BaseModel):
         runner_manager_log_level = cast(
             LogLevel, charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
         )
+        planner = PlannerConfig.from_charm(charm)
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             allow_external_contributor=cast(
@@ -477,6 +545,7 @@ class CharmConfig(BaseModel):
             ),
             custom_pre_job_script=custom_pre_job_script,
             runner_manager_log_level=runner_manager_log_level,
+            planner=planner,
         )
 
 

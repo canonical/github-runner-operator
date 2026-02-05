@@ -32,6 +32,7 @@ from charm_state import (
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
@@ -111,6 +112,7 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
             COS_AGENT_INTEGRATION_NAME: [],
             DEBUG_SSH_INTEGRATION_NAME: [],
             MONGO_DB_INTEGRATION_NAME: [],
+            PLANNER_INTEGRATION_NAME: [],
         }
     )
 
