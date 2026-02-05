@@ -940,7 +940,6 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
             """
         ),
     }
-    subprocess.Popen(stdout=)
 
     planner_app: Application = await model.deploy(
         "any-charm",
