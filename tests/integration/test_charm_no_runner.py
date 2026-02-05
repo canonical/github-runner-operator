@@ -162,7 +162,7 @@ async def test_planner_integration(
     
     address = mock_planner_app.units[0].get_public_address()
 
-    response = requests.get(f"http://{address}:8080", timeout=10)
+    response = requests.get(f"http://{address}:80", timeout=10)
     data = response.json()
     # TODO
     print("############################################################################")
