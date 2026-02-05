@@ -877,7 +877,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
 
             def run_server(address):
-                server = HTTPServer(server_address=(address, 80), RequestHandlerClass=MockPlannerHandler)
+                server = HTTPServer(server_address=(address, 8080), RequestHandlerClass=MockPlannerHandler)
                 server.serve_forever()
 
             class MockPlannerHandler(BaseHTTPRequestHandler):
