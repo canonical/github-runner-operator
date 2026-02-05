@@ -8,11 +8,8 @@ import logging
 import random
 import secrets
 import string
-import subprocess
 import textwrap
-import threading
 from dataclasses import dataclass
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -464,8 +461,7 @@ async def image_builder_fixture(
 
     # Use any-charm to mock the image relation provider
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -478,8 +474,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -871,8 +866,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "planner.py": textwrap.dedent(
-            """\
+        "planner.py": textwrap.dedent("""\
             import sys
             from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -906,10 +900,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
             if __name__ == "__main__":
                 run_server(sys.argv[1])
-            """
-        ),
-        "any_charm.py": textwrap.dedent(
-            f"""\
+            """),
+        "any_charm.py": textwrap.dedent(f"""\
             import subprocess
             import os
             from pathlib import Path
@@ -920,7 +912,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     super().__init__(*args, **kwargs)
                     self.framework.observe(self.on.install, self._on_install)
                     self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
-                
+
                 def _on_install(self, _):
                     address = str(self.model.get_binding("juju-info").network.bind_address)
                     pid_file = Path("/tmp/any.pid")
@@ -937,8 +929,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
-            """
-        ),
+            """),
     }
 
     planner_app: Application = await model.deploy(

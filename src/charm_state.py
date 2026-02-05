@@ -17,7 +17,14 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import AnyHttpUrl, BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
+from pydantic import (
+    AnyHttpUrl,
+    BaseModel,
+    MongoDsn,
+    ValidationError,
+    create_model_from_typeddict,
+    validator,
+)
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -198,53 +205,6 @@ class PlannerConfig(BaseModel):
                 flavor=charm.app.name,
             )
         return None
-
-
-class RepoPolicyComplianceConfig(BaseModel):
-    """Configuration for the repo policy compliance service.
-
-    Attributes:
-        token: Token for the repo policy compliance service.
-        url: URL of the repo policy compliance service.
-    """
-
-    token: str
-    url: AnyHttpsUrl
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RepoPolicyComplianceConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: If an invalid configuration was set.
-
-        Returns:
-            Current repo-policy-compliance config.
-        """
-        token = charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME)
-        if not token:
-            raise CharmConfigInvalidError(
-                f"Missing {REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME} configuration"
-            )
-        url = charm.config.get(REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME)
-        if not url:
-            raise CharmConfigInvalidError(
-                f"Missing {REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration"
-            )
-
-        logger.warning(
-            "%s, %s configuration option is marked for deprecation."
-            "Consider using %s configuration option instead.",
-            REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME,
-            REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME,
-            ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
-        )
-        # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
-        return cls(url=url, token=token)  # type: ignore
-
 
 
 class CharmConfig(BaseModel):
