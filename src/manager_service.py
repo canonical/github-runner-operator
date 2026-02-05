@@ -18,7 +18,7 @@ from github_runner_manager import constants
 from github_runner_manager.configuration.base import ApplicationConfiguration
 from yaml import safe_dump as yaml_safe_dump
 
-from charm_state import CharmState
+from charm_state import CharmState, PlannerConfig
 from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerApplicationStartError,
@@ -209,7 +209,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
 
     if state.charm_config.planner is not None:
         planner_config = state.charm_config.planner
-        add_flavor_to_planner(
+        _update_flavor(
             planner_config.endpoint,
             planner_config.token,
             planner_config.flavor,
@@ -235,10 +235,37 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service(unit_name)
 
 
-def add_flavor_to_planner(
+def cleanup_flavor(planner_config: PlannerConfig) -> None:
+    """Clean up flavor from planner service when the relation is broken.
+
+    Args:
+        planner_config: The planner configuration.
+    """
+    if planner_config is not None:
+        _delete_flavor(planner_config.endpoint, planner_config.token, planner_config.flavor)
+
+
+def _delete_flavor(endpoint: str, token: str, name: str) -> None:
+    """Delete flavor from planner service.
+
+    Args:
+        endpoint: The planner service endpoint.
+        token: The authentication token for the planner service.
+        name: The flavor name.
+    """
+    url = endpoint + f"/api/v1/auth/token/{name}"
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        requests.delete(url, headers=headers, timeout=10)
+    except (requests.RequestException, TimeoutError) as err:
+        logger.exception("Failed to delete flavor %s from planner", name)
+        raise RunnerManagerApplicationStartError("Failed to delete flavor from planner") from err
+
+
+def _update_flavor(
     endpoint: str, token: str, name: str, labels: list[str], minimum_pressure: int
 ) -> None:
-    """Add flavor to planner service.
+    """Update flavor to planner service.
 
     Args:
         endpoint: The planner service endpoint.
@@ -247,6 +274,7 @@ def add_flavor_to_planner(
         labels: The list of labels associated with the flavor.
         minimum_pressure: The minimum pressure for the flavor.
     """
+    _delete_flavor(endpoint, token, name)
     url = endpoint + f"/api/v1/auth/token/{name}"
     headers = {"Authorization": f"Bearer {token}"}
     payload = {
@@ -256,7 +284,11 @@ def add_flavor_to_planner(
         "priority": 50,
         "minimum_pressure": minimum_pressure,
     }
-    requests.post(url, headers=headers, json=payload, timeout=10)
+    try:
+        requests.post(url, headers=headers, json=payload, timeout=10)
+    except (requests.RequestException, TimeoutError) as err:
+        logger.exception("Failed to add flavor %s to planner", name)
+        raise RunnerManagerApplicationStartError("Failed to add flavor to planner") from err
 
 
 def install_package(unit_name: str) -> None:

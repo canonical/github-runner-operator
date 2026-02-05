@@ -195,16 +195,31 @@ class PlannerConfig(BaseModel):
             relation_data = relation.data[unit]
             if not relation_data:
                 continue
-            token_secret_id = relation_data.get("token", None)
-            if token_secret_id is None:
-                return None
-            token_secret = charm.model.get_secret(id=token_secret_id)
-            return PlannerConfig(
-                token=token_secret.get_content()["token"],
-                endpoint=relation_data["endpoint"],  # type: ignore
-                flavor=charm.app.name,
-            )
+            return cls.from_relation_data(relation_data, charm)
         return None
+
+    @classmethod
+    def from_relation_data(
+        cls, relation_data: dict[str, str], charm: CharmBase
+    ) -> "PlannerConfig | None":
+        """Initialize the config from relation data.
+
+        Args:
+            relation_data: The relation data from planner integration.
+            charm: The charm instance.
+
+        Returns:
+            Current planner config.
+        """
+        token_secret_id = relation_data.get("token", None)
+        if token_secret_id is None:
+            return None
+        token_secret = charm.model.get_secret(id=token_secret_id)
+        return PlannerConfig(
+            token=token_secret.get_content()["token"],
+            endpoint=relation_data["endpoint"],  # type: ignore
+            flavor=charm.app.name,
+        )
 
 
 class CharmConfig(BaseModel):
