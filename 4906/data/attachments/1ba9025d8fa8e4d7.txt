@@ -1,0 +1,29 @@
+06:33:49 WARNING unexpected facade SSHServer received from the controller
+06:33:49 INFO Adding model github-pr-aeaa2-lxd:test-charm-upgrade-5x5h on cloud localhost
+06:33:50 WARNING unexpected facade SSHServer received from the controller
+06:33:50 WARNING unexpected facade SSHSession received from the controller
+06:33:50 WARNING unexpected facade SSHTunneler received from the controller
+06:33:50 WARNING unexpected facade SSHServer received from the controller
+06:33:50 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:33:52 INFO Deploying ch:amd64/noble/any-charm-133
+06:33:53 INFO cli: juju download github-runner --channel latest/edge --series jammy --filepath /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/tmp/pytest/test_charm_upgrade0/github-runner.charm --no-progress
+06:34:14 INFO OpenStack servers: []
+06:34:14 INFO cli: juju debug-log --model github-pr-aeaa2-lxd:test-charm-upgrade-5x5h --limit 1000
+06:34:15 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-5x5h  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  06:34:15Z
+
+App                                   Version  Status   Scale  Charm      Channel      Rev  Exposed  Message
+github-runner-image-builder-hokyafc2           waiting    0/1  any-charm  latest/beta  133  no       waiting for machine
+
+Unit                                    Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-hokyafc2/0  waiting   allocating  0        10.201.129.12          waiting for machine
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        pending  10.201.129.12  juju-e4280a-0  ubuntu@24.04  github-runner  Running
+
+06:34:15 INFO Juju error logs:
+
+
+06:34:15 INFO Forgetting model main...
