@@ -166,5 +166,5 @@ async def test_planner_integration(
     data = response.json()
     assert data["name"] == app_no_runner.name
     assert data["platform"] == "github"
-    assert data["labels"] == app_no_runner.name
+    assert data["labels"] == [app_no_runner.name]
     assert data["minimum_pressure"] == 0
