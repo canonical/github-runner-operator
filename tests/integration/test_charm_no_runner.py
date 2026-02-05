@@ -164,7 +164,7 @@ async def test_planner_integration(
 
     response = requests.get(f"http://{address}:8080", timeout=10)
     data = response.json()
-    # TODO
-    print("############################################################################")
-    print(data)
-    print("############################################################################")
+    assert data["name"] == app_no_runner.name
+    assert data["platform"] == "github"
+    assert data["labels"] == app_no_runner.name
+    assert data["minimum_pressure"] == 0
