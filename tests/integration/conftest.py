@@ -8,6 +8,7 @@ import logging
 import random
 import secrets
 import string
+import subprocess
 import textwrap
 import threading
 from dataclasses import dataclass
@@ -929,15 +930,17 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                         except ProcessLookupError:
                             pass
                         pid_file.unlink()
-                    proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"))
+                    log_file = open("planner.log", "a")
+                    proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
                     pid_file.write_text(str(proc_http.pid), encoding="utf8")
 
                 def _on_planner_relation_changed(self, event):
-                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address + ":8080")
+                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
             """
         ),
     }
+    subprocess.Popen(stdout=)
 
     planner_app: Application = await model.deploy(
         "any-charm",
