@@ -929,6 +929,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                         except ProcessLookupError:
                             pass
                         pid_file.unlink()
+                    # The subprocess is spawned in detached mode therefore it keeps running after this script ends.
                     log_file = open("planner.log", "a")
                     proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
                     pid_file.write_text(str(proc_http.pid), encoding="utf8")
