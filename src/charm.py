@@ -52,10 +52,12 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
+    PlannerConfig,
     build_proxy_config_from_charm,
 )
 from errors import (
@@ -233,6 +235,13 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
+        )
+        self.framework.observe(
+            self.on[PLANNER_INTEGRATION_NAME].relation_changed,
+            self._on_planner_relation_changed,
+        )
+        self.framework.observe(
+            self.on[PLANNER_INTEGRATION_NAME].relation_broken, self._on_planner_relation_broken
         )
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
@@ -504,6 +513,22 @@ class GithubRunnerCharm(CharmBase):
         self._setup_service(state)
 
         self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_planner_relation_changed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle planner relation changed event."""
+        self.unit.status = MaintenanceStatus("Setup planner")
+        state = self._setup_state()
+        self._setup_service(state)
+        self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_planner_relation_broken(self, event: ops.RelationBrokenEvent) -> None:
+        """Handle planner relation broken event."""
+        self.unit.status = MaintenanceStatus("Cleanup planner data")
+        planner_config = PlannerConfig.from_relation_data(event.relation.data[self.unit], self)
+        manager_service.cleanup_flavor(planner_config)
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors

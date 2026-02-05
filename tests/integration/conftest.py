@@ -845,3 +845,106 @@ async def juju(
         yield juju
         show_debug_log(juju)
         return
+
+
+@pytest.fixture(scope="module")
+def planner_token_secret_name() -> str:
+    """Planner token secret name."""
+    return "planner-token-secret"
+
+
+@pytest_asyncio.fixture(scope="module")
+async def planner_token_secret(model: Model, planner_token_secret_name: str) -> AsyncIterator[str]:
+    """Create a planner token secret."""
+    return await model.add_secret(
+        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
+    )
+
+
+@pytest_asyncio.fixture(scope="module")
+async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
+    planner_name = "planner"
+
+    any_charm_src_overwrite = {
+        "planner.py": textwrap.dedent("""\
+            import sys
+            from http.server import BaseHTTPRequestHandler, HTTPServer
+
+            def run_server(address):
+                server = HTTPServer(server_address=(address, 8080), RequestHandlerClass=MockPlannerHandler)
+                server.serve_forever()
+
+            class MockPlannerHandler(BaseHTTPRequestHandler):
+                last_method = None
+                last_payload = None
+
+                def do_POST(self):
+                    if self.path.startswith("/api/v1/auth/token/"):
+                        content_length = int(self.headers["Content-Length"])
+                        MockPlannerHandler.last_payload = self.rfile.read(content_length)
+                        MockPlannerHandler.last_method = "POST"
+
+                        self.send_response(200)
+                        self.end_headers()
+                        return
+                    self.send_response(404)
+                    self.end_headers()
+
+                def do_DELETE(self):
+                    if self.path.startswith("/api/v1/auth/token/"):
+                        MockPlannerHandler.last_method = "DELETE"
+                        self.send_response(200)
+                        self.end_headers()
+                        return
+                    self.send_response(404)
+                    self.end_headers()
+
+                def do_GET(self):
+                    self.send_response(200)
+                    self.send_header("last-method", MockPlannerHandler.last_method)
+                    self.end_headers()
+                    self.wfile.write(MockPlannerHandler.last_payload)
+
+            if __name__ == "__main__":
+                run_server(sys.argv[1])
+            """),
+        "any_charm.py": textwrap.dedent(f"""\
+            import subprocess
+            import os
+            from pathlib import Path
+            from any_charm_base import AnyCharmBase
+
+            class AnyCharm(AnyCharmBase):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.framework.observe(self.on.install, self._on_install)
+                    self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
+
+                def _on_install(self, _):
+                    address = str(self.model.get_binding("juju-info").network.bind_address)
+                    pid_file = Path("/tmp/any.pid")
+                    if pid_file.exists():
+                        try:
+                            os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        pid_file.unlink()
+                    log_file = open("planner.log", "a")
+                    proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
+                    pid_file.write_text(str(proc_http.pid), encoding="utf8")
+
+                def _on_planner_relation_changed(self, event):
+                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
+                    event.relation.data[self.unit]["token"] = "{planner_token_secret}"
+            """),
+    }
+
+    planner_app: Application = await model.deploy(
+        "any-charm",
+        planner_name,
+        channel="latest/beta",
+        config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+    )
+
+    await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
+    yield planner_app
