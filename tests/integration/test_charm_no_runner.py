@@ -173,7 +173,7 @@ async def test_planner_integration(
     assert data["labels"] == [app_no_runner.name]
     assert data["minimum_pressure"] == 0
 
-    await mock_planner_app.remove_relation(remote_relation=f"{app_no_runner.name}:planner")
+    await mock_planner_app.remove_relation("planner", f"{app_no_runner.name}:planner")
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
     )
