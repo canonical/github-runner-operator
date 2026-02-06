@@ -1,0 +1,124 @@
+06:31:15 WARNING unexpected facade SSHServer received from the controller
+06:31:15 INFO Adding model github-pr-aeaa2-lxd:test-charm-metrics-failure-1v2u on cloud localhost
+06:31:15 WARNING unexpected facade SSHServer received from the controller
+06:31:15 WARNING unexpected facade SSHSession received from the controller
+06:31:15 WARNING unexpected facade SSHTunneler received from the controller
+06:31:15 WARNING unexpected facade SSHServer received from the controller
+06:31:16 INFO GitHub token rate limit: Rate(reset=2026-02-06 07:24:59+00:00, remaining=4990, limit=5000)
+06:31:18 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:31:20 INFO Deploying ch:amd64/noble/any-charm-133
+06:31:35 INFO Deploying local:jammy/github-runner-0
+06:31:35 INFO Waiting for model:
+  test-rqup87zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rqup87zx/0 [allocating] waiting: waiting for machine
+06:32:05 INFO Waiting for model:
+  test-rqup87zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rqup87zx/0 [allocating] waiting: waiting for machine
+06:32:36 INFO Waiting for model:
+  test-rqup87zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rqup87zx/0 [allocating] waiting: waiting for machine
+06:33:06 INFO Waiting for model:
+  test-rqup87zx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rqup87zx/0 [allocating] waiting: waiting for machine
+06:33:36 INFO Waiting for model:
+  test-rqup87zx/0 [allocating] waiting: agent initialising
+06:34:06 INFO Waiting for model:
+  test-rqup87zx/0 [executing] maintenance: installing charm software
+06:34:36 INFO Waiting for model:
+  test-rqup87zx/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-rqup87zx/0 [idle] active: 
+06:35:07 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:35:11 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-1v2u test-rqup87zx base-virtual-machines=0
+06:35:11 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:35:27 INFO Current reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:35:27 INFO Waiting for reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:36:28 INFO Current reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:36:28 INFO Current reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb, expected reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:36:28 INFO Waiting for reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:37:29 INFO Current reconcile ID: 905f408c-0782-49c9-a3f8-a344815777b5
+06:37:29 INFO Current reconcile ID: 905f408c-0782-49c9-a3f8-a344815777b5, expected reconcile ID: 83f09bcf-8eb8-4110-9b97-a593ef74ebeb
+06:37:29 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-1v2u test-rqup87zx path=canonical/github-runner-operator
+06:37:29 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-1v2u test-rqup87zx base-virtual-machines=1
+06:37:29 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:37:59 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:38:02 INFO Current reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:38:02 INFO Waiting for reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:39:03 INFO Current reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:39:03 INFO Current reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef, expected reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:39:03 INFO Waiting for reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:40:04 INFO Current reconcile ID: 8289a2dd-b773-4033-8a6c-57784d191a6d
+06:40:04 INFO Current reconcile ID: 8289a2dd-b773-4033-8a6c-57784d191a6d, expected reconcile ID: 58ce5e2c-020a-46ec-96de-fef136fa8cef
+06:40:11 INFO Wait for condition not met, sleeping 30
+06:40:52 INFO [TEST SETUP] Run command pkill -9 run.sh on test-rqup87zx-0-n-95560a35f04e
+06:40:52 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.244', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:32:db'}]])
+06:40:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rqup87zx-0-n-95560a35f04e.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.244 pkill -9 run.sh'
+06:40:55 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.244' (ED25519) to the list of known hosts.
+'
+06:40:57 INFO Runner test-rqup87zx-0-n-95560a35f04e status: online
+06:40:57 INFO Runner still marked as online, waiting for it to be marked offline
+06:41:58 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:42:28 INFO Waiting for model:
+  test-rqup87zx/0 [idle] active: 
+06:42:31 INFO Current reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:42:31 INFO Waiting for reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:43:32 INFO Current reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:43:32 INFO Current reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7, expected reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:43:32 INFO Waiting for reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:44:33 INFO Current reconcile ID: 06c9d15d-1ffd-4bb3-8466-84fb280a15dd
+06:44:33 INFO Current reconcile ID: 06c9d15d-1ffd-4bb3-8466-84fb280a15dd, expected reconcile ID: 3f0e53e5-0fcf-4fae-a286-a18cb2591db7
+06:44:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770359804.528954, "event": "reconciliation", "flavor": "test-rqup87zx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.087982654571533}
+{"timestamp": 1770359859.823617, "event": "reconciliation", "flavor": "test-rqup87zx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.416374683380127}
+{"timestamp": 1770359986.434885, "event": "reconciliation", "flavor": "test-rqup87zx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.467216491699219}
+{"timestamp": 1770359967.0, "event": "runner_installed", "flavor": "test-rqup87zx", "duration": 109.0}
+{"timestamp": 1770360023.0, "event": "runner_start", "flavor": "test-rqup87zx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 56.0, "queue_duration": 11.0}
+{"timestamp": 1770360054.0, "event": "runner_stop", "flavor": "test-rqup87zx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 31.0, "job_conclusion": "cancelled"}
+{"timestamp": 1770360131.8408327, "event": "reconciliation", "flavor": "test-rqup87zx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.1060152053833}
+{"timestamp": 1770360259.2741625, "event": "reconciliation", "flavor": "test-rqup87zx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.301438093185425}
+06:44:35 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-1v2u  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  06:44:35Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-rqup87zx           active      1  any-charm      latest/beta  133  no       
+test-rqup87zx                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-rqup87zx/0*  active    idle   0        10.128.64.222          
+test-rqup87zx/0*                         active    idle   1        10.128.64.137          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.128.64.222  juju-c29419-0  ubuntu@24.04  github-runner  Running
+1        started  10.128.64.137  juju-c29419-1  ubuntu@22.04  github-runner  Running
+
+06:44:35 INFO Juju error logs:
+
+machine-0: 06:33:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:33:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rqup87zx-0: 06:34:29 ERROR unit.test-rqup87zx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-rqup87zx-0: 06:34:30 ERROR unit.test-rqup87zx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rqup87zx-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:44:35 INFO Forgetting model main...

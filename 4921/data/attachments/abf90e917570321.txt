@@ -1,0 +1,75 @@
+06:49:50 INFO Waiting for model:
+  test-nnd3vmxi/0 [idle] active: 
+06:50:20 INFO Waiting for model:
+  test-nnd3vmxi/0 [idle] active: 
+06:50:23 INFO Current reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:50:23 INFO Waiting for reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:51:24 INFO Current reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:51:24 INFO Current reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb, expected reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:51:24 INFO Waiting for reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:52:25 INFO Current reconcile ID: 2d7a4806-4366-48e8-9b69-80315e55fb9e
+06:52:25 INFO Current reconcile ID: 2d7a4806-4366-48e8-9b69-80315e55fb9e, expected reconcile ID: d126c354-729f-4cc3-8db2-37e23fc796eb
+06:52:30 INFO Wait for condition not met, sleeping 10
+06:52:42 INFO Waiting for model:
+  test-nnd3vmxi/0 [idle] active: 
+06:53:12 INFO Waiting for model:
+  test-nnd3vmxi/0 [idle] active: 
+06:53:15 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:53:15 INFO Waiting for reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:54:16 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:54:16 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e, expected reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:54:16 INFO Waiting for reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:55:17 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:55:17 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e, expected reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:55:17 INFO Waiting for reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:56:18 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:56:18 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e, expected reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:56:18 INFO Waiting for reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:57:19 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:57:19 INFO Current reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e, expected reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:57:19 INFO Waiting for reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:58:20 INFO Current reconcile ID: d11f7977-fbbe-4a39-b172-577e2a82b427
+06:58:20 INFO Current reconcile ID: d11f7977-fbbe-4a39-b172-577e2a82b427, expected reconcile ID: a5f15ed5-7088-42f1-b8e4-ed4cfc11e39e
+06:58:21 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-e5p1  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  06:58:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-nnd3vmxi           active      1  any-charm      latest/beta  133  no       
+test-nnd3vmxi                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-nnd3vmxi/0*  active    idle   0        10.169.102.33          
+test-nnd3vmxi/0*                         active    idle   1        10.169.102.12          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.169.102.33  juju-de3315-0  ubuntu@24.04  github-runner  Running
+1        started  10.169.102.12  juju-de3315-1  ubuntu@22.04  github-runner  Running
+
+06:58:21 INFO Juju error logs:
+
+machine-0: 06:32:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:32:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nnd3vmxi-0: 06:34:36 ERROR unit.test-nnd3vmxi/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nnd3vmxi-0: 06:34:37 ERROR unit.test-nnd3vmxi/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nnd3vmxi-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:58:21 INFO Forgetting model main...

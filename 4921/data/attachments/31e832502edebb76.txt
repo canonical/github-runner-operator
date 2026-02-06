@@ -1,0 +1,101 @@
+06:31:18 WARNING unexpected facade SSHServer received from the controller
+06:31:18 INFO Adding model github-pr-aeaa2-lxd:test-multi-unit-same-machine-o7d6 on cloud localhost
+06:31:18 WARNING unexpected facade SSHServer received from the controller
+06:31:18 WARNING unexpected facade SSHSession received from the controller
+06:31:18 WARNING unexpected facade SSHTunneler received from the controller
+06:31:19 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:31:21 INFO Deploying ch:amd64/noble/any-charm-133
+06:31:34 INFO Deploying local:jammy/github-runner-0
+06:31:34 INFO Waiting for model:
+  test-smemkgbz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-smemkgbz/0 [allocating] waiting: waiting for machine
+06:32:05 INFO Waiting for model:
+  test-smemkgbz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-smemkgbz/0 [allocating] waiting: waiting for machine
+06:32:35 INFO Waiting for model:
+  test-smemkgbz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-smemkgbz/0 [allocating] waiting: waiting for machine
+06:33:05 INFO Waiting for model:
+  test-smemkgbz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-smemkgbz/0 [executing] maintenance: installing charm software
+06:33:36 INFO Waiting for model:
+  test-smemkgbz/0 [allocating] waiting: agent initialising
+06:34:06 INFO Waiting for model:
+  test-smemkgbz/0 [executing] maintenance: installing charm software
+06:34:37 INFO Waiting for model:
+  test-smemkgbz/0 [idle] active:
+06:34:52 INFO Waiting for model:
+  test-smemkgbz/0 [idle] active: 
+  test-smemkgbz/1 [allocating] waiting: installing agent
+06:35:22 INFO Waiting for model:
+  test-smemkgbz/0 [idle] active: 
+  test-smemkgbz/1 [executing] maintenance: installing charm software
+06:35:52 INFO Waiting for model:
+  test-smemkgbz/0 [idle] active: 
+  test-smemkgbz/1 [idle] active: 
+06:36:09 INFO File content of /var/lib/github-runner-manager/test-smemkgbz-0/http_port: 55555
+06:36:10 INFO File content of /var/lib/github-runner-manager/test-smemkgbz-1/http_port: 55556
+06:36:13 INFO File content of /var/lib/github-runner-manager/test-smemkgbz-1/http_port: 55556
+06:36:16 INFO File content of /var/lib/github-runner-manager/test-smemkgbz-1/http_port: 55556
+06:36:17 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-o7d6  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  06:36:17Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-smemkgbz           active      1  any-charm      latest/beta  133  no       
+test-smemkgbz                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-smemkgbz/0*  active    idle   0        10.108.94.65           
+test-smemkgbz/0*                         active    idle   1        10.108.94.241          
+test-smemkgbz/1                          active    idle   1        10.108.94.241          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.108.94.65   juju-83cc9d-0  ubuntu@24.04  github-runner  Running
+1        started  10.108.94.241  juju-83cc9d-1  ubuntu@22.04  github-runner  Running
+
+06:36:17 INFO Juju error logs:
+
+machine-0: 06:33:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:33:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-smemkgbz-0: 06:34:14 ERROR unit.test-smemkgbz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-smemkgbz-0: 06:34:15 ERROR unit.test-smemkgbz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-smemkgbz-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-smemkgbz-1: 06:35:27 ERROR unit.test-smemkgbz/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-smemkgbz-1: 06:35:28 ERROR unit.test-smemkgbz/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-smemkgbz-1/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:36:17 INFO Forgetting model main...
