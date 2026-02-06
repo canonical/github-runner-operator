@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-06
+
+- Migrated to latest consolidated `charmcraft.yaml` syntax and added 24.04, 26.04 bases.
+
 ## 2026-02-02
 
 - Deprecated `repo-policy-compliance` service.
