@@ -235,7 +235,21 @@ parts:
       rustup default stable
       craftctl default
 
-base:
-  - ubuntu@22.04
-  - ubuntu@24.04
-  - ubuntu@26.04
+platforms:
+  ubuntu-22.04-amd64:
+    build-on:
+      - ubuntu@22.04:amd64
+    build-for:
+      - ubuntu@22.04:amd64
+
+  ubuntu-24.04-amd64:
+    build-on:
+      - ubuntu@24.04:amd64
+    build-for:
+      - ubuntu@24.04:amd64
+
+  ubuntu-26.04-amd64:
+    build-on:
+      - ubuntu@26.04:amd64
+    build-for:
+      - ubuntu@26.04:amd64
