@@ -20,7 +20,12 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from tests.integration.conftest import DeploymentContext, GitHubConfig, OpenStackConfig, ProxyConfig
+from tests.integration.conftest import (
+    DeploymentContext,
+    GitHubConfig,
+    OpenStackConfig,
+    ProxyConfig,
+)
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
     is_upgrade_charm_event_emitted,

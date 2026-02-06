@@ -56,7 +56,7 @@ if TYPE_CHECKING:
     # Import only for type checking to avoid pytest fixture side effects at runtime
     from tests.integration.conftest import GitHubConfig, ProxyConfig
 
- 
+
 async def run_in_unit(
     unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
@@ -158,8 +158,8 @@ async def deploy_github_runner_charm(
     model: Model,
     charm_file: str,
     app_name: str,
-    github_config: 'GitHubConfig',
-    proxy_config: 'ProxyConfig',
+    github_config: "GitHubConfig",
+    proxy_config: "ProxyConfig",
     reconcile_interval: int,
     constraints: dict | None = None,
     config: dict | None = None,
