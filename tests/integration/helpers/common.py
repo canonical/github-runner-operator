@@ -11,7 +11,7 @@ import typing
 from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
-from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
+from typing import TYPE_CHECKING, Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
 import requests
@@ -52,7 +52,11 @@ DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 20 * 1024, "virt-type": "virtual-mach
 
 logger = logging.getLogger(__name__)
 
+if TYPE_CHECKING:
+    # Import only for type checking to avoid pytest fixture side effects at runtime
+    from tests.integration.conftest import GitHubConfig, ProxyConfig
 
+ 
 async def run_in_unit(
     unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
@@ -154,11 +158,8 @@ async def deploy_github_runner_charm(
     model: Model,
     charm_file: str,
     app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    github_config: 'GitHubConfig',
+    proxy_config: 'ProxyConfig',
     reconcile_interval: int,
     constraints: dict | None = None,
     config: dict | None = None,
@@ -173,11 +174,9 @@ async def deploy_github_runner_charm(
         model: Model to deploy the charm.
         charm_file: Path of the charm file to deploy.
         app_name: Application name for the deployment.
-        path: Path representing the GitHub repo/org.
-        token: GitHub Personal Token for the application to use.
-        http_proxy: HTTP proxy for the application to use.
-        https_proxy: HTTPS proxy for the application to use.
-        no_proxy: No proxy configuration for the application.
+        github_config: Object providing GitHub settings with attributes `path` and `token`.
+        proxy_config: Object providing proxy settings with attributes `http_proxy`,
+            `https_proxy`, and `no_proxy`.
         reconcile_interval: Time between reconcile for the application.
         constraints: The custom machine constraints to use. See DEFAULT_RUNNER_CONSTRAINTS
             otherwise.
@@ -190,16 +189,16 @@ async def deploy_github_runner_charm(
     """
     await model.set_config(
         {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
+            "juju-http-proxy": proxy_config.http_proxy,
+            "juju-https-proxy": proxy_config.https_proxy,
+            "juju-no-proxy": proxy_config.no_proxy,
             "logging-config": "<root>=INFO;unit=INFO",
         }
     )
 
     default_config = {
-        PATH_CONFIG_NAME: path,
-        TOKEN_CONFIG_NAME: token,
+        PATH_CONFIG_NAME: github_config.path,
+        TOKEN_CONFIG_NAME: github_config.token,
         BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
