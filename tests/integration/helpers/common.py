@@ -164,6 +164,8 @@ async def deploy_github_runner_charm(
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
+    base: str = "ubuntu@22.04",
+    series: str = "jammy",
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -209,8 +211,8 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
-        base="ubuntu@22.04",
-        series="jammy",
+        base=base,
+        series=series,
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),
