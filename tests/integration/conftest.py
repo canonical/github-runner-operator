@@ -293,12 +293,6 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(deployment_context: DeploymentContext) -> str:
-    """Filesystem path to the selected charm artifact."""
-    return deployment_context.charm_path
-
-
-@pytest.fixture(scope="module")
 def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
     """Github configuration for tests.
 
@@ -605,7 +599,6 @@ relation_changed, self._image_relation_changed)
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
 async def app_openstack_runner_fixture(
     model: Model,
-    charm_file: str,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
@@ -621,7 +614,7 @@ async def app_openstack_runner_fixture(
     else:
         application = await deploy_github_runner_charm(
             model=model,
-            charm_file=charm_file,
+            charm_file=deployment_context.charm_path,
             app_name=app_name,
             path=github_config.path,
             token=github_config.token,
@@ -681,7 +674,6 @@ async def app_scheduled_events_fixture(
 @pytest_asyncio.fixture(scope="module")
 async def app_runner(
     model: Model,
-    charm_file: str,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
@@ -691,7 +683,7 @@ async def app_runner(
     # Use a different app_name so workflows can select runners from this deployment.
     application = await deploy_github_runner_charm(
         model=model,
-        charm_file=charm_file,
+        charm_file=deployment_context.charm_path,
         app_name=f"{app_name}-test",
         path=github_config.path,
         token=github_config.token,
@@ -708,7 +700,6 @@ async def app_runner(
 @pytest_asyncio.fixture(scope="module", name="app_no_wait")
 async def app_no_wait_fixture(
     model: Model,
-    charm_file: str,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
@@ -717,7 +708,7 @@ async def app_no_wait_fixture(
     """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
-        charm_file=charm_file,
+        charm_file=deployment_context.charm_path,
         app_name=app_name,
         path=github_config.path,
         token=github_config.token,
