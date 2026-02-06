@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-03
+
+- Introduce planner-driven pressure reconciler.
+
 ## 2026-02-02
 
 - Deprecated `repo-policy-compliance` service.
@@ -39,7 +43,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
-GitHub runner image builder side.
+  GitHub runner image builder side.
 
 ## 2025-12-05
 

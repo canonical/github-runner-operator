@@ -93,6 +93,8 @@ openstack_configuration:
       username: test_username
     network: test_network
     vm_prefix: test_unit
+planner_token: planner-testing-token
+planner_url: http://planner.example.com
 reconcile_interval: 10
 """
 
@@ -175,6 +177,8 @@ def app_config_fixture() -> ApplicationConfiguration:
                 region_name="test_region",
             ),
         ),
+        planner_token="planner-testing-token",
+        planner_url="http://planner.example.com",
         reconcile_interval=10,
     )
 
