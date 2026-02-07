@@ -1,0 +1,124 @@
+06:26:15 WARNING unexpected facade SSHServer received from the controller
+06:26:15 INFO Adding model github-pr-aeaa2-lxd:test-charm-metrics-failure-5uvx on cloud localhost
+06:26:15 WARNING unexpected facade SSHServer received from the controller
+06:26:15 WARNING unexpected facade SSHSession received from the controller
+06:26:15 WARNING unexpected facade SSHTunneler received from the controller
+06:26:15 WARNING unexpected facade SSHServer received from the controller
+06:26:15 INFO GitHub token rate limit: Rate(reset=2026-02-07 06:44:54+00:00, remaining=4960, limit=5000)
+06:26:17 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:26:19 INFO Deploying ch:amd64/noble/any-charm-133
+06:26:31 INFO Deploying local:jammy/github-runner-0
+06:26:31 INFO Waiting for model:
+  test-hryntloc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hryntloc/0 [allocating] waiting: waiting for machine
+06:27:01 INFO Waiting for model:
+  test-hryntloc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hryntloc/0 [allocating] waiting: waiting for machine
+06:27:32 INFO Waiting for model:
+  test-hryntloc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hryntloc/0 [allocating] waiting: waiting for machine
+06:28:02 INFO Waiting for model:
+  test-hryntloc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hryntloc/0 [allocating] waiting: waiting for machine
+06:28:33 INFO Waiting for model:
+  test-hryntloc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hryntloc/0 [allocating] waiting: waiting for machine
+06:29:03 INFO Waiting for model:
+  test-hryntloc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hryntloc/0 [executing] maintenance: installing charm software
+06:29:33 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:29:48 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-5uvx test-hryntloc base-virtual-machines=0
+06:29:48 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:30:05 INFO Current reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:30:05 INFO Waiting for reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:31:06 INFO Current reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:31:06 INFO Current reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e, expected reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:31:06 INFO Waiting for reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:32:07 INFO Current reconcile ID: 901331e4-4770-47e2-a193-a55122e40d10
+06:32:07 INFO Current reconcile ID: 901331e4-4770-47e2-a193-a55122e40d10, expected reconcile ID: 242eedf6-dbb6-4927-99e9-6fccf80b288e
+06:32:07 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-5uvx test-hryntloc path=canonical/github-runner-operator
+06:32:07 INFO cli: juju config --model github-pr-aeaa2-lxd:test-charm-metrics-failure-5uvx test-hryntloc base-virtual-machines=1
+06:32:07 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:32:38 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:32:40 INFO Current reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:32:40 INFO Waiting for reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:33:41 INFO Current reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:33:41 INFO Current reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1, expected reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:33:41 INFO Waiting for reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:34:42 INFO Current reconcile ID: b277f65e-078c-45cd-825e-b17d75408821
+06:34:42 INFO Current reconcile ID: b277f65e-078c-45cd-825e-b17d75408821, expected reconcile ID: 5af95356-72f6-46f9-8fd1-cf08e0897de1
+06:34:48 INFO Wait for condition not met, sleeping 30
+06:35:29 INFO [TEST SETUP] Run command pkill -9 run.sh on test-hryntloc-0-n-5b66956f60dc
+06:35:29 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.156', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:b9:74'}]])
+06:35:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hryntloc-0-n-5b66956f60dc.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.156 pkill -9 run.sh'
+06:35:31 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.156' (ED25519) to the list of known hosts.
+'
+06:35:33 INFO Runner test-hryntloc-0-n-5b66956f60dc status: online
+06:35:33 INFO Runner still marked as online, waiting for it to be marked offline
+06:36:34 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:37:04 INFO Waiting for model:
+  test-hryntloc/0 [idle] active: 
+06:37:07 INFO Current reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:37:07 INFO Waiting for reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:38:08 INFO Current reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:38:08 INFO Current reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8, expected reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:38:08 INFO Waiting for reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:39:09 INFO Current reconcile ID: b6aadbb6-1997-4ee3-8b63-0f0afdd2c3b0
+06:39:09 INFO Current reconcile ID: b6aadbb6-1997-4ee3-8b63-0f0afdd2c3b0, expected reconcile ID: 85130639-2b5e-4f53-b1f9-769e572921b8
+06:39:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770445883.1679914, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.617372751235962}
+{"timestamp": 1770445936.9454806, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.320700883865356}
+{"timestamp": 1770446062.9063084, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 5.817798376083374}
+{"timestamp": 1770446014.0, "event": "runner_installed", "flavor": "test-hryntloc", "duration": 79.0}
+{"timestamp": 1770446092.0, "event": "runner_start", "flavor": "test-hryntloc", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 78.0, "queue_duration": 2.0}
+{"timestamp": 1770446132.0, "event": "runner_stop", "flavor": "test-hryntloc", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1770446192.5413587, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.51934027671814}
+{"timestamp": 1770446201.9399157, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.740986585617065}
+{"timestamp": 1770446329.6713629, "event": "reconciliation", "flavor": "test-hryntloc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.66668701171875}
+06:39:10 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-5uvx  github-pr-aeaa2-lxd  localhost/localhost  3.6.14   unsupported  06:39:10Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-hryntloc           active      1  any-charm      latest/beta  133  no       
+test-hryntloc                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hryntloc/0*  active    idle   0        10.153.144.162         
+test-hryntloc/0*                         active    idle   1        10.153.144.117         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.153.144.162  juju-1016d0-0  ubuntu@24.04  github-runner  Running
+1        started  10.153.144.117  juju-1016d0-1  ubuntu@22.04  github-runner  Running
+
+06:39:11 INFO Juju error logs:
+
+machine-1: 06:28:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hryntloc-0: 06:29:08 ERROR unit.test-hryntloc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hryntloc-0: 06:29:10 ERROR unit.test-hryntloc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hryntloc-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:39:11 INFO Forgetting model main...
