@@ -1,0 +1,27 @@
+18:19:06 WARNING unexpected facade SSHServer received from the controller
+18:19:06 INFO Adding model github-pr-aeaa2-lxd:test-charm-no-runner-zyqd on cloud localhost
+18:19:06 WARNING unexpected facade SSHServer received from the controller
+18:19:06 WARNING unexpected facade SSHSession received from the controller
+18:19:06 WARNING unexpected facade SSHTunneler received from the controller
+18:19:06 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:07 INFO Deploying ch:amd64/noble/any-charm-133
+18:19:19 INFO Deploying local:jammy/github-runner-0
+18:19:19 INFO Waiting for model:
+  test-nf52l0sb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nf52l0sb/0 [allocating] waiting: waiting for machine
+18:19:49 INFO Waiting for model:
+  test-nf52l0sb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nf52l0sb/0 [allocating] waiting: agent initialising
+18:20:20 INFO Waiting for model:
+  test-nf52l0sb/0 [allocating] waiting: waiting for machine
+18:20:50 INFO Waiting for model:
+  test-nf52l0sb/0 [allocating] waiting: waiting for machine
+18:21:21 INFO Waiting for model:
+  test-nf52l0sb/0 [executing] maintenance: installing charm software
+18:21:51 INFO Waiting for model:
+  test-nf52l0sb/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-nf52l0sb/0 [idle] active: 
+18:22:21 INFO Waiting for model:
+  test-nf52l0sb/0 [idle] active: 
+18:22:23 INFO Waiting for model:
+  test-nf52l0sb/0 [idle] active:
