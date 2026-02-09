@@ -252,7 +252,7 @@ def _delete_flavor(endpoint: str, token: str, name: str) -> None:
         token: The authentication token for the planner service.
         name: The flavor name.
     """
-    url = endpoint + f"/api/v1/auth/token/{name}"
+    url = endpoint + f"/api/v1/flavor/{name}"
     headers = {"Authorization": f"Bearer {token}"}
     try:
         requests.delete(url, headers=headers, timeout=10)
@@ -274,7 +274,7 @@ def _ensure_flavor(
         minimum_pressure: The minimum pressure for the flavor.
     """
     _delete_flavor(endpoint, token, name)
-    url = endpoint + f"/api/v1/auth/token/{name}"
+    url = endpoint + f"/api/v1/flavor/{name}"
     headers = {"Authorization": f"Bearer {token}"}
     payload = {
         "name": name,

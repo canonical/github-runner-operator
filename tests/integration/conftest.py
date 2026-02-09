@@ -878,7 +878,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 flavor = None
 
                 def do_POST(self):
-                    if self.path.startswith("/api/v1/auth/token/"):
+                    if self.path.startswith("/api/v1/flavor/"):
                         content_length = int(self.headers["Content-Length"])
                         MockPlannerHandler.flavor = self.rfile.read(content_length)
                         self.send_response(200)
@@ -888,7 +888,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.end_headers()
 
                 def do_DELETE(self):
-                    if self.path.startswith("/api/v1/auth/token/"):
+                    if self.path.startswith("/api/v1/flavor/"):
                         MockPlannerHandler.flavor = None
                         self.send_response(200)
                         self.end_headers()
