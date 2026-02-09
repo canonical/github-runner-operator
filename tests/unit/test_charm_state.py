@@ -31,6 +31,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
@@ -45,6 +46,7 @@ from charm_state import (
     GithubConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
+    PlannerConfig,
     ProxyConfig,
     SSHDebugConnection,
 )
@@ -1100,3 +1102,63 @@ def test_invalid_aproxy_config_in_charm_state(
 
     with pytest.raises(CharmConfigInvalidError):
         CharmState.from_charm(mock_charm, mock_database)
+
+
+def test_planner_config_from_charm_no_relation():
+    """
+    arrange: Charm with empty planner relations list.
+    act: Call PlannerConfig.from_charm.
+    assert: Returns None.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = []
+
+    result = PlannerConfig.from_charm(mock_charm)
+
+    assert result is None
+
+
+def test_planner_config_from_charm_with_valid_relation():
+    """
+    arrange: Charm with a planner relation containing endpoint and token secret ID.
+    act: Call PlannerConfig.from_charm.
+    assert: Returns a PlannerConfig with the correct values.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.app.name = "my-runner"
+
+    mock_unit = MagicMock()
+    mock_relation = MagicMock()
+    mock_relation.units = [mock_unit]
+    mock_relation.data = {
+        mock_unit: {
+            "endpoint": "https://planner.example.com",
+            "token": "secret:test-secret-id",
+        }
+    }
+    mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = [mock_relation]
+
+    mock_secret = MagicMock()
+    mock_secret.get_content.return_value = {"token": "my-planner-token"}
+    mock_charm.model.get_secret.return_value = mock_secret
+
+    result = PlannerConfig.from_charm(mock_charm)
+
+    assert result is not None
+    assert result.token == "my-planner-token"
+    assert str(result.endpoint) == "https://planner.example.com"
+    assert result.flavor == "my-runner"
+
+
+def test_planner_config_from_relation_data_missing_token():
+    """
+    arrange: Relation data without a 'token' key.
+    act: Call PlannerConfig.from_relation_data.
+    assert: Returns None.
+    """
+    mock_charm = MagicMock()
+    relation_data = {"endpoint": "https://planner.example.com"}
+
+    result = PlannerConfig.from_relation_data(relation_data, mock_charm)
+
+    assert result is None
