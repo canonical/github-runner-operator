@@ -255,7 +255,7 @@ def _delete_flavor(endpoint: str, token: str, name: str) -> None:
     Raises:
         RunnerManagerApplicationStartError: If the delete request fails.
     """
-    url = endpoint + f"/api/v1/flavor/{name}"
+    url = endpoint + f"/api/v1/flavors/{name}"
     headers = {"Authorization": f"Bearer {token}"}
     try:
         response = requests.delete(url, headers=headers, timeout=10)
@@ -280,7 +280,7 @@ def _ensure_flavor(
     Raises:
         RunnerManagerApplicationStartError: If the flavor check or creation fails.
     """
-    url = endpoint + f"/api/v1/flavor/{name}"
+    url = endpoint + f"/api/v1/flavors/{name}"
     headers = {"Authorization": f"Bearer {token}"}
     desired_priority = 50
     try:

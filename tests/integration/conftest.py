@@ -878,7 +878,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 flavor = None
 
                 def do_POST(self):
-                    if self.path.startswith("/api/v1/flavor/"):
+                    if self.path.startswith("/api/v1/flavors/"):
                         content_length = int(self.headers["Content-Length"])
                         MockPlannerHandler.flavor = self.rfile.read(content_length)
                         self.send_response(200)
@@ -888,7 +888,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.end_headers()
 
                 def do_DELETE(self):
-                    if self.path.startswith("/api/v1/flavor/"):
+                    if self.path.startswith("/api/v1/flavors/"):
                         MockPlannerHandler.flavor = None
                         self.send_response(200)
                         self.end_headers()
@@ -897,9 +897,18 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     self.end_headers()
 
                 def do_GET(self):
-                    self.send_response(200)
+                    if self.path.startswith("/api/v1/flavors/"):
+                        if MockPlannerHandler.flavor is None:
+                            self.send_response(404)
+                            self.end_headers()
+                            return
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self.end_headers()
+                        self.wfile.write(MockPlannerHandler.flavor)
+                        return
+                    self.send_response(404)
                     self.end_headers()
-                    self.wfile.write(MockPlannerHandler.flavor)
 
             if __name__ == "__main__":
                 run_server(sys.argv[1])

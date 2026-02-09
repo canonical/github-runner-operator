@@ -24,7 +24,7 @@ _PLANNER_TOKEN = "test-token"
 _FLAVOR_NAME = "test-flavor"
 _FLAVOR_LABELS = ["label1", "label2"]
 _MIN_PRESSURE = 5
-_FLAVOR_URL = f"{_PLANNER_ENDPOINT}/api/v1/flavor/{_FLAVOR_NAME}"
+_FLAVOR_URL = f"{_PLANNER_ENDPOINT}/api/v1/flavors/{_FLAVOR_NAME}"
 _AUTH_HEADERS = {"Authorization": f"Bearer {_PLANNER_TOKEN}"}
 _FLAVOR_PAYLOAD = {
     "name": _FLAVOR_NAME,
