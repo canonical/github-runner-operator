@@ -5,6 +5,8 @@ type: charm
 
 parts:
   charm:
+    charm-binary-python-packages:
+      - ghapi==1.0.10
     charm-python-packages:
       - setuptools>=75.8.0 # for jinja2
     build-packages:
