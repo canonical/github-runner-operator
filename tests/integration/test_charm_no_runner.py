@@ -112,7 +112,8 @@ pytestmark = pytest.mark.openstack
 #     # 1.
 #     await run_in_unit(
 #         unit,
-#         f"sudo systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{unit.name.replace('/', '-')}.service",
+#         f"sudo systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}"
+#         f"@{unit.name.replace('/', '-')}.service",
 #         timeout=60,
 #         assert_on_failure=True,
 #         assert_msg="GitHub runner manager service not healthy",
@@ -173,12 +174,10 @@ async def test_planner_integration(
     assert data["labels"] == [app_no_runner.name]
     assert data["minimum_pressure"] == 0
 
-    await mock_planner_app.remove_relation("provide-github-runner-planner-v0", f"{app_no_runner.name}:planner")
+    await mock_planner_app.remove_relation(
+        "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"
+    )
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
     )
     response = requests.get(f"http://{address}:8080", timeout=10)
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print(response.headers)
-    print(response.text)
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")

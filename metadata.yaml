@@ -35,8 +35,3 @@ requires:
   planner:
     interface: github_runner_planner_v0
 
-storage:
-  runner:
-    description: Storage for the root disk of LXD instances hosting the runner application.
-    type: filesystem
-    location: /storage/juju
