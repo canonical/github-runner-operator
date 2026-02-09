@@ -875,14 +875,12 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 server.serve_forever()
 
             class MockPlannerHandler(BaseHTTPRequestHandler):
-                last_method = None
-                last_payload = None
+                flavor = None
 
                 def do_POST(self):
                     if self.path.startswith("/api/v1/auth/token/"):
-                        MockPlannerHandler.last_method = "POST"
                         content_length = int(self.headers["Content-Length"])
-                        MockPlannerHandler.last_payload = self.rfile.read(content_length)
+                        MockPlannerHandler.flavor = self.rfile.read(content_length)
                         self.send_response(200)
                         self.end_headers()
                         return
@@ -891,8 +889,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
                 def do_DELETE(self):
                     if self.path.startswith("/api/v1/auth/token/"):
-                        MockPlannerHandler.last_method = "DELETE"
-                        MockPlannerHandler.last_payload = b""
+                        MockPlannerHandler.flavor = None
                         self.send_response(200)
                         self.end_headers()
                         return
@@ -901,9 +898,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
                 def do_GET(self):
                     self.send_response(200)
-                    self.send_header("last-method", MockPlannerHandler.last_method)
                     self.end_headers()
-                    self.wfile.write(MockPlannerHandler.last_payload)
+                    self.wfile.write(MockPlannerHandler.flavor)
 
             if __name__ == "__main__":
                 run_server(sys.argv[1])

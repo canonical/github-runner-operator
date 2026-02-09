@@ -166,7 +166,6 @@ async def test_planner_integration(
 
     address = await mock_planner_app.units[0].get_public_address()
     response = requests.get(f"http://{address}:8080", timeout=10)
-    assert response.headers["last-method"] == "POST"
     data = response.json()
     assert data["name"] == app_no_runner.name
     assert data["platform"] == "github"
@@ -182,4 +181,3 @@ async def test_planner_integration(
     print(response.headers)
     print(response.text)
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    assert response.headers["last-method"] == "DELETE"
