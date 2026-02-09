@@ -349,6 +349,9 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
     http_port = ensure_http_port_for_unit(unit_name)
+    # NOTE: KillMode=process preserves reactive runner processes across manager restarts.
+    # ExecStopPost resolves this unit's cgroup at stop time and terminates only the
+    # remaining PIDs in that cgroup, while skipping its own shell process.
     service_file_content = textwrap.dedent(f"""\
         [Unit]
         Description=Runs the github-runner-manager service
@@ -361,6 +364,10 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {http_port} \
 --python-path {str(python_path)} --log-level {log_level}
+        ExecStopPost=/bin/bash -c 'cg=$(systemctl show -p ControlGroup --value %n \
+2>/dev/null || true); for pid in $(cat "/sys/fs/cgroup${cg}/cgroup.procs" \
+2>/dev/null || true); do [ "$pid" = "$$" ] && continue; [ "$pid" = "$PPID" ] && \
+continue; kill -TERM "$pid" 2>/dev/null || true; done'
         Restart=on-failure
         RestartSec=30
         RestartSteps=5
