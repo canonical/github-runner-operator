@@ -178,4 +178,8 @@ async def test_planner_integration(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
     )
     response = requests.get(f"http://{address}:8080", timeout=10)
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print(response.headers)
+    print(response.text)
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     assert response.headers["last-method"] == "DELETE"

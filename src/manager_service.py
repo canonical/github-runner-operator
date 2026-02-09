@@ -209,7 +209,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
 
     if state.charm_config.planner is not None:
         planner_config = state.charm_config.planner
-        _update_flavor(
+        _ensure_flavor(
             planner_config.endpoint,
             planner_config.token,
             planner_config.flavor,
@@ -262,10 +262,10 @@ def _delete_flavor(endpoint: str, token: str, name: str) -> None:
         raise RunnerManagerApplicationStartError("Failed to delete flavor from planner") from err
 
 
-def _update_flavor(
+def _ensure_flavor(
     endpoint: str, token: str, name: str, labels: list[str], minimum_pressure: int
 ) -> None:
-    """Update flavor to planner service.
+    """Ensure flavor exists in planner service.
 
     Args:
         endpoint: The planner service endpoint.
