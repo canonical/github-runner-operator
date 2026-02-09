@@ -7,7 +7,7 @@ parts:
   charm:
     charm-python-packages:
       # Pinned due to upstream package issue.
-      - setuptools==80.10.2 # for jinja2
+      - setuptools==78.1.1 # for jinja2
     build-packages:
       - git # for installing git source of pylxd
       - libffi-dev # for cffi
