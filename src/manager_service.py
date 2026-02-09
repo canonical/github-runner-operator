@@ -283,6 +283,36 @@ def _stop(unit_name: str) -> None:
             systemd.service_stop(service_name)
     except SystemdError as err:
         raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
+    _cleanup_leftover_manager_processes(unit_name)
+
+
+def _cleanup_leftover_manager_processes(unit_name: str) -> None:
+    """Kill leftover manager processes for a specific unit.
+
+    The match is scoped to the per-unit config file path passed to
+    ``github-runner-manager --config-file ...`` so other unit instances on the
+    same machine are not targeted.
+
+    Args:
+        unit_name: The Juju unit name.
+    """
+    config_file = _unit_service_dir(unit_name) / "config.yaml"
+    output, code = execute_command(
+        ["/usr/bin/pkill", "-f", f"--config-file {config_file}"], check_exit=False
+    )
+    if code == 1:
+        logger.info("No leftover github-runner-manager process to clean up for unit %s.", unit_name)
+    elif code == 0:
+        logger.warning("Cleaned up leftover github-runner-manager processes for unit %s.", unit_name)
+    else:
+        logger.warning(
+            "Unexpected return code %s for unit %s cleanup: %s", code, unit_name, output
+        )
+
+
+def _unit_service_dir(unit_name: str) -> Path:
+    """Return the per-unit manager state directory."""
+    return GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
 
 
 def _get_log_file_path(unit_name: str) -> Path:
@@ -327,7 +357,7 @@ def _setup_config_file(config: ApplicationConfiguration, unit_name: str) -> Path
     # representations. The values needs to be string representations to be converted to YAML file.
     # No easy way to directly convert to YAML file, so json module is used.
     config_dict = json.loads(config.json())
-    unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
+    unit_dir = _unit_service_dir(unit_name)
     unit_dir.mkdir(parents=True, exist_ok=True)
     path = unit_dir / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
@@ -350,8 +380,8 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
     http_port = ensure_http_port_for_unit(unit_name)
     # NOTE: KillMode=process preserves reactive runner processes across manager restarts.
-    # ExecStopPost resolves this unit's cgroup at stop time and terminates only the
-    # remaining PIDs in that cgroup, while skipping its own shell process.
+    # Leftover manager-process cleanup is handled in charm code (`_stop`) with a
+    # per-unit process match based on `--config-file`, to avoid cross-unit impact.
     service_file_content = textwrap.dedent(f"""\
         [Unit]
         Description=Runs the github-runner-manager service
@@ -364,10 +394,6 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {http_port} \
 --python-path {str(python_path)} --log-level {log_level}
-        ExecStopPost=/bin/bash -c 'cg=$(systemctl show -p ControlGroup --value %n \
-2>/dev/null || true); for pid in $(cat "/sys/fs/cgroup${cg}/cgroup.procs" \
-2>/dev/null || true); do [ "$pid" = "$$" ] && continue; [ "$pid" = "$PPID" ] && \
-continue; kill -TERM "$pid" 2>/dev/null || true; done'
         Restart=on-failure
         RestartSec=30
         RestartSteps=5

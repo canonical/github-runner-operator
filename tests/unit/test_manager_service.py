@@ -103,6 +103,7 @@ def test_setup_started(
         f"ExecStart=github-runner-manager --config-file {config_path} --host 127.0.0.1 --port 55555"
         in service_content
     )
+    assert "ExecStopPost=" not in service_content
     assert "Restart=on-failure" in service_content
 
     config_content = (patched_paths.home_path / unit_name / "config.yaml").read_text()
@@ -167,7 +168,9 @@ def test_install_package_failure(mock_execute_command: MagicMock):
     assert manager_service._INSTALL_ERROR_MESSAGE in str(err.value)
 
 
-def test_stop_with_running_service(mock_systemd: MagicMock):
+def test_stop_with_running_service(
+    mock_systemd: MagicMock, mock_execute_command: MagicMock, patched_paths: PatchedPaths
+):
     """
     arrange: The service is running.
     act: Run stop.
@@ -177,9 +180,15 @@ def test_stop_with_running_service(mock_systemd: MagicMock):
     manager_service.stop(unit_name="test-unit/0")
     mock_systemd.service_running.assert_called_once()
     mock_systemd.service_stop.assert_called_once()
+    expected_cfg = patched_paths.service_dir / "test-unit-0" / "config.yaml"
+    mock_execute_command.assert_called_once_with(
+        ["/usr/bin/pkill", "-f", f"--config-file {expected_cfg}"], check_exit=False
+    )
 
 
-def test_stop_with_stopped_service(mock_systemd: MagicMock):
+def test_stop_with_stopped_service(
+    mock_systemd: MagicMock, mock_execute_command: MagicMock, patched_paths: PatchedPaths
+):
     """
     arrange: The service is stopped.
     act: Run stop.
@@ -189,6 +198,10 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     manager_service.stop(unit_name="test-unit/0")
     mock_systemd.service_running.assert_called_once()
     mock_systemd.service_stop.assert_not_called()
+    expected_cfg = patched_paths.service_dir / "test-unit-0" / "config.yaml"
+    mock_execute_command.assert_called_once_with(
+        ["/usr/bin/pkill", "-f", f"--config-file {expected_cfg}"], check_exit=False
+    )
 
 
 # 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
