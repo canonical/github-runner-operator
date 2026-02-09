@@ -6,7 +6,9 @@ type: charm
 parts:
   charm:
     charm-python-packages:
-      - setuptools==80.10.2 # for jinja2
+      - setuptools>=75.8.0 # for jinja2
+      - wheel>=0.45
+      - pip
     build-packages:
       - git # for installing git source of pylxd
       - libffi-dev # for cffi
