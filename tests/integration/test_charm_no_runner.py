@@ -165,6 +165,7 @@ async def test_planner_integration(
     )
 
     address = await mock_planner_app.units[0].get_public_address()
+    # Debugging method of the mock planner. It should return the last flavor information.
     response = requests.get(f"http://{address}:8080", timeout=10)
     data = response.json()
     assert data["name"] == app_no_runner.name
