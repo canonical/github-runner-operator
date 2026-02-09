@@ -241,8 +241,7 @@ def cleanup_flavor(planner_config: PlannerConfig) -> None:
     Args:
         planner_config: The planner configuration.
     """
-    if planner_config is not None:
-        _delete_flavor(planner_config.endpoint, planner_config.token, planner_config.flavor)
+    _delete_flavor(planner_config.endpoint, planner_config.token, planner_config.flavor)
 
 
 def _delete_flavor(endpoint: str, token: str, name: str) -> None:
