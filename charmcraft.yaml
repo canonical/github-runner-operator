@@ -14,6 +14,11 @@ parts:
       - pkg-config # for cryptography
     build-snaps:
       - rustup # for cryptography
+    # ghapi's setup.py uses pkg_resources, which was removed in setuptools 82+.
+    # Building from source fails, so install the wheel instead (pure Python, no downside).
+    # See: https://github.com/pypa/setuptools/issues/5174
+    charm-binary-python-packages:
+      - ghapi==1.0.10
     override-build: |
       rustup default stable
       craftctl default
