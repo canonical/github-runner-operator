@@ -191,8 +191,15 @@ def _parse_base_token(artifact_name: str) -> str:
 def resolve_series(base_token: str) -> tuple[str, str]:
     """Resolve Juju base and Ubuntu series for a given base token.
 
-    Raises a ValueError if the base token is unknown, prompting maintainers to
-    update BASE_SERIES_MAP when new Ubuntu releases are supported.
+    Args:
+        base_token: Ubuntu base identifier (e.g., '22.04', '24.04').
+
+    Returns:
+        A tuple of (charm base, series), for example ('ubuntu@22.04', 'jammy').
+
+    Raises:
+        ValueError: if the base token is unknown. Update BASE_SERIES_MAP
+            when new Ubuntu releases are supported.
     """
     mapped = BASE_SERIES_MAP.get(base_token)
     if not mapped:
@@ -567,8 +574,7 @@ async def image_builder_fixture(
     series = dep_ctx.series
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -581,8 +587,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = '{series}, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",

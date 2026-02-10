@@ -183,6 +183,8 @@ async def deploy_github_runner_charm(
         config: Additional custom config to use.
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
+        base: Charm base to deploy on (e.g., ubuntu@22.04).
+        series: Ubuntu series corresponding to the base (e.g., jammy).
 
     Returns:
         The charm application that was deployed.
