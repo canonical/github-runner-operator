@@ -154,25 +154,25 @@ async def test_planner_integration(
         1. Integrate the application with the mock planner.
         2. Remove the integration.
     assert:
-        1. The mock planner HTTP server receives a flavor registration.
-        2. The mock planner HTTP server receives a flavor deletion.
+        1. The charm writes its flavor name to the planner relation app data bag,
+           and the mock planner observes it.
+        2. The charm returns to active status after the relation is removed.
     """
     await model.grant_secret(planner_token_secret_name, app_no_runner.name)
     await model.grant_secret(planner_token_secret_name, mock_planner_app.name)
 
     await model.relate(f"{app_no_runner.name}:planner", mock_planner_app.name)
     await model.wait_for_idle(
-        apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+        apps=[app_no_runner.name, mock_planner_app.name],
+        status=ActiveStatus.name,
+        idle_period=30,
+        timeout=10 * 60,
     )
 
     address = await mock_planner_app.units[0].get_public_address()
-    # Debugging method of the mock planner. It should return the last flavor information.
     response = requests.get(f"http://{address}:8080", timeout=10)
     data = response.json()
-    assert data["name"] == app_no_runner.name
-    assert data["platform"] == "github"
-    assert data["labels"] == [app_no_runner.name]
-    assert data["minimum_pressure"] == 0
+    assert data["flavor"] == app_no_runner.name
 
     await mock_planner_app.remove_relation(
         "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"
@@ -180,4 +180,3 @@ async def test_planner_integration(
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
     )
-    response = requests.get(f"http://{address}:8080", timeout=10)

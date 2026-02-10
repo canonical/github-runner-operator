@@ -57,7 +57,6 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
-    PlannerConfig,
     build_proxy_config_from_charm,
 )
 from errors import (
@@ -521,14 +520,16 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Setup planner")
         state = self._setup_state()
         self._setup_service(state)
+        for relation in self.model.relations[PLANNER_INTEGRATION_NAME]:
+            relation.data[self.app]["flavor"] = self.app.name
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors
-    def _on_planner_relation_broken(self, event: ops.RelationBrokenEvent) -> None:
+    def _on_planner_relation_broken(self, _: ops.RelationBrokenEvent) -> None:
         """Handle planner relation broken event."""
         self.unit.status = MaintenanceStatus("Cleanup planner data")
-        planner_config = PlannerConfig.from_relation_data(event.relation.data[self.unit], self)
-        manager_service.cleanup_flavor(planner_config)
+        state = self._setup_state()
+        self._setup_service(state)
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors

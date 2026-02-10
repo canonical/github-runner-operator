@@ -867,57 +867,40 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
     any_charm_src_overwrite = {
         "planner.py": textwrap.dedent("""\
+            import json
             import sys
             from http.server import BaseHTTPRequestHandler, HTTPServer
+            from pathlib import Path
+
+            FLAVOR_FILE = Path("/tmp/planner_flavor.json")
 
             def run_server(address):
                 server = HTTPServer(server_address=(address, 8080), RequestHandlerClass=MockPlannerHandler)
                 server.serve_forever()
 
             class MockPlannerHandler(BaseHTTPRequestHandler):
-                flavor = None
-
-                def do_POST(self):
-                    if self.path.startswith("/api/v1/flavors/"):
-                        content_length = int(self.headers["Content-Length"])
-                        MockPlannerHandler.flavor = self.rfile.read(content_length)
-                        self.send_response(200)
-                        self.end_headers()
-                        return
-                    self.send_response(404)
-                    self.end_headers()
-
-                def do_DELETE(self):
-                    if self.path.startswith("/api/v1/flavors/"):
-                        MockPlannerHandler.flavor = None
-                        self.send_response(200)
-                        self.end_headers()
-                        return
-                    self.send_response(404)
-                    self.end_headers()
-
                 def do_GET(self):
-                    if self.path.startswith("/api/v1/flavors/"):
-                        if MockPlannerHandler.flavor is None:
-                            self.send_response(404)
-                            self.end_headers()
-                            return
+                    if FLAVOR_FILE.exists():
+                        data = FLAVOR_FILE.read_text(encoding="utf-8")
                         self.send_response(200)
                         self.send_header("Content-Type", "application/json")
                         self.end_headers()
-                        self.wfile.write(MockPlannerHandler.flavor)
-                        return
-                    self.send_response(404)
-                    self.end_headers()
+                        self.wfile.write(data.encode())
+                    else:
+                        self.send_response(404)
+                        self.end_headers()
 
             if __name__ == "__main__":
                 run_server(sys.argv[1])
             """),
         "any_charm.py": textwrap.dedent(f"""\
+            import json
             import subprocess
             import os
             from pathlib import Path
             from any_charm_base import AnyCharmBase
+
+            FLAVOR_FILE = Path("/tmp/planner_flavor.json")
 
             class AnyCharm(AnyCharmBase):
                 def __init__(self, *args, **kwargs):
@@ -934,7 +917,6 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                         except ProcessLookupError:
                             pass
                         pid_file.unlink()
-                    # The subprocess is spawned in detached mode therefore it keeps running after this script ends.
                     log_file = open("planner.log", "a")
                     proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
                     pid_file.write_text(str(proc_http.pid), encoding="utf8")
@@ -942,6 +924,9 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
+                    flavor = event.relation.data[event.app].get("flavor")
+                    if flavor:
+                        FLAVOR_FILE.write_text(json.dumps({{"flavor": flavor}}), encoding="utf-8")
             """),
     }
 

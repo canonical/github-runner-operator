@@ -5,11 +5,9 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-import requests as requests_lib
-
 import manager_service
 from charm_state import CharmState
 from errors import (
@@ -18,29 +16,6 @@ from errors import (
     SubprocessError,
 )
 from manager_service import SystemdError
-
-_PLANNER_ENDPOINT = "http://planner.example.com"
-_PLANNER_TOKEN = "test-token"
-_FLAVOR_NAME = "test-flavor"
-_FLAVOR_LABELS = ["label1", "label2"]
-_MIN_PRESSURE = 5
-_FLAVOR_URL = f"{_PLANNER_ENDPOINT}/api/v1/flavors/{_FLAVOR_NAME}"
-_AUTH_HEADERS = {"Authorization": f"Bearer {_PLANNER_TOKEN}"}
-_FLAVOR_PAYLOAD = {
-    "name": _FLAVOR_NAME,
-    "platform": "github",
-    "labels": _FLAVOR_LABELS,
-    "priority": 50,
-    "minimum_pressure": _MIN_PRESSURE,
-}
-_FLAVOR_RESPONSE = {
-    "name": _FLAVOR_NAME,
-    "platform": "github",
-    "labels": _FLAVOR_LABELS,
-    "priority": 50,
-    "is_disabled": False,
-    "minimum_pressure": _MIN_PRESSURE,
-}
 
 
 @dataclass(frozen=True)
@@ -313,120 +288,3 @@ def test_select_http_port_skips_persisted_ports(
     assert selected == base + expected_offset
     this_unit_dir = patched_paths.service_dir / "app-0"
     assert int((this_unit_dir / "http_port").read_text(encoding="utf-8").strip()) == selected
-
-
-@patch("manager_service.requests")
-def test_ensure_flavor_created_when_not_found(mock_requests):
-    """
-    arrange: GET returns 404 (flavor does not exist).
-    act: Call _ensure_flavor.
-    assert: POST is called with the correct payload.
-    """
-    mock_get_response = MagicMock()
-    mock_get_response.status_code = 404
-    mock_requests.get.return_value = mock_get_response
-    mock_requests.RequestException = requests_lib.RequestException
-
-    mock_post_response = MagicMock()
-    mock_post_response.raise_for_status = MagicMock()
-    mock_requests.post.return_value = mock_post_response
-
-    manager_service._ensure_flavor(
-        _PLANNER_ENDPOINT, _PLANNER_TOKEN, _FLAVOR_NAME, _FLAVOR_LABELS, _MIN_PRESSURE
-    )
-
-    mock_requests.get.assert_called_once_with(_FLAVOR_URL, headers=_AUTH_HEADERS, timeout=10)
-    mock_requests.post.assert_called_once_with(
-        _FLAVOR_URL, headers=_AUTH_HEADERS, json=_FLAVOR_PAYLOAD, timeout=10
-    )
-
-
-@patch("manager_service.requests")
-def test_ensure_flavor_exists_skips_creation(mock_requests):
-    """
-    arrange: GET returns 200 (flavor already exists).
-    act: Call _ensure_flavor.
-    assert: POST is not called.
-    """
-    mock_get_response = MagicMock()
-    mock_get_response.status_code = 200
-    mock_get_response.json.return_value = _FLAVOR_RESPONSE
-    mock_requests.get.return_value = mock_get_response
-    mock_requests.RequestException = requests_lib.RequestException
-
-    manager_service._ensure_flavor(
-        _PLANNER_ENDPOINT, _PLANNER_TOKEN, _FLAVOR_NAME, _FLAVOR_LABELS, _MIN_PRESSURE
-    )
-
-    mock_requests.get.assert_called_once()
-    mock_requests.delete.assert_not_called()
-    mock_requests.post.assert_not_called()
-
-
-@patch("manager_service.requests")
-def test_ensure_flavor_mismatch_recreates(mock_requests):
-    """
-    arrange: GET returns 200 but flavor does not match expected config.
-    act: Call _ensure_flavor.
-    assert: DELETE then POST are called to recreate the flavor.
-    """
-    mock_get_response = MagicMock()
-    mock_get_response.status_code = 200
-    mock_get_response.json.return_value = {
-        **_FLAVOR_RESPONSE,
-        "minimum_pressure": _MIN_PRESSURE + 1,
-    }
-    mock_requests.get.return_value = mock_get_response
-    mock_requests.RequestException = requests_lib.RequestException
-
-    mock_delete_response = MagicMock()
-    mock_delete_response.raise_for_status = MagicMock()
-    mock_requests.delete.return_value = mock_delete_response
-
-    mock_post_response = MagicMock()
-    mock_post_response.raise_for_status = MagicMock()
-    mock_requests.post.return_value = mock_post_response
-
-    manager_service._ensure_flavor(
-        _PLANNER_ENDPOINT, _PLANNER_TOKEN, _FLAVOR_NAME, _FLAVOR_LABELS, _MIN_PRESSURE
-    )
-
-    mock_requests.delete.assert_called_once_with(_FLAVOR_URL, headers=_AUTH_HEADERS, timeout=10)
-    mock_requests.post.assert_called_once_with(
-        _FLAVOR_URL, headers=_AUTH_HEADERS, json=_FLAVOR_PAYLOAD, timeout=10
-    )
-
-
-@patch("manager_service.requests")
-def test_ensure_flavor_get_network_error_raises(mock_requests):
-    """
-    arrange: GET raises a RequestException.
-    act: Call _ensure_flavor.
-    assert: RunnerManagerApplicationStartError is raised.
-    """
-    mock_requests.get.side_effect = requests_lib.RequestException("connection error")
-    mock_requests.RequestException = requests_lib.RequestException
-
-    with pytest.raises(RunnerManagerApplicationStartError, match="check flavor"):
-        manager_service._ensure_flavor(
-            _PLANNER_ENDPOINT, _PLANNER_TOKEN, _FLAVOR_NAME, _FLAVOR_LABELS, _MIN_PRESSURE
-        )
-
-
-@patch("manager_service.requests")
-def test_ensure_flavor_post_network_error_raises(mock_requests):
-    """
-    arrange: GET returns 404, POST raises a RequestException.
-    act: Call _ensure_flavor.
-    assert: RunnerManagerApplicationStartError is raised.
-    """
-    mock_get_response = MagicMock()
-    mock_get_response.status_code = 404
-    mock_requests.get.return_value = mock_get_response
-    mock_requests.post.side_effect = requests_lib.RequestException("connection error")
-    mock_requests.RequestException = requests_lib.RequestException
-
-    with pytest.raises(RunnerManagerApplicationStartError, match="add flavor"):
-        manager_service._ensure_flavor(
-            _PLANNER_ENDPOINT, _PLANNER_TOKEN, _FLAVOR_NAME, _FLAVOR_LABELS, _MIN_PRESSURE
-        )

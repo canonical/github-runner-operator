@@ -34,6 +34,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     OpenStackCloudsYAML,
@@ -703,3 +704,25 @@ def test_database_integration_events_setup_service(
     else:
         getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
     setup_service_mock.assert_called_once()
+
+
+def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Set up charm with mocked _setup_state and _setup_service.
+    act: Fire planner relation_changed event.
+    assert: The app data bag contains flavor equal to the app name.
+    """
+    harness = Harness(GithubRunnerCharm)
+    harness.set_leader(True)
+    relation_id = harness.add_relation(PLANNER_INTEGRATION_NAME, "planner-app")
+    harness.add_relation_unit(relation_id, "planner-app/0")
+    harness.begin()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._setup_state = MagicMock()
+    harness.charm._setup_service = MagicMock()
+
+    harness.update_relation_data(relation_id, "planner-app/0", {"endpoint": "http://example.com"})
+
+    assert harness.get_relation_data(relation_id, harness.charm.app) == {
+        "flavor": harness.charm.app.name,
+    }
