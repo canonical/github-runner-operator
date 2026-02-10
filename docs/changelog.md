@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-02-10
 
-- Fixed stuck `list_runners` call caused by `ghapi`'s `pages()` spawning a multiprocessing Manager with no timeout. Replaced with serial `paged()` iterator.
+- Fixed charm hook errors caused by `ghapi`'s `pages()` leaving a stuck multiprocessing process that held the HTTP port.
 
 ## 2026-02-02
 
