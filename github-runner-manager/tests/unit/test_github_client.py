@@ -20,7 +20,6 @@ from fastcore.net import (  # pylint: disable=no-name-in-module
 )
 from requests import HTTPError as RequestsHTTPError
 
-import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
