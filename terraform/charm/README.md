@@ -94,7 +94,7 @@ No modules.
 | <a name="input_channel"></a> [channel](#input_channel)             | The channel to use when deploying a charm.                                                                           | `string`      | `"latest/stable"` |    no    |
 | <a name="input_config"></a> [config](#input_config)                | Application config. Details about available options can be found at https://charmhub.io/github-runner/configurations | `map(string)` | `{}`              |    no    |
 | <a name="input_constraints"></a> [constraints](#input_constraints) | Juju constraints to apply for this application.                                                                      | `string`      | `""`              |    no    |
-| <a name="input_model"></a> [model](#input_model)                   | Reference to a `juju_model`.                                                                                         | `string`      | `""`              |    no    |
+| <a name="input_model_uuid"></a> [model_uuid](#input_model_uuid)    | UUID of the Juju model.                                                                                              | `string`      | `""`              |    no    |
 | <a name="input_revision"></a> [revision](#input_revision)          | Revision number of the charm                                                                                         | `number`      | `null`            |    no    |
 | <a name="input_units"></a> [units](#input_units)                   | Number of units to deploy                                                                                            | `number`      | `1`               |    no    |
 
