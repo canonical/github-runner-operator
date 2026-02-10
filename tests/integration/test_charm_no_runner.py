@@ -173,6 +173,9 @@ async def test_planner_integration(
     response = requests.get(f"http://{address}:8080", timeout=10)
     data = response.json()
     assert data["flavor"] == app_no_runner.name
+    assert data["flavor-platform"] == "github"
+    assert data["flavor-priority"] == "50"
+    assert data["flavor-minimum-pressure"] == "0"
 
     await mock_planner_app.remove_relation(
         "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"

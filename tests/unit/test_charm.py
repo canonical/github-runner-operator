@@ -28,6 +28,10 @@ from charm import (
 )
 from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
+    FLAVOR_LABELS_RELATION_KEY,
+    FLAVOR_MINIMUM_PRESSURE_RELATION_KEY,
+    FLAVOR_PLATFORM_RELATION_KEY,
+    FLAVOR_PRIORITY_RELATION_KEY,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
@@ -710,7 +714,7 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     """
     arrange: Set up charm with mocked _setup_state and _setup_service.
     act: Fire planner relation_changed event.
-    assert: The app data bag contains flavor equal to the app name.
+    assert: The app data bag contains all flavor fields for the planner.
     """
     harness = Harness(GithubRunnerCharm)
     harness.set_leader(True)
@@ -718,11 +722,18 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     harness.add_relation_unit(relation_id, "planner-app/0")
     harness.begin()
     monkeypatch.setattr("charm.manager_service", MagicMock())
-    harness.charm._setup_state = MagicMock()
+    state_mock = MagicMock()
+    state_mock.charm_config.labels = ("label1", "label2")
+    state_mock.runner_config.base_virtual_machines = 3
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._setup_service = MagicMock()
 
     harness.update_relation_data(relation_id, "planner-app/0", {"endpoint": "http://example.com"})
 
     assert harness.get_relation_data(relation_id, harness.charm.app) == {
         "flavor": harness.charm.app.name,
+        FLAVOR_LABELS_RELATION_KEY: '["label1", "label2"]',
+        FLAVOR_PLATFORM_RELATION_KEY: "github",
+        FLAVOR_PRIORITY_RELATION_KEY: "50",
+        FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: "3",
     }

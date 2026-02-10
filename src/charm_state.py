@@ -9,7 +9,7 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Literal, cast
+from typing import Final, Literal, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -69,6 +69,12 @@ DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
 PLANNER_INTEGRATION_NAME = "planner"
+
+# Keys for planner relation app data bag
+FLAVOR_LABELS_RELATION_KEY: Final[str] = "flavor-labels"
+FLAVOR_PLATFORM_RELATION_KEY: Final[str] = "flavor-platform"
+FLAVOR_PRIORITY_RELATION_KEY: Final[str] = "flavor-priority"
+FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "flavor-minimum-pressure"
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 

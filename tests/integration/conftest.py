@@ -924,9 +924,17 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
-                    flavor = event.relation.data[event.app].get("flavor")
+                    app_data = event.relation.data[event.app]
+                    flavor = app_data.get("flavor")
                     if flavor:
-                        FLAVOR_FILE.write_text(json.dumps({{"flavor": flavor}}), encoding="utf-8")
+                        data = {{
+                            "flavor": flavor,
+                            "flavor-labels": app_data.get("flavor-labels", ""),
+                            "flavor-platform": app_data.get("flavor-platform", ""),
+                            "flavor-priority": app_data.get("flavor-priority", ""),
+                            "flavor-minimum-pressure": app_data.get("flavor-minimum-pressure", ""),
+                        }}
+                        FLAVOR_FILE.write_text(json.dumps(data), encoding="utf-8")
             """),
     }
 
