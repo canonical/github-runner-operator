@@ -70,11 +70,13 @@ IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
 PLANNER_INTEGRATION_NAME = "planner"
 
-# Keys for planner relation app data bag
+# Keys and defaults for planner relation app data bag
+FLAVOR_RELATION_KEY: Final[str] = "flavor"
 FLAVOR_LABELS_RELATION_KEY: Final[str] = "flavor-labels"
 FLAVOR_PLATFORM_RELATION_KEY: Final[str] = "flavor-platform"
 FLAVOR_PRIORITY_RELATION_KEY: Final[str] = "flavor-priority"
 FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "flavor-minimum-pressure"
+FLAVOR_DEFAULT_PLATFORM: Final[str] = "github"
 FLAVOR_DEFAULT_PRIORITY: Final[int] = 50
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]

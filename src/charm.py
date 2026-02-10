@@ -48,11 +48,13 @@ import manager_service
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    FLAVOR_DEFAULT_PLATFORM,
     FLAVOR_DEFAULT_PRIORITY,
     FLAVOR_LABELS_RELATION_KEY,
     FLAVOR_MINIMUM_PRESSURE_RELATION_KEY,
     FLAVOR_PLATFORM_RELATION_KEY,
     FLAVOR_PRIORITY_RELATION_KEY,
+    FLAVOR_RELATION_KEY,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
@@ -526,11 +528,11 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._setup_service(state)
         for relation in self.model.relations[PLANNER_INTEGRATION_NAME]:
-            relation.data[self.app]["flavor"] = self.app.name
+            relation.data[self.app][FLAVOR_RELATION_KEY] = self.app.name
             relation.data[self.app][FLAVOR_LABELS_RELATION_KEY] = json.dumps(
                 list(state.charm_config.labels)
             )
-            relation.data[self.app][FLAVOR_PLATFORM_RELATION_KEY] = "github"
+            relation.data[self.app][FLAVOR_PLATFORM_RELATION_KEY] = FLAVOR_DEFAULT_PLATFORM
             relation.data[self.app][FLAVOR_PRIORITY_RELATION_KEY] = str(
                 FLAVOR_DEFAULT_PRIORITY
             )

@@ -27,11 +27,14 @@ from charm import (
     catch_charm_errors,
 )
 from charm_state import (
+    FLAVOR_DEFAULT_PLATFORM,
+    FLAVOR_DEFAULT_PRIORITY,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     FLAVOR_LABELS_RELATION_KEY,
     FLAVOR_MINIMUM_PRESSURE_RELATION_KEY,
     FLAVOR_PLATFORM_RELATION_KEY,
     FLAVOR_PRIORITY_RELATION_KEY,
+    FLAVOR_RELATION_KEY,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
@@ -731,9 +734,9 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     harness.update_relation_data(relation_id, "planner-app/0", {"endpoint": "http://example.com"})
 
     assert harness.get_relation_data(relation_id, harness.charm.app) == {
-        "flavor": harness.charm.app.name,
+        FLAVOR_RELATION_KEY: harness.charm.app.name,
         FLAVOR_LABELS_RELATION_KEY: '["label1", "label2"]',
-        FLAVOR_PLATFORM_RELATION_KEY: "github",
-        FLAVOR_PRIORITY_RELATION_KEY: "50",
+        FLAVOR_PLATFORM_RELATION_KEY: FLAVOR_DEFAULT_PLATFORM,
+        FLAVOR_PRIORITY_RELATION_KEY: str(FLAVOR_DEFAULT_PRIORITY),
         FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: "3",
     }
