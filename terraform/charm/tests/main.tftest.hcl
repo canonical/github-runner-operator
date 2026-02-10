@@ -14,8 +14,8 @@ run "two_apps_one_machine" {
   }
 
   assert {
-    condition     = module.runner_a.model == "test-model"
-    error_message = "runner_a model should pass through"
+    condition     = module.runner_a.model == juju_model.test_model.uuid
+    error_message = "runner_a model UUID should pass through"
   }
 
   assert {
@@ -35,8 +35,8 @@ run "two_apps_one_machine" {
   }
 
   assert {
-    condition     = module.runner_b.model == "test-model"
-    error_message = "runner_b model should pass through"
+    condition     = module.runner_b.model == juju_model.test_model.uuid
+    error_message = "runner_b model UUID should pass through"
   }
 
   assert {

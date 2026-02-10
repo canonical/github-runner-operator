@@ -7,8 +7,8 @@ output "app_name" {
 }
 
 output "model" {
-  description = "Model the application is deployed to."
-  value       = juju_application.github_runner.model
+  description = "Model UUID the application is deployed to."
+  value       = juju_application.github_runner.model_uuid
 }
 
 output "machines" {

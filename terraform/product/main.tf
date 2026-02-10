@@ -2,7 +2,8 @@
 # See LICENSE file for licensing details.
 
 data "juju_model" "github_runner" {
-  name = var.model
+  name  = var.model
+  owner = "admin"
 }
 
 module "github_runner" {
@@ -13,7 +14,7 @@ module "github_runner" {
   channel     = each.value.channel
   config      = each.value.config
   constraints = each.value.constraints
-  model       = data.juju_model.github_runner.name
+  model_uuid  = data.juju_model.github_runner.uuid
   revision    = each.value.revision
   base        = each.value.base
   units       = each.value.units
@@ -21,19 +22,19 @@ module "github_runner" {
 }
 
 module "github_runner_image_builder" {
-  source      = "git::https://github.com/canonical/github-runner-image-builder-operator//terraform/charm?ref=rev67"
+  source      = "git::https://github.com/canonical/github-runner-image-builder-operator//terraform/charm?ref=rev143"
   app_name    = var.github_runner_image_builder.app_name
   channel     = var.github_runner_image_builder.channel
   config      = var.github_runner_image_builder.config
   constraints = var.github_runner_image_builder.constraints
-  model       = data.juju_model.github_runner.name
+  model_uuid  = data.juju_model.github_runner.uuid
   revision    = var.github_runner_image_builder.revision
   base        = var.github_runner_image_builder.base
   units       = var.github_runner_image_builder.units
 }
 
 resource "juju_integration" "image_builder" {
-  model = data.juju_model.github_runner.name
+  model_uuid = data.juju_model.github_runner.uuid
 
   for_each = { for github_runner in module.github_runner : github_runner.app_name => github_runner }
 
