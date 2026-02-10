@@ -156,7 +156,7 @@ class GithubClient:
         Returns:
             List of runner information.
         """
-        remote_runners_list: list[SelfHostedRunner] = []
+        remote_runners_list: list[dict] = []
 
         if isinstance(path, GitHubRepo):
             for page in paged(
@@ -169,7 +169,7 @@ class GithubClient:
                 if not runners:
                     break
                 remote_runners_list.extend(runners)
-        if isinstance(path, GitHubOrg):
+        elif isinstance(path, GitHubOrg):
             for page in paged(
                 self._client.actions.list_self_hosted_runners_for_org,
                 org=path.org,
