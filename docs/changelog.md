@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-10
+
+- Fixed stuck `list_runners` call caused by `ghapi`'s `pages()` spawning a multiprocessing Manager with no timeout. Replaced with serial `paged()` iterator.
+
 ## 2026-02-02
 
 - Deprecated `repo-policy-compliance` service.
