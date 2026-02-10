@@ -14,8 +14,7 @@ terraform {
 provider "juju" {}
 
 resource "juju_model" "test_model" {
-  name  = "test-model"
-  owner = "admin"
+  name = "test-model"
 }
 
 # Provision a machine and reuse its ID in module placements
