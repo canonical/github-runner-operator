@@ -19,7 +19,7 @@ from fastcore.net import (  # pylint: disable=no-name-in-module
     HTTP404NotFoundError,
     HTTP422UnprocessableEntityError,
 )
-from ghapi.all import GhApi, pages
+from ghapi.all import GhApi
 from ghapi.page import paged
 from requests import RequestException
 from typing_extensions import assert_never
@@ -157,42 +157,28 @@ class GithubClient:
         remote_runners_list: list[SelfHostedRunner] = []
 
         if isinstance(path, GitHubRepo):
-            # The documentation of ghapi for pagination is incorrect and examples will give errors.
-            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
-            self._client.actions.list_self_hosted_runners_for_repo(
-                owner=path.owner, repo=path.repo, per_page=100, timeout=TIMEOUT_IN_SECS
-            )
-            num_of_pages = self._client.last_page()
-            remote_runners_list = [
-                item
-                for page in pages(
-                    self._client.actions.list_self_hosted_runners_for_repo,
-                    num_of_pages + 1,
-                    owner=path.owner,
-                    repo=path.repo,
-                    per_page=100,
-                    timeout=TIMEOUT_IN_SECS,
-                )
-                for item in page["runners"]
-            ]
+            for page in paged(
+                self._client.actions.list_self_hosted_runners_for_repo,
+                owner=path.owner,
+                repo=path.repo,
+                per_page=100,
+                timeout=TIMEOUT_IN_SECS,
+            ):
+                runners = page["runners"]
+                if not runners:
+                    break
+                remote_runners_list.extend(runners)
         if isinstance(path, GitHubOrg):
-            # The documentation of ghapi for pagination is incorrect and examples will give errors.
-            # This workaround is a temp solution. Will be moving to PyGitHub in the future.
-            self._client.actions.list_self_hosted_runners_for_org(
-                org=path.org, per_page=100, timeout=TIMEOUT_IN_SECS
-            )
-            num_of_pages = self._client.last_page()
-            remote_runners_list = [
-                item
-                for page in pages(
-                    self._client.actions.list_self_hosted_runners_for_org,
-                    num_of_pages + 1,
-                    org=path.org,
-                    per_page=100,
-                    timeout=TIMEOUT_IN_SECS,
-                )
-                for item in page["runners"]
-            ]
+            for page in paged(
+                self._client.actions.list_self_hosted_runners_for_org,
+                org=path.org,
+                per_page=100,
+                timeout=TIMEOUT_IN_SECS,
+            ):
+                runners = page["runners"]
+                if not runners:
+                    break
+                remote_runners_list.extend(runners)
 
         # Filter by prefix and create the SelfHostedRunner instances.
         managed_runners_list = []

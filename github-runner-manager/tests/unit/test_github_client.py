@@ -281,7 +281,7 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
-def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+def test_list_runners(github_client: GithubClient):
     """
     arrange: A mocked Github Client that returns two runners, one for the requested prefix.
     act: Call list_runners with the prefix.
@@ -319,12 +319,10 @@ def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPat
         ],
     }
 
-    github_client._client.last_page.return_value = 1
-    github_client._client.actions.list_self_hosted_runners_for_repo.side_effect = response
-
-    pages = MagicMock()
-    pages.return_value = [response]
-    monkeypatch.setattr(github_runner_manager.github_client, "pages", pages)
+    github_client._client.actions.list_self_hosted_runners_for_repo.side_effect = [
+        response,
+        {"runners": []},
+    ]
 
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     runners = github_client.list_runners(path=github_repo, prefix="current-unit-0")
