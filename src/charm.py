@@ -48,6 +48,7 @@ import manager_service
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    FLAVOR_DEFAULT_PRIORITY,
     FLAVOR_LABELS_RELATION_KEY,
     FLAVOR_MINIMUM_PRESSURE_RELATION_KEY,
     FLAVOR_PLATFORM_RELATION_KEY,
@@ -530,7 +531,9 @@ class GithubRunnerCharm(CharmBase):
                 list(state.charm_config.labels)
             )
             relation.data[self.app][FLAVOR_PLATFORM_RELATION_KEY] = "github"
-            relation.data[self.app][FLAVOR_PRIORITY_RELATION_KEY] = "50"
+            relation.data[self.app][FLAVOR_PRIORITY_RELATION_KEY] = str(
+                FLAVOR_DEFAULT_PRIORITY
+            )
             relation.data[self.app][FLAVOR_MINIMUM_PRESSURE_RELATION_KEY] = str(
                 state.runner_config.base_virtual_machines
             )

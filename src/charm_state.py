@@ -75,6 +75,7 @@ FLAVOR_LABELS_RELATION_KEY: Final[str] = "flavor-labels"
 FLAVOR_PLATFORM_RELATION_KEY: Final[str] = "flavor-platform"
 FLAVOR_PRIORITY_RELATION_KEY: Final[str] = "flavor-priority"
 FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "flavor-minimum-pressure"
+FLAVOR_DEFAULT_PRIORITY: Final[int] = 50
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
