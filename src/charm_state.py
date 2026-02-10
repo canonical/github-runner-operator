@@ -8,6 +8,7 @@ import ipaddress
 import json
 import logging
 import re
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Final, Literal, cast
 from urllib.parse import urlsplit
@@ -209,7 +210,7 @@ class PlannerConfig(BaseModel):
 
     @classmethod
     def from_relation_data(
-        cls, relation_data: dict[str, str], charm: CharmBase
+        cls, relation_data: Mapping[str, str], charm: CharmBase
     ) -> "PlannerConfig | None":
         """Initialize the config from relation data.
 

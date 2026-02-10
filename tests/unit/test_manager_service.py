@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+
 import manager_service
 from charm_state import CharmState
 from errors import (
