@@ -6,6 +6,7 @@
 import json
 import logging
 import random
+import re
 import secrets
 import string
 import textwrap
@@ -145,6 +146,123 @@ class ProxyConfig:
     no_proxy: str
 
 
+# Map base token to (charm base, series)
+BASE_SERIES_MAP: dict[str, tuple[str, str]] = {
+    "22.04": ("ubuntu@22.04", "jammy"),
+    "24.04": ("ubuntu@24.04", "noble"),
+}
+
+
+@dataclass
+class CharmArtifact:
+    """Charm build artifact metadata used for selection.
+
+    Attributes:
+        name: Artifact filename relative to the workspace root.
+        base_token: Base identifier extracted from the filename (e.g., '22.04', '24.04').
+    """
+
+    name: str
+    base_token: str
+
+
+@dataclass
+class DeploymentContext:
+    """Deployment parameters derived from the selected artifact.
+
+    Attributes:
+        charm_path: Filesystem path to the selected charm artifact.
+        base: Juju base for deployment (e.g., 'ubuntu@22.04').
+        series: Ubuntu series corresponding to the base (e.g., 'jammy', 'noble').
+    """
+
+    charm_path: str
+    base: str
+    series: str
+
+
+def _parse_base_token(artifact_name: str) -> str:
+    """Extract an Ubuntu base token (e.g., '22.04', '24.04', '26.04') from an artifact name."""
+    ubuntu_match = re.search(r"ubuntu@(?P<base>\d{2}\.\d{2})", artifact_name)
+    assert ubuntu_match, "Base not detected from charm file (e.g., 'github-runner-ubuntu@22.04')"
+    return ubuntu_match.group("base")
+
+
+def resolve_series(base_token: str) -> tuple[str, str]:
+    """Resolve Juju base and Ubuntu series for a given base token.
+
+    Args:
+        base_token: Ubuntu base identifier (e.g., '22.04', '24.04').
+
+    Returns:
+        A tuple of (charm base, series), for example ('ubuntu@22.04', 'jammy').
+
+    Raises:
+        ValueError: if the base token is unknown. Update BASE_SERIES_MAP
+            when new Ubuntu releases are supported.
+    """
+    mapped = BASE_SERIES_MAP.get(base_token)
+    if not mapped:
+        raise ValueError(
+            f"Unknown base token '{base_token}'. Please update BASE_SERIES_MAP to include the corresponding series."
+        )
+    return mapped
+
+
+@pytest.fixture(scope="module")
+def cli_base_option(pytestconfig: pytest.Config) -> str:
+    """Selected base token from `--base` option, defaulting to '22.04'."""
+    return cast(str, pytestconfig.getoption("--base") or "22.04")
+
+
+@pytest.fixture(scope="module")
+def available_charm_files(pytestconfig: pytest.Config) -> list[str]:
+    """List of charm artifact filenames from repeated `--charm-file` options.
+
+    Asserts that at least one artifact is provided.
+    """
+    files: list[str] = cast(list[str], pytestconfig.getoption("--charm-file") or [])
+    assert files, "Please specify one or more --charm-file options"
+    return files
+
+
+@pytest.fixture(scope="module")
+def artifact_catalog(available_charm_files: list[str]) -> list[CharmArtifact]:
+    """Build a catalog of charm artifacts annotated with base tokens."""
+    catalog: list[CharmArtifact] = []
+    for f in available_charm_files:
+        base_token = _parse_base_token(f)
+        catalog.append(CharmArtifact(name=f, base_token=base_token))
+    return catalog
+
+
+@pytest.fixture(scope="module")
+def selected_artifact(
+    cli_base_option: str, artifact_catalog: list[CharmArtifact]
+) -> CharmArtifact:
+    """Choose the artifact matching the `--base` option."""
+    for art in artifact_catalog:
+        if art.base_token == cli_base_option:
+            return art
+    raise ValueError(
+        "No charm artifact found matching the specified base token. Please check your --charm-file options."
+    )
+
+
+@pytest.fixture(scope="module")
+def deployment_context(selected_artifact: CharmArtifact) -> DeploymentContext:
+    """Construct the deployment context (base, series) for the selected artifact.
+
+    Fails fast if the base token isn't mapped to a known series.
+    """
+    base, series = resolve_series(selected_artifact.base_token)
+    return DeploymentContext(
+        charm_path=f"./{selected_artifact.name}",
+        base=base,
+        series=series,
+    )
+
+
 @pytest.fixture(scope="module")
 def metadata() -> dict[str, Any]:
     """Metadata information of the charm."""
@@ -179,15 +297,6 @@ def app_name(random_app_name_suffix: str) -> str:
 def image_builder_app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
     return f"github-runner-image-builder-{random_app_name_suffix}"
-
-
-@pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config) -> str:
-    """Path to the built charm."""
-    charm = pytestconfig.getoption("--charm-file")
-    assert charm, "Please specify the --charm-file command line option"
-
-    return f"./{charm}"
 
 
 @pytest.fixture(scope="module")
@@ -460,6 +569,10 @@ async def image_builder_fixture(
         return
 
     # Use any-charm to mock the image relation provider
+    # Determine series based on selected deployment context
+    dep_ctx: DeploymentContext = request.getfixturevalue("deployment_context")
+    series = dep_ctx.series
+
     any_charm_src_overwrite = {
         "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
@@ -473,7 +586,7 @@ relation_changed, self._image_relation_changed)
                 def _image_relation_changed(self, event):
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
-                    event.relation.data[self.unit]['tags'] = 'jammy, amd64'
+                    event.relation.data[self.unit]['tags'] = '{series}, amd64'
             """),
     }
     logging.info(
@@ -491,7 +604,7 @@ relation_changed, self._image_relation_changed)
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
 async def app_openstack_runner_fixture(
     model: Model,
-    charm_file: str,
+    deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig,
@@ -506,13 +619,14 @@ async def app_openstack_runner_fixture(
     else:
         application = await deploy_github_runner_charm(
             model=model,
-            charm_file=charm_file,
+            charm_file=deployment_context.charm_path,
             app_name=app_name,
-            path=github_config.path,
-            token=github_config.token,
-            http_proxy=openstack_config.http_proxy,
-            https_proxy=openstack_config.https_proxy,
-            no_proxy=openstack_config.no_proxy,
+            github_config=github_config,
+            proxy_config=ProxyConfig(
+                http_proxy=openstack_config.http_proxy,
+                https_proxy=openstack_config.https_proxy,
+                no_proxy=openstack_config.no_proxy,
+            ),
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
             constraints={"root-disk": 50 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
             config={
@@ -524,6 +638,8 @@ async def app_openstack_runner_fixture(
                 LABELS_CONFIG_NAME: app_name,
                 **({DOCKERHUB_MIRROR_CONFIG_NAME: dockerhub_mirror} if dockerhub_mirror else {}),
             },
+            base=deployment_context.base,
+            series=deployment_context.series,
             wait_idle=False,
         )
         await model.integrate(image_builder.name, f"{application.name}:image")
@@ -564,7 +680,7 @@ async def app_scheduled_events_fixture(
 @pytest_asyncio.fixture(scope="module")
 async def app_runner(
     model: Model,
-    charm_file: str,
+    deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     proxy_config: ProxyConfig,
@@ -573,14 +689,13 @@ async def app_runner(
     # Use a different app_name so workflows can select runners from this deployment.
     application = await deploy_github_runner_charm(
         model=model,
-        charm_file=charm_file,
+        charm_file=deployment_context.charm_path,
         app_name=f"{app_name}-test",
-        path=github_config.path,
-        token=github_config.token,
-        http_proxy=proxy_config.http_proxy,
-        https_proxy=proxy_config.https_proxy,
-        no_proxy=proxy_config.no_proxy,
+        github_config=github_config,
+        proxy_config=proxy_config,
         reconcile_interval=1,
+        base=deployment_context.base,
+        series=deployment_context.series,
     )
     return application
 
@@ -588,7 +703,7 @@ async def app_runner(
 @pytest_asyncio.fixture(scope="module", name="app_no_wait")
 async def app_no_wait_fixture(
     model: Model,
-    charm_file: str,
+    deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     proxy_config: ProxyConfig,
@@ -596,14 +711,13 @@ async def app_no_wait_fixture(
     """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
-        charm_file=charm_file,
+        charm_file=deployment_context.charm_path,
         app_name=app_name,
-        path=github_config.path,
-        token=github_config.token,
-        http_proxy=proxy_config.http_proxy,
-        https_proxy=proxy_config.https_proxy,
-        no_proxy=proxy_config.no_proxy,
+        github_config=github_config,
+        proxy_config=proxy_config,
         reconcile_interval=1,
+        base=deployment_context.base,
+        series=deployment_context.series,
         wait_idle=False,
     )
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
