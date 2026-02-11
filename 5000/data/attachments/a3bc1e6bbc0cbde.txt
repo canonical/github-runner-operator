@@ -1,0 +1,25 @@
+18:46:33 WARNING unexpected facade SSHServer received from the controller
+18:46:33 INFO Adding model github-pr-2f78f-lxd:test-charm-no-runner-o51s on cloud localhost
+18:46:33 WARNING unexpected facade SSHServer received from the controller
+18:46:33 WARNING unexpected facade SSHSession received from the controller
+18:46:33 WARNING unexpected facade SSHTunneler received from the controller
+18:46:34 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:46:35 INFO Deploying ch:amd64/noble/any-charm-133
+18:46:47 INFO Deploying local:jammy/github-runner-0
+18:46:47 INFO Waiting for model:
+  test-tez10j74/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tez10j74/0 [allocating] waiting: waiting for machine
+18:47:17 INFO Waiting for model:
+  test-tez10j74/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tez10j74/0 [executing] maintenance: installing charm software
+18:47:48 INFO Waiting for model:
+  test-tez10j74/0 [allocating] waiting: waiting for machine
+18:48:18 INFO Waiting for model:
+  test-tez10j74/0 [allocating] waiting: agent initialising
+18:48:49 INFO Waiting for model:
+  test-tez10j74/0 [executing] maintenance: installing charm software
+18:49:19 INFO Waiting for model:
+  test-tez10j74/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-tez10j74/0 [idle] active: 
+18:49:47 INFO Waiting for model:
+  test-tez10j74/0 [idle] active:
