@@ -1176,3 +1176,39 @@ def test_planner_config_from_relation_data_missing_endpoint():
     result = PlannerConfig.from_relation_data(relation_data, mock_charm)
 
     assert result is None
+
+
+def test_flavor_relation_data_to_relation_data():
+    """
+    arrange: Create a FlavorRelationData instance with test values.
+    act: Call to_relation_data().
+    assert: Returns a dictionary with correct key mappings.
+    """
+    from charm_state import (
+        FLAVOR_DEFAULT_PLATFORM,
+        FLAVOR_DEFAULT_PRIORITY,
+        FLAVOR_LABELS_RELATION_KEY,
+        FLAVOR_MINIMUM_PRESSURE_RELATION_KEY,
+        FLAVOR_PLATFORM_RELATION_KEY,
+        FLAVOR_PRIORITY_RELATION_KEY,
+        FLAVOR_RELATION_KEY,
+        FlavorRelationData,
+    )
+
+    flavor_data = FlavorRelationData(
+        flavor="test-runner",
+        flavor_labels='["label1", "label2"]',
+        flavor_platform=FLAVOR_DEFAULT_PLATFORM,
+        flavor_priority=str(FLAVOR_DEFAULT_PRIORITY),
+        flavor_minimum_pressure="5",
+    )
+
+    result = flavor_data.to_relation_data()
+
+    assert result == {
+        FLAVOR_RELATION_KEY: "test-runner",
+        FLAVOR_LABELS_RELATION_KEY: '["label1", "label2"]',
+        FLAVOR_PLATFORM_RELATION_KEY: FLAVOR_DEFAULT_PLATFORM,
+        FLAVOR_PRIORITY_RELATION_KEY: str(FLAVOR_DEFAULT_PRIORITY),
+        FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: "5",
+    }
