@@ -221,13 +221,14 @@ class PlannerConfig(BaseModel):
         Returns:
             Current planner config.
         """
-        token_secret_id = relation_data.get("token", None)
-        if token_secret_id is None:
+        token_secret_id = relation_data.get("token")
+        endpoint = relation_data.get("endpoint")
+        if token_secret_id is None or endpoint is None:
             return None
         token_secret = charm.model.get_secret(id=token_secret_id)
         return PlannerConfig(
             token=token_secret.get_content()["token"],
-            endpoint=relation_data["endpoint"],  # type: ignore
+            endpoint=endpoint,  # type: ignore
             flavor=charm.app.name,
         )
 

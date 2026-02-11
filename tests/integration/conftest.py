@@ -854,7 +854,7 @@ def planner_token_secret_name() -> str:
 
 
 @pytest_asyncio.fixture(scope="module")
-async def planner_token_secret(model: Model, planner_token_secret_name: str) -> AsyncIterator[str]:
+async def planner_token_secret(model: Model, planner_token_secret_name: str) -> str:
     """Create a planner token secret."""
     return await model.add_secret(
         name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
@@ -895,6 +895,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
             """),
         "any_charm.py": textwrap.dedent(f"""\
             import json
+            import signal
             import subprocess
             import os
             from pathlib import Path
@@ -913,12 +914,12 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     pid_file = Path("/tmp/any.pid")
                     if pid_file.exists():
                         try:
-                            os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGKILL)
+                            os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGTERM)
                         except ProcessLookupError:
                             pass
                         pid_file.unlink()
-                    log_file = open("planner.log", "a")
-                    proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
+                    with open("planner.log", "a") as log_file:
+                        proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
                     pid_file.write_text(str(proc_http.pid), encoding="utf8")
 
                 def _on_planner_relation_changed(self, event):

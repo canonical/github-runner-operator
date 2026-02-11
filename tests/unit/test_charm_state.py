@@ -1162,3 +1162,17 @@ def test_planner_config_from_relation_data_missing_token():
     result = PlannerConfig.from_relation_data(relation_data, mock_charm)
 
     assert result is None
+
+
+def test_planner_config_from_relation_data_missing_endpoint():
+    """
+    arrange: Relation data with token but without 'endpoint' key.
+    act: Call PlannerConfig.from_relation_data.
+    assert: Returns None.
+    """
+    mock_charm = MagicMock()
+    relation_data = {"token": "secret:test-secret-id"}
+
+    result = PlannerConfig.from_relation_data(relation_data, mock_charm)
+
+    assert result is None
