@@ -2,9 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-02-10
+## 2026-02-11
 
 - Fixed charm hook errors caused by `ghapi`'s `pages()` leaving a stuck multiprocessing process that held the HTTP port.
+
+## 2026-02-06
+
+- Migrated to latest consolidated `charmcraft.yaml` syntax and added 24.04, 26.04 bases.
 
 ## 2026-02-02
 
