@@ -63,6 +63,7 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
+    FlavorRelationData,
     OpenstackImage,
     build_proxy_config_from_charm,
 )
@@ -528,18 +529,15 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._setup_service(state)
         if self.unit.is_leader():
+            flavor_data = FlavorRelationData(
+                flavor=self.app.name,
+                flavor_labels=json.dumps(list(state.charm_config.labels)),
+                flavor_platform=FLAVOR_DEFAULT_PLATFORM,
+                flavor_priority=str(FLAVOR_DEFAULT_PRIORITY),
+                flavor_minimum_pressure=str(state.runner_config.base_virtual_machines),
+            )
             for relation in self.model.relations[PLANNER_INTEGRATION_NAME]:
-                relation.data[self.app][FLAVOR_RELATION_KEY] = self.app.name
-                relation.data[self.app][FLAVOR_LABELS_RELATION_KEY] = json.dumps(
-                    list(state.charm_config.labels)
-                )
-                relation.data[self.app][FLAVOR_PLATFORM_RELATION_KEY] = FLAVOR_DEFAULT_PLATFORM
-                relation.data[self.app][FLAVOR_PRIORITY_RELATION_KEY] = str(
-                    FLAVOR_DEFAULT_PRIORITY
-                )
-                relation.data[self.app][FLAVOR_MINIMUM_PRESSURE_RELATION_KEY] = str(
-                    state.runner_config.base_virtual_machines
-                )
+                relation.data[self.app].update(flavor_data.to_relation_data())
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors

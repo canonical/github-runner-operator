@@ -84,6 +84,39 @@ LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 
 @dataclasses.dataclass
+class FlavorRelationData:
+    """Data structure for planner relation flavor information.
+
+    Attributes:
+        flavor: The flavor name (application name).
+        flavor-labels: JSON-encoded list of labels for this flavor.
+        flavor-platform: The platform type (e.g., "github").
+        flavor-priority: Priority value for flavor scheduling.
+        flavor-minimum-pressure: Minimum number of runners to maintain.
+    """
+
+    flavor: str
+    flavor_labels: str
+    flavor_platform: str
+    flavor_priority: str
+    flavor_minimum_pressure: str
+
+    def to_relation_data(self) -> dict[str, str]:
+        """Convert to relation databag format with correct key names.
+
+        Returns:
+            Dictionary with hyphenated keys for relation databag.
+        """
+        return {
+            FLAVOR_RELATION_KEY: self.flavor,
+            FLAVOR_LABELS_RELATION_KEY: self.flavor_labels,
+            FLAVOR_PLATFORM_RELATION_KEY: self.flavor_platform,
+            FLAVOR_PRIORITY_RELATION_KEY: self.flavor_priority,
+            FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: self.flavor_minimum_pressure,
+        }
+
+
+@dataclasses.dataclass
 class GithubConfig:
     """Charm configuration related to GitHub.
 
