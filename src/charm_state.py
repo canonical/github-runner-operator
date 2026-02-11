@@ -89,10 +89,10 @@ class FlavorRelationData:
 
     Attributes:
         flavor: The flavor name (application name).
-        flavor-labels: JSON-encoded list of labels for this flavor.
-        flavor-platform: The platform type (e.g., "github").
-        flavor-priority: Priority value for flavor scheduling.
-        flavor-minimum-pressure: Minimum number of runners to maintain.
+        flavor_labels: JSON-encoded list of labels for this flavor.
+        flavor_platform: The platform type (e.g., "github").
+        flavor_priority: Priority value for flavor scheduling.
+        flavor_minimum_pressure: Minimum number of runners to maintain.
     """
 
     flavor: str
