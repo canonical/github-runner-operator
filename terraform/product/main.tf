@@ -3,7 +3,12 @@
 
 data "juju_model" "github_runner" {
   name  = var.model
-  owner = "admin"
+  owner = var.juju_model_owner
+}
+
+variable "juju_model_owner" {
+  type    = string
+  default = "admin"
 }
 
 module "github_runner" {
