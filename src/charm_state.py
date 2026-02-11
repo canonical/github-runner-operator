@@ -83,6 +83,39 @@ FLAVOR_DEFAULT_PRIORITY: Final[int] = 50
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 
+@dataclasses.dataclass(frozen=True)
+class FlavorRelationData:
+    """Data written to the planner relation app databag.
+
+    Attributes:
+        flavor: The flavor name (app name).
+        labels: Runner labels for this flavor.
+        platform: The platform identifier.
+        priority: Scheduling priority.
+        minimum_pressure: Minimum number of runners to maintain.
+    """
+
+    flavor: str
+    labels: tuple[str, ...]
+    platform: str = FLAVOR_DEFAULT_PLATFORM
+    priority: int = FLAVOR_DEFAULT_PRIORITY
+    minimum_pressure: int = 0
+
+    def to_relation_data(self) -> dict[str, str]:
+        """Serialize to relation databag format.
+
+        Returns:
+            Dictionary of string key-value pairs for the Juju relation databag.
+        """
+        return {
+            FLAVOR_RELATION_KEY: self.flavor,
+            FLAVOR_LABELS_RELATION_KEY: json.dumps(list(self.labels)),
+            FLAVOR_PLATFORM_RELATION_KEY: self.platform,
+            FLAVOR_PRIORITY_RELATION_KEY: str(self.priority),
+            FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
+        }
+
+
 @dataclasses.dataclass
 class GithubConfig:
     """Charm configuration related to GitHub.
