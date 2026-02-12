@@ -73,10 +73,10 @@ PLANNER_INTEGRATION_NAME = "planner"
 
 # Keys and defaults for planner relation app data bag
 FLAVOR_RELATION_KEY: Final[str] = "flavor"
-FLAVOR_LABELS_RELATION_KEY: Final[str] = "flavor-labels"
-FLAVOR_PLATFORM_RELATION_KEY: Final[str] = "flavor-platform"
-FLAVOR_PRIORITY_RELATION_KEY: Final[str] = "flavor-priority"
-FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "flavor-minimum-pressure"
+LABELS_RELATION_KEY: Final[str] = "labels"
+PLATFORM_RELATION_KEY: Final[str] = "platform"
+PRIORITY_RELATION_KEY: Final[str] = "priority"
+MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
 FLAVOR_DEFAULT_PLATFORM: Final[str] = "github"
 FLAVOR_DEFAULT_PRIORITY: Final[int] = 50
 
@@ -109,10 +109,10 @@ class FlavorRelationData:
         """
         return {
             FLAVOR_RELATION_KEY: self.flavor,
-            FLAVOR_LABELS_RELATION_KEY: json.dumps(list(self.labels)),
-            FLAVOR_PLATFORM_RELATION_KEY: self.platform,
-            FLAVOR_PRIORITY_RELATION_KEY: str(self.priority),
-            FLAVOR_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
+            LABELS_RELATION_KEY: json.dumps(list(self.labels)),
+            PLATFORM_RELATION_KEY: self.platform,
+            PRIORITY_RELATION_KEY: str(self.priority),
+            MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
         }
 
 
