@@ -1,0 +1,57 @@
+18:45:28 WARNING unexpected facade SSHServer received from the controller
+18:45:28 INFO Adding model github-pr-b74c6-lxd:test-reactive-tt9p on cloud localhost
+18:45:29 WARNING unexpected facade SSHServer received from the controller
+18:45:29 WARNING unexpected facade SSHSession received from the controller
+18:45:29 WARNING unexpected facade SSHTunneler received from the controller
+18:45:29 INFO GitHub token rate limit: Rate(reset=2026-02-12 19:37:26+00:00, remaining=4983, limit=5000)
+18:45:33 INFO Deploying ch:amd64/jammy/mongodb-280
+18:45:34 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:45:36 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:51 INFO Deploying local:jammy/github-runner-0
+18:45:51 INFO Waiting for model:
+  test-fypgijt0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fypgijt0/0 [allocating] waiting: waiting for machine
+18:46:21 INFO Waiting for model:
+  test-fypgijt0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fypgijt0/0 [idle] active: 
+18:46:51 INFO Waiting for model:
+  test-fypgijt0/0 [allocating] waiting: waiting for machine
+18:47:22 INFO Waiting for model:
+  test-fypgijt0/0 [allocating] waiting: waiting for machine
+18:47:52 INFO Waiting for model:
+  test-fypgijt0/0 [executing] maintenance: installing charm software
+18:48:22 INFO Waiting for model:
+  test-fypgijt0/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-fypgijt0/0 [idle] active: 
+18:48:52 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+18:48:54 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:48:54 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:49:25 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:49:33 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+18:50:03 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+18:50:06 INFO Current reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:50:06 INFO Waiting for reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:51:07 INFO Current reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:51:07 INFO Current reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c, expected reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:51:07 INFO Waiting for reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:52:08 INFO Current reconcile ID: 2cc78820-d31e-4898-b03c-9897c4b7ec4e
+18:52:08 INFO Current reconcile ID: 2cc78820-d31e-4898-b03c-9897c4b7ec4e, expected reconcile ID: f1ab8ebc-c230-4c14-900b-dad57d0ff46c
+18:52:12 INFO Wait for condition not met, sleeping 10
+18:52:23 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+18:52:53 INFO Waiting for model:
+  test-fypgijt0/0 [idle] active: 
+18:52:55 INFO Current reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e
+18:52:55 INFO Waiting for reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e
+18:53:57 INFO Current reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e
+18:53:57 INFO Current reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e, expected reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e
+18:53:57 INFO Waiting for reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e
+18:54:58 INFO Current reconcile ID: 81c7c4e0-f923-41e1-b174-972cfff18a75
+18:54:58 INFO Current reconcile ID: 81c7c4e0-f923-41e1-b174-972cfff18a75, expected reconcile ID: 08050f6e-233e-49a6-9f54-1922ad297e2e

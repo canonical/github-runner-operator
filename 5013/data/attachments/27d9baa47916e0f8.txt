@@ -1,0 +1,76 @@
+19:01:04 INFO Waiting for model:
+  test-vt7jvuil/0 [idle] active: 
+19:01:35 INFO Waiting for model:
+  test-vt7jvuil/0 [idle] active: 
+19:01:37 INFO Current reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:01:37 INFO Waiting for reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:02:39 INFO Current reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:02:39 INFO Current reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde, expected reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:02:39 INFO Waiting for reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:03:40 INFO Current reconcile ID: 992d3bd4-8777-4520-93f9-392624e828e5
+19:03:40 INFO Current reconcile ID: 992d3bd4-8777-4520-93f9-392624e828e5, expected reconcile ID: 38648081-c9e8-4c63-ae6f-d1cf3bb5fcde
+19:03:45 INFO Wait for condition not met, sleeping 10
+19:03:56 INFO Wait for condition not met, sleeping 60
+19:04:57 INFO Wait for condition not met, sleeping 60
+19:05:57 INFO Wait for condition not met, sleeping 60
+19:06:57 INFO Wait for condition not met, sleeping 60
+19:07:58 INFO Wait for condition not met, sleeping 60
+19:08:58 INFO Wait for condition not met, sleeping 60
+19:09:58 INFO Wait for condition not met, sleeping 60
+19:10:59 INFO Wait for condition not met, sleeping 60
+19:11:59 INFO Wait for condition not met, sleeping 60
+19:13:00 INFO Wait for condition not met, sleeping 60
+19:14:02 INFO Waiting for model:
+  test-vt7jvuil/0 [idle] active: 
+19:14:32 INFO Waiting for model:
+  test-vt7jvuil/0 [idle] active: 
+19:14:34 INFO Current reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:14:34 INFO Waiting for reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:15:35 INFO Current reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:15:35 INFO Current reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49, expected reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:15:35 INFO Waiting for reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:16:36 INFO Current reconcile ID: 7eecc041-8859-4fd9-9f2d-8fab317fff9b
+19:16:36 INFO Current reconcile ID: 7eecc041-8859-4fd9-9f2d-8fab317fff9b, expected reconcile ID: 3a02eec8-5811-4eeb-adea-04d527c35e49
+19:16:37 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-k89c  github-pr-b74c6-lxd  localhost/localhost  3.6.14   unsupported  19:16:37Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-vt7jvuil           active      1  any-charm      latest/beta  133  no       
+test-vt7jvuil                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vt7jvuil/0*  active    idle   0        10.17.126.170          
+test-vt7jvuil/0*                         active    idle   1        10.17.126.73           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.17.126.170  juju-094c6b-0  ubuntu@24.04  github-runner  Running
+1        started  10.17.126.73   juju-094c6b-1  ubuntu@22.04  github-runner  Running
+
+19:16:38 INFO Juju error logs:
+
+machine-0: 18:43:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vt7jvuil-0: 18:45:47 ERROR unit.test-vt7jvuil/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-vt7jvuil-0: 18:45:49 ERROR unit.test-vt7jvuil/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vt7jvuil-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:16:38 INFO Forgetting model main...

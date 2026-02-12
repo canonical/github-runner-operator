@@ -1,0 +1,123 @@
+18:45:26 WARNING unexpected facade SSHServer received from the controller
+18:45:26 INFO Adding model github-pr-b74c6-lxd:test-charm-metrics-failure-5j7o on cloud localhost
+18:45:27 WARNING unexpected facade SSHServer received from the controller
+18:45:27 WARNING unexpected facade SSHSession received from the controller
+18:45:27 WARNING unexpected facade SSHTunneler received from the controller
+18:45:27 WARNING unexpected facade SSHServer received from the controller
+18:45:27 INFO GitHub token rate limit: Rate(reset=2026-02-12 19:37:26+00:00, remaining=4985, limit=5000)
+18:45:29 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:45:32 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:44 INFO Deploying local:jammy/github-runner-0
+18:45:44 INFO Waiting for model:
+  test-oxahuft6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oxahuft6/0 [allocating] waiting: waiting for machine
+18:46:14 INFO Waiting for model:
+  test-oxahuft6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oxahuft6/0 [allocating] waiting: waiting for machine
+18:46:44 INFO Waiting for model:
+  test-oxahuft6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oxahuft6/0 [executing] maintenance: installing charm software
+18:47:14 INFO Waiting for model:
+  test-oxahuft6/0 [allocating] waiting: waiting for machine
+18:47:45 INFO Waiting for model:
+  test-oxahuft6/0 [executing] maintenance: installing charm software
+18:48:15 INFO Waiting for model:
+  test-oxahuft6/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-oxahuft6/0 [idle] active: 
+18:48:45 INFO Waiting for model:
+  test-oxahuft6/0 [idle] active: 
+18:48:48 INFO cli: juju config --model github-pr-b74c6-lxd:test-charm-metrics-failure-5j7o test-oxahuft6 base-virtual-machines=0
+18:48:48 INFO Waiting for model:
+  test-oxahuft6/0 [idle] active: 
+18:49:04 INFO Current reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:49:04 INFO Waiting for reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:50:05 INFO Current reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:50:05 INFO Current reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665, expected reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:50:05 INFO Waiting for reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:51:06 INFO Current reconcile ID: bddf6b90-44ad-4126-94d6-c25650251cd8
+18:51:06 INFO Current reconcile ID: bddf6b90-44ad-4126-94d6-c25650251cd8, expected reconcile ID: c0127619-86b5-4a8e-93fa-0c7ce9fb3665
+18:51:06 INFO cli: juju config --model github-pr-b74c6-lxd:test-charm-metrics-failure-5j7o test-oxahuft6 path=canonical/github-runner-operator
+18:51:06 INFO cli: juju config --model github-pr-b74c6-lxd:test-charm-metrics-failure-5j7o test-oxahuft6 base-virtual-machines=1
+18:51:07 INFO Waiting for model:
+  test-oxahuft6/0 [executing] active: 
+18:51:37 INFO Waiting for model:
+  test-oxahuft6/0 [idle] active: 
+18:51:39 INFO Current reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:51:39 INFO Waiting for reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:52:40 INFO Current reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:52:40 INFO Current reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8, expected reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:52:40 INFO Waiting for reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:53:41 INFO Current reconcile ID: 149eafec-442e-41e5-9567-8af85a05e149
+18:53:41 INFO Current reconcile ID: 149eafec-442e-41e5-9567-8af85a05e149, expected reconcile ID: a838a987-a72c-48e6-a24c-a8b2423700f8
+18:53:48 INFO Wait for condition not met, sleeping 30
+18:54:18 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-e037069d&created=%3E%3D2026-02-12T18%3A53%3A44%2B00%3A00
+18:54:30 INFO [TEST SETUP] Run command pkill -9 run.sh on test-oxahuft6-0-n-f887bb27ee5a
+18:54:30 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.236', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d3:5a:08'}]])
+18:54:31 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-oxahuft6-0-n-f887bb27ee5a.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.236 pkill -9 run.sh'
+18:54:32 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.236' (ED25519) to the list of known hosts.
+'
+18:54:35 INFO Runner test-oxahuft6-0-n-f887bb27ee5a status: online
+18:54:35 INFO Runner still marked as online, waiting for it to be marked offline
+18:55:35 INFO Waiting for model:
+  test-oxahuft6/0 [idle] active: 
+18:56:06 INFO Waiting for model:
+  test-oxahuft6/0 [idle] active: 
+18:56:08 INFO Current reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:56:08 INFO Waiting for reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:57:09 INFO Current reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:57:09 INFO Current reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957, expected reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:57:09 INFO Waiting for reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:58:10 INFO Current reconcile ID: 0b2d7ae5-de72-46c1-bc30-cb9cf1b2b6d3
+18:58:10 INFO Current reconcile ID: 0b2d7ae5-de72-46c1-bc30-cb9cf1b2b6d3, expected reconcile ID: 589989c7-5442-4e4a-9c10-85040243c957
+18:58:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1770922223.7083492, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.143714189529419}
+{"timestamp": 1770922279.407331, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.449787139892578}
+{"timestamp": 1770922405.6257706, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.100231647491455}
+{"timestamp": 1770922357.0, "event": "runner_installed", "flavor": "test-oxahuft6", "duration": 79.0}
+{"timestamp": 1770922445.0, "event": "runner_start", "flavor": "test-oxahuft6", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 88.0, "queue_duration": 2.0}
+{"timestamp": 1770922471.0, "event": "runner_stop", "flavor": "test-oxahuft6", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 26.0, "job_conclusion": "cancelled"}
+{"timestamp": 1770922534.2821558, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.621176481246948}
+{"timestamp": 1770922542.1981924, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.53744649887085}
+{"timestamp": 1770922668.1256409, "event": "reconciliation", "flavor": "test-oxahuft6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.846262216567993}
+18:58:12 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-5j7o  github-pr-b74c6-lxd  localhost/localhost  3.6.14   unsupported  18:58:12Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-oxahuft6           active      1  any-charm      latest/beta  133  no       
+test-oxahuft6                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-oxahuft6/0*  active    idle   0        10.109.109.48          
+test-oxahuft6/0*                         active    idle   1        10.109.109.201         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.109.109.48   juju-300638-0  ubuntu@24.04  github-runner  Running
+1        started  10.109.109.201  juju-300638-1  ubuntu@22.04  github-runner  Running
+
+18:58:12 INFO Juju error logs:
+
+machine-0: 18:46:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:46:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oxahuft6-0: 18:48:07 ERROR unit.test-oxahuft6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oxahuft6-0: 18:48:08 ERROR unit.test-oxahuft6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oxahuft6-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:58:12 INFO Forgetting model main...
