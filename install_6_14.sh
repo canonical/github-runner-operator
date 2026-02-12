@@ -4,4 +4,7 @@
 #  See LICENSE file for licensing details.
 #
 
-sudo apt install linux-generic-6.14 -y
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
+apt-get install -y linux-generic-6.14
