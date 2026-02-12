@@ -72,19 +72,19 @@ MONGO_DB_INTEGRATION_NAME = "mongodb"
 PLANNER_INTEGRATION_NAME = "planner"
 
 # Keys and defaults for planner relation app data bag
-FLAVOR_RELATION_KEY: Final[str] = "flavor"
-LABELS_RELATION_KEY: Final[str] = "labels"
-PLATFORM_RELATION_KEY: Final[str] = "platform"
-PRIORITY_RELATION_KEY: Final[str] = "priority"
-MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
-FLAVOR_DEFAULT_PLATFORM: Final[str] = "github"
-FLAVOR_DEFAULT_PRIORITY: Final[int] = 50
+PLANNER_FLAVOR_RELATION_KEY: Final[str] = "flavor"
+PLANNER_LABELS_RELATION_KEY: Final[str] = "labels"
+PLANNER_PLATFORM_RELATION_KEY: Final[str] = "platform"
+PLANNER_PRIORITY_RELATION_KEY: Final[str] = "priority"
+PLANNER_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
+PLANNER_DEFAULT_PLATFORM: Final[str] = "github"
+PLANNER_DEFAULT_PRIORITY: Final[int] = 50
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 
 @dataclasses.dataclass(frozen=True)
-class FlavorRelationData:
+class PlannerRelationData:
     """Data written to the planner relation app databag.
 
     Attributes:
@@ -97,8 +97,8 @@ class FlavorRelationData:
 
     flavor: str
     labels: tuple[str, ...]
-    platform: str = FLAVOR_DEFAULT_PLATFORM
-    priority: int = FLAVOR_DEFAULT_PRIORITY
+    platform: str = PLANNER_DEFAULT_PLATFORM
+    priority: int = PLANNER_DEFAULT_PRIORITY
     minimum_pressure: int = 0
 
     def to_relation_data(self) -> dict[str, str]:
@@ -108,11 +108,11 @@ class FlavorRelationData:
             Dictionary of string key-value pairs for the Juju relation databag.
         """
         return {
-            FLAVOR_RELATION_KEY: self.flavor,
-            LABELS_RELATION_KEY: json.dumps(list(self.labels)),
-            PLATFORM_RELATION_KEY: self.platform,
-            PRIORITY_RELATION_KEY: str(self.priority),
-            MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
+            PLANNER_FLAVOR_RELATION_KEY: self.flavor,
+            PLANNER_LABELS_RELATION_KEY: json.dumps(list(self.labels)),
+            PLANNER_PLATFORM_RELATION_KEY: self.platform,
+            PLANNER_PRIORITY_RELATION_KEY: str(self.priority),
+            PLANNER_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
         }
 
 

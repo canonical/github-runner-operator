@@ -56,8 +56,8 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
-    FlavorRelationData,
     OpenstackImage,
+    PlannerRelationData,
     build_proxy_config_from_charm,
 )
 from errors import (
@@ -522,7 +522,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._setup_service(state)
         if self.unit.is_leader():
-            flavor_data = FlavorRelationData(
+            flavor_data = PlannerRelationData(
                 flavor=self.app.name,
                 labels=state.charm_config.labels,
                 minimum_pressure=state.runner_config.base_virtual_machines,
