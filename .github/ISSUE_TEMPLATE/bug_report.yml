@@ -1,6 +1,6 @@
 name: Bug Report
 description: File a bug report
-labels: ["Type: Bug", "Status: Triage"]
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
@@ -16,6 +16,25 @@ body:
         If applicable, add screenshots to help explain the problem you are facing.
     validations:
       required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      description: How severe is the business impact of this bug?
+      options:
+        - Low (minor issue or cosmetic problem)
+        - Medium (functionality degraded, workaround exists)
+        - High (major functionality broken, no workaround)
+        - Critical (system down, data loss, affecting deployment in production)
+    validations:
+      required: true
+  - type: textarea
+    id: impact-rationale
+    attributes:
+      label: Impact Rationale
+      description: >
+        If impact is high or critical, please provide the rationale behind your assessment, impacted
+        project reference and any relevant project deadline dates which will be affected by this bug.
   - type: textarea
     id: reproduction
     attributes:
@@ -46,7 +65,7 @@ body:
       description: >
         Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
         Fetch the logs using `juju debug-log --replay` and `kubectl logs ...`. Additional details available in the juju docs 
-        at https://juju.is/docs/olm/juju-logs
+        at https://documentation.ubuntu.com/juju/3.6/howto/manage-logs/#manage-logs
       render: shell
     validations:
       required: true
@@ -54,4 +73,3 @@ body:
     id: additional-context
     attributes:
       label: Additional context
-
