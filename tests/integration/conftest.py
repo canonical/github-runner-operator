@@ -977,79 +977,24 @@ async def planner_token_secret(model: Model, planner_token_secret_name: str) -> 
 
 @pytest_asyncio.fixture(scope="module")
 async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
+    """Deploy a minimal any-charm that acts as the requires side of the planner relation."""
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "planner.py": textwrap.dedent("""\
-            import json
-            import sys
-            from http.server import BaseHTTPRequestHandler, HTTPServer
-            from pathlib import Path
-
-            FLAVOR_FILE = Path("/tmp/planner_flavor.json")
-
-            def run_server(address):
-                server = HTTPServer(server_address=(address, 8080), RequestHandlerClass=MockPlannerHandler)
-                server.serve_forever()
-
-            class MockPlannerHandler(BaseHTTPRequestHandler):
-                def do_GET(self):
-                    if FLAVOR_FILE.exists():
-                        data = FLAVOR_FILE.read_text(encoding="utf-8")
-                        self.send_response(200)
-                        self.send_header("Content-Type", "application/json")
-                        self.end_headers()
-                        self.wfile.write(data.encode())
-                    else:
-                        self.send_response(404)
-                        self.end_headers()
-
-            if __name__ == "__main__":
-                run_server(sys.argv[1])
-            """),
         "any_charm.py": textwrap.dedent(f"""\
-            import json
-            import signal
-            import subprocess
-            import os
-            from pathlib import Path
             from any_charm_base import AnyCharmBase
-
-            FLAVOR_FILE = Path("/tmp/planner_flavor.json")
 
             class AnyCharm(AnyCharmBase):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
-                    self.framework.observe(self.on.install, self._on_install)
-                    self.framework.observe(self.on["provide-github-runner-planner-v0"].relation_changed, self._on_planner_relation_changed)
-
-                def _on_install(self, _):
-                    address = str(self.model.get_binding("juju-info").network.bind_address)
-                    pid_file = Path("/tmp/any.pid")
-                    if pid_file.exists():
-                        try:
-                            os.kill(int(pid_file.read_text(encoding="utf8")), signal.SIGTERM)
-                        except ProcessLookupError:
-                            pass
-                        pid_file.unlink()
-                    with open("planner.log", "a") as log_file:
-                        proc_http = subprocess.Popen(["python3", "-m", "planner", address, "&"], start_new_session=True, cwd=str(Path.cwd() / "src"), stdout=log_file, stderr=subprocess.STDOUT)
-                    pid_file.write_text(str(proc_http.pid), encoding="utf8")
+                    self.framework.observe(
+                        self.on["require-github-runner-planner-v0"].relation_changed,
+                        self._on_planner_relation_changed,
+                    )
 
                 def _on_planner_relation_changed(self, event):
-                    event.relation.data[self.unit]["endpoint"] = "http://" + str(self.model.get_binding("juju-info").network.bind_address) + ":8080"
+                    event.relation.data[self.unit]["endpoint"] = "http://mock:8080"
                     event.relation.data[self.unit]["token"] = "{planner_token_secret}"
-                    app_data = event.relation.data[event.app]
-                    flavor = app_data.get("flavor")
-                    if flavor:
-                        data = {{
-                            "flavor": flavor,
-                            "flavor-labels": app_data.get("flavor-labels", ""),
-                            "flavor-platform": app_data.get("flavor-platform", ""),
-                            "flavor-priority": app_data.get("flavor-priority", ""),
-                            "flavor-minimum-pressure": app_data.get("flavor-minimum-pressure", ""),
-                        }}
-                        FLAVOR_FILE.write_text(json.dumps(data), encoding="utf-8")
             """),
     }
 

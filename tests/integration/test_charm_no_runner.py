@@ -3,10 +3,11 @@
 
 """Integration tests for github-runner charm with no runner."""
 
+import json
 import logging
 
+import jubilant
 import pytest
-import requests
 from github_runner_manager.reconcile_service import (
     RECONCILE_SERVICE_START_MSG,
     RECONCILE_START_MSG,
@@ -144,6 +145,7 @@ async def test_manager_service_started(
 @pytest.mark.abort_on_fail
 async def test_planner_integration(
     model: Model,
+    juju: jubilant.Juju,
     app_no_runner: Application,
     mock_planner_app: Application,
     planner_token_secret_name: str,
@@ -154,8 +156,7 @@ async def test_planner_integration(
         1. Integrate the application with the mock planner.
         2. Remove the integration.
     assert:
-        1. The charm writes its flavor name to the planner relation app data bag,
-           and the mock planner observes it.
+        1. The charm writes its flavor data to the planner relation app data bag.
         2. The charm returns to active status after the relation is removed.
     """
     await model.grant_secret(planner_token_secret_name, app_no_runner.name)
@@ -169,16 +170,19 @@ async def test_planner_integration(
         timeout=10 * 60,
     )
 
-    address = await mock_planner_app.units[0].get_public_address()
-    response = requests.get(f"http://{address}:8080", timeout=10)
-    data = response.json()
-    assert data["flavor"] == app_no_runner.name
-    assert data["flavor-platform"] == "github"
-    assert data["flavor-priority"] == "50"
-    assert data["flavor-minimum-pressure"] == "0"
+    # Verify the runner charm wrote flavor data to the relation app databag.
+    unit_name = app_no_runner.units[0].name
+    raw = juju.cli("show-unit", unit_name, "--format", "json")
+    unit_data = json.loads(raw)[unit_name]
+    planner_rel = next(rel for rel in unit_data["relation-info"] if rel["endpoint"] == "planner")
+    app_data = planner_rel["application-data"]
+    assert app_data["flavor"] == app_no_runner.name
+    assert app_data["platform"] == "github"
+    assert app_data["priority"] == "50"
+    assert app_data["minimum-pressure"] == "0"
 
     await mock_planner_app.remove_relation(
-        "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"
+        "require-github-runner-planner-v0", f"{app_no_runner.name}:planner"
     )
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
