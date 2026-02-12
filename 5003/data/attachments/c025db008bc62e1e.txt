@@ -1,0 +1,166 @@
+06:49:13 WARNING unexpected facade SSHServer received from the controller
+06:49:13 INFO Adding model github-pr-2f78f-lxd:test-charm-metrics-failure-f339 on cloud localhost
+06:49:14 WARNING unexpected facade SSHServer received from the controller
+06:49:14 WARNING unexpected facade SSHSession received from the controller
+06:49:14 WARNING unexpected facade SSHTunneler received from the controller
+06:49:14 WARNING unexpected facade SSHServer received from the controller
+06:49:14 INFO GitHub token rate limit: Rate(reset=2026-02-12 07:32:24+00:00, remaining=4871, limit=5000)
+06:49:16 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:49:18 INFO Deploying ch:amd64/noble/any-charm-133
+06:49:32 INFO Deploying local:jammy/github-runner-0
+06:49:32 INFO Waiting for model:
+  test-zb6ab23s/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zb6ab23s/0 [allocating] waiting: waiting for machine
+06:50:02 INFO Waiting for model:
+  test-zb6ab23s/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zb6ab23s/0 [executing] maintenance: installing charm software
+06:50:26 WARNING Receiver: Connection closed, reconnecting
+06:50:26 WARNING Receiver: Connection closed, reconnecting
+06:50:26 ERROR Task tmp raised an exception: watcher was stopped
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/_jasyncio.py", line 36, in _task_result_exp_handler
+    task.result()
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/facade.py", line 482, in wrapper
+    reply = await f(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/_client3.py", line 126, in Next
+    reply = await self.rpc(msg)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/overrides.py", line 116, in rpc
+    result = await self.connection.rpc(msg, encoder=TypeEncoder)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 597, in rpc
+    raise errors.JujuAPIError(result)
+juju.errors.JujuAPIError: watcher was stopped
+06:50:26 WARNING Watcher: watcher stopped, restarting
+06:50:26 WARNING RPC: Connection closed, reconnecting
+06:50:26 ERROR Task exception was never retrieved
+future: <Task finished name='Task-1196' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Thu, 12 Feb 2026 06:50:26 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+06:50:26 ERROR Task exception was never retrieved
+future: <Task finished name='Task-1194' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Thu, 12 Feb 2026 06:50:26 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+06:50:26 ERROR Task exception was never retrieved
+future: <Task finished name='Task-1200' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Thu, 12 Feb 2026 06:50:26 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+06:50:26 ERROR RPC: Automatic reconnect failed
+06:50:26 WARNING RPC: Connection closed, reconnecting
+06:50:26 ERROR RPC: Automatic reconnect failed
+06:50:27 INFO OpenStack servers: []
+06:50:27 INFO cli: juju debug-log --model github-pr-2f78f-lxd:test-charm-metrics-failure-f339 --limit 1000
+06:50:29 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-f339  github-pr-2f78f-lxd  localhost/localhost  3.6.14   unsupported  06:50:29Z
+
+App                                   Version  Status       Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-zb6ab23s           maintenance      1  any-charm      latest/beta  133  no       installing charm software
+test-zb6ab23s                                  waiting        0/1  github-runner                 0  no       waiting for machine
+
+Unit                                     Workload     Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-zb6ab23s/0*  maintenance  executing   0        10.151.227.11          (install) installing charm software
+test-zb6ab23s/0                          waiting      allocating  1        10.151.227.170         waiting for machine
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        down     10.151.227.11   juju-bb31a0-0  ubuntu@24.04  github-runner  Running
+1        pending  10.151.227.170  juju-bb31a0-1  ubuntu@22.04  github-runner  Running
+
+06:50:30 INFO Juju error logs:
+
+machine-0: 06:49:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:49:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-zb6ab23s-0: 06:50:26 ERROR juju.worker.dependency "leadership-tracker" manifold worker returned unexpected error: leadership failure: lease manager stopped
+
+06:50:30 INFO Forgetting model main...

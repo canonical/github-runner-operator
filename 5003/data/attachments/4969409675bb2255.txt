@@ -1,0 +1,63 @@
+07:08:13 WARNING RPC: Connection closed, reconnecting
+07:08:13 ERROR RPC: Automatic reconnect failed
+07:08:13 WARNING RPC: Connection closed, reconnecting
+07:08:13 ERROR RPC: Automatic reconnect failed
+07:08:14 WARNING RPC: Connection closed, reconnecting
+07:08:14 ERROR RPC: Automatic reconnect failed
+07:08:14 INFO OpenStack servers: []
+07:08:14 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-fvax  github-pr-2f78f-lxd  localhost/localhost  3.6.14   unsupported  07:08:14Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ny7jbpc4           active      1  any-charm      latest/beta  133  no       
+test-ny7jbpc4                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ny7jbpc4/0*  active    idle   0        10.63.98.146           
+test-ny7jbpc4/0*                         active    idle   1        10.63.98.67            
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.63.98.146  juju-91e9fd-0  ubuntu@24.04  github-runner  Running
+1        started  10.63.98.67   juju-91e9fd-1  ubuntu@22.04  github-runner  Running
+
+07:08:15 INFO Juju error logs:
+
+machine-0: 06:50:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:50:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:51:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:51:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ny7jbpc4-0: 06:53:01 ERROR unit.test-ny7jbpc4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ny7jbpc4-0: 06:53:02 ERROR unit.test-ny7jbpc4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ny7jbpc4-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-1: 07:08:04 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 07:08:04 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.63.98.146:50314: use of closed network connection
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 07:08:04 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-1: 07:08:07 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [198d7e] "machine-1" cannot open api: unable to connect to API: dial tcp 10.63.98.2:17070: connect: connection refused
+machine-0: 07:08:07 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [198d7e] "machine-0" cannot open api: unable to connect to API: dial tcp 10.63.98.2:17070: connect: connection refused
+
+07:08:15 INFO Forgetting model main...
