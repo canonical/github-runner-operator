@@ -171,10 +171,16 @@ async def test_planner_integration(
     )
 
     # Verify the runner charm wrote flavor data to the relation app databag.
-    unit_name = app_no_runner.units[0].name
-    raw = juju.cli("show-unit", unit_name, "--format", "json")
-    unit_data = json.loads(raw)[unit_name]
-    planner_rel = next(rel for rel in unit_data["relation-info"] if rel["endpoint"] == "planner")
+    # Query from the planner unit's perspective so "application-data" shows the
+    # remote (runner) app's data rather than the planner's own app data.
+    planner_unit_name = mock_planner_app.units[0].name
+    raw = juju.cli("show-unit", planner_unit_name, "--format", "json")
+    unit_data = json.loads(raw)[planner_unit_name]
+    planner_rel = next(
+        rel
+        for rel in unit_data["relation-info"]
+        if rel["endpoint"] == "require-github-runner-planner-v0"
+    )
     app_data = planner_rel["application-data"]
     assert app_data["flavor"] == app_no_runner.name
     assert app_data["platform"] == "github"
