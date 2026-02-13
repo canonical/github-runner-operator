@@ -1,0 +1,38 @@
+06:47:41 WARNING unexpected facade SSHServer received from the controller
+06:47:41 INFO Adding model github-pr-b74c6-lxd:test-charm-no-runner-t02e on cloud localhost
+06:47:42 WARNING unexpected facade SSHServer received from the controller
+06:47:42 WARNING unexpected facade SSHSession received from the controller
+06:47:42 WARNING unexpected facade SSHTunneler received from the controller
+06:47:42 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:47:44 INFO Deploying ch:amd64/noble/any-charm-133
+06:48:14 INFO Deploying local:jammy/github-runner-0
+06:48:14 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f17zzucr/0 [allocating] waiting: waiting for machine
+06:48:45 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f17zzucr/0 [allocating] waiting: waiting for machine
+06:49:15 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f17zzucr/0 [executing] maintenance: installing charm software
+06:49:45 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+06:50:16 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+06:50:46 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: waiting for machine
+06:51:16 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: agent initialising
+06:51:47 INFO Waiting for model:
+  test-f17zzucr/0 [allocating] waiting: agent initialising
+06:52:17 INFO Waiting for model:
+  test-f17zzucr/0 [executing] maintenance: installing charm software
+06:52:47 INFO Waiting for model:
+  test-f17zzucr/0 [executing] maintenance: installing charm software
+06:53:18 INFO Waiting for model:
+  test-f17zzucr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-f17zzucr/0 [idle] active: 
+06:53:48 INFO Waiting for model:
+  test-f17zzucr/0 [idle] active: 
+06:53:54 INFO Waiting for model:
+  test-f17zzucr/0 [idle] active:
