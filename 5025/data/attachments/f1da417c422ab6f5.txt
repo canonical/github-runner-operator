@@ -1,0 +1,69 @@
+18:49:08 INFO Waiting for model:
+  test-c86pbcy0/0 [idle] active: 
+18:49:38 INFO Waiting for model:
+  test-c86pbcy0/0 [idle] active: 
+18:49:42 INFO Current reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:49:42 INFO Waiting for reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:50:43 INFO Current reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:50:43 INFO Current reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc, expected reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:50:43 INFO Waiting for reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:51:44 INFO Current reconcile ID: 488445ad-416a-40f7-a1a2-6a2dc23c1d75
+18:51:44 INFO Current reconcile ID: 488445ad-416a-40f7-a1a2-6a2dc23c1d75, expected reconcile ID: 51bc816d-f22f-4043-b238-fa422276fadc
+18:51:49 INFO Wait for condition not met, sleeping 10
+18:52:02 INFO Waiting for model:
+  test-c86pbcy0/0 [idle] active: 
+18:52:32 INFO Waiting for model:
+  test-c86pbcy0/0 [idle] active: 
+18:52:35 INFO Current reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:52:35 INFO Waiting for reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:53:36 INFO Current reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:53:36 INFO Current reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23, expected reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:53:36 INFO Waiting for reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:54:37 INFO Current reconcile ID: 375ba92d-9702-4eec-bdc4-92ababfb111f
+18:54:37 INFO Current reconcile ID: 375ba92d-9702-4eec-bdc4-92ababfb111f, expected reconcile ID: e472d0fb-d60a-449f-92d0-ac53bdf27a23
+18:54:38 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-lzmb  github-pr-b74c6-lxd  localhost/localhost  3.6.14   unsupported  18:54:38Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-c86pbcy0           active      1  any-charm      latest/beta  133  no       
+test-c86pbcy0                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-c86pbcy0/0*  active    idle   0        10.208.217.163         
+test-c86pbcy0/0*                         active    idle   1        10.208.217.128         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.208.217.163  juju-3b6a1d-0  ubuntu@24.04  github-runner  Running
+1        started  10.208.217.128  juju-3b6a1d-1  ubuntu@24.04  github-runner  Running
+
+18:54:38 INFO Juju error logs:
+
+machine-0: 18:31:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:31:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-c86pbcy0-0: 18:31:18 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-c86pbcy0/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-c86pbcy0-0: 18:31:22 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-c86pbcy0/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-c86pbcy0-0: 18:31:26 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-c86pbcy0/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+machine-1: 18:32:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:32:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-c86pbcy0-0: 18:33:50 ERROR unit.test-c86pbcy0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 366, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-c86pbcy0-0: 18:33:52 ERROR unit.test-c86pbcy0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 120, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 329, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-c86pbcy0-0/charm/./src/charm.py", line 536, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:54:38 INFO Forgetting model main...
