@@ -32,5 +32,6 @@ output "requires" {
 output "provides" {
   value = {
     cos_agent = "cos-agent"
+    github_runner_planner_v0 = "planner"
   }
 }

@@ -21,3 +21,15 @@ output "all_app_names" {
   description = "Names of the all the deployed apps, github-runner plus github-runner-image-builder."
   value       = concat([for github_runner in values(module.github_runner) : github_runner.app_name], [module.github_runner_image_builder.app_name])
 }
+
+
+output "planner_offers" {
+  description = "Juju offers for each GitHub runner"
+  value = {
+    for name, offer in juju_offer.planner :
+    name => {
+      url  = offer.url
+      name = offer.name
+    }
+  }
+}

@@ -53,3 +53,13 @@ resource "juju_integration" "image_builder" {
     endpoint = module.github_runner_image_builder.provides.github_runner_image_v0
   }
 }
+
+resource "juju_offer" "planner" {
+
+  for_each = { for github_runner in module.github_runner : github_runner.app_name => github_runner }
+
+  model            = var.model
+  application_name = each.key
+  endpoints        = [module.github_runner.provides.github_runner_planner_v0]
+  name             = "${module.github_runner.provides.github_runner_planner_v0}-${each.key}"
+}
