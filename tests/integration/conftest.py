@@ -959,3 +959,51 @@ async def juju(
         yield juju
         show_debug_log(juju)
         return
+
+
+@pytest.fixture(scope="module")
+def planner_token_secret_name() -> str:
+    """Planner token secret name."""
+    return "planner-token-secret"
+
+
+@pytest_asyncio.fixture(scope="module")
+async def planner_token_secret(model: Model, planner_token_secret_name: str) -> str:
+    """Create a planner token secret."""
+    return await model.add_secret(
+        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
+    )
+
+
+@pytest_asyncio.fixture(scope="module")
+async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
+    """Deploy a minimal any-charm that acts as the requires side of the planner relation."""
+    planner_name = "planner"
+
+    any_charm_src_overwrite = {
+        "any_charm.py": textwrap.dedent(f"""\
+            from any_charm_base import AnyCharmBase
+
+            class AnyCharm(AnyCharmBase):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.framework.observe(
+                        self.on["require-github-runner-planner-v0"].relation_changed,
+                        self._on_planner_relation_changed,
+                    )
+
+                def _on_planner_relation_changed(self, event):
+                    event.relation.data[self.unit]["endpoint"] = "http://mock:8080"
+                    event.relation.data[self.unit]["token"] = "{planner_token_secret}"
+            """),
+    }
+
+    planner_app: Application = await model.deploy(
+        "any-charm",
+        planner_name,
+        channel="latest/beta",
+        config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+    )
+
+    await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
+    yield planner_app
