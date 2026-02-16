@@ -9,7 +9,7 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Literal, cast
+from typing import Final, Literal, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -17,7 +17,13 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
+from pydantic import (
+    BaseModel,
+    MongoDsn,
+    ValidationError,
+    create_model_from_typeddict,
+    validator,
+)
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -61,8 +67,51 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
+PLANNER_INTEGRATION_NAME = "planner"
+
+# Keys and defaults for planner relation app data bag
+PLANNER_FLAVOR_RELATION_KEY: Final[str] = "flavor"
+PLANNER_LABELS_RELATION_KEY: Final[str] = "labels"
+PLANNER_PLATFORM_RELATION_KEY: Final[str] = "platform"
+PLANNER_PRIORITY_RELATION_KEY: Final[str] = "priority"
+PLANNER_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
+PLANNER_DEFAULT_PLATFORM: Final[str] = "github"
+PLANNER_DEFAULT_PRIORITY: Final[int] = 50
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+
+
+@dataclasses.dataclass(frozen=True)
+class PlannerRelationData:
+    """Data written to the planner relation app databag.
+
+    Attributes:
+        flavor: The flavor name (app name).
+        labels: Runner labels for this flavor.
+        platform: The platform identifier.
+        priority: Scheduling priority.
+        minimum_pressure: Minimum number of runners to maintain.
+    """
+
+    flavor: str
+    labels: tuple[str, ...]
+    platform: str = PLANNER_DEFAULT_PLATFORM
+    priority: int = PLANNER_DEFAULT_PRIORITY
+    minimum_pressure: int = 0
+
+    def to_relation_data(self) -> dict[str, str]:
+        """Serialize to relation databag format.
+
+        Returns:
+            Dictionary of string key-value pairs for the Juju relation databag.
+        """
+        return {
+            PLANNER_FLAVOR_RELATION_KEY: self.flavor,
+            PLANNER_LABELS_RELATION_KEY: json.dumps(list(self.labels)),
+            PLANNER_PLATFORM_RELATION_KEY: self.platform,
+            PLANNER_PRIORITY_RELATION_KEY: str(self.priority),
+            PLANNER_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
+        }
 
 
 @dataclasses.dataclass
@@ -455,7 +504,6 @@ class CharmConfig(BaseModel):
         runner_manager_log_level = cast(
             LogLevel, charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
         )
-        # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             allow_external_contributor=cast(
                 bool, charm.config.get(ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, False)

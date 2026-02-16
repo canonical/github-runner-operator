@@ -25,6 +25,8 @@ links:
 provides:
   cos-agent:
     interface: cos_agent
+  planner:
+    interface: github_runner_planner_v0
 
 requires:
   debug-ssh:
