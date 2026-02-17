@@ -25,8 +25,6 @@ links:
 provides:
   cos-agent:
     interface: cos_agent
-  planner:
-    interface: github_runner_planner_v0
 
 requires:
   debug-ssh:
@@ -36,6 +34,8 @@ requires:
   mongodb:
     interface: mongodb_client
     limit: 1
+  planner:
+    interface: github_runner_planner_v0
 
 config:
   options:
