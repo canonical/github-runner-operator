@@ -1,0 +1,52 @@
+06:47:06 WARNING unexpected facade SSHServer received from the controller
+06:47:06 INFO Adding model github-pr-a90b3-lxd:test-charm-metrics-success-svg8 on cloud localhost
+06:47:06 WARNING unexpected facade SSHServer received from the controller
+06:47:06 WARNING unexpected facade SSHSession received from the controller
+06:47:06 WARNING unexpected facade SSHTunneler received from the controller
+06:47:06 WARNING unexpected facade SSHServer received from the controller
+06:47:06 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:47:08 INFO Deploying ch:amd64/noble/any-charm-133
+06:47:23 INFO Deploying local:jammy/github-runner-0
+06:47:23 INFO Waiting for model:
+  test-gpxg8ve2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gpxg8ve2/0 [allocating] waiting: waiting for machine
+06:47:54 INFO Waiting for model:
+  test-gpxg8ve2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gpxg8ve2/0 [allocating] waiting: agent initialising
+06:48:24 INFO Waiting for model:
+  test-gpxg8ve2/0 [allocating] waiting: waiting for machine
+06:48:54 INFO Waiting for model:
+  test-gpxg8ve2/0 [allocating] waiting: agent initialising
+06:49:24 INFO Waiting for model:
+  test-gpxg8ve2/0 [executing] maintenance: installing charm software
+06:49:55 INFO Waiting for model:
+  test-gpxg8ve2/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-gpxg8ve2/0 [idle] active:
+06:50:23 INFO Waiting for model:
+  test-gpxg8ve2/0 [idle] active: 
+06:50:53 INFO Waiting for model:
+  test-gpxg8ve2/0 [idle] active: 
+06:50:56 INFO Current reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:50:56 INFO Waiting for reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:51:57 INFO Current reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:51:57 INFO Current reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec, expected reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:51:57 INFO Waiting for reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:52:59 INFO Current reconcile ID: 693c5d11-75ca-4795-a769-8cc8bcec55cb
+06:52:59 INFO Current reconcile ID: 693c5d11-75ca-4795-a769-8cc8bcec55cb, expected reconcile ID: a726f92b-98d8-4742-903b-99c01a6fb6ec
+06:53:02 INFO cli: juju config --model github-pr-a90b3-lxd:test-charm-metrics-success-svg8 test-gpxg8ve2 base-virtual-machines=0
+06:53:02 INFO Waiting for model:
+  test-gpxg8ve2/0 [idle] active: 
+06:53:32 INFO Waiting for model:
+  test-gpxg8ve2/0 [idle] active: 
+06:53:34 INFO Current reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:53:34 INFO Waiting for reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:54:35 INFO Current reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:54:35 INFO Current reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58, expected reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:54:35 INFO Waiting for reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:55:36 INFO Current reconcile ID: a9f06193-311b-48ce-b483-a8ad17ade853
+06:55:36 INFO Current reconcile ID: a9f06193-311b-48ce-b483-a8ad17ade853, expected reconcile ID: 6daf9ef9-c035-4290-b884-d003539a8e58
+06:55:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771311033.0515876, "event": "reconciliation", "flavor": "test-gpxg8ve2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.301779985427856}
+{"timestamp": 1771311160.3992364, "event": "reconciliation", "flavor": "test-gpxg8ve2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.20141077041626}
+{"timestamp": 1771311111.0, "event": "runner_installed", "flavor": "test-gpxg8ve2", "duration": 79.0}
+{"timestamp": 1771311193.7763987, "event": "reconciliation", "flavor": "test-gpxg8ve2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.629548788070679}
+{"timestamp": 1771311320.5657716, "event": "reconciliation", "flavor": "test-gpxg8ve2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.667296886444092}
