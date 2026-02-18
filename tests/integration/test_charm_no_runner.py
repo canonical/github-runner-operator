@@ -179,7 +179,7 @@ async def test_planner_integration(
     planner_rel = next(
         rel
         for rel in unit_data["relation-info"]
-        if rel["endpoint"] == "require-github-runner-planner-v0"
+        if rel["endpoint"] == "provide-github-runner-planner-v0"
     )
     app_data = planner_rel["application-data"]
     assert app_data["flavor"] == app_no_runner.name
@@ -188,7 +188,7 @@ async def test_planner_integration(
     assert app_data["minimum-pressure"] == "0"
 
     await mock_planner_app.remove_relation(
-        "require-github-runner-planner-v0", f"{app_no_runner.name}:planner"
+        "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"
     )
     await model.wait_for_idle(
         apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60

@@ -988,7 +988,7 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.framework.observe(
-                        self.on["require-github-runner-planner-v0"].relation_changed,
+                        self.on["provide-github-runner-planner-v0"].relation_changed,
                         self._on_planner_relation_changed,
                     )
 
