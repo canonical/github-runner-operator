@@ -1007,3 +1007,232 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
     await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
     yield planner_app
+
+
+@pytest_asyncio.fixture(scope="module")
+async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
+    """Deploy any-charm planner that serves HTTP planner endpoints.
+
+    The embedded planner server listens on port 8080 and exposes:
+    - ``GET /api/v1/flavors/<name>``: returns flavor metadata.
+    - ``GET /api/v1/flavors/<name>/pressure``: returns current pressure.
+    - ``GET /api/v1/flavors/<name>/pressure?stream=true``: NDJSON pressure stream.
+    - ``POST /control/pressure``: test control endpoint to update pressure dynamically.
+
+    The default pressure is ``1`` via ``/tmp/planner_pressure.json``.
+    """
+    planner_name = "planner-http"
+    any_charm_src_overwrite = {
+        "planner.py": textwrap.dedent(
+            """\
+            import json
+            import time
+            from http.server import BaseHTTPRequestHandler, HTTPServer
+            from pathlib import Path
+            from urllib.parse import parse_qs, urlparse
+
+            FLAVOR_PATH = Path("/tmp/planner_flavor.json")
+            PRESSURE_PATH = Path("/tmp/planner_pressure.json")
+
+
+            def _read_json(path: Path, default: dict):
+                try:
+                    return json.loads(path.read_text(encoding="utf-8"))
+                except (json.JSONDecodeError, OSError):
+                    return default
+
+
+            def _write_json(path: Path, payload: dict):
+                path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+            class PlannerHandler(BaseHTTPRequestHandler):
+                def _send_json(self, payload: dict, status: int = 200):
+                    body = json.dumps(payload).encode("utf-8")
+                    self.send_response(status)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+
+                def _extract_flavor_name(self):
+                    parts = urlparse(self.path).path.strip("/").split("/")
+                    if len(parts) >= 4 and parts[0] == "api" and parts[1] == "v1" and parts[2] == "flavors":
+                        return parts[3], parts[4:]
+                    return None, []
+
+                def do_GET(self):
+                    flavor_name, remaining = self._extract_flavor_name()
+                    if flavor_name is None:
+                        self._send_json({"error": "not found"}, status=404)
+                        return
+
+                    parsed = urlparse(self.path)
+                    if not remaining:
+                        flavor = _read_json(
+                            FLAVOR_PATH,
+                            {"name": flavor_name, "labels": [], "minimum_pressure": 0},
+                        )
+                        self._send_json(
+                            {
+                                "name": flavor.get("name", flavor_name),
+                                "labels": flavor.get("labels", []),
+                                "minimum_pressure": flavor.get("minimum_pressure", 0),
+                            }
+                        )
+                        return
+
+                    if remaining[0] != "pressure":
+                        self._send_json({"error": "not found"}, status=404)
+                        return
+
+                    pressure = float(_read_json(PRESSURE_PATH, {"pressure": 1}).get("pressure", 1))
+                    if parse_qs(parsed.query).get("stream") == ["true"]:
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/x-ndjson")
+                        self.end_headers()
+                        while True:
+                            pressure = float(
+                                _read_json(PRESSURE_PATH, {"pressure": 1}).get("pressure", 1)
+                            )
+                            self.wfile.write((json.dumps({"pressure": pressure}) + "\\n").encode("utf-8"))
+                            self.wfile.flush()
+                            time.sleep(10)
+
+                    self._send_json({"pressure": pressure})
+
+                def do_POST(self):
+                    if urlparse(self.path).path != "/control/pressure":
+                        self._send_json({"error": "not found"}, status=404)
+                        return
+
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    payload = json.loads(self.rfile.read(content_len).decode("utf-8"))
+                    pressure = float(payload.get("pressure", 0))
+                    _write_json(PRESSURE_PATH, {"pressure": pressure})
+                    self._send_json({"pressure": pressure}, status=200)
+
+
+            if __name__ == "__main__":
+                if not PRESSURE_PATH.exists():
+                    _write_json(PRESSURE_PATH, {"pressure": 1})
+                HTTPServer(("0.0.0.0", 8080), PlannerHandler).serve_forever()
+            """
+        ),
+        "any_charm.py": textwrap.dedent(
+            f"""\
+            import json
+            import os
+            import signal
+            import subprocess
+            from pathlib import Path
+
+            from any_charm_base import AnyCharmBase
+
+            PLANNER_PID_FILE = Path("/tmp/planner-http.pid")
+            PLANNER_SCRIPT = Path(__file__).with_name("planner.py")
+            FLAVOR_PATH = Path("/tmp/planner_flavor.json")
+            PRESSURE_PATH = Path("/tmp/planner_pressure.json")
+            TOKEN_SECRET_ID = "{planner_token_secret}"
+
+
+            class AnyCharm(AnyCharmBase):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.framework.observe(self.on.install, self._on_install)
+                    self.framework.observe(self.on.start, self._on_start)
+                    self.framework.observe(self.on.stop, self._on_stop)
+                    self.framework.observe(
+                        self.on["provide-github-runner-planner-v0"].relation_changed,
+                        self._on_planner_relation_changed,
+                    )
+
+                def _is_running(self):
+                    if not PLANNER_PID_FILE.exists():
+                        return False
+                    try:
+                        os.kill(int(PLANNER_PID_FILE.read_text(encoding="utf-8")), 0)
+                        return True
+                    except (OSError, ValueError):
+                        return False
+
+                def _start_planner(self):
+                    if self._is_running():
+                        return
+                    if not PRESSURE_PATH.exists():
+                        PRESSURE_PATH.write_text('{{"pressure": 1}}', encoding="utf-8")
+                    proc = subprocess.Popen(["python3", str(PLANNER_SCRIPT)])
+                    PLANNER_PID_FILE.write_text(str(proc.pid), encoding="utf-8")
+
+                def _stop_planner(self):
+                    if not PLANNER_PID_FILE.exists():
+                        return
+                    try:
+                        os.kill(int(PLANNER_PID_FILE.read_text(encoding="utf-8")), signal.SIGTERM)
+                    except (OSError, ValueError):
+                        pass
+                    PLANNER_PID_FILE.unlink(missing_ok=True)
+
+                def _on_install(self, _event):
+                    self._start_planner()
+
+                def _on_start(self, _event):
+                    self._start_planner()
+
+                def _on_stop(self, _event):
+                    self._stop_planner()
+
+                def _on_planner_relation_changed(self, event):
+                    self._start_planner()
+                    binding = self.model.get_binding(event.relation)
+                    bind_address = str(binding.network.bind_address)
+                    event.relation.data[self.unit]["endpoint"] = f"http://{{bind_address}}:8080"
+                    event.relation.data[self.unit]["token"] = TOKEN_SECRET_ID
+
+                    remote_app = event.app
+                    if not remote_app:
+                        return
+
+                    app_data = event.relation.data[remote_app]
+                    labels_raw = app_data.get("labels", "[]")
+                    try:
+                        labels = json.loads(labels_raw)
+                    except json.JSONDecodeError:
+                        labels = []
+                    minimum_pressure = int(app_data.get("minimum-pressure", "0"))
+                    flavor_payload = {{
+                        "name": app_data.get("flavor", remote_app.name),
+                        "labels": labels,
+                        "minimum_pressure": minimum_pressure,
+                    }}
+                    FLAVOR_PATH.write_text(json.dumps(flavor_payload), encoding="utf-8")
+            """
+        ),
+    }
+    planner_app: Application = await model.deploy(
+        "any-charm",
+        planner_name,
+        channel="latest/beta",
+        config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+    )
+
+    await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
+    yield planner_app
+
+
+@pytest_asyncio.fixture(scope="module", name="mock_planner_http_unit_ip")
+async def mock_planner_http_unit_ip_fixture(
+    model: Model,
+    mock_planner_http_app: Application,
+) -> str:
+    """The unit IP for the HTTP planner fixture."""
+    app_name = mock_planner_http_app.name
+    status: FullStatus = await model.get_status([app_name])
+    app_status = status.applications[app_name]
+    assert app_status is not None, f"Application {app_name} not found in status"
+    try:
+        unit_status: UnitStatus = next(iter(app_status.units.values()))  # type: ignore
+        assert unit_status.public_address, "Invalid unit address"
+        return unit_status.public_address
+    except StopIteration as exc:
+        raise StopIteration("Invalid unit status") from exc
