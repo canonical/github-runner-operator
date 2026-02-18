@@ -9,13 +9,11 @@ import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from ops.testing import Harness
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
-from charm import GithubRunnerCharm
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME,
@@ -51,6 +49,7 @@ from charm_state import (
     OpenstackRunnerConfig,
     ProxyConfig,
     SSHDebugConnection,
+    _build_planner_config_from_charm,
 )
 from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
@@ -731,54 +730,60 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert CharmState.from_charm(mock_charm, mock_database)
 
 
-def test_planner_relation_changed_extracts_endpoint_token():
+def test_planner_config_from_charm_extracts_endpoint_token():
     """
-    arrange: Set up charm with planner relation and granted planner token secret.
-    act: Populate planner endpoint/token data and build charm state.
-    assert: CharmState contains planner_config with resolved token.
+    arrange: Mock charm with planner relation providing endpoint and a token secret.
+    act: Call _build_planner_config_from_charm.
+    assert: PlannerConfig is returned with resolved endpoint and token.
     """
-    harness = Harness(GithubRunnerCharm)
-    relation_id = harness.add_relation(PLANNER_INTEGRATION_NAME, "planner-app")
-    harness.add_relation_unit(relation_id, "planner-app/0")
-    harness.begin()
-    secret_id = harness.add_model_secret("planner-app", {"token": "planner-token-value"})
-    harness.grant_secret(secret_id, harness.charm.app)
-    harness.update_relation_data(
-        relation_id,
-        "planner-app/0",
-        {"endpoint": "http://planner.example.com", "token": secret_id},
-    )
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    unit_mock.name = "planner-app/0"
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {
+        unit_mock: {"endpoint": "http://planner.example.com", "token": "secret:abc123"},
+    }
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"token": "planner-token-value"}
+    mock_charm.model.get_secret.return_value = secret_mock
+    mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = [relation_mock]
 
-    state = harness.charm._setup_state()
+    result = _build_planner_config_from_charm(mock_charm)
 
-    assert state.planner_config == PlannerConfig(
+    assert result == PlannerConfig(
         endpoint="http://planner.example.com", token="planner-token-value"
     )
+    mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
 
 
-def test_planner_relation_broken_clears_config():
+def test_planner_config_from_charm_no_relation():
     """
-    arrange: Set up charm with planner relation data and then remove relation.
-    act: Build state after relation removal.
-    assert: planner_config is None.
+    arrange: Mock charm with no planner relation.
+    act: Call _build_planner_config_from_charm.
+    assert: Returns None.
     """
-    harness = Harness(GithubRunnerCharm)
-    relation_id = harness.add_relation(PLANNER_INTEGRATION_NAME, "planner-app")
-    harness.add_relation_unit(relation_id, "planner-app/0")
-    harness.begin()
-    secret_id = harness.add_model_secret("planner-app", {"token": "planner-token-value"})
-    harness.grant_secret(secret_id, harness.charm.app)
-    harness.update_relation_data(
-        relation_id,
-        "planner-app/0",
-        {"endpoint": "http://planner.example.com", "token": secret_id},
-    )
-    assert harness.charm._setup_state().planner_config is not None
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = []
 
-    harness.remove_relation(relation_id)
-    state = harness.charm._setup_state()
+    assert _build_planner_config_from_charm(mock_charm) is None
 
-    assert state.planner_config is None
+
+def test_planner_config_from_charm_data_not_ready():
+    """
+    arrange: Mock charm with planner relation but no endpoint/token in unit data.
+    act: Call _build_planner_config_from_charm.
+    assert: Returns None.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    relation_mock = MagicMock()
+    unit_mock = MagicMock()
+    unit_mock.name = "planner-app/0"
+    relation_mock.units = [unit_mock]
+    relation_mock.data = {unit_mock: {}}
+    mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = [relation_mock]
+
+    assert _build_planner_config_from_charm(mock_charm) is None
 
 
 @pytest.mark.parametrize(
