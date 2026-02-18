@@ -186,7 +186,7 @@ async def test_planner_pressure_spawns_and_cleans_single_runner(
     app: Application,
     mock_planner_http_app: Application,
     mock_planner_http_unit_ip: str,
-    planner_token_secret: str,
+    planner_token_secret_name: str,
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
@@ -201,7 +201,7 @@ async def test_planner_pressure_spawns_and_cleans_single_runner(
         3. App returns to active after relation removal.
     """
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.grant_secret(planner_token_secret, app.name)
+    await model.grant_secret(planner_token_secret_name, app.name)
     await model.relate(f"{app.name}:planner", mock_planner_http_app.name)
     await model.wait_for_idle(
         apps=[app.name, mock_planner_http_app.name],
