@@ -1,0 +1,66 @@
+19:04:46 INFO Waiting for model:
+  test-g38camxi/0 [idle] active: 
+19:05:16 INFO Waiting for model:
+  test-g38camxi/0 [idle] active: 
+19:05:20 INFO Current reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:05:20 INFO Waiting for reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:06:21 INFO Current reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:06:21 INFO Current reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819, expected reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:06:21 INFO Waiting for reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:07:22 INFO Current reconcile ID: ca570fb4-74e2-488f-842b-86f30c478bc5
+19:07:22 INFO Current reconcile ID: ca570fb4-74e2-488f-842b-86f30c478bc5, expected reconcile ID: 8c310d27-498a-4d5f-bd34-78d2e686d819
+19:07:30 INFO Wait for condition not met, sleeping 10
+19:07:42 INFO Waiting for model:
+  test-g38camxi/0 [idle] active: 
+19:08:12 INFO Waiting for model:
+  test-g38camxi/0 [idle] active: 
+19:08:19 INFO Current reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:08:19 INFO Waiting for reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:09:20 INFO Current reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:09:20 INFO Current reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072, expected reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:09:20 INFO Waiting for reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:10:21 INFO Current reconcile ID: 16e56c15-0cfe-4286-bf8e-3a09a78b2a36
+19:10:21 INFO Current reconcile ID: 16e56c15-0cfe-4286-bf8e-3a09a78b2a36, expected reconcile ID: 156be731-c456-4fcb-aeb7-802b0134b072
+19:10:22 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-7fw7  github-pr-a90b3-lxd  localhost/localhost  3.6.14   unsupported  19:10:22Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-g38camxi           active      1  any-charm      latest/beta  133  no       
+test-g38camxi                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-g38camxi/0*  active    idle   0        10.183.206.242         
+test-g38camxi/0*                         active    idle   1        10.183.206.166         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.183.206.242  juju-d8b254-0  ubuntu@24.04  github-runner  Running
+1        started  10.183.206.166  juju-d8b254-1  ubuntu@24.04  github-runner  Running
+
+19:10:22 INFO Juju error logs:
+
+machine-0: 18:43:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:46:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:46:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-g38camxi-0: 18:49:11 ERROR unit.test-g38camxi/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-g38camxi-0: 18:49:14 ERROR unit.test-g38camxi/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-g38camxi-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:10:22 INFO Forgetting model main...

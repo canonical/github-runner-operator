@@ -1,0 +1,115 @@
+18:44:49 WARNING unexpected facade SSHServer received from the controller
+18:44:49 INFO Adding model github-pr-a90b3-lxd:test-multi-unit-same-machine-pg0k on cloud localhost
+18:44:50 WARNING unexpected facade SSHServer received from the controller
+18:44:50 WARNING unexpected facade SSHSession received from the controller
+18:44:50 WARNING unexpected facade SSHTunneler received from the controller
+18:44:50 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:44:52 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:33 INFO Deploying local:jammy/github-runner-0
+18:45:33 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hnxv2rur/0 [allocating] waiting: waiting for machine
+18:46:04 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hnxv2rur/0 [allocating] waiting: waiting for machine
+18:46:34 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hnxv2rur/0 [idle] active: 
+18:47:04 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: waiting for machine
+18:47:34 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: agent initialising
+18:48:05 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: agent initialising
+18:48:35 INFO Waiting for model:
+  test-hnxv2rur/0 [allocating] waiting: agent initialising
+18:49:05 INFO Waiting for model:
+  test-hnxv2rur/0 [executing] maintenance: installing charm software
+18:49:36 INFO Waiting for model:
+  test-hnxv2rur/0 [executing] maintenance: installing charm software
+18:50:06 INFO Waiting for model:
+  test-hnxv2rur/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-hnxv2rur/0 [idle] active: 
+18:50:36 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active:
+18:50:42 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active: 
+  test-hnxv2rur/1 [allocating] waiting: installing agent
+18:51:13 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active: 
+  test-hnxv2rur/1 [allocating] waiting: agent initialising
+18:51:43 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active: 
+  test-hnxv2rur/1 [executing] maintenance: installing charm software
+18:52:13 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active: 
+  test-hnxv2rur/1 [executing] maintenance: installing charm software
+18:52:43 INFO Waiting for model:
+  test-hnxv2rur/0 [idle] active: 
+  test-hnxv2rur/1 [executing] maintenance: Update image for runners
+18:53:16 INFO File content of /var/lib/github-runner-manager/test-hnxv2rur-0/http_port: 55555
+18:53:17 INFO File content of /var/lib/github-runner-manager/test-hnxv2rur-1/http_port: 55556
+18:53:20 INFO File content of /var/lib/github-runner-manager/test-hnxv2rur-1/http_port: 55556
+18:53:24 INFO File content of /var/lib/github-runner-manager/test-hnxv2rur-1/http_port: 55556
+18:53:24 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-pg0k  github-pr-a90b3-lxd  localhost/localhost  3.6.14   unsupported  18:53:24Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-hnxv2rur           active      1  any-charm      latest/beta  133  no       
+test-hnxv2rur                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hnxv2rur/0*  active    idle   0        10.202.167.209         
+test-hnxv2rur/0*                         active    idle   1        10.202.167.155         
+test-hnxv2rur/1                          active    idle   1        10.202.167.155         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.202.167.209  juju-9d9d37-0  ubuntu@24.04  github-runner  Running
+1        started  10.202.167.155  juju-9d9d37-1  ubuntu@22.04  github-runner  Running
+
+18:53:24 INFO Juju error logs:
+
+machine-0: 18:46:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:46:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hnxv2rur-0: 18:49:56 ERROR unit.test-hnxv2rur/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hnxv2rur-0: 18:49:58 ERROR unit.test-hnxv2rur/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hnxv2rur-1: 18:52:31 ERROR unit.test-hnxv2rur/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hnxv2rur-1: 18:52:33 ERROR unit.test-hnxv2rur/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hnxv2rur-1/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:53:24 INFO Forgetting model main...

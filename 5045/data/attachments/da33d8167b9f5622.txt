@@ -1,0 +1,129 @@
+18:44:50 WARNING unexpected facade SSHServer received from the controller
+18:44:50 INFO Adding model github-pr-a90b3-lxd:test-charm-metrics-failure-5mpl on cloud localhost
+18:44:50 WARNING unexpected facade SSHServer received from the controller
+18:44:50 WARNING unexpected facade SSHSession received from the controller
+18:44:50 WARNING unexpected facade SSHTunneler received from the controller
+18:44:51 WARNING unexpected facade SSHServer received from the controller
+18:44:51 INFO GitHub token rate limit: Rate(reset=2026-02-17 19:04:13+00:00, remaining=4878, limit=5000)
+18:44:53 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:44:55 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:37 INFO Deploying local:jammy/github-runner-0
+18:45:37 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-imkzqm81/0 [allocating] waiting: waiting for machine
+18:46:07 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-imkzqm81/0 [executing] maintenance: installing charm software
+18:46:37 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: waiting for machine
+18:47:08 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: waiting for machine
+18:47:38 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: agent initialising
+18:48:08 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: agent initialising
+18:48:39 INFO Waiting for model:
+  test-imkzqm81/0 [allocating] waiting: agent initialising
+18:49:09 INFO Waiting for model:
+  test-imkzqm81/0 [executing] maintenance: installing charm software
+18:49:39 INFO Waiting for model:
+  test-imkzqm81/0 [executing] maintenance: installing charm software
+18:50:09 INFO Waiting for model:
+  test-imkzqm81/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-imkzqm81/0 [idle] active: 
+18:50:40 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:50:42 INFO cli: juju config --model github-pr-a90b3-lxd:test-charm-metrics-failure-5mpl test-imkzqm81 base-virtual-machines=0
+18:50:42 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:50:58 INFO Current reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:50:58 INFO Waiting for reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:52:00 INFO Current reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:52:00 INFO Current reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c, expected reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:52:00 INFO Waiting for reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:53:01 INFO Current reconcile ID: 0bd9f9aa-cc4e-4d61-a860-1bc25de2049c
+18:53:01 INFO Current reconcile ID: 0bd9f9aa-cc4e-4d61-a860-1bc25de2049c, expected reconcile ID: 8e3ebb23-53d4-44a0-b826-24e46ce3252c
+18:53:01 INFO cli: juju config --model github-pr-a90b3-lxd:test-charm-metrics-failure-5mpl test-imkzqm81 path=canonical/github-runner-operator
+18:53:01 INFO cli: juju config --model github-pr-a90b3-lxd:test-charm-metrics-failure-5mpl test-imkzqm81 base-virtual-machines=1
+18:53:01 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:53:31 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:53:34 INFO Current reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:53:34 INFO Waiting for reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:54:35 INFO Current reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:54:35 INFO Current reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d, expected reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:54:35 INFO Waiting for reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:55:36 INFO Current reconcile ID: 20ee8237-f8e9-4ee5-951f-2413674a0542
+18:55:36 INFO Current reconcile ID: 20ee8237-f8e9-4ee5-951f-2413674a0542, expected reconcile ID: 8779d270-b6ab-4480-94ac-a78a9f80670d
+18:55:44 INFO Wait for condition not met, sleeping 30
+18:56:27 INFO [TEST SETUP] Run command pkill -9 run.sh on test-imkzqm81-0-n-73e7e70bac36
+18:56:27 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.76', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6e:15:af'}]])
+18:56:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-imkzqm81-0-n-73e7e70bac36.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.76 pkill -9 run.sh'
+18:56:29 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.76' (ED25519) to the list of known hosts.
+'
+18:56:31 INFO Runner test-imkzqm81-0-n-73e7e70bac36 status: online
+18:56:31 INFO Runner still marked as online, waiting for it to be marked offline
+18:57:32 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:58:02 INFO Waiting for model:
+  test-imkzqm81/0 [idle] active: 
+18:58:05 INFO Current reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+18:58:05 INFO Waiting for reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+18:59:06 INFO Current reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+18:59:06 INFO Current reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842, expected reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+18:59:06 INFO Waiting for reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+19:00:07 INFO Current reconcile ID: 3280853b-56a4-46a5-a02b-a1cbbedbf207
+19:00:07 INFO Current reconcile ID: 3280853b-56a4-46a5-a02b-a1cbbedbf207, expected reconcile ID: 9bba93a9-26b4-4d18-b33f-efe58b0fa842
+19:00:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771354338.8350127, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.944926738739014}
+{"timestamp": 1771354391.433368, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.772173404693604}
+{"timestamp": 1771354519.786468, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.215243577957153}
+{"timestamp": 1771354469.0, "event": "runner_installed", "flavor": "test-imkzqm81", "duration": 79.0}
+{"timestamp": 1771354548.0, "event": "runner_start", "flavor": "test-imkzqm81", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 79.0, "queue_duration": 2.0}
+{"timestamp": 1771354589.0, "event": "runner_stop", "flavor": "test-imkzqm81", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1771354651.8113883, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.914203643798828}
+{"timestamp": 1771354661.94322, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.611526727676392}
+{"timestamp": 1771354789.618942, "event": "reconciliation", "flavor": "test-imkzqm81", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.568240165710449}
+19:00:09 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-5mpl  github-pr-a90b3-lxd  localhost/localhost  3.6.14   unsupported  19:00:09Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-imkzqm81           active      1  any-charm      latest/beta  133  no       
+test-imkzqm81                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-imkzqm81/0*  active    idle   0        10.81.254.44           
+test-imkzqm81/0*                         active    idle   1        10.81.254.97           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.81.254.44  juju-8ccc32-0  ubuntu@24.04  github-runner  Running
+1        started  10.81.254.97  juju-8ccc32-1  ubuntu@22.04  github-runner  Running
+
+19:00:09 INFO Juju error logs:
+
+machine-0: 18:45:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:45:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-imkzqm81-0: 18:49:57 ERROR unit.test-imkzqm81/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-imkzqm81-0: 18:49:59 ERROR unit.test-imkzqm81/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-imkzqm81-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:00:09 INFO Forgetting model main...

@@ -1,0 +1,62 @@
+18:44:45 WARNING unexpected facade SSHServer received from the controller
+18:44:45 INFO Adding model github-pr-a90b3-lxd:test-charm-metrics-success-pgz4 on cloud localhost
+18:44:46 WARNING unexpected facade SSHServer received from the controller
+18:44:46 WARNING unexpected facade SSHSession received from the controller
+18:44:46 WARNING unexpected facade SSHTunneler received from the controller
+18:44:46 WARNING unexpected facade SSHServer received from the controller
+18:44:46 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:44:48 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:25 INFO Deploying local:jammy/github-runner-0
+18:45:25 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvoy2ux3/0 [allocating] waiting: waiting for machine
+18:45:55 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvoy2ux3/0 [allocating] waiting: agent initialising
+18:46:26 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: waiting for machine
+18:46:56 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: waiting for machine
+18:47:26 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: waiting for machine
+18:47:56 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: agent initialising
+18:48:26 INFO Waiting for model:
+  test-jvoy2ux3/0 [allocating] waiting: agent initialising
+18:48:57 INFO Waiting for model:
+  test-jvoy2ux3/0 [executing] maintenance: installing charm software
+18:49:27 INFO Waiting for model:
+  test-jvoy2ux3/0 [executing] maintenance: installing charm software
+18:49:58 INFO Waiting for model:
+  test-jvoy2ux3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-jvoy2ux3/0 [idle] active: 
+18:50:28 INFO Waiting for model:
+  test-jvoy2ux3/0 [idle] active:
+18:50:34 INFO Waiting for model:
+  test-jvoy2ux3/0 [idle] active: 
+18:51:04 INFO Waiting for model:
+  test-jvoy2ux3/0 [idle] active: 
+18:51:08 INFO Current reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:51:08 INFO Waiting for reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:52:09 INFO Current reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:52:09 INFO Current reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db, expected reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:52:09 INFO Waiting for reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:53:10 INFO Current reconcile ID: 6dfdc9dd-2eae-4876-9dcc-2085e5685299
+18:53:10 INFO Current reconcile ID: 6dfdc9dd-2eae-4876-9dcc-2085e5685299, expected reconcile ID: 3362dbb2-64c8-4157-8749-0b4ea9cb92db
+18:53:14 INFO cli: juju config --model github-pr-a90b3-lxd:test-charm-metrics-success-pgz4 test-jvoy2ux3 base-virtual-machines=0
+18:53:14 INFO Waiting for model:
+  test-jvoy2ux3/0 [executing] active: 
+18:53:44 INFO Waiting for model:
+  test-jvoy2ux3/0 [idle] active: 
+18:53:49 INFO Current reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:53:49 INFO Waiting for reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:54:50 INFO Current reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:54:50 INFO Current reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944, expected reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:54:50 INFO Waiting for reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:55:51 INFO Current reconcile ID: 0cf01339-5eb6-4355-a7e2-bdad32ae5d8d
+18:55:51 INFO Current reconcile ID: 0cf01339-5eb6-4355-a7e2-bdad32ae5d8d, expected reconcile ID: 67cafa68-89b6-4a58-b7e7-a267cddb9944
+18:55:52 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771354245.8999538, "event": "reconciliation", "flavor": "test-jvoy2ux3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.799806833267212}
+{"timestamp": 1771354373.8717813, "event": "reconciliation", "flavor": "test-jvoy2ux3", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.788052082061768}
+{"timestamp": 1771354364.0, "event": "runner_installed", "flavor": "test-jvoy2ux3", "duration": 119.0}
+{"timestamp": 1771354407.1837678, "event": "reconciliation", "flavor": "test-jvoy2ux3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.305938720703125}
+{"timestamp": 1771354535.9527187, "event": "reconciliation", "flavor": "test-jvoy2ux3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.603562593460083}
