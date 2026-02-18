@@ -204,3 +204,15 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     yaml_config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
     loaded_app_config = ApplicationConfiguration.validate(yaml_config)
     assert loaded_app_config == app_config
+
+
+def test_configuration_allows_empty_planner_fields():
+    """Planner URL/token are optional for non-planner mode."""
+    config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
+    config["planner_url"] = None
+    config["planner_token"] = None
+
+    loaded = ApplicationConfiguration.validate(config)
+
+    assert loaded.planner_url is None
+    assert loaded.planner_token is None

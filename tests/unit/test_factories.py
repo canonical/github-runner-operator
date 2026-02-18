@@ -1,5 +1,6 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import dataclasses
 from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
@@ -135,3 +136,25 @@ def test_create_openstack_configuration(complete_charm_state: charm_state.CharmS
             region_name="region",
         ),
     )
+
+
+def test_create_application_configuration_with_planner(
+    complete_charm_state: charm_state.CharmState,
+):
+    """
+    arrange: Prepare CharmState with planner relation config.
+    act: Call create_application_configuration.
+    assert: Planner endpoint/token are passed to ApplicationConfiguration.
+    """
+    state = dataclasses.replace(
+        complete_charm_state,
+        planner_config=charm_state.PlannerConfig(
+            endpoint="http://planner.example.com",
+            token="planner-token-value",
+        ),
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
+    assert str(app_configuration.planner_url) == "http://planner.example.com"
+    assert app_configuration.planner_token == "planner-token-value"

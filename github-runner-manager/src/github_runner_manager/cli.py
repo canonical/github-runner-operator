@@ -32,6 +32,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.planner_client import PlannerClient, PlannerConfiguration
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
 version = importlib.metadata.version("github-runner-manager")
@@ -115,72 +116,79 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     )
     logging.info("Starting GitHub runner manager service version: %s", version)
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_file.read()))
+    lock = Lock()
 
     thread_manager = ThreadManager()
     thread_manager.add_thread(
         target=partial(
             start_http_server,
             config,
-            Lock(),
+            lock,
             FlaskArgs(host=host, port=port, debug=debug),
         ),
         daemon=True,
     )
 
-    pressure_reconciler = PressureReconciler(
-        manager=RunnerManager(
-            manager_name=config.name,
-            platform_provider=GitHubRunnerPlatform.build(
-                prefix=config.openstack_configuration.vm_prefix,
-                github_configuration=config.github_config,
-            ),
-            cloud_runner_manager=OpenStackRunnerManager(
-                config=OpenStackRunnerManagerConfig(
-                    allow_external_contributor=config.allow_external_contributor,
+    if config.planner_url and config.planner_token:
+        combinations = config.non_reactive_configuration.combinations
+        pressure_reconciler = PressureReconciler(
+            manager=RunnerManager(
+                manager_name=config.name,
+                platform_provider=GitHubRunnerPlatform.build(
                     prefix=config.openstack_configuration.vm_prefix,
-                    credentials=config.openstack_configuration.credentials,
-                    server_config=(
-                        None
-                        if not config.non_reactive_configuration.combinations
-                        else OpenStackServerConfig(
-                            image=config.non_reactive_configuration.combinations[0].image.name,
-                            flavor=config.non_reactive_configuration.combinations[0].flavor.name,
-                            network=config.openstack_configuration.network,
-                        )
-                    ),
-                    service_config=config.service_config,
+                    github_configuration=config.github_config,
                 ),
-                user=UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name),
-            ),
-            labels=(
-                list(config.extra_labels)
-                + (
-                    []
-                    if not config.non_reactive_configuration.combinations
-                    else (
-                        config.non_reactive_configuration.combinations[0].image.labels
-                        + config.non_reactive_configuration.combinations[0].flavor.labels
+                cloud_runner_manager=OpenStackRunnerManager(
+                    config=OpenStackRunnerManagerConfig(
+                        allow_external_contributor=config.allow_external_contributor,
+                        prefix=config.openstack_configuration.vm_prefix,
+                        credentials=config.openstack_configuration.credentials,
+                        server_config=(
+                            None
+                            if not combinations
+                            else OpenStackServerConfig(
+                                image=combinations[0].image.name,
+                                flavor=combinations[0].flavor.name,
+                                network=config.openstack_configuration.network,
+                            )
+                        ),
+                        service_config=config.service_config,
+                    ),
+                    user=UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name),
+                ),
+                labels=(
+                    list(config.extra_labels)
+                    + (
+                        []
+                        if not combinations
+                        else (combinations[0].image.labels + combinations[0].flavor.labels)
                     )
-                )
+                ),
             ),
-        ),
-        planner_client=PlannerClient(
-            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
-        ),
-        config=PressureReconcilerConfig(
-            flavor_name=(
-                config.non_reactive_configuration.combinations[0].flavor.name
-                if config.non_reactive_configuration.combinations
-                else ""
-            )
-        ),
-    )
-    signal.signal(
-        signal.SIGTERM, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
-    )
-    signal.signal(signal.SIGINT, partial(handle_shutdown, pressure_reconciler=pressure_reconciler))
-    thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
-    thread_manager.add_thread(target=pressure_reconciler.start_delete_loop, daemon=True)
+            planner_client=PlannerClient(
+                PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+            ),
+            config=PressureReconcilerConfig(
+                flavor_name=combinations[0].flavor.name if combinations else "",
+                reconcile_interval=config.reconcile_interval,
+                fallback_runners=combinations[0].base_virtual_machines if combinations else 0,
+            ),
+            lock=lock,
+        )
+        signal.signal(
+            signal.SIGTERM, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
+        )
+        signal.signal(
+            signal.SIGINT, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
+        )
+        thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
+        thread_manager.add_thread(target=pressure_reconciler.start_delete_loop, daemon=True)
+    # Legacy mode is still supported for deployments without planner config.
+    else:
+        thread_manager.add_thread(
+            target=partial(start_reconcile_service, config, None, lock),
+            daemon=True,
+        )
 
     thread_manager.start()
     thread_manager.raise_on_error()

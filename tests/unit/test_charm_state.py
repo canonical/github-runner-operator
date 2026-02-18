@@ -9,11 +9,13 @@ import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from ops.testing import Harness
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
 
 import charm_state
+from charm import GithubRunnerCharm
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME,
@@ -31,6 +33,8 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    PLANNER_INTEGRATION_NAME,
+    PlannerConfig,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
@@ -725,6 +729,56 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
     assert CharmState.from_charm(mock_charm, mock_database)
+
+
+def test_planner_relation_changed_extracts_endpoint_token():
+    """
+    arrange: Set up charm with planner relation and granted planner token secret.
+    act: Populate planner endpoint/token data and build charm state.
+    assert: CharmState contains planner_config with resolved token.
+    """
+    harness = Harness(GithubRunnerCharm)
+    relation_id = harness.add_relation(PLANNER_INTEGRATION_NAME, "planner-app")
+    harness.add_relation_unit(relation_id, "planner-app/0")
+    harness.begin()
+    secret_id = harness.add_model_secret("planner-app", {"token": "planner-token-value"})
+    harness.grant_secret(secret_id, harness.charm.app)
+    harness.update_relation_data(
+        relation_id,
+        "planner-app/0",
+        {"endpoint": "http://planner.example.com", "token": secret_id},
+    )
+
+    state = harness.charm._setup_state()
+
+    assert state.planner_config == PlannerConfig(
+        endpoint="http://planner.example.com", token="planner-token-value"
+    )
+
+
+def test_planner_relation_broken_clears_config():
+    """
+    arrange: Set up charm with planner relation data and then remove relation.
+    act: Build state after relation removal.
+    assert: planner_config is None.
+    """
+    harness = Harness(GithubRunnerCharm)
+    relation_id = harness.add_relation(PLANNER_INTEGRATION_NAME, "planner-app")
+    harness.add_relation_unit(relation_id, "planner-app/0")
+    harness.begin()
+    secret_id = harness.add_model_secret("planner-app", {"token": "planner-token-value"})
+    harness.grant_secret(secret_id, harness.charm.app)
+    harness.update_relation_data(
+        relation_id,
+        "planner-app/0",
+        {"endpoint": "http://planner.example.com", "token": secret_id},
+    )
+    assert harness.charm._setup_state().planner_config is not None
+
+    harness.remove_relation(relation_id)
+    state = harness.charm._setup_state()
+
+    assert state.planner_config is None
 
 
 @pytest.mark.parametrize(

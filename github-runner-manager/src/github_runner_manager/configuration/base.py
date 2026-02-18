@@ -63,8 +63,8 @@ class ApplicationConfiguration(BaseModel):
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
     openstack_configuration: OpenStackConfiguration
-    planner_url: AnyHttpUrl
-    planner_token: str
+    planner_url: Optional[AnyHttpUrl] = None
+    planner_token: Optional[str] = None
     reconcile_interval: int
 
     @staticmethod

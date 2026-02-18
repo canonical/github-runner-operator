@@ -17,6 +17,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
+from ops.model import SecretNotFoundError
 from pydantic import (
     BaseModel,
     MongoDsn,
@@ -112,6 +113,19 @@ class PlannerRelationData:
             PLANNER_PRIORITY_RELATION_KEY: str(self.priority),
             PLANNER_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
         }
+
+
+@dataclasses.dataclass(frozen=True)
+class PlannerConfig:
+    """Data read from planner relation unit databag.
+
+    Attributes:
+        endpoint: Planner service endpoint URL.
+        token: Planner authentication bearer token.
+    """
+
+    endpoint: str
+    token: str
 
 
 @dataclasses.dataclass
@@ -706,6 +720,48 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
     return ssh_debug_connections
 
 
+def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
+    """Initialize planner endpoint and token from relation data.
+
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        PlannerConfig if planner relation data is ready; otherwise None.
+    """
+    relations = charm.model.relations[PLANNER_INTEGRATION_NAME]
+    if not relations or not (relation := relations[0]).units:
+        return None
+
+    for unit in relation.units:
+        relation_data = relation.data[unit]
+        if not (endpoint := relation_data.get("endpoint")) or not (
+            token_secret_id := relation_data.get("token")
+        ):
+            logger.warning("%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, unit)
+            continue
+        try:
+            token_secret = charm.model.get_secret(id=token_secret_id)
+            token_content = token_secret.get_content()
+            token = token_content.get("token")
+            if not token:
+                logger.warning(
+                    "Token secret content for %s relation unit %s is missing token field.",
+                    PLANNER_INTEGRATION_NAME,
+                    unit.name,
+                )
+                continue
+            return PlannerConfig(endpoint=endpoint, token=token)
+        except SecretNotFoundError:
+            logger.warning(
+                "Token secret %s for %s relation unit %s is not found or not granted yet.",
+                token_secret_id,
+                PLANNER_INTEGRATION_NAME,
+                unit.name,
+            )
+    return None
+
+
 class ReactiveConfig(BaseModel):
     """Represents the configuration for reactive scheduling.
 
@@ -763,6 +819,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
+        planner_config: Planner endpoint and token from relation data.
     """
 
     is_metrics_logging_available: bool
@@ -772,6 +829,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
+    planner_config: PlannerConfig | None
 
     @classmethod
     def _store_state(cls, state: "CharmState") -> None:
@@ -871,6 +929,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        planner_config = _build_planner_config_from_charm(charm)
         reactive_config = ReactiveConfig.from_database(database)
 
         state = cls(
@@ -881,6 +940,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             runner_config=runner_config,
             reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
+            planner_config=planner_config,
         )
 
         cls._store_state(state)
