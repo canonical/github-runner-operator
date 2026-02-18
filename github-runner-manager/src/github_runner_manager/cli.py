@@ -92,12 +92,19 @@ def handle_shutdown(
     default="INFO",
     help="The log level for the application.",
 )
+@click.option(
+    "--python-path",
+    type=str,
+    required=False,
+    help="The PYTHONPATH to access the github-runner-manager library.",
+)
 # The entry point for the CLI will be tested with integration test.
 def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config_file: TextIO,
     host: str,
     port: int,
     debug: bool,
+    python_path: str | None,
     log_level: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
@@ -107,6 +114,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         host: The hostname to listen on for the HTTP server
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
+        python_path: PYTHONPATH to access the github-runner-manager library.
         log_level: The log level.
     """
     logging.basicConfig(
@@ -186,7 +194,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     # Legacy mode is still supported for deployments without planner config.
     else:
         thread_manager.add_thread(
-            target=partial(start_reconcile_service, config, None, lock),
+            target=partial(start_reconcile_service, config, python_path, lock),
             daemon=True,
         )
 
