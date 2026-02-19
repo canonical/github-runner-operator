@@ -152,8 +152,8 @@ def create_default_config(
         ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
-        planner_url: Planner service URL. Defaults to local stub.
-        planner_token: Planner service token. Defaults to stub token.
+        planner_url: Planner service URL. Omitted from config when not provided.
+        planner_token: Planner service token. Omitted from config when not provided.
 
     Returns:
         Configuration dictionary for the application.
@@ -253,7 +253,7 @@ def create_default_config(
                 "region_name": openstack_config.region_name,
             },
         },
-        "planner_url": planner_url or "http://127.0.0.1:8081",
-        "planner_token": planner_token or "stub-token",
+        **({"planner_url": planner_url} if planner_url else {}),
+        **({"planner_token": planner_token} if planner_token else {}),
         "reconcile_interval": 60,
     }

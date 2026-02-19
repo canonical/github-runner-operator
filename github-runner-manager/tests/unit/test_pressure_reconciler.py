@@ -83,7 +83,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     reconciler._last_pressure = 3.0  # noqa: SLF001
     handler = MagicMock()
-    monkeypatch.setattr(reconciler, "_handle_delete", handler)
+    monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
     monkeypatch.setattr(
         reconciler._stop,
         "wait",
@@ -102,7 +102,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=1)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     handler = MagicMock()
-    monkeypatch.setattr(reconciler, "_handle_delete", handler)
+    monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
     wait_calls = {"count": 0}
 
     def _wait(_interval: int) -> bool:
@@ -115,14 +115,14 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     assert handler.call_count == 0
 
 
-def test_handle_delete_uses_desired_total_not_raw_pressure():
+def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
     """Delete path should compare against desired total (with minimum pressure floor)."""
     mgr = _FakeManager(runners_count=4)
     planner = _FakePlanner(flavor_min_pressure=5)
     cfg = PressureReconcilerConfig(flavor_name="small")
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
-    reconciler._handle_delete(0.0)
+    reconciler._handle_timer_reconcile(0.0)
 
     assert mgr.cleanup_called == 1
     assert mgr.created_args == [1]

@@ -188,7 +188,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             max_retries=urllib3.Retry(
                 total=3,
                 backoff_factor=0.3,
-                status_forcelist=[404, 500, 502, 503, 504],
+                status_forcelist=[500, 502, 503, 504],
             )
         )
 

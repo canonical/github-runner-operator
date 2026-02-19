@@ -139,6 +139,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
 
     if config.planner_url and config.planner_token:
         combinations = config.non_reactive_configuration.combinations
+        first_combo = combinations[0] if combinations else None
         pressure_reconciler = PressureReconciler(
             manager=RunnerManager(
                 manager_name=config.name,
@@ -153,10 +154,10 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
                         credentials=config.openstack_configuration.credentials,
                         server_config=(
                             None
-                            if not combinations
+                            if not first_combo
                             else OpenStackServerConfig(
-                                image=combinations[0].image.name,
-                                flavor=combinations[0].flavor.name,
+                                image=first_combo.image.name,
+                                flavor=first_combo.flavor.name,
                                 network=config.openstack_configuration.network,
                             )
                         ),
@@ -168,8 +169,8 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
                     list(config.extra_labels)
                     + (
                         []
-                        if not combinations
-                        else (combinations[0].image.labels + combinations[0].flavor.labels)
+                        if not first_combo
+                        else (first_combo.image.labels + first_combo.flavor.labels)
                     )
                 ),
             ),
@@ -177,9 +178,9 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
                 PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
             ),
             config=PressureReconcilerConfig(
-                flavor_name=combinations[0].flavor.name if combinations else "",
+                flavor_name=first_combo.flavor.name if first_combo else "",
                 reconcile_interval=config.reconcile_interval,
-                fallback_runners=combinations[0].base_virtual_machines if combinations else 0,
+                fallback_runners=first_combo.base_virtual_machines if first_combo else 0,
             ),
             lock=lock,
         )
