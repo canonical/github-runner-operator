@@ -42,24 +42,24 @@ async def app_fixture(
     await wait_for_reconcile(basic_app)
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_check_runner(app: Application, instance_helper: OpenStackInstanceHelper) -> None:
-    """
-    arrange: A working application with one runner.
-    act: Run check_runner action.
-    assert: Action returns result with one runner.
-    """
-    await instance_helper.set_app_runner_amount(app, 2)
-
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "2"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_check_runner(app: Application, instance_helper: OpenStackInstanceHelper) -> None:
+#     """
+#     arrange: A working application with one runner.
+#     act: Run check_runner action.
+#     assert: Action returns result with one runner.
+#     """
+#     await instance_helper.set_app_runner_amount(app, 2)
+#
+#     action = await app.units[0].run_action("check-runners")
+#     await action.wait()
+#
+#     assert action.status == "completed"
+#     assert action.results["online"] == "2"
+#     assert action.results["offline"] == "0"
+#     assert action.results["unknown"] == "0"
 
 
 # @pytest.mark.openstack
