@@ -128,7 +128,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             if self._last_pressure is None:
                 logger.debug("Delete loop: no pressure seen yet, skipping.")
                 continue
-            self._handle_delete(self._last_pressure)
+            self._handle_timer_reconcile(self._last_pressure)
 
     def stop(self) -> None:
         """Signal the reconciler loops to stop gracefully."""
@@ -183,8 +183,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Unable to create runners due to missing server configuration (image/flavor)."
                 )
 
-    def _handle_delete(self, pressure: float) -> None:
-        """Clean up then create missing runners if below desired.
+    def _handle_timer_reconcile(self, pressure: float) -> None:
+        """Clean up stale runners, then fill back to desired count if needed.
 
         Args:
             pressure: Current pressure value used to compute desired total.

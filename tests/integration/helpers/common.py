@@ -420,25 +420,22 @@ async def wait_for(
     Returns:
         The result of the function if any.
     """
+    async def _call() -> R:
+        result = func()
+        if inspect.isawaitable(result):
+            return await cast(Awaitable, result)
+        return cast(R, result)
+
     deadline = time.time() + timeout
-    is_awaitable = inspect.iscoroutinefunction(func)
     while time.time() < deadline:
-        if is_awaitable:
-            if result := await cast(Awaitable, func()):
-                return result
-        else:
-            if result := func():
-                return cast(R, result)
+        if result := await _call():
+            return result
         logger.info("Wait for condition not met, sleeping %s", check_interval)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
-    if is_awaitable:
-        if result := await cast(Awaitable, func()):
-            return result
-    else:
-        if result := func():
-            return cast(R, result)
+    if result := await _call():
+        return result
     raise TimeoutError()
 
 
