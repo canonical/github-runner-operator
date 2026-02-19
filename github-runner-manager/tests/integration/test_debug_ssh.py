@@ -24,6 +24,7 @@ from github.Repository import Repository
 from openstack.compute.v2.server import Server as OpenstackServer
 
 from .application import RunningApplication
+from .conftest import wait_for_runner
 from .factories import (
     GitHubConfig,
     OpenStackConfig,
@@ -76,51 +77,6 @@ class TmateServer:
     port: int
     rsa_fingerprint: str
     ed25519_fingerprint: str
-
-
-def wait_for_runner(
-    openstack_connection: openstack.connection.Connection,
-    test_config: TestConfig,
-    timeout: int = 300,
-    interval: int = 5,
-) -> tuple[OpenstackServer, str] | tuple[None, None]:
-    """Wait for an OpenStack runner to be created and return it with its IP.
-
-    Args:
-        openstack_connection: OpenStack connection object.
-        test_config: Test configuration with VM prefix.
-        timeout: Maximum time to wait in seconds.
-        interval: Time between checks in seconds.
-
-    Returns:
-        Tuple of (runner, ip) if found, or (None, None) if not found within timeout.
-    """
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        servers = [
-            server
-            for server in openstack_connection.list_servers()
-            if server.name.startswith(test_config.vm_prefix)
-        ]
-        if servers:
-            runner = servers[0]
-            logger.info("Found runner: %s", runner.name)
-
-            # Get runner IP
-            ip = None
-            for network_addresses in runner.addresses.values():
-                for address in network_addresses:
-                    ip = address["addr"]
-                    break
-                if ip:
-                    break
-
-            if ip:
-                return runner, ip
-
-        time.sleep(interval)
-
-    return None, None
 
 
 def wait_for_ssh(runner_ip: str, port: int = 22, timeout: int = 120, interval: int = 2) -> bool:

@@ -7,6 +7,7 @@ Provides flavor info and pressure endpoints expected by PlannerClient:
 - GET /api/v1/flavors/<name>
 - GET /api/v1/flavors/<name>/pressure
 - GET /api/v1/flavors/<name>/pressure?stream=true (NDJSON)
+- POST /control/pressure (test control endpoint for dynamic pressure updates)
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import json
 import multiprocessing
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 import requests
@@ -30,12 +32,58 @@ class PlannerStubConfig:
     token: str = "stub-token"
     flavor_name: str = "small"
     minimum_pressure: int = 0
-    stream_sequence: tuple[float, ...] = (1.0, 1.0, 1.0)
-    stream_interval_seconds: float = 10
+    initial_pressure: float = 1.0
+
+
+def _pressure_file_path(port: int) -> Path:
+    """Return the path to the pressure state file for the given port.
+
+    Port-namespaced to allow parallel test execution without conflicts.
+    """
+    return Path(f"/tmp/planner_stub_{port}_pressure.json")
+
+
+def _read_pressure(pressure_path: Path, default: float) -> float:
+    """Read the current pressure value from the state file.
+
+    Args:
+        pressure_path: Path to the JSON pressure state file.
+        default: Value to return if the file is missing or malformed.
+
+    Returns:
+        The pressure value from the file, or ``default`` on error.
+    """
+    try:
+        data = json.loads(pressure_path.read_text(encoding="utf-8"))
+        return float(data.get("pressure", default))
+    except (json.JSONDecodeError, OSError):
+        return default
+
+
+def _pressure_stream_gen(pressure_path: Path, default: float) -> Iterable[bytes]:
+    """Yield NDJSON-encoded pressure values indefinitely, re-reading the file each time.
+
+    Yields one line every 10 seconds so that calls to ``/control/pressure`` are
+    reflected in streaming consumers without restarting the server.
+
+    Args:
+        pressure_path: Path to the JSON pressure state file.
+        default: Pressure value to use when the file is missing or malformed.
+
+    Yields:
+        Iterable[bytes]: NDJSON lines as byte strings.
+    """
+    while True:
+        p = _read_pressure(pressure_path, default)
+        yield (json.dumps({"pressure": p}) + "\n").encode("utf-8")
+        time.sleep(10)
 
 
 def _make_app(config: PlannerStubConfig) -> Flask:
     """Create a Flask app configured as a planner stub server.
+
+    Writes the initial pressure to a temp file so pressure persists across
+    requests and can be updated dynamically via ``POST /control/pressure``.
 
     Args:
         config: Configuration for the planner stub.
@@ -44,6 +92,10 @@ def _make_app(config: PlannerStubConfig) -> Flask:
         Flask: Configured Flask app instance.
     """
     app = Flask(__name__)
+    pressure_path = _pressure_file_path(config.port)
+    pressure_path.write_text(
+        json.dumps({"pressure": config.initial_pressure}), encoding="utf-8"
+    )
 
     @app.get("/health")
     def health() -> Response:
@@ -70,43 +122,37 @@ def _make_app(config: PlannerStubConfig) -> Flask:
 
     @app.get(f"/api/v1/flavors/{config.flavor_name}/pressure")
     def get_pressure() -> Response:
-        """Return the latest pressure snapshot for the flavor.
+        """Return the current pressure as a snapshot or NDJSON stream.
+
+        When ``stream=true`` is present in the query string, an NDJSON stream
+        is returned that re-reads the pressure file on every iteration.
+        Otherwise, a single JSON snapshot is returned.
 
         Returns:
-            Response: JSON body with a single `pressure` float value.
-        """
-        payload = {"pressure": float(config.stream_sequence[-1])}
-        return Response(json.dumps(payload), mimetype="application/json")
-
-    @app.get(f"/api/v1/flavors/{config.flavor_name}/pressure")
-    def stream_pressure() -> Response:  # type: ignore[no-redef]
-        """Return an NDJSON stream of pressure updates when requested.
-
-        If the query parameter `stream=true` is present, an NDJSON stream of
-        pressure updates is returned; otherwise, a single pressure snapshot is
-        returned.
-
-        Returns:
-            Response: NDJSON stream or a single JSON snapshot.
+            Response: JSON snapshot or infinite NDJSON stream.
         """
         if request.args.get("stream") != "true":
-            return get_pressure()
+            p = _read_pressure(pressure_path, config.initial_pressure)
+            return Response(json.dumps({"pressure": p}), mimetype="application/json")
+        return Response(
+            _pressure_stream_gen(pressure_path, config.initial_pressure),
+            mimetype="application/x-ndjson",
+        )
 
-        def _gen() -> Iterable[bytes]:
-            """Yield NDJSON-encoded pressure values on a schedule.
+    @app.post("/control/pressure")
+    def control_pressure() -> Response:
+        """Update the pressure served by all subsequent requests.
 
-            Yields:
-                Iterable[bytes]: Sequence of NDJSON lines as byte strings.
-            """
-            # Emit a few cycles deterministically, then stop.
-            cycles = 5
-            for _ in range(cycles):
-                for p in config.stream_sequence:
-                    line = json.dumps({"pressure": float(p)}) + "\n"
-                    yield line.encode("utf-8")
-                    time.sleep(config.stream_interval_seconds)
+        Writes the new value to the pressure file so both snapshot and
+        streaming endpoints pick it up without a server restart.
 
-        return Response(_gen(), mimetype="application/x-ndjson")
+        Returns:
+            Response: JSON body with the newly set `pressure` value.
+        """
+        payload = request.get_json(force=True)
+        pressure = float(payload.get("pressure", 0))
+        pressure_path.write_text(json.dumps({"pressure": pressure}), encoding="utf-8")
+        return Response(json.dumps({"pressure": pressure}), mimetype="application/json")
 
     return app
 
@@ -119,7 +165,7 @@ class PlannerStub:
 
         Args:
             config: Optional configuration for host, port, token, flavor name,
-                minimum pressure, and stream behavior. If not provided,
+                minimum pressure, and initial pressure. If not provided,
                 defaults from `PlannerStubConfig` are used.
         """
         self._config = config or PlannerStubConfig()
@@ -170,3 +216,19 @@ class PlannerStub:
             if self._process.is_alive():
                 self._process.kill()
                 self._process.join()
+
+    def set_pressure(self, value: float) -> None:
+        """Update the pressure served by the stub server.
+
+        POSTs to the stub's own ``/control/pressure`` endpoint so the change
+        is immediately reflected in both snapshot and streaming responses.
+
+        Args:
+            value: The new pressure value to serve.
+        """
+        response = requests.post(
+            f"{self.base_url}/control/pressure",
+            json={"pressure": value},
+            timeout=5,
+        )
+        response.raise_for_status()

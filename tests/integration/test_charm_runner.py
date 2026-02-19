@@ -7,13 +7,10 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
-import requests
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.action import Action
 from juju.application import Application
-from juju.model import Model
-from ops import ActiveStatus
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
 from tests.integration.helpers.common import (
@@ -178,61 +175,3 @@ async def app_fixture(
 #     assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_planner_pressure_spawns_and_cleans_single_runner(
-    model: Model,
-    app: Application,
-    mock_planner_http_app: Application,
-    mock_planner_http_unit_ip: str,
-    planner_token_secret_name: str,
-    instance_helper: OpenStackInstanceHelper,
-) -> None:
-    """
-    arrange: A working runner app, a HTTP planner app, and planner secret grant.
-    act:
-        1. Set base-virtual-machines to 0 and relate planner.
-        2. Change planner pressure from 1 to 0 through control endpoint.
-        3. Remove planner relation.
-    assert:
-        1. Planner drives runner count from 0 to 1.
-        2. Planner pressure 0 drives runner count back to 0.
-        3. App returns to active after relation removal.
-    """
-    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.grant_secret(planner_token_secret_name, app.name)
-    await model.relate(f"{app.name}:planner", mock_planner_http_app.name)
-    await model.wait_for_idle(
-        apps=[app.name, mock_planner_http_app.name],
-        status=ActiveStatus.name,
-        idle_period=30,
-        timeout=10 * 60,
-    )
-
-    unit = app.units[0]
-
-    async def _runner_count(number: int) -> bool:
-        return len(await instance_helper.get_runner_names(unit)) == number
-
-    await wait_for(lambda: _runner_count(1), timeout=10 * 60, check_interval=10)
-
-    response = requests.post(
-        f"http://{mock_planner_http_unit_ip}:8080/control/pressure",
-        json={"pressure": 0},
-        timeout=30,
-    )
-    assert response.status_code == 200
-
-    await wait_for(lambda: _runner_count(0), timeout=15 * 60, check_interval=15)
-
-    await mock_planner_http_app.remove_relation(
-        "provide-github-runner-planner-v0",
-        f"{app.name}:planner",
-    )
-    await model.wait_for_idle(
-        apps=[app.name],
-        status=ActiveStatus.name,
-        idle_period=30,
-        timeout=10 * 60,
-    )
