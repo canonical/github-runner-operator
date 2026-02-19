@@ -184,7 +184,10 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 )
 
     def _handle_timer_reconcile(self, pressure: float) -> None:
-        """Clean up stale runners, then fill back to desired count if needed.
+        """Clean up stale runners, then converge toward the desired count.
+
+        Scales down (deletes) when current exceeds desired, and scales up
+        (creates) when current falls below desired after cleanup.
 
         Args:
             pressure: Current pressure value used to compute desired total.
@@ -193,20 +196,29 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         with self._lock:
             self._manager.cleanup_runners()
             current_total = len(self._manager.get_runners())
-            if desired_total <= current_total:
+            if current_total > desired_total:
+                to_delete = current_total - desired_total
                 logger.info(
-                    "Desired total less than or equal to current runners (%s <= %s). No changes.",
+                    "Timer: scaling down %s runners (desired=%s current=%s)",
+                    to_delete,
                     desired_total,
                     current_total,
                 )
-                return
-
-            desired_pressure_difference = desired_total - current_total
-            logger.info(
-                "Pressure bigger than current runners (%s > %s). Creating runners.",
-                desired_total,
-                current_total,
-            )
-            self._manager.create_runners(
-                num=desired_pressure_difference, metadata=RunnerMetadata()
-            )
+                # delete_runners prioritises idle runners over busy ones; if busy
+                # runners are selected, the GitHub API rejects their deletion.
+                self._manager.delete_runners(num=to_delete)
+            elif current_total < desired_total:
+                to_create = desired_total - current_total
+                logger.info(
+                    "Timer: scaling up %s runners (desired=%s current=%s)",
+                    to_create,
+                    desired_total,
+                    current_total,
+                )
+                self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+            else:
+                logger.info(
+                    "Timer: no changes needed (desired=%s current=%s)",
+                    desired_total,
+                    current_total,
+                )
