@@ -1027,7 +1027,7 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
             """\
             import json
             import time
-            from http.server import BaseHTTPRequestHandler, HTTPServer
+            from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
             from pathlib import Path
             from urllib.parse import parse_qs, urlparse
 
@@ -1116,7 +1116,7 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
             if __name__ == "__main__":
                 if not PRESSURE_PATH.exists():
                     _write_json(PRESSURE_PATH, {"pressure": 1})
-                HTTPServer(("0.0.0.0", 8080), PlannerHandler).serve_forever()
+                ThreadingHTTPServer(("0.0.0.0", 8080), PlannerHandler).serve_forever()
             """
         ),
         "any_charm.py": textwrap.dedent(
