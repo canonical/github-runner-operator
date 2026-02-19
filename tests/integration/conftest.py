@@ -1047,6 +1047,12 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
 
 
             class PlannerHandler(BaseHTTPRequestHandler):
+                def log_message(self, format, *args):
+                    try:
+                        super().log_message(format, *args)
+                    except OSError:
+                        pass
+
                 def _send_json(self, payload: dict, status: int = 200):
                     body = json.dumps(payload).encode("utf-8")
                     self.send_response(status)
@@ -1124,7 +1130,9 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
             import json
             import os
             import signal
+            import socket
             import subprocess
+            import time
             from pathlib import Path
 
             from any_charm_base import AnyCharmBase
@@ -1161,7 +1169,12 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
                         return
                     if not PRESSURE_PATH.exists():
                         PRESSURE_PATH.write_text('{{"pressure": 1}}', encoding="utf-8")
-                    proc = subprocess.Popen(["python3", str(PLANNER_SCRIPT)])
+                    proc = subprocess.Popen(
+                        ["python3", str(PLANNER_SCRIPT)],
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
                     PLANNER_PID_FILE.write_text(str(proc.pid), encoding="utf-8")
 
                 def _stop_planner(self):
@@ -1184,6 +1197,12 @@ async def mock_planner_http_app(model: Model, planner_token_secret) -> AsyncIter
 
                 def _on_planner_relation_changed(self, event):
                     self._start_planner()
+                    for _ in range(30):
+                        try:
+                            socket.create_connection(("127.0.0.1", 8080), timeout=1.0).close()
+                            break
+                        except OSError:
+                            time.sleep(1)
                     binding = self.model.get_binding(event.relation)
                     bind_address = str(binding.network.bind_address)
                     event.relation.data[self.unit]["endpoint"] = f"http://{{bind_address}}:8080"
