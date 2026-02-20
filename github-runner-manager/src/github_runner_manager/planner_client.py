@@ -194,7 +194,4 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
         session = requests.Session()
         session.mount("http://", adapter)
         session.mount("https://", adapter)
-        # Disable proxy env vars (HTTP_PROXY, HTTPS_PROXY, etc.) — the planner
-        # is a local service and must never be reached through a proxy.
-        session.trust_env = False
         return session
