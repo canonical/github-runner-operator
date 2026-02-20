@@ -73,12 +73,12 @@ def test_planner_pressure_spawns_and_cleans_runner(
     openstack_connection: openstack.connection.Connection,
     test_config: TestConfig,
 ) -> None:
-    """Planner pressure drives the full runner lifecycle without Juju.
-
-    Arrange: app running in planner mode, stub serving pressure=1.
-    Act 1: wait for a runner VM to appear on OpenStack.
-    Act 2: set planner pressure to 0.
-    Act 3: wait for the runner VM to disappear from OpenStack.
+    """
+    arrange: app running in planner mode, stub serving pressure=1.
+    act:
+        1. wait for a runner VM to appear on OpenStack.
+        2. set planner pressure to 0.
+        3. wait for the runner VM to disappear from OpenStack.
     Assert: runner lifecycle is driven entirely by planner pressure.
     """
     app, stub = planner_app
