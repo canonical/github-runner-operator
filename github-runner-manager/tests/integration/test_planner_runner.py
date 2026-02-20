@@ -52,6 +52,10 @@ def planner_app(
         planner_url=stub.base_url,
         planner_token=stub.token,
     )
+    # Fire the delete loop every 5 minutes so cleanup is visible within the 15-minute
+    # test timeout. The default factory value (60) waits 60 * 60 = 3600 s between ticks.
+    # 5 matches the PressureReconcilerConfig default and reflects realistic behavior.
+    config["reconcile_interval"] = 5
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
