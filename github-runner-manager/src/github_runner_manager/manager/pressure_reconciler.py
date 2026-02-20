@@ -28,7 +28,11 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.planner_client import PlannerApiError, PlannerClient, PlannerConfiguration
+from github_runner_manager.planner_client import (
+    PlannerApiError,
+    PlannerClient,
+    PlannerConfiguration,
+)
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
 logger = logging.getLogger(__name__)
@@ -69,7 +73,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
         _planner: Client used to load flavor info and stream pressure updates.
-        _flavor: Flavor name whose pressure should be reconciled.
         _config: Reconciler configuration.
         _lock: Shared lock to serialize operations with other reconcile loops.
         _stop: Event used to signal streaming loops to stop gracefully.
@@ -96,7 +99,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """
         self._manager = manager
         self._planner = planner_client
-        self._flavor = config.flavor_name
         self._config = config
         self._lock = lock
 
@@ -105,7 +107,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._last_pressure: Optional[float] = None
 
         try:
-            flavor = self._planner.get_flavor(self._flavor)
+            flavor = self._planner.get_flavor(self._config.flavor_name)
             self._min_pressure = flavor.minimum_pressure
             logger.info(
                 "Planner flavor loaded: name=%s, minimum_pressure=%s",
@@ -115,14 +117,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         except PlannerApiError:
             logger.warning(
                 "Planner flavor info unavailable for '%s'. Proceeding without minimum_pressure.",
-                self._flavor,
+                self._config.flavor_name,
             )
 
     def start_create_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously create runners to satisfy planner pressure."""
         while not self._stop.is_set():
             try:
-                for update in self._planner.stream_pressure(self._flavor):
+                for update in self._planner.stream_pressure(self._config.flavor_name):
                     if self._stop.is_set():
                         return
                     self._handle_create(update.pressure)
@@ -178,7 +180,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             pressure: Current pressure value used to compute desired total.
         """
         desired_total = self._desired_total_from_pressure(pressure)
-        logger.debug("Create loop: pressure=%.2f, desired=%s, updating _last_pressure", pressure, desired_total)
+        logger.debug(
+            "Create loop: pressure=%.2f, desired=%s, updating _last_pressure",
+            pressure,
+            desired_total,
+        )
         self._last_pressure = pressure
         with self._lock:
             current_total = len(self._manager.get_runners())

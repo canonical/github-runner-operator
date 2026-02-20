@@ -20,19 +20,23 @@ class _FakeManager:
     """Lightweight runner manager stub for testing the reconciler."""
 
     def __init__(self, runners_count: int = 0):
+        """Initialize with an optional number of pre-existing runners."""
         self._runners = [object() for _ in range(runners_count)]
         self.created_args: list[int] = []
         self.cleanup_called = 0
 
     def get_runners(self) -> list[object]:
+        """Return the current list of runners."""
         return list(self._runners)
 
     def create_runners(self, num: int, metadata: object):  # noqa: ARG002
+        """Record the creation request and extend the internal runner list."""
         self.created_args.append(num)
         if num > 0:
             self._runners.extend(object() for _ in range(num))
 
     def cleanup_runners(self):
+        """Increment the cleanup counter."""
         self.cleanup_called += 1
 
 
@@ -45,14 +49,21 @@ class _FakePlanner:
         stream_updates: list[float] | None = None,
         stream_raises: bool = False,
     ):
+        """Initialize with configurable flavor pressure and stream behavior."""
         self._flavor_min_pressure = flavor_min_pressure
         self._stream_updates = stream_updates or []
         self._stream_raises = stream_raises
 
     def get_flavor(self, name: str):  # noqa: ARG002
+        """Return a stub flavor object with the configured minimum pressure."""
         return SimpleNamespace(name="small", minimum_pressure=self._flavor_min_pressure)
 
     def stream_pressure(self, name: str):  # noqa: ARG002
+        """Yield pressure updates or raise PlannerApiError based on configuration.
+
+        Yields:
+            Namespace objects with a pressure attribute.
+        """
         if self._stream_raises:
             raise PlannerApiError
         for p in self._stream_updates:
@@ -67,9 +78,12 @@ def test_fallback_runners_used_when_stream_errors(monkeypatch: pytest.MonkeyPatc
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
     def _stop_after_backoff(_seconds: int):
+        """Stop the reconciler after the backoff sleep is triggered."""
         reconciler.stop()
 
-    monkeypatch.setattr("github_runner_manager.manager.pressure_reconciler.time.sleep", _stop_after_backoff)
+    monkeypatch.setattr(
+        "github_runner_manager.manager.pressure_reconciler.time.sleep", _stop_after_backoff
+    )
     reconciler.start_create_loop()
 
     assert 2 in mgr.created_args
@@ -106,6 +120,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     wait_calls = {"count": 0}
 
     def _wait(_interval: int) -> bool:
+        """Return True (stop signal) after the second call."""
         wait_calls["count"] += 1
         return wait_calls["count"] > 1
 

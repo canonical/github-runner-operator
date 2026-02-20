@@ -1007,5 +1007,3 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
 
     await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
     yield planner_app
-
-

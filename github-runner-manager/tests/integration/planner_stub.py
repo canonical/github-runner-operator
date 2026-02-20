@@ -97,9 +97,7 @@ def _make_app(config: PlannerStubConfig) -> Flask:
     """
     app = Flask(__name__)
     pressure_path = _pressure_file_path(config.port)
-    pressure_path.write_text(
-        json.dumps({"pressure": config.initial_pressure}), encoding="utf-8"
-    )
+    pressure_path.write_text(json.dumps({"pressure": config.initial_pressure}), encoding="utf-8")
 
     @app.get("/health")
     def health() -> Response:

@@ -66,7 +66,7 @@ class PlannerApiError(Exception):
 
 
 class PlannerClient:  # pylint: disable=too-few-public-methods
-    """Minimal client for the planner service.
+    """An HTTP client for the planner service.
 
     Supports flavor retrieval and pressure (single fetch and stream).
     """
@@ -176,7 +176,8 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             logger.exception("Error while streaming pressure for flavor '%s' from planner.", name)
             raise PlannerApiError from exc
 
-    def _create_session(self) -> requests.Session:
+    @staticmethod
+    def _create_session() -> requests.Session:
         """Create a requests session with retries and no env proxies.
 
         Returns:
