@@ -2,14 +2,10 @@ name: Tests for github-runner-manager
 
 on:
   pull_request:
-  push:
-    branches-ignore:
-      - 'test-*'
 
 jobs:
   application-unit-tests:
     name: Unit tests for github-runner-manager
-    if: github.event_name == 'pull_request'
     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     secrets: inherit
     with:
@@ -23,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         test-module:
-#          - test_debug_ssh
+          - test_debug_ssh
           - test_planner_runner
     steps:
       - name: Checkout code
