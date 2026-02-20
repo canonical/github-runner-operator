@@ -14,8 +14,6 @@ import requests.adapters
 import urllib3
 from pydantic import AnyHttpUrl, BaseModel
 
-from github_runner_manager.http_util import configure_session
-
 logger = logging.getLogger(__name__)
 
 
@@ -192,4 +190,10 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             )
         )
 
-        return configure_session(adapter)
+        session = requests.Session()
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
+        # Disable proxy env vars (HTTP_PROXY, HTTPS_PROXY, etc.) — the planner
+        # is a local service and must never be reached through a proxy.
+        session.trust_env = False
+        return session
