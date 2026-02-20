@@ -10,15 +10,26 @@ access to the underlying RunnerManager via the provided lock.
 
 from __future__ import annotations
 
+import getpass
+import grp
 import logging
+import os
 import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional
 
+from github_runner_manager.configuration import ApplicationConfiguration
+from github_runner_manager.configuration.base import UserInfo
 from github_runner_manager.errors import MissingServerConfigError
 from github_runner_manager.manager.runner_manager import RunnerManager, RunnerMetadata
-from github_runner_manager.planner_client import PlannerApiError, PlannerClient
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
+)
+from github_runner_manager.planner_client import PlannerApiError, PlannerClient, PlannerConfiguration
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +59,12 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     - delete loop: scales down when current exceeds desired
 
     Concurrency with any other reconcile loop is protected by a shared lock.
+
+    The delete loop uses the last pressure seen by the create loop rather than
+    fetching a fresh value, so it may act on a stale reading if pressure changed
+    between stream events. This is an accepted trade-off: the window is bounded
+    by the stream update frequency, and any over-deletion is self-correcting
+    because the create loop will scale back up on the next pressure event.
 
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
@@ -207,8 +224,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                # delete_runners prioritises idle runners over busy ones; if busy
-                # runners are selected, the GitHub API rejects their deletion.
                 self._manager.delete_runners(num=to_delete)
             elif current_total < desired_total:
                 to_create = desired_total - current_total
@@ -225,3 +240,59 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
+
+
+def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> PressureReconciler:
+    """Construct a PressureReconciler from application configuration.
+
+    Args:
+        config: Application configuration.
+        lock: Shared lock to serialize operations with other reconcile loops.
+
+    Returns:
+        A fully constructed PressureReconciler.
+    """
+    combinations = config.non_reactive_configuration.combinations
+    first_combo = combinations[0] if combinations else None
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
+    manager = RunnerManager(
+        manager_name=config.name,
+        platform_provider=GitHubRunnerPlatform.build(
+            prefix=config.openstack_configuration.vm_prefix,
+            github_configuration=config.github_config,
+        ),
+        cloud_runner_manager=OpenStackRunnerManager(
+            config=OpenStackRunnerManagerConfig(
+                allow_external_contributor=config.allow_external_contributor,
+                prefix=config.openstack_configuration.vm_prefix,
+                credentials=config.openstack_configuration.credentials,
+                server_config=(
+                    None
+                    if not first_combo
+                    else OpenStackServerConfig(
+                        image=first_combo.image.name,
+                        flavor=first_combo.flavor.name,
+                        network=config.openstack_configuration.network,
+                    )
+                ),
+                service_config=config.service_config,
+            ),
+            user=user,
+        ),
+        labels=(
+            list(config.extra_labels)
+            + ([] if not first_combo else (first_combo.image.labels + first_combo.flavor.labels))
+        ),
+    )
+    return PressureReconciler(
+        manager=manager,
+        planner_client=PlannerClient(
+            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+        ),
+        config=PressureReconcilerConfig(
+            flavor_name=first_combo.flavor.name if first_combo else "",
+            reconcile_interval=config.reconcile_interval,
+            fallback_runners=first_combo.base_virtual_machines if first_combo else 0,
+        ),
+        lock=lock,
+    )

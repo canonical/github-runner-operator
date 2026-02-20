@@ -3,11 +3,8 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
-import getpass
-import grp
 import importlib.metadata
 import logging
-import os
 import signal
 import sys
 from functools import partial
@@ -18,20 +15,12 @@ from typing import TextIO
 
 import click
 
-from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
-    PressureReconcilerConfig,
+    build_pressure_reconciler,
 )
-from github_runner_manager.manager.runner_manager import RunnerManager
-from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
-from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackRunnerManager,
-    OpenStackRunnerManagerConfig,
-)
-from github_runner_manager.planner_client import PlannerClient, PlannerConfiguration
-from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -138,52 +127,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     )
 
     if config.planner_url and config.planner_token:
-        combinations = config.non_reactive_configuration.combinations
-        first_combo = combinations[0] if combinations else None
-        pressure_reconciler = PressureReconciler(
-            manager=RunnerManager(
-                manager_name=config.name,
-                platform_provider=GitHubRunnerPlatform.build(
-                    prefix=config.openstack_configuration.vm_prefix,
-                    github_configuration=config.github_config,
-                ),
-                cloud_runner_manager=OpenStackRunnerManager(
-                    config=OpenStackRunnerManagerConfig(
-                        allow_external_contributor=config.allow_external_contributor,
-                        prefix=config.openstack_configuration.vm_prefix,
-                        credentials=config.openstack_configuration.credentials,
-                        server_config=(
-                            None
-                            if not first_combo
-                            else OpenStackServerConfig(
-                                image=first_combo.image.name,
-                                flavor=first_combo.flavor.name,
-                                network=config.openstack_configuration.network,
-                            )
-                        ),
-                        service_config=config.service_config,
-                    ),
-                    user=UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name),
-                ),
-                labels=(
-                    list(config.extra_labels)
-                    + (
-                        []
-                        if not first_combo
-                        else (first_combo.image.labels + first_combo.flavor.labels)
-                    )
-                ),
-            ),
-            planner_client=PlannerClient(
-                PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
-            ),
-            config=PressureReconcilerConfig(
-                flavor_name=first_combo.flavor.name if first_combo else "",
-                reconcile_interval=config.reconcile_interval,
-                fallback_runners=first_combo.base_virtual_machines if first_combo else 0,
-            ),
-            lock=lock,
-        )
+        pressure_reconciler = build_pressure_reconciler(config, lock)
         signal.signal(
             signal.SIGTERM, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
         )
