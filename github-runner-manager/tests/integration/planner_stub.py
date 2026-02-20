@@ -13,6 +13,7 @@ Provides flavor info and pressure endpoints expected by PlannerClient:
 from __future__ import annotations
 
 import json
+import logging
 import multiprocessing
 import time
 from dataclasses import dataclass
@@ -21,6 +22,8 @@ from typing import Iterable
 
 import requests
 from flask import Flask, Response, request
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -75,6 +78,7 @@ def _pressure_stream_gen(pressure_path: Path, default: float) -> Iterable[bytes]
     """
     while True:
         p = _read_pressure(pressure_path, default)
+        logger.info("Stream: yielding pressure=%.2f (path=%s)", p, pressure_path)
         yield (json.dumps({"pressure": p}) + "\n").encode("utf-8")
         time.sleep(10)
 
@@ -152,6 +156,7 @@ def _make_app(config: PlannerStubConfig) -> Flask:
         payload = request.get_json(force=True)
         pressure = float(payload.get("pressure", 0))
         pressure_path.write_text(json.dumps({"pressure": pressure}), encoding="utf-8")
+        logger.info("Control: pressure set to %.2f (path=%s)", pressure, pressure_path)
         return Response(json.dumps({"pressure": pressure}), mimetype="application/json")
 
     return app

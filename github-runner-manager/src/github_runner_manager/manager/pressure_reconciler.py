@@ -122,9 +122,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously delete runners using last seen pressure on a timer."""
         interval_seconds = self._config.reconcile_interval * 60
+        logger.debug("Delete loop: starting, interval=%ss", interval_seconds)
         while not self._stop.is_set():
             if self._stop.wait(interval_seconds):
                 return
+            logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
                 logger.debug("Delete loop: no pressure seen yet, skipping.")
                 continue
@@ -159,6 +161,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             pressure: Current pressure value used to compute desired total.
         """
         desired_total = self._desired_total_from_pressure(pressure)
+        logger.debug("Create loop: pressure=%.2f, desired=%s, updating _last_pressure", pressure, desired_total)
         self._last_pressure = pressure
         with self._lock:
             current_total = len(self._manager.get_runners())
