@@ -1,0 +1,67 @@
+07:02:05 INFO Waiting for model:
+  test-ats541dl/0 [idle] active: 
+07:02:35 INFO Waiting for model:
+  test-ats541dl/0 [idle] active: 
+07:02:39 INFO Current reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:02:39 INFO Waiting for reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:03:40 INFO Current reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:03:40 INFO Current reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c, expected reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:03:40 INFO Waiting for reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:04:41 INFO Current reconcile ID: 2ff8f174-e63c-46bd-9abf-f719628ab879
+07:04:41 INFO Current reconcile ID: 2ff8f174-e63c-46bd-9abf-f719628ab879, expected reconcile ID: 90b64d15-44dc-4047-b745-a93c3db5079c
+07:04:47 INFO Wait for condition not met, sleeping 10
+07:04:59 INFO Waiting for model:
+  test-ats541dl/0 [idle] active: 
+07:05:29 INFO Waiting for model:
+  test-ats541dl/0 [idle] active: 
+07:05:33 INFO Current reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:05:33 INFO Waiting for reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:06:34 INFO Current reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:06:34 INFO Current reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946, expected reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:06:34 INFO Waiting for reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:07:35 INFO Current reconcile ID: 4c1684c3-c4f9-4533-9964-045cfb7e02a0
+07:07:35 INFO Current reconcile ID: 4c1684c3-c4f9-4533-9964-045cfb7e02a0, expected reconcile ID: 40036483-2b9d-458a-86c8-5b9e69a7a946
+07:07:36 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-an3h  github-pr-4ab4b-lxd  localhost/localhost  3.6.14   unsupported  07:07:36Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ats541dl           active      1  any-charm      latest/beta  133  no       
+test-ats541dl                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ats541dl/0*  active    idle   0        10.23.57.183           
+test-ats541dl/0*                         active    idle   1        10.23.57.165           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.23.57.183  juju-f68a66-0  ubuntu@24.04  github-runner  Running
+1        started  10.23.57.165  juju-f68a66-1  ubuntu@24.04  github-runner  Running
+
+07:07:36 INFO Juju error logs:
+
+machine-0: 06:44:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:44:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ats541dl-0: 06:44:26 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-ats541dl/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+machine-1: 06:46:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:46:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ats541dl-0: 06:47:10 ERROR unit.test-ats541dl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ats541dl-0: 06:47:12 ERROR unit.test-ats541dl/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ats541dl-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:07:36 INFO Forgetting model main...
