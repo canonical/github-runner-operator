@@ -3,6 +3,8 @@ name: Tests for github-runner-manager
 on:
   pull_request:
   push:
+    branches-ignore:
+      - 'test-*'
 
 jobs:
   application-unit-tests:
