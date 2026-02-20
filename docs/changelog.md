@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-18
+
+- Introduce planner-driven pressure reconciler.
+
 ## 2026-02-12
 
 - Add support to integrate with GitHub Runner planner charm with the `github_runner_planner_v0` interface.
@@ -51,7 +55,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
-GitHub runner image builder side.
+  GitHub runner image builder side.
 
 ## 2025-12-05
 

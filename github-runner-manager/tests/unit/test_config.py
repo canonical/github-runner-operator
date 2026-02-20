@@ -93,6 +93,8 @@ openstack_configuration:
       username: test_username
     network: test_network
     vm_prefix: test_unit
+planner_token: planner-testing-token
+planner_url: http://planner.example.com
 reconcile_interval: 10
 """
 
@@ -175,6 +177,8 @@ def app_config_fixture() -> ApplicationConfiguration:
                 region_name="test_region",
             ),
         ),
+        planner_token="planner-testing-token",
+        planner_url="http://planner.example.com",
         reconcile_interval=10,
     )
 
@@ -200,3 +204,15 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     yaml_config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
     loaded_app_config = ApplicationConfiguration.validate(yaml_config)
     assert loaded_app_config == app_config
+
+
+def test_configuration_allows_empty_planner_fields():
+    """Planner URL/token are optional for non-planner mode."""
+    config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
+    config["planner_url"] = None
+    config["planner_token"] = None
+
+    loaded = ApplicationConfiguration.validate(config)
+
+    assert loaded.planner_url is None
+    assert loaded.planner_token is None

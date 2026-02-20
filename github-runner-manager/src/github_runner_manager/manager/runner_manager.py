@@ -264,10 +264,15 @@ class RunnerManager:
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
-        """Delete runners.
+        """Delete up to `num` runners, preferring idle ones over busy.
+
+        Runners are selected in order: deletable → idle → busy. Busy runners
+        are only targeted when there are not enough idle runners to satisfy
+        `num`, and the GitHub API will reject deletion of runners actively
+        executing a job, so the actual number deleted may be less than `num`.
 
         Args:
-            num: The number of runner to delete.
+            num: The maximum number of runners to delete.
 
         Returns:
             Stats on metrics events issued during the deletion of runners.
@@ -402,6 +407,45 @@ class RunnerManager:
         logger.info("Cleaned up VMs: %s", cleaned_up_vms)
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+
+    def cleanup_runners(self) -> list[InstanceID]:
+        """Run cleanup of runners and return cleaned-up VM InstanceIDs.
+
+        Performs the same operations as ``cleanup`` but returns the list of
+        cloud VM ``InstanceID`` objects that were cleaned up.
+
+        Returns:
+            The list of VM ``InstanceID`` values that were deleted during cleanup.
+        """
+        logger.info("runner_manager::cleanup_runners")
+        vms = self._cloud.get_vms()
+        logger.info("VMs: %s", vms)
+        runners_health_response = self._platform.get_runners_health(requested_runners=vms)
+        logger.info("Runner health: %s", runners_health_response)
+
+        self._cloud.cleanup()
+        platform_runner_ids_to_cleanup = list(
+            _get_platform_runners_to_cleanup(runners=runners_health_response, vms=vms)
+        )
+        logger.info("Cleaning up platform runners: %s", platform_runner_ids_to_cleanup)
+        cleanedup_runner_ids = self._delete_runners(runner_ids=platform_runner_ids_to_cleanup)
+        logger.info("Cleaned up platform runners: %s", cleanedup_runner_ids)
+
+        vm_ids_to_cleanup = list(
+            _get_vms_to_cleanup(
+                vms=vms,
+                runner_ids=cleanedup_runner_ids,
+            )
+        )
+        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
+        logger.info("Cleaning up VMs: %s", vm_ids_to_cleanup)
+        cleaned_up_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
+        logger.info("Cleaned up VMs: %s", cleaned_up_vms)
+
+        # Maintain parity with cleanup by issuing metrics, but return cleaned VMs.
+        self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        return cleaned_up_vms
 
     def _delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete runners from platform.
