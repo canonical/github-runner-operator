@@ -1,0 +1,66 @@
+06:55:37 INFO Waiting for model:
+  test-y305rt73/0 [idle] active: 
+06:56:07 INFO Waiting for model:
+  test-y305rt73/0 [idle] active: 
+06:56:10 INFO Current reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:56:10 INFO Waiting for reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:57:11 INFO Current reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:57:11 INFO Current reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c, expected reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:57:11 INFO Waiting for reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:58:12 INFO Current reconcile ID: 50d0d62f-df72-41a2-a88d-54ff346627e6
+06:58:12 INFO Current reconcile ID: 50d0d62f-df72-41a2-a88d-54ff346627e6, expected reconcile ID: f80308e8-bd47-40cf-873f-bdacb971c36c
+06:58:17 INFO Wait for condition not met, sleeping 10
+06:58:29 INFO Waiting for model:
+  test-y305rt73/0 [idle] active: 
+06:58:59 INFO Waiting for model:
+  test-y305rt73/0 [idle] active: 
+06:59:02 INFO Current reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+06:59:02 INFO Waiting for reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+07:00:03 INFO Current reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+07:00:03 INFO Current reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd, expected reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+07:00:03 INFO Waiting for reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+07:01:04 INFO Current reconcile ID: 4ed1d24f-13bd-4a5e-8e73-28f7386b5288
+07:01:04 INFO Current reconcile ID: 4ed1d24f-13bd-4a5e-8e73-28f7386b5288, expected reconcile ID: 0494bb43-01cf-4299-b655-11274dfc88dd
+07:01:05 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-qefv  github-pr-4ab4b-lxd  localhost/localhost  3.6.14   unsupported  07:01:05Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-y305rt73           active      1  any-charm      latest/beta  133  no       
+test-y305rt73                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-y305rt73/0*  active    idle   0        10.119.94.194          
+test-y305rt73/0*                         active    idle   1        10.119.94.89           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.119.94.194  juju-c2ebe9-0  ubuntu@24.04  github-runner  Running
+1        started  10.119.94.89   juju-c2ebe9-1  ubuntu@22.04  github-runner  Running
+
+07:01:05 INFO Juju error logs:
+
+machine-0: 06:38:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:38:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:39:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:39:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-y305rt73-0: 06:40:26 ERROR unit.test-y305rt73/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-y305rt73-0: 06:40:28 ERROR unit.test-y305rt73/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y305rt73-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:01:05 INFO Forgetting model main...
