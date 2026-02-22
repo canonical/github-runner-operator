@@ -1,0 +1,52 @@
+06:40:22 WARNING unexpected facade SSHServer received from the controller
+06:40:22 INFO Adding model github-pr-4ab4b-lxd:test-charm-metrics-success-xxqw on cloud localhost
+06:40:22 WARNING unexpected facade SSHServer received from the controller
+06:40:22 WARNING unexpected facade SSHSession received from the controller
+06:40:22 WARNING unexpected facade SSHTunneler received from the controller
+06:40:22 WARNING unexpected facade SSHServer received from the controller
+06:40:22 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:40:24 INFO Deploying ch:amd64/noble/any-charm-133
+06:40:36 INFO Deploying local:jammy/github-runner-0
+06:40:36 INFO Waiting for model:
+  test-ryz0c95n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ryz0c95n/0 [allocating] waiting: waiting for machine
+06:41:07 INFO Waiting for model:
+  test-ryz0c95n/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ryz0c95n/0 [executing] maintenance: installing charm software
+06:41:37 INFO Waiting for model:
+  test-ryz0c95n/0 [allocating] waiting: waiting for machine
+06:42:08 INFO Waiting for model:
+  test-ryz0c95n/0 [allocating] waiting: agent initialising
+06:42:38 INFO Waiting for model:
+  test-ryz0c95n/0 [executing] maintenance: installing charm software
+06:43:08 INFO Waiting for model:
+  test-ryz0c95n/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ryz0c95n/0 [idle] active:
+06:43:40 INFO Waiting for model:
+  test-ryz0c95n/0 [idle] active: 
+06:44:10 INFO Waiting for model:
+  test-ryz0c95n/0 [idle] active: 
+06:44:12 INFO Current reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:44:12 INFO Waiting for reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:45:13 INFO Current reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:45:13 INFO Current reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c, expected reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:45:13 INFO Waiting for reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:46:14 INFO Current reconcile ID: 1beb7cad-9ee1-4a5b-8bf8-2c13ec0d222c
+06:46:14 INFO Current reconcile ID: 1beb7cad-9ee1-4a5b-8bf8-2c13ec0d222c, expected reconcile ID: 046b91be-0519-40dd-adf1-88b903e7a02c
+06:46:18 INFO cli: juju config --model github-pr-4ab4b-lxd:test-charm-metrics-success-xxqw test-ryz0c95n base-virtual-machines=0
+06:46:19 INFO Waiting for model:
+  test-ryz0c95n/0 [idle] active: 
+06:46:49 INFO Waiting for model:
+  test-ryz0c95n/0 [idle] active: 
+06:46:51 INFO Current reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:46:51 INFO Waiting for reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:47:52 INFO Current reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:47:52 INFO Current reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d, expected reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:47:52 INFO Waiting for reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:48:53 INFO Current reconcile ID: 7ae027e4-6a5c-45bc-95a9-edb08209628e
+06:48:53 INFO Current reconcile ID: 7ae027e4-6a5c-45bc-95a9-edb08209628e, expected reconcile ID: 9e314f10-1b6d-4d97-a87c-110b6877ab5d
+06:48:54 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771742628.6240022, "event": "reconciliation", "flavor": "test-ryz0c95n", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.438866376876831}
+{"timestamp": 1771742755.2626004, "event": "reconciliation", "flavor": "test-ryz0c95n", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.5991058349609375}
+{"timestamp": 1771742718.0, "event": "runner_installed", "flavor": "test-ryz0c95n", "duration": 91.0}
+{"timestamp": 1771742790.9690166, "event": "reconciliation", "flavor": "test-ryz0c95n", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.983519554138184}
+{"timestamp": 1771742916.6940317, "event": "reconciliation", "flavor": "test-ryz0c95n", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.628920078277588}

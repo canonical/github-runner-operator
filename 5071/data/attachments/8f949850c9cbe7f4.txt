@@ -1,0 +1,67 @@
+06:51:50 WARNING unexpected facade SSHServer received from the controller
+06:51:51 INFO Deploying ch:amd64/noble/any-charm-133
+06:51:52 INFO Waiting for model:
+  planner/0 [allocating] waiting: waiting for machine
+06:52:22 INFO Waiting for model:
+  planner/0 [allocating] waiting: agent initialising
+06:52:42 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:52:42 INFO Waiting for model:
+  test-nvghb25n/0 [idle] active: 
+  planner/0 [idle] active: 
+06:53:12 INFO Waiting for model:
+  test-nvghb25n/0 [idle] active: 
+  planner/0 [idle] active: 
+06:53:31 INFO cli: juju show-unit --model github-pr-4ab4b-lxd:test-charm-no-runner-1fvc planner/0 --format json
+06:53:31 INFO Waiting for model:
+  test-nvghb25n/0 [idle] active: 
+06:54:01 INFO Waiting for model:
+  test-nvghb25n/0 [idle] active:
+06:54:19 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-1fvc  github-pr-4ab4b-lxd  localhost/localhost  3.6.14   unsupported  06:54:19Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-nvghb25n           active      1  any-charm      latest/beta  133  no       
+planner                                        active      1  any-charm      latest/beta  133  no       
+test-nvghb25n                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-nvghb25n/0*  active    idle   0        10.48.197.83           
+planner/0*                               active    idle   2        10.48.197.185          
+test-nvghb25n/0*                         active    idle   1        10.48.197.248          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.48.197.83   juju-c224e7-0  ubuntu@24.04  github-runner  Running
+1        started  10.48.197.248  juju-c224e7-1  ubuntu@22.04  github-runner  Running
+2        started  10.48.197.185  juju-c224e7-2  ubuntu@24.04  github-runner  Running
+
+06:54:19 INFO Juju error logs:
+
+machine-0: 06:41:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:41:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:42:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:42:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nvghb25n-0: 06:43:17 ERROR unit.test-nvghb25n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nvghb25n-0: 06:43:18 ERROR unit.test-nvghb25n/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nvghb25n-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-2: 06:52:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:52:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-planner-0: 06:53:48 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: relation scope id "73ca9b09-4910-41e2-8a8e-7127f6c224e7:r#3#test-nvghb25n": settings 73ca9b09-4910-41e2-8a8e-7127f6c224e7:r#3#test-nvghb25n not found (not found)
+
+06:54:19 INFO Forgetting model main...

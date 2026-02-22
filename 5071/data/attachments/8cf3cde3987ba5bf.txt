@@ -1,0 +1,90 @@
+06:40:25 WARNING unexpected facade SSHServer received from the controller
+06:40:25 INFO Adding model github-pr-4ab4b-lxd:test-reactive-qk99 on cloud localhost
+06:40:25 WARNING unexpected facade SSHServer received from the controller
+06:40:25 WARNING unexpected facade SSHSession received from the controller
+06:40:25 WARNING unexpected facade SSHTunneler received from the controller
+06:40:25 INFO GitHub token rate limit: Rate(reset=2026-02-22 07:08:24+00:00, remaining=4450, limit=5000)
+06:40:29 INFO Deploying ch:amd64/jammy/mongodb-286
+06:40:29 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:40:31 INFO Deploying ch:amd64/noble/any-charm-133
+06:40:49 INFO Deploying local:jammy/github-runner-0
+06:40:49 INFO Waiting for model:
+  test-pbimpptx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pbimpptx/0 [allocating] waiting: waiting for machine
+06:41:20 INFO Waiting for model:
+  test-pbimpptx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pbimpptx/0 [executing] maintenance: installing charm software
+06:41:50 INFO Waiting for model:
+  test-pbimpptx/0 [allocating] waiting: waiting for machine
+06:42:20 INFO Waiting for model:
+  test-pbimpptx/0 [allocating] waiting: agent initialising
+06:42:50 INFO Waiting for model:
+  test-pbimpptx/0 [executing] maintenance: installing charm software
+06:43:21 INFO Waiting for model:
+  test-pbimpptx/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pbimpptx/0 [idle] active: 
+06:43:43 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:43:43 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:44:13 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:44:22 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:44:52 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:44:55 INFO Current reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:44:55 INFO Waiting for reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:45:56 INFO Current reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:45:56 INFO Current reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7, expected reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:45:56 INFO Waiting for reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:46:57 INFO Current reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:46:57 INFO Current reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264, expected reconcile ID: 6e63e442-bb14-4f35-9124-f3a4f5a2e1b7
+06:47:00 INFO Wait for condition not met, sleeping 10
+06:47:21 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:47:37 INFO Current reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:47:37 INFO Waiting for reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:48:38 INFO Current reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:48:38 INFO Current reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264, expected reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:48:38 INFO Waiting for reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:49:39 INFO Current reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:49:39 INFO Current reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915, expected reconcile ID: ccb89fd9-58a5-403f-a0e1-6bde72ad6264
+06:49:40 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:49:56 INFO Current reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:49:56 INFO Waiting for reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:50:57 INFO Current reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:50:57 INFO Current reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915, expected reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:50:57 INFO Waiting for reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:51:58 INFO Current reconcile ID: 8eb5e3b5-b7d9-4bea-9ffe-bdc38af093ab
+06:51:58 INFO Current reconcile ID: 8eb5e3b5-b7d9-4bea-9ffe-bdc38af093ab, expected reconcile ID: fd5cbe6a-e7e4-4967-a584-044d5c46a915
+06:51:59 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771742901.0, "event": "runner_installed", "flavor": "test-pbimpptx", "duration": 67.0}
+{"timestamp": 1771742907.0, "event": "runner_start", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 84.0}
+{"timestamp": 1771742911.0, "event": "runner_stop", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1771742930.6951902, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.30144453048706}
+{"timestamp": 1771743059.2816193, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.49228811264038}
+
+06:52:00 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771742901.0, "event": "runner_installed", "flavor": "test-pbimpptx", "duration": 67.0}
+{"timestamp": 1771742907.0, "event": "runner_start", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 84.0}
+{"timestamp": 1771742911.0, "event": "runner_stop", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1771742930.6951902, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.30144453048706}
+{"timestamp": 1771743059.2816193, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.49228811264038}
+
+06:52:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771742901.0, "event": "runner_installed", "flavor": "test-pbimpptx", "duration": 67.0}
+{"timestamp": 1771742907.0, "event": "runner_start", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 84.0}
+{"timestamp": 1771742911.0, "event": "runner_stop", "flavor": "test-pbimpptx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1771742930.6951902, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.30144453048706}
+{"timestamp": 1771743059.2816193, "event": "reconciliation", "flavor": "test-pbimpptx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.49228811264038}
+06:52:01 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:52:31 INFO Waiting for model:
+  test-pbimpptx/0 [idle] active: 
+06:52:34 INFO Current reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
+06:52:34 INFO Waiting for reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
+06:53:35 INFO Current reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
+06:53:35 INFO Current reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13, expected reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
+06:53:35 INFO Waiting for reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
+06:54:36 INFO Current reconcile ID: 823c4f56-ad1c-46ee-90e5-2e515c9e5d2f
+06:54:36 INFO Current reconcile ID: 823c4f56-ad1c-46ee-90e5-2e515c9e5d2f, expected reconcile ID: 9f8e6bde-0cc4-483d-adb3-d3dd8f79bd13
