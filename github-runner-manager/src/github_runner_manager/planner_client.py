@@ -119,6 +119,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                         data = json.loads(line)
                         # The planner sends periodic heartbeat pings as non-dict values.
                         if not isinstance(data, dict) or "pressure" not in data:
+                            logger.debug("Skipping non-pressure stream line: %s", line)
                             continue
                         yield PressureInfo(pressure=int(data[name]))
                     except json.JSONDecodeError:
