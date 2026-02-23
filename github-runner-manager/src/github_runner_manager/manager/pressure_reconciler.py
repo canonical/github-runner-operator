@@ -121,7 +121,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     self._config.fallback_runners,
                 )
                 self._handle_create(float(self._config.fallback_runners))
-                # Short backoff to avoid hot-looping on failures.
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
@@ -226,7 +225,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         Returns:
             The desired total number of runners.
         """
-        # Ensure we never drop below a configured minimum pressure (if available).
         base = int(pressure)
         if self._min_pressure is not None:
             base = max(base, int(self._min_pressure))
