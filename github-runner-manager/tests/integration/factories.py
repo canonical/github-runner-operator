@@ -139,6 +139,8 @@ def create_default_config(
     proxy_config: ProxyConfig | None = None,
     ssh_debug_connections: list[SSHDebugConfiguration] | None = None,
     test_config: TestConfig | None = None,
+    planner_url: str | None = None,
+    planner_token: str | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -150,6 +152,8 @@ def create_default_config(
         ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
+        planner_url: Planner service URL. Omitted from config when not provided.
+        planner_token: Planner service token. Omitted from config when not provided.
 
     Returns:
         Configuration dictionary for the application.
@@ -213,7 +217,7 @@ def create_default_config(
             "manager_proxy_command": None,
             "proxy_config": runner_proxy,
             "runner_proxy_config": openstack_proxy,
-            "use_aproxy": True,
+            "use_aproxy": openstack_proxy is not None,
             "aproxy_exclude_addresses": [],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
@@ -249,5 +253,7 @@ def create_default_config(
                 "region_name": openstack_config.region_name,
             },
         },
+        **({"planner_url": planner_url} if planner_url else {}),
+        **({"planner_token": planner_token} if planner_token else {}),
         "reconcile_interval": 60,
     }

@@ -50,6 +50,8 @@ class ApplicationConfiguration(BaseModel):
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
         openstack_configuration: Configuration for authorization to a OpenStack host.
+        planner_url: Base URL of the planner service.
+        planner_token: Bearer token to authenticate against the planner service.
         reconcile_interval: Seconds to wait between reconciliation.
     """
 
@@ -61,6 +63,8 @@ class ApplicationConfiguration(BaseModel):
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
     openstack_configuration: OpenStackConfiguration
+    planner_url: Optional[AnyHttpUrl] = None
+    planner_token: Optional[str] = None
     reconcile_interval: int
 
     @staticmethod
