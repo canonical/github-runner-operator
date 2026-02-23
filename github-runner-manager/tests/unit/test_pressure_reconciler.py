@@ -41,22 +41,16 @@ class _FakeManager:
 
 
 class _FakePlanner:
-    """Planner client stub supplying flavor and pressure data for tests."""
+    """Planner client stub supplying pressure data for tests."""
 
     def __init__(
         self,
-        flavor_min_pressure: int | None = None,
         stream_updates: list[float] | None = None,
         stream_raises: bool = False,
     ):
-        """Initialize with configurable flavor pressure and stream behavior."""
-        self._flavor_min_pressure = flavor_min_pressure
+        """Initialize with configurable stream behavior."""
         self._stream_updates = stream_updates or []
         self._stream_raises = stream_raises
-
-    def get_flavor(self, name: str):  # noqa: ARG002
-        """Return a stub flavor object with the configured minimum pressure."""
-        return SimpleNamespace(name="small", minimum_pressure=self._flavor_min_pressure)
 
     def stream_pressure(self, name: str):  # noqa: ARG002
         """Yield pressure updates or raise PlannerApiError based on configuration.
@@ -133,8 +127,8 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
 def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
     """Delete path should compare against desired total (with minimum pressure floor)."""
     mgr = _FakeManager(runners_count=4)
-    planner = _FakePlanner(flavor_min_pressure=5)
-    cfg = PressureReconcilerConfig(flavor_name="small")
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=5)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
     reconciler._handle_timer_reconcile(0.0)

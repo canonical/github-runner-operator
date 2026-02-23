@@ -31,11 +31,13 @@ class PressureReconcilerConfig:
         flavor_name: Name of the planner flavor to reconcile.
         reconcile_interval: Seconds between timer-based delete reconciliations.
         fallback_runners: Desired runner count to use while planner is unavailable.
+        min_pressure: Minimum desired runner count (floor) for the flavor.
     """
 
     flavor_name: str
     reconcile_interval: int = 5 * 60
     fallback_runners: int = 0
+    min_pressure: int = 0
 
 
 class PressureReconciler:  # pylint: disable=too-few-public-methods
@@ -57,11 +59,10 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
-        _planner: Client used to load flavor info and stream pressure updates.
+        _planner: Client used to stream pressure updates.
         _config: Reconciler configuration.
         _lock: Shared lock to serialize operations with other reconcile loops.
         _stop: Event used to signal streaming loops to stop gracefully.
-        _min_pressure: Minimum desired runner count derived from planner flavor.
         _last_pressure: Last pressure value seen in the create stream.
     """
 
@@ -77,8 +78,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         Args:
             manager: Runner manager interface for creating, cleaning up,
                 and listing runners.
-            planner_client: Client used to query planner flavor info and
-                stream pressure updates.
+            planner_client: Client used to stream pressure updates.
             config: Reconciler configuration.
             lock: Shared lock to serialize operations with other reconcile loops.
         """
@@ -88,22 +88,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._lock = lock
 
         self._stop = Event()
-        self._min_pressure: Optional[int] = None
         self._last_pressure: Optional[float] = None
-
-        try:
-            flavor = self._planner.get_flavor(self._config.flavor_name)
-            self._min_pressure = flavor.minimum_pressure
-            logger.info(
-                "Planner flavor loaded: name=%s, minimum_pressure=%s",
-                flavor.name,
-                flavor.minimum_pressure,
-            )
-        except PlannerApiError:
-            logger.warning(
-                "Planner flavor info unavailable for '%s'. Proceeding without minimum_pressure.",
-                self._config.flavor_name,
-            )
 
     def start_create_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously create runners to satisfy planner pressure."""
@@ -214,8 +199,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     def _desired_total_from_pressure(self, pressure: float) -> int:
         """Compute desired runner total from planner pressure.
 
-        Ensures non-negative totals and respects planner `minimum_pressure`
-        if available.
+        Ensures non-negative totals and respects the configured `min_pressure`
+        floor.
 
         Args:
             pressure: Current pressure value from planner.
@@ -224,6 +209,5 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             The desired total number of runners.
         """
         base = int(pressure)
-        if self._min_pressure is not None:
-            base = max(base, int(self._min_pressure))
+        base = max(base, self._config.min_pressure)
         return max(base, 0)
