@@ -93,7 +93,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """Delete loop should call handler with cached pressure, not planner stream."""
     mgr = _FakeManager()
     planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=1)
+    cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     reconciler._last_pressure = 3.0  # noqa: SLF001
     handler = MagicMock()
@@ -113,7 +113,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     """Delete loop should not run delete handler until pressure is observed."""
     mgr = _FakeManager()
     planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=1)
+    cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     handler = MagicMock()
     monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)

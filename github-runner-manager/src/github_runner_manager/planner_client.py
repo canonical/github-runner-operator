@@ -139,7 +139,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                         continue
                     try:
                         data = json.loads(line)
-                        # If a heartbeat or malformed content occurs, skip.
+                        # The planner sends periodic heartbeat pings as non-dict values.
                         if not isinstance(data, dict) or "pressure" not in data:
                             continue
                         yield PressureInfo(pressure=float(data["pressure"]))

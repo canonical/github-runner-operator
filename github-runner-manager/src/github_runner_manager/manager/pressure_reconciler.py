@@ -29,12 +29,12 @@ class PressureReconcilerConfig:
 
     Attributes:
         flavor_name: Name of the planner flavor to reconcile.
-        reconcile_interval: Minutes between timer-based delete reconciliations.
+        reconcile_interval: Seconds between timer-based delete reconciliations.
         fallback_runners: Desired runner count to use while planner is unavailable.
     """
 
     flavor_name: str
-    reconcile_interval: int = 5
+    reconcile_interval: int = 5 * 60
     fallback_runners: int = 0
 
 
@@ -117,7 +117,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 if self._stop.is_set():
                     return
                 logger.exception(
-                    "Unhandled error in pressure stream loop. Retrying after backoff."
+                    "Error in pressure stream loop, falling back to %s runners.",
+                    self._config.fallback_runners,
                 )
                 self._handle_create(float(self._config.fallback_runners))
                 # Short backoff to avoid hot-looping on failures.
@@ -125,10 +126,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously delete runners using last seen pressure on a timer."""
-        interval_seconds = self._config.reconcile_interval * 60
-        logger.debug("Delete loop: starting, interval=%ss", interval_seconds)
+        logger.debug("Delete loop: starting, interval=%ss", self._config.reconcile_interval)
         while not self._stop.is_set():
-            if self._stop.wait(interval_seconds):
+            if self._stop.wait(self._config.reconcile_interval):
                 return
             logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
