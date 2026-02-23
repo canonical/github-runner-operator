@@ -160,7 +160,6 @@ def complete_charm_state_fixture():
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,
             runner_manager_log_level="INFO",
-            planner=None,
         ),
         runner_config=charm_state.OpenstackRunnerConfig(
             base_virtual_machines=1,
@@ -189,4 +188,5 @@ def complete_charm_state_fixture():
                 ed25519_fingerprint="SHA256:ed25519",
             ),
         ],
+        planner_config=None,
     )
