@@ -198,11 +198,10 @@ def _fake_get_status_response(status_code: int):
 
 
 def test_get_flavor_success(monkeypatch):
-    """Test get_flavor returns expected fields and headers.
-
-    Arrange: PlannerClient with a fake session returning flavor JSON.
-    Act: Call get_flavor('small').
-    Assert: Fields match and Authorization header/URL are expected.
+    """
+    arrange: PlannerClient with a fake session returning flavor JSON.
+    act: Call get_flavor('small').
+    assert: get_flavor returns expected fields and headers.
     """
     cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
     client = PlannerClient(cfg)
@@ -219,11 +218,10 @@ def test_get_flavor_success(monkeypatch):
 
 
 def test_stream_pressure_success(monkeypatch):
-    """Test stream_pressure yields pressure updates from NDJSON stream.
-
-    Arrange: Fake session streams NDJSON lines with a blank heartbeat.
-    Act: Iterate over stream_pressure('small').
-    Assert: Yields expected updates; includes stream=true and uses stream=True on request.
+    """
+    arrange: Fake session streams NDJSON lines with a blank heartbeat.
+    act: Iterate over stream_pressure('small').
+    assert: Yields expected pressure updates, skipping blank heartbeat lines.
     """
     cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
     client = PlannerClient(cfg)
@@ -240,11 +238,10 @@ def test_stream_pressure_success(monkeypatch):
 
 
 def test_get_flavor_error_raises(monkeypatch):
-    """Test get_flavor raises PlannerApiError on HTTP failure.
-
-    Arrange: PlannerClient with a fake session returning HTTP 500.
-    Act: Calling get_flavor('small').
-    Assert: Raises PlannerApiError
+    """
+    arrange: PlannerClient with a fake session returning HTTP 500.
+    act: Call get_flavor('small').
+    assert: Raises PlannerApiError.
     """
     cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
     client = PlannerClient(cfg)
