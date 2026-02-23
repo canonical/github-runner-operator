@@ -109,7 +109,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                 is_disabled=data.get("is_disabled"),
                 minimum_pressure=data.get("minimum_pressure"),
             )
-        except (requests.RequestException, ValueError, requests.HTTPError) as exc:
+        except (requests.RequestException, ValueError) as exc:
             logger.exception("Unable to get flavor '%s' from planner.", name)
             raise PlannerApiError from exc
 
