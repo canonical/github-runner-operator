@@ -126,9 +126,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously delete runners using last seen pressure on a timer."""
         logger.debug("Delete loop: starting, interval=%ss", self._config.reconcile_interval)
-        while not self._stop.is_set():
-            if self._stop.wait(self._config.reconcile_interval):
-                return
+        while not self._stop.wait(self._config.reconcile_interval):
             logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
                 logger.debug("Delete loop: no pressure seen yet, skipping.")
