@@ -1,0 +1,54 @@
+18:46:09 WARNING unexpected facade SSHServer received from the controller
+18:46:09 INFO Adding model github-pr-4ab4b-lxd:test-charm-metrics-success-ovej on cloud localhost
+18:46:09 WARNING unexpected facade SSHServer received from the controller
+18:46:09 WARNING unexpected facade SSHSession received from the controller
+18:46:09 WARNING unexpected facade SSHTunneler received from the controller
+18:46:09 WARNING unexpected facade SSHServer received from the controller
+18:46:09 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:46:11 INFO Deploying ch:amd64/noble/any-charm-133
+18:46:26 INFO Deploying local:jammy/github-runner-0
+18:46:26 INFO Waiting for model:
+  test-idj7nd5o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-idj7nd5o/0 [allocating] waiting: waiting for machine
+18:46:56 INFO Waiting for model:
+  test-idj7nd5o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-idj7nd5o/0 [idle] active: 
+18:47:26 INFO Waiting for model:
+  test-idj7nd5o/0 [allocating] waiting: waiting for machine
+18:47:56 INFO Waiting for model:
+  test-idj7nd5o/0 [allocating] waiting: waiting for machine
+18:48:26 INFO Waiting for model:
+  test-idj7nd5o/0 [allocating] waiting: agent initialising
+18:48:56 INFO Waiting for model:
+  test-idj7nd5o/0 [executing] maintenance: installing charm software
+18:49:27 INFO Waiting for model:
+  test-idj7nd5o/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-idj7nd5o/0 [idle] active:
+18:49:50 INFO Waiting for model:
+  test-idj7nd5o/0 [idle] active: 
+18:50:20 INFO Waiting for model:
+  test-idj7nd5o/0 [idle] active: 
+18:50:23 INFO Current reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:50:23 INFO Waiting for reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:51:24 INFO Current reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:51:24 INFO Current reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d, expected reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:51:24 INFO Waiting for reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:52:25 INFO Current reconcile ID: 7a038fd6-3c0c-4411-aaae-d1e3e912dac1
+18:52:25 INFO Current reconcile ID: 7a038fd6-3c0c-4411-aaae-d1e3e912dac1, expected reconcile ID: 5db7d75f-6fc4-4aaf-bd15-b3d6b6c12b7d
+18:52:29 INFO cli: juju config --model github-pr-4ab4b-lxd:test-charm-metrics-success-ovej test-idj7nd5o base-virtual-machines=0
+18:52:29 INFO Waiting for model:
+  test-idj7nd5o/0 [idle] active: 
+18:52:59 INFO Waiting for model:
+  test-idj7nd5o/0 [idle] active: 
+18:53:03 INFO Current reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:53:03 INFO Waiting for reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:54:04 INFO Current reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:54:04 INFO Current reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c, expected reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:54:04 INFO Waiting for reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:55:05 INFO Current reconcile ID: 391824d6-4471-403a-ba38-cf30ac9afda2
+18:55:05 INFO Current reconcile ID: 391824d6-4471-403a-ba38-cf30ac9afda2, expected reconcile ID: 2ab63f8b-efa6-4db4-b067-7db19f2abd2c
+18:55:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771872600.8333497, "event": "reconciliation", "flavor": "test-idj7nd5o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.209441900253296}
+{"timestamp": 1771872728.5829859, "event": "reconciliation", "flavor": "test-idj7nd5o", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.673023700714111}
+{"timestamp": 1771872680.0, "event": "runner_installed", "flavor": "test-idj7nd5o", "duration": 82.0}
+{"timestamp": 1771872763.1143005, "event": "reconciliation", "flavor": "test-idj7nd5o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.523193597793579}
+{"timestamp": 1771872889.6799223, "event": "reconciliation", "flavor": "test-idj7nd5o", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.424671173095703}

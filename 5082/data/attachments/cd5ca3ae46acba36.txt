@@ -1,0 +1,76 @@
+19:04:13 INFO Waiting for model:
+  test-awda3140/0 [idle] active: 
+19:04:43 INFO Waiting for model:
+  test-awda3140/0 [idle] active: 
+19:04:46 INFO Current reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:04:46 INFO Waiting for reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:05:47 INFO Current reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:05:47 INFO Current reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8, expected reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:05:47 INFO Waiting for reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:06:48 INFO Current reconcile ID: ddec3785-f94e-4adb-9227-b4208a449e67
+19:06:48 INFO Current reconcile ID: ddec3785-f94e-4adb-9227-b4208a449e67, expected reconcile ID: e5c7c66d-bead-4afd-ada1-f004d40892b8
+19:06:53 INFO Wait for condition not met, sleeping 10
+19:07:04 INFO Wait for condition not met, sleeping 60
+19:08:05 INFO Wait for condition not met, sleeping 60
+19:09:05 INFO Wait for condition not met, sleeping 60
+19:10:05 INFO Wait for condition not met, sleeping 60
+19:11:06 INFO Wait for condition not met, sleeping 60
+19:12:06 INFO Wait for condition not met, sleeping 60
+19:13:06 INFO Wait for condition not met, sleeping 60
+19:14:07 INFO Wait for condition not met, sleeping 60
+19:15:07 INFO Wait for condition not met, sleeping 60
+19:16:07 INFO Wait for condition not met, sleeping 60
+19:17:09 INFO Waiting for model:
+  test-awda3140/0 [idle] active: 
+19:17:39 INFO Waiting for model:
+  test-awda3140/0 [idle] active: 
+19:17:42 INFO Current reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:17:42 INFO Waiting for reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:18:43 INFO Current reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:18:43 INFO Current reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6, expected reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:18:43 INFO Waiting for reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:19:44 INFO Current reconcile ID: d952e914-0d33-44b9-9d9e-cbe5342e1370
+19:19:44 INFO Current reconcile ID: d952e914-0d33-44b9-9d9e-cbe5342e1370, expected reconcile ID: eb4c03f5-5d89-46de-bae0-d1fb8aae32a6
+19:19:45 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-0x9f  github-pr-4ab4b-lxd  localhost/localhost  3.6.14   unsupported  19:19:45Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-awda3140           active      1  any-charm      latest/beta  133  no       
+test-awda3140                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-awda3140/0*  active    idle   0        10.86.226.72           
+test-awda3140/0*                         active    idle   1        10.86.226.112          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.86.226.72   juju-d05317-0  ubuntu@24.04  github-runner  Running
+1        started  10.86.226.112  juju-d05317-1  ubuntu@22.04  github-runner  Running
+
+19:19:45 INFO Juju error logs:
+
+machine-0: 18:46:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:46:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:47:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-awda3140-0: 18:48:51 ERROR unit.test-awda3140/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-awda3140-0: 18:48:53 ERROR unit.test-awda3140/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-awda3140-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:19:45 INFO Forgetting model main...

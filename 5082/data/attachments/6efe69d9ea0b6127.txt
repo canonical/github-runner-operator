@@ -1,0 +1,59 @@
+18:46:23 WARNING unexpected facade SSHServer received from the controller
+18:46:23 INFO Adding model github-pr-4ab4b-lxd:test-reactive-n2fk on cloud localhost
+18:46:23 WARNING unexpected facade SSHServer received from the controller
+18:46:23 WARNING unexpected facade SSHSession received from the controller
+18:46:23 WARNING unexpected facade SSHTunneler received from the controller
+18:46:24 INFO GitHub token rate limit: Rate(reset=2026-02-23 19:46:25+00:00, remaining=5000, limit=5000)
+18:46:27 INFO Deploying ch:amd64/jammy/mongodb-286
+18:46:28 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:46:30 INFO Deploying ch:amd64/noble/any-charm-133
+18:46:49 INFO Deploying local:jammy/github-runner-0
+18:46:50 INFO Waiting for model:
+  test-k4ourcaq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k4ourcaq/0 [allocating] waiting: waiting for machine
+18:47:20 INFO Waiting for model:
+  test-k4ourcaq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k4ourcaq/0 [allocating] waiting: waiting for machine
+18:47:50 INFO Waiting for model:
+  test-k4ourcaq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k4ourcaq/0 [idle] active: 
+18:48:21 INFO Waiting for model:
+  test-k4ourcaq/0 [allocating] waiting: waiting for machine
+18:48:51 INFO Waiting for model:
+  test-k4ourcaq/0 [allocating] waiting: agent initialising
+18:49:21 INFO Waiting for model:
+  test-k4ourcaq/0 [executing] maintenance: installing charm software
+18:49:51 INFO Waiting for model:
+  test-k4ourcaq/0 [executing] maintenance: installing charm software
+18:50:21 INFO Waiting for model:
+  test-k4ourcaq/0 [executing] maintenance: Update image for runners
+18:50:39 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:50:39 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:51:09 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:51:21 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+18:51:51 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+18:51:54 INFO Current reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:51:54 INFO Waiting for reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:52:55 INFO Current reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:52:55 INFO Current reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977, expected reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:52:55 INFO Waiting for reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:53:56 INFO Current reconcile ID: dd288192-a764-4d78-97f4-49ed37c4ead1
+18:53:56 INFO Current reconcile ID: dd288192-a764-4d78-97f4-49ed37c4ead1, expected reconcile ID: 472f46f3-5f4e-4e5c-91b6-401215fb9977
+18:54:00 INFO Wait for condition not met, sleeping 10
+18:54:11 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+18:54:41 INFO Waiting for model:
+  test-k4ourcaq/0 [idle] active: 
+18:54:44 INFO Current reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5
+18:54:44 INFO Waiting for reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5
+18:55:45 INFO Current reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5
+18:55:45 INFO Current reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5, expected reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5
+18:55:45 INFO Waiting for reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5
+18:56:46 INFO Current reconcile ID: 98869eab-6fb5-42a8-9f70-3d95a5b4b9b4
+18:56:46 INFO Current reconcile ID: 98869eab-6fb5-42a8-9f70-3d95a5b4b9b4, expected reconcile ID: 6d0ba52b-ca9c-4238-8b69-4001eac333f5

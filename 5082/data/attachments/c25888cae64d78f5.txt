@@ -1,0 +1,51 @@
+18:46:57 WARNING unexpected facade SSHServer received from the controller
+18:46:57 INFO Adding model github-pr-4ab4b-lxd:test-charm-runner-92rn on cloud localhost
+18:46:57 WARNING unexpected facade SSHServer received from the controller
+18:46:57 WARNING unexpected facade SSHSession received from the controller
+18:46:57 WARNING unexpected facade SSHTunneler received from the controller
+18:46:58 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:46:59 INFO Deploying ch:amd64/noble/any-charm-133
+18:47:16 INFO Deploying local:noble/github-runner-0
+18:47:16 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-owj1263l/0 [allocating] waiting: waiting for machine
+18:47:47 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-owj1263l/0 [allocating] waiting: agent initialising
+18:48:17 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: waiting for machine
+18:48:47 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: waiting for machine
+18:49:18 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: waiting for machine
+18:49:48 INFO Waiting for model:
+  test-owj1263l/0 [allocating] waiting: agent initialising
+18:50:19 INFO Waiting for model:
+  test-owj1263l/0 [executing] maintenance: installing charm software
+18:50:49 INFO Waiting for model:
+  test-owj1263l/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-owj1263l/0 [idle] active: 
+18:51:19 INFO Waiting for model:
+  test-owj1263l/0 [idle] active:
+18:51:27 INFO Waiting for model:
+  test-owj1263l/0 [idle] active: 
+18:51:58 INFO Waiting for model:
+  test-owj1263l/0 [idle] active: 
+18:52:01 INFO Current reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:52:01 INFO Waiting for reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:53:02 INFO Current reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:53:02 INFO Current reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff, expected reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:53:02 INFO Waiting for reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:54:03 INFO Current reconcile ID: a25be918-1323-4d59-846e-2d83292f3ab4
+18:54:03 INFO Current reconcile ID: a25be918-1323-4d59-846e-2d83292f3ab4, expected reconcile ID: cea1ad25-b919-4e4c-82de-0a801666f2ff
+18:54:11 INFO Waiting for model:
+  test-owj1263l/0 [idle] active: 
+18:54:42 INFO Waiting for model:
+  test-owj1263l/0 [idle] active: 
+18:54:45 INFO Current reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
+18:54:45 INFO Waiting for reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
+18:55:46 INFO Current reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
+18:55:46 INFO Current reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df, expected reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
+18:55:46 INFO Waiting for reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
+18:56:47 INFO Current reconcile ID: f8a77211-2400-4cd8-b53a-3d21368184e2
+18:56:47 INFO Current reconcile ID: f8a77211-2400-4cd8-b53a-3d21368184e2, expected reconcile ID: 0e4fe186-233a-4954-8648-96b00075a1df
