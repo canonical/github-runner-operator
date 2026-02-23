@@ -6,7 +6,7 @@
 import json
 import logging
 from dataclasses import dataclass
-from typing import Iterable, Optional
+from typing import Iterable
 from urllib.parse import urljoin
 
 import requests
@@ -15,25 +15,6 @@ import urllib3
 from pydantic import AnyHttpUrl, BaseModel
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class FlavorInfo:
-    """Flavor information returned by the planner service.
-
-    Attributes:
-        name: Flavor name.
-        labels: Labels associated with the flavor.
-        priority: Optional priority for scheduling.
-        is_disabled: Whether the flavor is disabled.
-        minimum_pressure: Minimum desired runner count for the flavor.
-    """
-
-    name: str
-    labels: list[str]
-    priority: Optional[int] = None
-    is_disabled: Optional[bool] = None
-    minimum_pressure: Optional[int] = None
 
 
 @dataclass
@@ -66,10 +47,7 @@ class PlannerApiError(Exception):
 
 
 class PlannerClient:  # pylint: disable=too-few-public-methods
-    """An HTTP client for the planner service.
-
-    Supports flavor retrieval and pressure streaming.
-    """
+    """An HTTP client for the planner service."""
 
     def __init__(self, config: PlannerConfiguration) -> None:
         """Initialize client with planner configuration.
@@ -80,38 +58,6 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
         """
         self._session = self._create_session()
         self._config = config
-
-    def get_flavor(self, name: str) -> FlavorInfo:
-        """Get flavor details.
-
-        Args:
-            name: Flavor name.
-
-        Raises:
-            PlannerApiError: On HTTP or parsing errors.
-
-        Returns:
-            Parsed flavor information.
-        """
-        url = urljoin(str(self._config.base_url), f"/api/v1/flavors/{name}")
-        try:
-            response = self._session.get(
-                url,
-                headers={"Authorization": f"Bearer {self._config.token}"},
-                timeout=self._config.timeout,
-            )
-            response.raise_for_status()
-            data = response.json()
-            return FlavorInfo(
-                name=data.get("name", ""),
-                labels=data.get("labels", []),
-                priority=data.get("priority"),
-                is_disabled=data.get("is_disabled"),
-                minimum_pressure=data.get("minimum_pressure"),
-            )
-        except (requests.RequestException, ValueError) as exc:
-            logger.exception("Unable to get flavor '%s' from planner.", name)
-            raise PlannerApiError from exc
 
     def stream_pressure(self, name: str) -> Iterable[PressureInfo]:
         """Stream pressure updates for the given flavor.

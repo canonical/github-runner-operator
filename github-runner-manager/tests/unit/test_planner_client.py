@@ -6,11 +6,9 @@
 import json
 from types import SimpleNamespace
 
-import pytest
 import requests
 
 from github_runner_manager.planner_client import (
-    PlannerApiError,
     PlannerClient,
     PlannerConfiguration,
 )
@@ -20,17 +18,15 @@ class _FakeResponse:
     """Minimal Response-like object used to stub `requests.Response`."""
 
     def __init__(
-        self, status_code: int = 200, json_obj: dict | None = None, lines: list[str] | None = None
+        self, status_code: int = 200, lines: list[str] | None = None
     ) -> None:
         """Minimal Response-like object used to stub `requests.Response`.
 
         Args:
             status_code: HTTP status code to emulate.
-            json_obj: JSON body returned by `json()`.
             lines: Lines yielded by `iter_lines()` for streaming tests.
         """
         self.status_code = status_code
-        self._json_obj = json_obj or {}
         self._lines = lines or []
         self._closed = False
 
@@ -42,14 +38,6 @@ class _FakeResponse:
         """
         if self.status_code >= 400:
             raise requests.HTTPError("HTTP error")
-
-    def json(self) -> dict:
-        """Return the configured JSON body.
-
-        Returns:
-            dict: The JSON payload used by tests.
-        """
-        return self._json_obj
 
     def iter_lines(self, decode_unicode: bool = True):
         """Yield configured NDJSON lines for streaming tests.
@@ -114,34 +102,6 @@ class _FakeSession:
         return _FakeResponse(status_code=200)
 
 
-def _fake_get_json_response(json_obj: dict, status_code: int = 200):
-    """Build a stub `Session.get` returning a JSON body.
-
-    Args:
-        json_obj: JSON payload to return.
-        status_code: HTTP status code for the response (default: 200).
-
-    Returns:
-        Callable: A function compatible with `Session.get` signature.
-    """
-
-    def _fake_get(url, headers, timeout, stream=False):
-        """Return a fake JSON response for any GET request.
-
-        Args:
-            url: Request URL (ignored by stub).
-            headers: Request headers (ignored by stub).
-            timeout: Request timeout in seconds (ignored by stub).
-            stream: Whether streaming is requested (ignored by stub).
-
-        Returns:
-            _FakeResponse: Response carrying the provided JSON payload.
-        """
-        return _FakeResponse(status_code=status_code, json_obj=json_obj)
-
-    return _fake_get
-
-
 def _fake_get_stream_response(lines: list[str], status_code: int = 200):
     """Build a stub `Session.get` returning stream lines (NDJSON).
 
@@ -170,53 +130,6 @@ def _fake_get_stream_response(lines: list[str], status_code: int = 200):
     return _fake_get
 
 
-def _fake_get_status_response(status_code: int):
-    """Build a stub `Session.get` returning only a status code.
-
-    Args:
-        status_code: HTTP status code to return.
-
-    Returns:
-        Callable: A function compatible with `Session.get` signature.
-    """
-
-    def _fake_get(url, headers, timeout, stream=False):  # noqa: ARG001
-        """Return a fake response with only a status code.
-
-        Args:
-            url: Request URL (ignored by stub).
-            headers: Request headers (ignored by stub).
-            timeout: Request timeout in seconds (ignored by stub).
-            stream: Whether streaming is requested (ignored by stub).
-
-        Returns:
-            _FakeResponse: Response with the given HTTP status code.
-        """
-        return _FakeResponse(status_code=status_code)
-
-    return _fake_get
-
-
-def test_get_flavor_success(monkeypatch):
-    """
-    arrange: PlannerClient with a fake session returning flavor JSON.
-    act: Call get_flavor('small').
-    assert: get_flavor returns expected fields and headers.
-    """
-    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
-    client = PlannerClient(cfg)
-
-    fake_session = _FakeSession()
-    monkeypatch.setattr(client, "_session", fake_session)
-
-    monkeypatch.setattr(
-        fake_session, "get", _fake_get_json_response({"name": "small", "labels": ["x"]})
-    )
-
-    flavor = client.get_flavor("small")
-    assert flavor.name == "small"
-
-
 def test_stream_pressure_success(monkeypatch):
     """
     arrange: Fake session streams NDJSON lines with a blank heartbeat.
@@ -235,21 +148,3 @@ def test_stream_pressure_success(monkeypatch):
     updates = list(client.stream_pressure("small"))
     assert updates[0].pressure == 2
     assert updates[1].pressure == 5
-
-
-def test_get_flavor_error_raises(monkeypatch):
-    """
-    arrange: PlannerClient with a fake session returning HTTP 500.
-    act: Call get_flavor('small').
-    assert: Raises PlannerApiError.
-    """
-    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
-    client = PlannerClient(cfg)
-
-    fake_session = _FakeSession()
-    monkeypatch.setattr(client, "_session", fake_session)
-
-    monkeypatch.setattr(fake_session, "get", _fake_get_status_response(500))
-
-    with pytest.raises(PlannerApiError):
-        _ = client.get_flavor("small")
