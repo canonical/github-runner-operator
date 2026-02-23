@@ -1,0 +1,10 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ["self-hosted", "linux", "amd64", "tiobe", "noble"]
+    steps:
+      - name: uname -a
+        run: uname -a
+      - name: tmate
+        uses: canonical/action-tmate@main
