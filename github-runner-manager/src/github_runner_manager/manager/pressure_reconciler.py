@@ -31,11 +31,13 @@ class PressureReconcilerConfig:
         flavor_name: Name of the planner flavor to reconcile.
         reconcile_interval: Seconds between timer-based delete reconciliations.
         fallback_runners: Desired runner count to use while planner is unavailable.
+        min_pressure: Minimum desired runner count (floor) for the flavor.
     """
 
     flavor_name: str
     reconcile_interval: int = 5 * 60
     fallback_runners: int = 0
+    min_pressure: int = 0
 
 
 class PressureReconciler:  # pylint: disable=too-few-public-methods
@@ -86,9 +88,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._lock = lock
 
         self._stop = Event()
-        self._last_pressure: Optional[int] = None
+        self._last_pressure: Optional[float] = None
 
-    def start_create_loop(self) -> None:
+    def start_create_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously create runners to satisfy planner pressure."""
         while not self._stop.is_set():
             try:
@@ -212,6 +214,5 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             The desired total number of runners.
         """
         base = int(pressure)
-        if self._min_pressure is not None:
-            base = max(base, int(self._min_pressure))
+        base = max(base, self._config.min_pressure)
         return max(base, 0)

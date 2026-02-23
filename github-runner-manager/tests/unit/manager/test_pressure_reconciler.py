@@ -44,7 +44,7 @@ class _FakePlanner:
 
     def __init__(
         self,
-        stream_updates: list[int] | None = None,
+        stream_updates: list[float] | None = None,
         stream_raises: bool = False,
     ):
         """Initialize with configurable stream behavior."""
