@@ -102,7 +102,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Error in pressure stream loop, falling back to %s runners.",
                     self._config.fallback_runners,
                 )
-                self._handle_create_runners(fallback)
+                self._handle_create(float(self._config.fallback_runners))
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:
@@ -213,4 +213,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         Returns:
             The desired total number of runners.
         """
-        return max(pressure, self._config.min_pressure, 0)
+        base = int(pressure)
+        if self._min_pressure is not None:
+            base = max(base, int(self._min_pressure))
+        return max(base, 0)
