@@ -1,0 +1,62 @@
+06:50:31 WARNING unexpected facade SSHServer received from the controller
+06:50:31 INFO Adding model github-pr-4ab4b-lxd:test-reactive-0l1t on cloud localhost
+06:50:32 WARNING unexpected facade SSHServer received from the controller
+06:50:32 WARNING unexpected facade SSHSession received from the controller
+06:50:32 WARNING unexpected facade SSHTunneler received from the controller
+06:50:36 INFO GitHub token rate limit: Rate(reset=2026-02-23 07:08:30+00:00, remaining=4986, limit=5000)
+06:50:40 INFO Deploying ch:amd64/jammy/mongodb-286
+06:50:43 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:50:45 INFO Deploying ch:amd64/noble/any-charm-133
+06:51:01 INFO Deploying local:jammy/github-runner-0
+06:51:02 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cobzft56/0 [allocating] waiting: waiting for machine
+06:51:32 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cobzft56/0 [idle] active: 
+06:52:02 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+06:52:32 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+06:53:03 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+06:53:33 INFO Waiting for model:
+  test-cobzft56/0 [allocating] waiting: waiting for machine
+06:54:03 INFO Waiting for model:
+  test-cobzft56/0 [executing] maintenance: installing charm software
+06:54:34 INFO Waiting for model:
+  test-cobzft56/0 [executing] maintenance: installing charm software
+06:55:04 INFO Waiting for model:
+  test-cobzft56/0 [executing] maintenance: installing charm software
+06:55:34 INFO Waiting for model:
+  test-cobzft56/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cobzft56/0 [idle] active: 
+06:56:03 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:56:03 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:56:33 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:56:43 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+06:57:13 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+06:57:16 INFO Current reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:57:16 INFO Waiting for reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:58:17 INFO Current reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:58:17 INFO Current reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07, expected reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:58:17 INFO Waiting for reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:59:18 INFO Current reconcile ID: 6efd6fef-52c6-4041-b543-96b35f78d319
+06:59:18 INFO Current reconcile ID: 6efd6fef-52c6-4041-b543-96b35f78d319, expected reconcile ID: 864e1f51-0e29-4e02-8da4-1d5a42956e07
+06:59:23 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+06:59:53 INFO Waiting for model:
+  test-cobzft56/0 [idle] active: 
+06:59:55 INFO Current reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
+06:59:55 INFO Waiting for reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
+07:00:57 INFO Current reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
+07:00:57 INFO Current reconcile ID: 3db61040-5246-4272-8758-a611a359eb68, expected reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
+07:00:57 INFO Waiting for reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
+07:01:58 INFO Current reconcile ID: 5915fd5f-af04-44bd-a7f5-61d5eb21eab0
+07:01:58 INFO Current reconcile ID: 5915fd5f-af04-44bd-a7f5-61d5eb21eab0, expected reconcile ID: 3db61040-5246-4272-8758-a611a359eb68
