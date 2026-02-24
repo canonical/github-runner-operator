@@ -64,15 +64,15 @@ class _FakePlanner:
             yield SimpleNamespace(pressure=p)
 
 
-def test_fallback_runners_used_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
+def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler whose planner stream raises PlannerApiError.
     act: Call start_create_loop.
-    assert: Fallback runner count is used to create runners.
+    assert: min_pressure is used as fallback to create runners.
     """
     mgr = _FakeManager()
     planner = _FakePlanner(stream_raises=True)
-    cfg = PressureReconcilerConfig(flavor_name="small", fallback_runners=2)
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
     def _stop_after_backoff(_seconds: int):
