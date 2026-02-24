@@ -2,7 +2,7 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-02-18
+## 2026-02-24
 
 - Introduce planner-driven pressure reconciler.
 
