@@ -45,7 +45,7 @@ class _FakePlanner:
 
     def __init__(
         self,
-        stream_updates: list[float] | None = None,
+        stream_updates: list[int] | None = None,
         stream_raises: bool = False,
     ):
         """Initialize with configurable stream behavior."""
@@ -89,7 +89,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    reconciler._last_pressure = 3.0  # noqa: SLF001
+    reconciler._last_pressure = 3  # noqa: SLF001
     handler = MagicMock()
     monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
     monkeypatch.setattr(
@@ -100,7 +100,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
 
     reconciler.start_delete_loop()
 
-    handler.assert_called_once_with(3.0)
+    handler.assert_called_once_with(3)
 
 
 def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
@@ -131,7 +131,7 @@ def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=5)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
-    reconciler._handle_timer_reconcile(0.0)
+    reconciler._handle_timer_reconcile(0)
 
     assert mgr.cleanup_called == 1
     assert mgr.created_args == [1]
