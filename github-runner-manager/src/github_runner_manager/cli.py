@@ -39,6 +39,7 @@ def handle_shutdown(
     """
     logging.info("Received signal %s; stopping pressure reconciler", signum)
     pressure_reconciler.stop()
+    raise SystemExit(0)
 
 
 @click.command()
