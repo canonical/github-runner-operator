@@ -65,7 +65,7 @@ class _FakePlanner:
 
 def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: A reconciler whose planner stream raises PlannerApiError.
+    arrange: A reconciler whose planner stream raises PlannerApiError and no prior pressure.
     act: Call start_create_loop.
     assert: min_pressure is used as fallback to create runners.
     """
