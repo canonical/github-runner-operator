@@ -65,7 +65,11 @@ class _FakePlanner:
 
 
 def test_fallback_runners_used_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
-    """Planner stream failures should trigger fallback runner creation."""
+    """
+    arrange: A reconciler whose planner stream raises PlannerApiError.
+    act: Call start_create_loop.
+    assert: Fallback runner count is used to create runners.
+    """
     mgr = _FakeManager()
     planner = _FakePlanner(stream_raises=True)
     cfg = PressureReconcilerConfig(flavor_name="small", fallback_runners=2)
@@ -84,7 +88,11 @@ def test_fallback_runners_used_when_stream_errors(monkeypatch: pytest.MonkeyPatc
 
 
 def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
-    """Delete loop should call handler with cached pressure, not planner stream."""
+    """
+    arrange: A reconciler with a cached last_pressure value.
+    act: Call start_delete_loop.
+    assert: The timer handler is called with the cached pressure.
+    """
     mgr = _FakeManager()
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
@@ -103,7 +111,11 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
 
 
 def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
-    """Delete loop should not run delete handler until pressure is observed."""
+    """
+    arrange: A reconciler with no cached pressure (None).
+    act: Call start_delete_loop.
+    assert: The timer handler is never called.
+    """
     mgr = _FakeManager()
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
@@ -124,7 +136,11 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
 
 
 def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
-    """Delete path should compare against desired total (with minimum pressure floor)."""
+    """
+    arrange: A reconciler with 4 runners and min_pressure=5.
+    act: Call _handle_timer_reconcile with pressure 0.
+    assert: Cleanup runs and 1 runner is created to reach the min_pressure floor.
+    """
     mgr = _FakeManager(runners_count=4)
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=5)
