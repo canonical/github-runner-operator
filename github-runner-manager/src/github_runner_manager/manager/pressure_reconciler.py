@@ -44,13 +44,13 @@ class PressureReconcilerConfig:
 
     Attributes:
         flavor_name: Name of the planner flavor to reconcile.
-        reconcile_interval: Seconds between timer-based delete reconciliations.
+        reconcile_interval: Minutes between timer-based delete reconciliations.
         min_pressure: Minimum desired runner count (floor) for the flavor.
             Also used as fallback when the planner is unavailable.
     """
 
     flavor_name: str
-    reconcile_interval: int = 5 * 60
+    reconcile_interval: int = 5
     min_pressure: int = 0
 
 
@@ -123,8 +123,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def start_delete_loop(self) -> None:
         """Continuously delete runners using last seen pressure on a timer."""
-        logger.debug("Delete loop: starting, interval=%ss", self._config.reconcile_interval)
-        while not self._stop.wait(self._config.reconcile_interval):
+        interval_seconds = self._config.reconcile_interval * 60
+        logger.debug("Delete loop: starting, interval=%ss", interval_seconds)
+        while not self._stop.wait(interval_seconds):
             logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
                 logger.debug("Delete loop: no pressure seen yet, skipping.")

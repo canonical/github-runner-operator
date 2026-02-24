@@ -54,8 +54,7 @@ def planner_app(
         planner_token=stub.token,
     )
     # Fire the delete loop every 5 minutes so cleanup is visible within the 15-minute
-    # test timeout. The default factory value (60) waits 60 * 60 = 3600 s between ticks.
-    # 5 matches the PressureReconcilerConfig default and reflects realistic behavior.
+    # test timeout. The default factory value (60) waits 60 minutes between ticks.
     config["reconcile_interval"] = 5
     # Set base_virtual_machines to 0 so min_pressure doesn't override planner pressure.
     # Without this, min_pressure=1 acts as a floor and prevents scaling down to zero.
