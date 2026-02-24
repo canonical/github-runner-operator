@@ -66,7 +66,7 @@ class _FakePlanner:
 
 def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: A reconciler whose planner stream raises PlannerApiError.
+    arrange: A reconciler whose planner stream raises PlannerApiError and no prior pressure.
     act: Call start_create_loop.
     assert: min_pressure is used as fallback to create runners.
     """
@@ -85,6 +85,30 @@ def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.Mo
     reconciler.start_create_loop()
 
     assert 2 in mgr.created_args
+
+
+def test_fallback_preserves_last_pressure_when_higher(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with last_pressure=10 and min_pressure=2 whose stream errors.
+    act: Call start_create_loop.
+    assert: The higher last_pressure is used as fallback instead of min_pressure.
+    """
+    mgr = _FakeManager()
+    planner = _FakePlanner(stream_raises=True)
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+    reconciler._last_pressure = 10
+
+    def _stop_after_backoff(_seconds: int):
+        """Stop the reconciler after the backoff sleep is triggered."""
+        reconciler.stop()
+
+    monkeypatch.setattr(
+        "github_runner_manager.manager.pressure_reconciler.time.sleep", _stop_after_backoff
+    )
+    reconciler.start_create_loop()
+
+    assert 10 in mgr.created_args
 
 
 def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):

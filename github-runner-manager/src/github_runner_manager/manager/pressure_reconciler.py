@@ -98,11 +98,12 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         return
                     self._handle_create_runners(update.pressure)
             except PlannerApiError:
+                fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
                     "Error in pressure stream loop, falling back to %s runners.",
-                    self._config.min_pressure,
+                    fallback,
                 )
-                self._handle_create_runners(self._config.min_pressure)
+                self._handle_create_runners(fallback)
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
