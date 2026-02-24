@@ -61,7 +61,7 @@ allows the manager to react within seconds of a pressure change.
 **A single unified reconcile loop.** Combining create and delete into one loop
 simplifies concurrency but forces a trade-off: either the loop runs frequently
 (introducing excessive GitHub and OpenStack API calls) or it runs infrequently
-(losing the low-latency create behaviour). Cleanup involves listing runners via
+(losing the low-latency create behaviour). Cleanup involves listing runners through
 the GitHub API and querying OpenStack for VM state — calls that are expensive both
 in latency and in quota. GitHub rate limiting has caused operational problems for
 this project in the past, and OpenStack also degrades under high call rates.
