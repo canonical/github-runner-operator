@@ -89,7 +89,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                         if not isinstance(data, dict) or "pressure" not in data:
                             logger.debug("Skipping non-pressure stream line: %s", line)
                             continue
-                        yield PressureInfo(pressure=int(data[name]))
+                        yield PressureInfo(pressure=int(data["pressure"]))
                     except json.JSONDecodeError:
                         logger.warning("Skipping malformed stream line: %s", line)
                         continue
