@@ -63,11 +63,11 @@ class _FakePlanner:
             yield SimpleNamespace(pressure=p)
 
 
-def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
+def test_fallback_runners_used_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: A reconciler whose planner stream raises PlannerApiError and no prior pressure.
+    arrange: A reconciler whose planner stream raises PlannerApiError.
     act: Call start_create_loop.
-    assert: min_pressure is used as fallback to create runners.
+    assert: Fallback runner count is used to create runners.
     """
     mgr = _FakeManager()
     planner = _FakePlanner(stream_raises=True)
@@ -114,7 +114,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with a cached last_pressure value.
     act: Call start_delete_loop.
-    assert: Cleanup runs and runners are created based on the cached pressure.
+    assert: The timer handler is called with the cached pressure.
     """
     mgr = _FakeManager()
     planner = _FakePlanner()
@@ -137,7 +137,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     """
     arrange: A reconciler with no cached pressure (None).
     act: Call start_delete_loop.
-    assert: No cleanup or creation occurs.
+    assert: The timer handler is never called.
     """
     mgr = _FakeManager()
     planner = _FakePlanner()
