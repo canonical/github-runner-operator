@@ -57,6 +57,9 @@ def planner_app(
     # test timeout. The default factory value (60) waits 60 * 60 = 3600 s between ticks.
     # 5 matches the PressureReconcilerConfig default and reflects realistic behavior.
     config["reconcile_interval"] = 5
+    # Set base_virtual_machines to 0 so min_pressure doesn't override planner pressure.
+    # Without this, min_pressure=1 acts as a floor and prevents scaling down to zero.
+    config["non_reactive_configuration"]["combinations"][0]["base_virtual_machines"] = 0
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
