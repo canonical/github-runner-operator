@@ -142,7 +142,7 @@ def test_stream_pressure_success(monkeypatch):
     fake_session = _FakeSession()
     monkeypatch.setattr(client, "_session", fake_session)
 
-    lines = [json.dumps({"pressure": 2}), "", json.dumps({"pressure": 5})]
+    lines = [json.dumps({"small": 2}), "", json.dumps({"small": 5})]
     monkeypatch.setattr(fake_session, "get", _fake_get_stream_response(lines))
 
     updates = list(client.stream_pressure("small"))
