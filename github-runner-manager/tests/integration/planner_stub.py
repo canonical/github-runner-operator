@@ -4,7 +4,6 @@
 """Lightweight planner stub for integration tests.
 
 Provides flavor info and pressure endpoints expected by PlannerClient:
-- GET /api/v1/flavors/<name>
 - GET /api/v1/flavors/<name>/pressure
 - GET /api/v1/flavors/<name>/pressure?stream=true (NDJSON)
 - POST /control/pressure (test control endpoint for dynamic pressure updates)
@@ -34,7 +33,6 @@ class PlannerStubConfig:
     port: int = 8081
     token: str = "stub-token"
     flavor_name: str = "small"
-    minimum_pressure: int = 0
     initial_pressure: float = 1.0
 
 
@@ -63,15 +61,21 @@ def _read_pressure(pressure_path: Path, default: float) -> float:
         return default
 
 
-def _pressure_stream_gen(pressure_path: Path, default: float) -> Iterable[bytes]:
+def _pressure_stream_gen(
+    pressure_path: Path, default: float, flavor_name: str
+) -> Iterable[bytes]:
     """Yield NDJSON-encoded pressure values indefinitely, re-reading the file each time.
 
     Yields one line every 10 seconds so that calls to ``/control/pressure`` are
     reflected in streaming consumers without restarting the server.
 
+    The stream format uses the flavor name as the key (e.g. ``{"small": 1.0}``)
+    to match what PlannerClient.stream_pressure expects.
+
     Args:
         pressure_path: Path to the JSON pressure state file.
         default: Pressure value to use when the file is missing or malformed.
+        flavor_name: Flavor name used as the JSON key in each line.
 
     Yields:
         Iterable[bytes]: NDJSON lines as byte strings.
@@ -79,7 +83,7 @@ def _pressure_stream_gen(pressure_path: Path, default: float) -> Iterable[bytes]
     while True:
         p = _read_pressure(pressure_path, default)
         logger.info("Stream: yielding pressure=%.2f (path=%s)", p, pressure_path)
-        yield (json.dumps({"pressure": p}) + "\n").encode("utf-8")
+        yield (json.dumps({flavor_name: p}) + "\n").encode("utf-8")
         time.sleep(10)
 
 
@@ -108,20 +112,6 @@ def _make_app(config: PlannerStubConfig) -> Flask:
         """
         return Response(status=204)
 
-    @app.get(f"/api/v1/flavors/{config.flavor_name}")
-    def get_flavor() -> Response:
-        """Return flavor metadata for the configured flavor.
-
-        Returns:
-            Response: JSON body with `name`, `labels`, and `minimum_pressure`.
-        """
-        payload = {
-            "name": config.flavor_name,
-            "labels": [config.flavor_name],
-            "minimum_pressure": config.minimum_pressure,
-        }
-        return Response(json.dumps(payload), mimetype="application/json")
-
     @app.get(f"/api/v1/flavors/{config.flavor_name}/pressure")
     def get_pressure() -> Response:
         """Return the current pressure as a snapshot or NDJSON stream.
@@ -137,7 +127,7 @@ def _make_app(config: PlannerStubConfig) -> Flask:
             p = _read_pressure(pressure_path, config.initial_pressure)
             return Response(json.dumps({"pressure": p}), mimetype="application/json")
         return Response(
-            _pressure_stream_gen(pressure_path, config.initial_pressure),
+            _pressure_stream_gen(pressure_path, config.initial_pressure, config.flavor_name),
             mimetype="application/x-ndjson",
         )
 
