@@ -20,7 +20,7 @@ from threading import Event, Lock
 from typing import Optional
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.configuration.base import UserInfo
+from github_runner_manager.configuration.base import NonReactiveCombination, UserInfo
 from github_runner_manager.errors import MissingServerConfigError
 from github_runner_manager.manager.runner_manager import RunnerManager, RunnerMetadata
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
@@ -238,6 +238,9 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
         config: Application configuration.
         lock: Shared lock to serialize operations with other reconcile loops.
 
+    Raises:
+        ValueError: If no non-reactive combinations are configured.
+
     Returns:
         A fully constructed PressureReconciler.
     """
@@ -246,9 +249,36 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
         raise ValueError(
             "Cannot build PressureReconciler: no non-reactive combinations configured."
         )
-    first_combo = combinations[0]
+    first = combinations[0]
+    manager = _build_runner_manager(config, first)
+    return PressureReconciler(
+        manager=manager,
+        planner_client=PlannerClient(
+            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+        ),
+        config=PressureReconcilerConfig(
+            flavor_name=first.flavor.name,
+            reconcile_interval=config.reconcile_interval,
+            min_pressure=first.base_virtual_machines,
+        ),
+        lock=lock,
+    )
+
+
+def _build_runner_manager(
+    config: ApplicationConfiguration, combination: NonReactiveCombination
+) -> RunnerManager:
+    """Build a RunnerManager from application config and a flavor/image combination.
+
+    Args:
+        config: Application configuration.
+        combination: The flavor/image combination to use for OpenStack VMs.
+
+    Returns:
+        A configured RunnerManager instance.
+    """
     user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
-    manager = RunnerManager(
+    return RunnerManager(
         manager_name=config.name,
         platform_provider=GitHubRunnerPlatform.build(
             prefix=config.openstack_configuration.vm_prefix,
@@ -259,33 +289,14 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
                 allow_external_contributor=config.allow_external_contributor,
                 prefix=config.openstack_configuration.vm_prefix,
                 credentials=config.openstack_configuration.credentials,
-                server_config=(
-                    None
-                    if not first_combo
-                    else OpenStackServerConfig(
-                        image=first_combo.image.name,
-                        flavor=first_combo.flavor.name,
-                        network=config.openstack_configuration.network,
-                    )
+                server_config=OpenStackServerConfig(
+                    image=combination.image.name,
+                    flavor=combination.flavor.name,
+                    network=config.openstack_configuration.network,
                 ),
                 service_config=config.service_config,
             ),
             user=user,
         ),
-        labels=(
-            list(config.extra_labels)
-            + ([] if not first_combo else (first_combo.image.labels + first_combo.flavor.labels))
-        ),
-    )
-    return PressureReconciler(
-        manager=manager,
-        planner_client=PlannerClient(
-            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
-        ),
-        config=PressureReconcilerConfig(
-            flavor_name=first_combo.flavor.name if first_combo else "",
-            reconcile_interval=config.reconcile_interval,
-            min_pressure=first_combo.base_virtual_machines if first_combo else 0,
-        ),
-        lock=lock,
+        labels=list(config.extra_labels) + combination.image.labels + combination.flavor.labels,
     )
