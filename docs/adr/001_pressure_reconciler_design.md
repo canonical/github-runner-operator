@@ -1,8 +1,10 @@
-# ADR-001: Pressure reconciler design for planner integration
-
-**Author:** Christopher Bartz (christopher.bartz@canonical.com)
-**Date:** 2026/02/20
-**Domain:** Architecture
+---
+title: ADR-001 - Pressure reconciler design for planner integration
+author: Christopher Bartz (christopher.bartz@canonical.com)
+date: 2026/02/20
+domain: architecture
+replaced-by: 
+---
 
 ## Overview
 
