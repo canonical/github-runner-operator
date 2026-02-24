@@ -99,8 +99,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         return
                     self._handle_create(update.pressure)
             except PlannerApiError:
-                if self._stop.is_set():
-                    return
                 logger.exception(
                     "Error in pressure stream loop, falling back to %s runners.",
                     self._config.fallback_runners,
