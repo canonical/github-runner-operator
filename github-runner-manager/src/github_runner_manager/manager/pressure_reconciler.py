@@ -186,7 +186,13 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+                try:
+                    self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+                except MissingServerConfigError:
+                    logger.exception(
+                        "Unable to create runners due to missing server configuration"
+                        " (image/flavor)."
+                    )
             else:
                 logger.info(
                     "Timer: no changes needed (desired=%s current=%s)",
