@@ -97,13 +97,13 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 for update in self._planner.stream_pressure(self._config.flavor_name):
                     if self._stop.is_set():
                         return
-                    self._handle_create(update.pressure)
+                    self._handle_create_runners(update.pressure)
             except PlannerApiError:
                 logger.exception(
                     "Error in pressure stream loop, falling back to %s runners.",
                     self._config.fallback_runners,
                 )
-                self._handle_create(float(self._config.fallback_runners))
+                self._handle_create_runners(float(self._config.fallback_runners))
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
@@ -120,7 +120,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """Signal the reconciler loops to stop gracefully."""
         self._stop.set()
 
-    def _handle_create(self, pressure: float) -> None:
+    def _handle_create_runners(self, pressure: float) -> None:
         """Create runners when desired exceeds current total.
 
         Args:
