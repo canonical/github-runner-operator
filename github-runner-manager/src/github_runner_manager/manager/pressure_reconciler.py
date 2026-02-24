@@ -242,7 +242,11 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
         A fully constructed PressureReconciler.
     """
     combinations = config.non_reactive_configuration.combinations
-    first_combo = combinations[0] if combinations else None
+    if not combinations:
+        raise ValueError(
+            "Cannot build PressureReconciler: no non-reactive combinations configured."
+        )
+    first_combo = combinations[0]
     user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
     manager = RunnerManager(
         manager_name=config.name,
