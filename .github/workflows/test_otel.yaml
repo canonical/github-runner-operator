@@ -2,9 +2,11 @@ name: CI
 on: [push]
 jobs:
   build:
-    runs-on: ["self-hosted", "linux", "amd64", "tiobe", "noble"]
+    runs-on: ["self-hosted", "linux", "amd64", "edge"]
     steps:
       - name: uname -a
         run: uname -a
+      - name: otel-collector
+        run: sudo snap services opentelemetry-collector
       - name: tmate
         uses: canonical/action-tmate@main
