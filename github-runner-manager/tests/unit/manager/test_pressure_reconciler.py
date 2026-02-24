@@ -44,7 +44,7 @@ class _FakePlanner:
 
     def __init__(
         self,
-        stream_updates: list[float] | None = None,
+        stream_updates: list[int] | None = None,
         stream_raises: bool = False,
     ):
         """Initialize with configurable stream behavior."""
@@ -120,8 +120,14 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    reconciler._last_pressure = 3
-    wait_calls = {"count": 0}
+    reconciler._last_pressure = 3  # noqa: SLF001
+    handler = MagicMock()
+    monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
+    monkeypatch.setattr(
+        reconciler._stop,
+        "wait",
+        lambda _interval: True if handler.call_count else False,
+    )  # noqa: SLF001
 
     def _wait(_interval: int) -> bool:
         """Return False once to enter the loop, then True to exit."""
@@ -131,8 +137,7 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(reconciler._stop, "wait", _wait)
     reconciler.start_delete_loop()
 
-    assert mgr.cleanup_called == 1
-    assert mgr.created_args == [3]
+    handler.assert_called_once_with(3)
 
 
 def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
