@@ -17,9 +17,7 @@ from github_runner_manager.planner_client import (
 class _FakeResponse:
     """Minimal Response-like object used to stub `requests.Response`."""
 
-    def __init__(
-        self, status_code: int = 200, lines: list[str] | None = None
-    ) -> None:
+    def __init__(self, status_code: int = 200, lines: list[str] | None = None) -> None:
         """Minimal Response-like object used to stub `requests.Response`.
 
         Args:
