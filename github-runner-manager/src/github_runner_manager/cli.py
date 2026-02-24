@@ -28,17 +28,26 @@ version = importlib.metadata.version("github-runner-manager")
 
 
 def handle_shutdown(
-    signum: int, _frame: FrameType | None, pressure_reconciler: PressureReconciler
+    signum: int,
+    _frame: FrameType | None,
+    pressure_reconciler: PressureReconciler,
+    thread_manager: ThreadManager,
 ) -> None:  # pragma: no cover
     """Stop reconciler threads on shutdown signals.
+
+    Signals the reconciler loops to stop, waits for all threads to finish
+    their current operation, then exits the process.
 
     Args:
         signum: Received POSIX signal number.
         _frame: Current stack frame when the signal was received.
         pressure_reconciler: The reconciler instance to stop.
+        thread_manager: The thread manager whose threads to join before exiting.
     """
     logging.info("Received signal %s; stopping pressure reconciler", signum)
     pressure_reconciler.stop()
+    for thread in thread_manager.threads:
+        thread.join(timeout=60)
     raise SystemExit(0)
 
 
@@ -129,12 +138,13 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
 
     if config.planner_url and config.planner_token:
         pressure_reconciler = build_pressure_reconciler(config, lock)
-        signal.signal(
-            signal.SIGTERM, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
+        shutdown = partial(
+            handle_shutdown,
+            pressure_reconciler=pressure_reconciler,
+            thread_manager=thread_manager,
         )
-        signal.signal(
-            signal.SIGINT, partial(handle_shutdown, pressure_reconciler=pressure_reconciler)
-        )
+        signal.signal(signal.SIGTERM, shutdown)
+        signal.signal(signal.SIGINT, shutdown)
         thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
         thread_manager.add_thread(target=pressure_reconciler.start_delete_loop, daemon=True)
     # Legacy mode is still supported for deployments without planner config.
