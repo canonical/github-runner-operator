@@ -43,6 +43,9 @@ def handle_shutdown(
         _frame: Current stack frame when the signal was received.
         pressure_reconciler: The reconciler instance to stop.
         thread_manager: The thread manager whose threads to join before exiting.
+
+    Raises:
+        SystemExit: Always raised after graceful shutdown to terminate the process.
     """
     logging.info("Received signal %s; stopping pressure reconciler", signum)
     pressure_reconciler.stop()
