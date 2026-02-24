@@ -88,7 +88,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._lock = lock
 
         self._stop = Event()
-        self._last_pressure: Optional[float] = None
+        self._last_pressure: Optional[int] = None
 
     def start_create_loop(self) -> None:  # pragma: no cover - long-running loop
         """Continuously create runners to satisfy planner pressure."""
@@ -103,7 +103,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Error in pressure stream loop, falling back to %s runners.",
                     self._config.fallback_runners,
                 )
-                self._handle_create_runners(float(self._config.fallback_runners))
+                self._handle_create_runners(self._config.fallback_runners)
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:  # pragma: no cover - long-running loop
@@ -120,7 +120,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """Signal the reconciler loops to stop gracefully."""
         self._stop.set()
 
-    def _handle_create_runners(self, pressure: float) -> None:
+    def _handle_create_runners(self, pressure: int) -> None:
         """Create runners when desired exceeds current total.
 
         Args:
@@ -128,7 +128,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """
         desired_total = self._desired_total_from_pressure(pressure)
         logger.debug(
-            "Create loop: pressure=%.2f, desired=%s, updating _last_pressure",
+            "Create loop: pressure=%s, desired=%s, updating _last_pressure",
             pressure,
             desired_total,
         )
@@ -137,7 +137,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             current_total = len(self._manager.get_runners())
             to_create = max(desired_total - current_total, 0)
             if to_create <= 0:
-                logger.debug(
+                logger.info(
                     "Create loop: nothing to do (desired=%s current=%s)",
                     desired_total,
                     current_total,
@@ -156,7 +156,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Unable to create runners due to missing server configuration (image/flavor)."
                 )
 
-    def _handle_timer_reconcile(self, pressure: float) -> None:
+    def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, then converge toward the desired count.
 
         Scales down (deletes) when current exceeds desired, and scales up
@@ -194,7 +194,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
 
-    def _desired_total_from_pressure(self, pressure: float) -> int:
+    def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.
 
         Ensures non-negative totals and respects the configured `min_pressure`
@@ -206,6 +206,4 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         Returns:
             The desired total number of runners.
         """
-        base = int(pressure)
-        base = max(base, self._config.min_pressure)
-        return max(base, 0)
+        return max(pressure, self._config.min_pressure, 0)

@@ -25,7 +25,7 @@ class PressureInfo:
         pressure: Desired total runner count for the flavor.
     """
 
-    pressure: float
+    pressure: int
 
 
 class PlannerConfiguration(BaseModel):
@@ -89,7 +89,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                         if not isinstance(data, dict) or "pressure" not in data:
                             logger.debug("Skipping non-pressure stream line: %s", line)
                             continue
-                        yield PressureInfo(pressure=float(data["pressure"]))
+                        yield PressureInfo(pressure=int(data["pressure"]))
                     except json.JSONDecodeError:
                         logger.warning("Skipping malformed stream line: %s", line)
                         continue
