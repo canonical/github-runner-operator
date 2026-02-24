@@ -40,10 +40,9 @@ with the existing reconcile path:
    whenever the desired total exceeds the current total. Each pressure event updates
    a shared `_last_pressure` field consumed by the delete loop.
 
-2. **Delete loop** – wakes on a configurable timer and calls `cleanup_runners` to
-   remove stale VMs, then converges the runner count toward `_last_pressure` (the
-   most recently observed pressure from the create loop). It does not fetch fresh
-   pressure from the planner.
+2. **Delete loop** – wakes on a configurable timer, removes stale VMs, then
+   converges the runner count toward the most recently observed pressure from the
+   create loop. It does not fetch fresh pressure from the planner.
 
 Planner mode is activated only when `planner_url` and `planner_token` are present
 in configuration, allowing staged rollout before the legacy reconcile path is
@@ -54,11 +53,6 @@ When the streaming connection fails, the create loop falls back to
 preventing a hot loop on transient planner outages.
 
 ## Alternatives explored
-
-**Polling instead of streaming for creates.** A polling approach (e.g. fetching
-pressure on each reconcile tick) is simpler, but it introduces a latency equal to
-the polling interval between a demand spike and new runners appearing. Streaming
-allows the manager to react within seconds of a pressure change.
 
 **A single unified reconcile loop.** Combining create and delete into one loop
 simplifies concurrency but forces a trade-off: either the loop runs frequently

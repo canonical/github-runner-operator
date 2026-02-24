@@ -126,13 +126,9 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     lock = Lock()
 
     thread_manager = ThreadManager()
+    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
     thread_manager.add_thread(
-        target=partial(
-            start_http_server,
-            config,
-            lock,
-            FlaskArgs(host=host, port=port, debug=debug),
-        ),
+        target=partial(start_http_server, config, lock, http_server_args),
         daemon=True,
     )
 
