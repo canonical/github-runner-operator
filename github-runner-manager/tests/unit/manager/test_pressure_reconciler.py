@@ -5,6 +5,7 @@
 
 from threading import Lock
 from types import SimpleNamespace
+
 import pytest
 
 from github_runner_manager.manager.pressure_reconciler import (
