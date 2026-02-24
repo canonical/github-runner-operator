@@ -103,7 +103,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Error in pressure stream loop, falling back to %s runners.",
                     self._config.fallback_runners,
                 )
-                self._handle_create(float(self._config.fallback_runners))
+                self._handle_create_runners(float(self._config.fallback_runners))
                 time.sleep(5)
 
     def start_delete_loop(self) -> None:
@@ -120,7 +120,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """Signal the reconciler loops to stop gracefully."""
         self._stop.set()
 
-    def _handle_create_runners(self, pressure: int) -> None:
+    def _handle_create_runners(self, pressure: float) -> None:
         """Create runners when desired exceeds current total.
 
         Args:
