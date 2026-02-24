@@ -1,4 +1,4 @@
-# ADR-001: Pressure Reconciler Design for Planner Integration
+# ADR-001: Pressure reconciler design for planner integration
 
 **Author:** Christopher Bartz (christopher.bartz@canonical.com)
 **Date:** 2026/02/20
@@ -7,14 +7,14 @@
 ## Overview
 
 This ADR documents the design of the `PressureReconciler`, which enables the
-github-runner-manager to scale runners reactively in response to pressure signals
+github-runner-manager to scale runners on demand in response to pressure signals
 from the planner service, while preserving the existing timer-based reconciliation
 for deployments without a planner.
 
 ## Context
 
 The runner manager historically determined the desired runner count in two ways:
-a static count from configuration (number of VMs per combination), or reactively
+a static count from configuration (number of VMs for each combination), or on demand
 by consuming job messages from a MongoDB queue. With the introduction of the planner
 charm, the desired runner count becomes a dynamic value driven by observed queue
 depth—referred to as *pressure*. The runner manager must respond to pressure changes
@@ -48,10 +48,10 @@ in configuration, allowing staged rollout before the legacy reconcile path is
 removed.
 
 When the streaming connection fails, the create loop falls back to
-`fallback_runners` (configurable, default 0) and retries after a short backoff,
+`fallback_runners` (configurable, default zero) and retries after a short backoff,
 preventing a hot loop on transient planner outages.
 
-## Alternatives Explored
+## Alternatives explored
 
 **Polling instead of streaming for creates.** A polling approach (e.g. fetching
 pressure on each reconcile tick) is simpler, but it introduces a latency equal to
