@@ -5,7 +5,6 @@
 
 from threading import Lock
 from types import SimpleNamespace
-
 import pytest
 
 from github_runner_manager.manager.pressure_reconciler import (
@@ -114,30 +113,32 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with a cached last_pressure value.
     act: Call start_delete_loop.
-    assert: The timer handler is called with the cached pressure.
+    assert: Cleanup runs and runners are created based on the cached pressure.
     """
     mgr = _FakeManager()
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     reconciler._last_pressure = 3
-    handler = MagicMock()
-    monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
-    monkeypatch.setattr(
-        reconciler._stop,
-        "wait",
-        lambda _interval: True if handler.call_count else False,
-    )
+    wait_calls = {"count": 0}
+
+    def _wait(_interval: int) -> bool:
+        """Return False once to enter the loop, then True to exit."""
+        wait_calls["count"] += 1
+        return wait_calls["count"] > 1
+
+    monkeypatch.setattr(reconciler._stop, "wait", _wait)
     reconciler.start_delete_loop()
 
-    handler.assert_called_once_with(3)
+    assert mgr.cleanup_called == 1
+    assert mgr.created_args == [3]
 
 
 def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with no cached pressure (None).
     act: Call start_delete_loop.
-    assert: The timer handler is never called.
+    assert: No cleanup or creation occurs.
     """
     mgr = _FakeManager()
     planner = _FakePlanner()

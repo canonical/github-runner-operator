@@ -89,7 +89,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._stop = Event()
         self._last_pressure: Optional[int] = None
 
-    def start_create_loop(self) -> None:  # pragma: no cover - long-running loop
+    def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
         while not self._stop.is_set():
             try:
