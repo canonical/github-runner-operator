@@ -186,6 +186,8 @@ def application_configuration_fixture() -> ApplicationConfiguration:
                 region_name="region",
             ),
         ),
+        planner_token="planner-testing-token",
+        planner_url="http://planner.example.com",
         reconcile_interval=10,
     )
 
