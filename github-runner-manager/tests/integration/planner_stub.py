@@ -61,9 +61,7 @@ def _read_pressure(pressure_path: Path, default: float) -> float:
         return default
 
 
-def _pressure_stream_gen(
-    pressure_path: Path, default: float, flavor_name: str
-) -> Iterable[bytes]:
+def _pressure_stream_gen(pressure_path: Path, default: float, flavor_name: str) -> Iterable[bytes]:
     """Yield NDJSON-encoded pressure values indefinitely, re-reading the file each time.
 
     Yields one line every 10 seconds so that calls to ``/control/pressure`` are

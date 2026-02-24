@@ -738,7 +738,9 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
         if not (endpoint := relation_data.get("endpoint")) or not (
             token_secret_id := relation_data.get("token")
         ):
-            logger.warning("%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, unit)
+            logger.warning(
+                "%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, unit
+            )
             continue
         try:
             token_secret = charm.model.get_secret(id=token_secret_id)

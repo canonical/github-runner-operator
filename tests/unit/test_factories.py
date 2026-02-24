@@ -1,6 +1,7 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import dataclasses
+
 from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,

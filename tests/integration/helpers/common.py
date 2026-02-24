@@ -420,7 +420,9 @@ async def wait_for(
     Returns:
         The result of the function if any.
     """
+
     async def _call() -> R:
+        """Await the function if it returns an awaitable, otherwise cast and return."""
         result = func()
         if inspect.isawaitable(result):
             return await cast(Awaitable, result)
