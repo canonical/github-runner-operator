@@ -33,7 +33,7 @@ class PlannerStubConfig:
     port: int = 8081
     token: str = "stub-token"
     flavor_name: str = "small"
-    initial_pressure: float = 1.0
+    initial_pressure: int = 1
 
 
 def _pressure_file_path(port: int) -> Path:
@@ -44,7 +44,7 @@ def _pressure_file_path(port: int) -> Path:
     return Path(f"/tmp/planner_stub_{port}_pressure.json")
 
 
-def _read_pressure(pressure_path: Path, default: float) -> float:
+def _read_pressure(pressure_path: Path, default: int) -> int:
     """Read the current pressure value from the state file.
 
     Args:
@@ -56,18 +56,18 @@ def _read_pressure(pressure_path: Path, default: float) -> float:
     """
     try:
         data = json.loads(pressure_path.read_text(encoding="utf-8"))
-        return float(data.get("pressure", default))
+        return int(data.get("pressure", default))
     except (json.JSONDecodeError, OSError):
         return default
 
 
-def _pressure_stream_gen(pressure_path: Path, default: float, flavor_name: str) -> Iterable[bytes]:
+def _pressure_stream_gen(pressure_path: Path, default: int, flavor_name: str) -> Iterable[bytes]:
     """Yield NDJSON-encoded pressure values indefinitely, re-reading the file each time.
 
     Yields one line every 10 seconds so that calls to ``/control/pressure`` are
     reflected in streaming consumers without restarting the server.
 
-    The stream format uses the flavor name as the key (e.g. ``{"small": 1.0}``)
+    The stream format uses the flavor name as the key (e.g. ``{"small": 1}``)
     to match what PlannerClient.stream_pressure expects.
 
     Args:
@@ -80,7 +80,7 @@ def _pressure_stream_gen(pressure_path: Path, default: float, flavor_name: str) 
     """
     while True:
         p = _read_pressure(pressure_path, default)
-        logger.info("Stream: yielding pressure=%.2f (path=%s)", p, pressure_path)
+        logger.info("Stream: yielding pressure=%d (path=%s)", p, pressure_path)
         yield (json.dumps({flavor_name: p}) + "\n").encode("utf-8")
         time.sleep(10)
 
@@ -140,9 +140,9 @@ def _make_app(config: PlannerStubConfig) -> Flask:
             Response: JSON body with the newly set `pressure` value.
         """
         payload = request.get_json(force=True)
-        pressure = float(payload.get("pressure", 0))
+        pressure = int(payload.get("pressure", 0))
         pressure_path.write_text(json.dumps({"pressure": pressure}), encoding="utf-8")
-        logger.info("Control: pressure set to %.2f (path=%s)", pressure, pressure_path)
+        logger.info("Control: pressure set to %d (path=%s)", pressure, pressure_path)
         return Response(json.dumps({"pressure": pressure}), mimetype="application/json")
 
     return app
@@ -208,7 +208,7 @@ class PlannerStub:
                 self._process.kill()
                 self._process.join()
 
-    def set_pressure(self, value: float) -> None:
+    def set_pressure(self, value: int) -> None:
         """Update the pressure served by the stub server.
 
         POSTs to the stub's own ``/control/pressure`` endpoint so the change
