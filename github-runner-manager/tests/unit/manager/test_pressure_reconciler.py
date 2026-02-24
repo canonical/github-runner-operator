@@ -89,15 +89,14 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    reconciler._last_pressure = 3  # noqa: SLF001
+    reconciler._last_pressure = 3
     handler = MagicMock()
     monkeypatch.setattr(reconciler, "_handle_timer_reconcile", handler)
     monkeypatch.setattr(
         reconciler._stop,
         "wait",
         lambda _interval: True if handler.call_count else False,
-    )  # noqa: SLF001
-
+    )
     reconciler.start_delete_loop()
 
     handler.assert_called_once_with(3)
@@ -118,7 +117,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
         wait_calls["count"] += 1
         return wait_calls["count"] > 1
 
-    monkeypatch.setattr(reconciler._stop, "wait", _wait)  # noqa: SLF001
+    monkeypatch.setattr(reconciler._stop, "wait", _wait)
     reconciler.start_delete_loop()
 
     assert handler.call_count == 0
