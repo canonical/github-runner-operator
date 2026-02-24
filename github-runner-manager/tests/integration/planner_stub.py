@@ -189,7 +189,8 @@ class PlannerStub:
         self._process.start()
         # Wait for server to be ready via /health endpoint
         ready_url = f"http://{self._config.host}:{self._port}/health"
-        deadline = time.monotonic() + 5.0
+        timeout_seconds = 5.0
+        deadline = time.monotonic() + timeout_seconds
         while time.monotonic() < deadline:
             try:
                 resp = requests.get(ready_url, timeout=0.5)
@@ -198,6 +199,12 @@ class PlannerStub:
             except requests.RequestException:
                 pass
             time.sleep(0.1)
+        else:
+            self.stop()
+            raise TimeoutError(
+                f"PlannerStub server did not become ready at {ready_url}"
+                f" within {timeout_seconds} seconds"
+            )
 
     def stop(self) -> None:
         """Stop the planner stub server if it is running."""
