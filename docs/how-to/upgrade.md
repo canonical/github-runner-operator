@@ -1,6 +1,6 @@
 # Upgrade
 
-In order to upgrade the charm, you need to refresh the revision 
+In order to upgrade the charm, refresh the revision using the `juju refresh` command:
 
 ```bash
 juju refresh github-runner
