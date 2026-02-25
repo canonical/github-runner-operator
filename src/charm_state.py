@@ -744,6 +744,7 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
             continue
         try:
             token_secret = charm.model.get_secret(id=token_secret_id)
+            # no need for refresh - there shouldn't be multiple secret revisions
             token_content = token_secret.get_content()
             token = token_content.get("token")
             if not token:
