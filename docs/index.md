@@ -59,6 +59,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
   1. [Set up reactive spawning](how-to/reactive.md)
   1. [Comply with security requirements](how-to/comply-security.md)
+  1  [Upgrade](how-to/upgrade.md)
   1. [Contribute](how-to/contribute.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
