@@ -15,12 +15,14 @@ import json
 import logging
 import multiprocessing
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
 import requests
 from flask import Flask, Response, request
+
+from tests.integration.application import wait_for_server
 
 logger = logging.getLogger(__name__)
 
@@ -34,14 +36,17 @@ class PlannerStubConfig:
     token: str = "stub-token"
     flavor_name: str = "small"
     initial_pressure: int = 1
+    pressure_dir: Path = field(default_factory=lambda: Path("/tmp"))
 
 
-def _pressure_file_path(port: int) -> Path:
-    """Return the path to the pressure state file for the given port.
+def _pressure_file_path(config: PlannerStubConfig) -> Path:
+    """Return the path to the pressure state file.
 
-    Port-namespaced to allow parallel test execution without conflicts.
+    File-based because the stub Flask app runs in a child process
+    (multiprocessing.Process) and needs shared mutable state that the test
+    can update mid-run via POST /control/pressure.
     """
-    return Path(f"/tmp/planner_stub_{port}_pressure.json")
+    return config.pressure_dir / f"planner_stub_{config.port}_pressure.json"
 
 
 def _read_pressure(pressure_path: Path, default: int) -> int:
@@ -98,7 +103,7 @@ def _make_app(config: PlannerStubConfig) -> Flask:
         Flask: Configured Flask app instance.
     """
     app = Flask(__name__)
-    pressure_path = _pressure_file_path(config.port)
+    pressure_path = _pressure_file_path(config)
     pressure_path.write_text(json.dumps({"pressure": config.initial_pressure}), encoding="utf-8")
 
     @app.get("/health")
@@ -187,23 +192,11 @@ class PlannerStub:
             daemon=True,
         )
         self._process.start()
-        # Wait for server to be ready via /health endpoint
-        ready_url = f"http://{self._config.host}:{self._port}/health"
-        timeout_seconds = 5.0
-        deadline = time.monotonic() + timeout_seconds
-        while time.monotonic() < deadline:
-            try:
-                resp = requests.get(ready_url, timeout=0.5)
-                if resp.status_code in (200, 204):
-                    break
-            except requests.RequestException:
-                pass
-            time.sleep(0.1)
-        else:
+        if not wait_for_server(self._config.host, self._port, timeout=5.0):
             self.stop()
             raise TimeoutError(
-                f"PlannerStub server did not become ready at {ready_url}"
-                f" within {timeout_seconds} seconds"
+                f"PlannerStub server did not become ready on"
+                f" {self._config.host}:{self._port} within 5 seconds"
             )
 
     def stop(self) -> None:
