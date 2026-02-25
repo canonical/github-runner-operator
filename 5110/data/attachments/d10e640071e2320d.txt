@@ -1,0 +1,67 @@
+19:04:43 INFO Waiting for model:
+  test-c4livrlx/0 [idle] active: 
+19:05:13 INFO Waiting for model:
+  test-c4livrlx/0 [idle] active: 
+19:05:17 INFO Current reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:05:17 INFO Waiting for reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:06:18 INFO Current reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:06:18 INFO Current reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518, expected reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:06:18 INFO Waiting for reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:07:19 INFO Current reconcile ID: 558f406e-9e52-45ee-a3d3-4534af2bba44
+19:07:19 INFO Current reconcile ID: 558f406e-9e52-45ee-a3d3-4534af2bba44, expected reconcile ID: fc6300e0-ee87-46a0-a108-2617298db518
+19:07:25 INFO Wait for condition not met, sleeping 10
+19:07:35 INFO Wait for condition not met, sleeping 60
+19:08:37 INFO Waiting for model:
+  test-c4livrlx/0 [idle] active: 
+19:09:07 INFO Waiting for model:
+  test-c4livrlx/0 [idle] active: 
+19:09:10 INFO Current reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:09:10 INFO Waiting for reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:10:11 INFO Current reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:10:11 INFO Current reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f, expected reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:10:11 INFO Waiting for reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:11:12 INFO Current reconcile ID: c1f690a7-98ca-47d7-9582-75183c12f45e
+19:11:12 INFO Current reconcile ID: c1f690a7-98ca-47d7-9582-75183c12f45e, expected reconcile ID: eeac3ca0-9ad1-483a-9abc-9921a8f8205f
+19:11:14 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-wyzc  github-pr-ca637-lxd  localhost/localhost  3.6.14   unsupported  19:11:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-c4livrlx           active      1  any-charm      latest/beta  133  no       
+test-c4livrlx                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-c4livrlx/0*  active    idle   0        10.182.234.160         
+test-c4livrlx/0*                         active    idle   1        10.182.234.182         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.182.234.160  juju-126de2-0  ubuntu@24.04  github-runner  Running
+1        started  10.182.234.182  juju-126de2-1  ubuntu@22.04  github-runner  Running
+
+19:11:14 INFO Juju error logs:
+
+machine-0: 18:47:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:47:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:48:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:48:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-c4livrlx-0: 18:49:50 ERROR unit.test-c4livrlx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-c4livrlx-0: 18:49:51 ERROR unit.test-c4livrlx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-c4livrlx-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:11:14 INFO Forgetting model main...

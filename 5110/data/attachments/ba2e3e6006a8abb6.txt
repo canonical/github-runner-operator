@@ -1,0 +1,120 @@
+18:48:29 WARNING unexpected facade SSHServer received from the controller
+18:48:29 INFO Adding model github-pr-ca637-lxd:test-charm-metrics-failure-mjz1 on cloud localhost
+18:48:29 WARNING unexpected facade SSHServer received from the controller
+18:48:29 WARNING unexpected facade SSHSession received from the controller
+18:48:29 WARNING unexpected facade SSHTunneler received from the controller
+18:48:30 WARNING unexpected facade SSHServer received from the controller
+18:48:30 INFO GitHub token rate limit: Rate(reset=2026-02-24 19:34:49+00:00, remaining=4916, limit=5000)
+18:48:32 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:48:35 INFO Deploying ch:amd64/noble/any-charm-133
+18:48:50 INFO Deploying local:jammy/github-runner-0
+18:48:51 INFO Waiting for model:
+  test-xucam59h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xucam59h/0 [allocating] waiting: waiting for machine
+18:49:21 INFO Waiting for model:
+  test-xucam59h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xucam59h/0 [executing] maintenance: installing charm software
+18:49:51 INFO Waiting for model:
+  test-xucam59h/0 [allocating] waiting: waiting for machine
+18:50:22 INFO Waiting for model:
+  test-xucam59h/0 [allocating] waiting: waiting for machine
+18:50:52 INFO Waiting for model:
+  test-xucam59h/0 [allocating] waiting: agent initialising
+18:51:22 INFO Waiting for model:
+  test-xucam59h/0 [executing] maintenance: installing charm software
+18:51:52 INFO Waiting for model:
+  test-xucam59h/0 [executing] maintenance: Update image for runners
+18:52:11 INFO cli: juju config --model github-pr-ca637-lxd:test-charm-metrics-failure-mjz1 test-xucam59h base-virtual-machines=0
+18:52:12 INFO Waiting for model:
+  test-xucam59h/0 [idle] active: 
+18:52:28 INFO Current reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:52:28 INFO Waiting for reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:53:29 INFO Current reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:53:29 INFO Current reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384, expected reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:53:29 INFO Waiting for reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:54:30 INFO Current reconcile ID: fb3f1edb-633e-4636-8169-fa48deb62355
+18:54:30 INFO Current reconcile ID: fb3f1edb-633e-4636-8169-fa48deb62355, expected reconcile ID: c13c5a3a-8621-460e-a14f-4bfa50176384
+18:54:30 INFO cli: juju config --model github-pr-ca637-lxd:test-charm-metrics-failure-mjz1 test-xucam59h path=canonical/github-runner-operator
+18:54:30 INFO cli: juju config --model github-pr-ca637-lxd:test-charm-metrics-failure-mjz1 test-xucam59h base-virtual-machines=1
+18:54:30 INFO Waiting for model:
+  test-xucam59h/0 [idle] active: 
+18:55:00 INFO Waiting for model:
+  test-xucam59h/0 [idle] active: 
+18:55:03 INFO Current reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:55:03 INFO Waiting for reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:56:04 INFO Current reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:56:04 INFO Current reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4, expected reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:56:04 INFO Waiting for reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:57:05 INFO Current reconcile ID: 6ec604dd-e9f6-4014-b3a2-c50a577bb462
+18:57:05 INFO Current reconcile ID: 6ec604dd-e9f6-4014-b3a2-c50a577bb462, expected reconcile ID: 00583d0b-50ca-4cb3-ac1f-f7441fecf0a4
+18:57:13 INFO Wait for condition not met, sleeping 30
+18:57:55 INFO [TEST SETUP] Run command pkill -9 run.sh on test-xucam59h-0-n-b66a4de3df65
+18:57:55 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.156', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:74:61:38'}]])
+18:57:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xucam59h-0-n-b66a4de3df65.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.156 pkill -9 run.sh'
+18:57:57 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.156' (ED25519) to the list of known hosts.
+'
+18:58:00 INFO Runner test-xucam59h-0-n-b66a4de3df65 status: online
+18:58:00 INFO Runner still marked as online, waiting for it to be marked offline
+18:59:01 INFO Waiting for model:
+  test-xucam59h/0 [idle] active: 
+18:59:31 INFO Waiting for model:
+  test-xucam59h/0 [idle] active: 
+18:59:33 INFO Current reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+18:59:33 INFO Waiting for reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+19:00:34 INFO Current reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+19:00:34 INFO Current reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987, expected reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+19:00:34 INFO Waiting for reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+19:01:35 INFO Current reconcile ID: ad6cc145-8ac3-4e82-b3e4-2cef6f2c4723
+19:01:35 INFO Current reconcile ID: ad6cc145-8ac3-4e82-b3e4-2cef6f2c4723, expected reconcile ID: e525997b-29a0-4c87-88ac-9e3f3a17e987
+19:01:36 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1771959230.3185616, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.72582221031189}
+{"timestamp": 1771959281.114318, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.564606428146362}
+{"timestamp": 1771959409.3054907, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.046849966049194}
+{"timestamp": 1771959363.0, "event": "runner_installed", "flavor": "test-xucam59h", "duration": 84.0}
+{"timestamp": 1771959436.0, "event": "runner_start", "flavor": "test-xucam59h", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 73.0, "queue_duration": 2.0}
+{"timestamp": 1771959477.0, "event": "runner_stop", "flavor": "test-xucam59h", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1771959539.2309558, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.805118083953857}
+{"timestamp": 1771959550.3122618, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.961595058441162}
+{"timestamp": 1771959678.6880906, "event": "reconciliation", "flavor": "test-xucam59h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.256268739700317}
+19:01:37 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-mjz1  github-pr-ca637-lxd  localhost/localhost  3.6.14   unsupported  19:01:37Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-xucam59h           active      1  any-charm      latest/beta  133  no       
+test-xucam59h                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-xucam59h/0*  active    idle   0        10.44.185.249          
+test-xucam59h/0*                         active    idle   1        10.44.185.3            
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.44.185.249  juju-255791-0  ubuntu@24.04  github-runner  Running
+1        started  10.44.185.3    juju-255791-1  ubuntu@22.04  github-runner  Running
+
+19:01:37 INFO Juju error logs:
+
+machine-0: 18:49:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:49:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-xucam59h-0: 18:51:30 ERROR unit.test-xucam59h/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-xucam59h-0: 18:51:31 ERROR unit.test-xucam59h/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xucam59h-0/charm/./src/charm.py", line 569, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:01:37 INFO Forgetting model main...
