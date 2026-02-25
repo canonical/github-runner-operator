@@ -13,7 +13,6 @@ from typing import Any
 
 import requests
 import yaml
-from click.testing import CliRunner
 
 from src.github_runner_manager.cli import main
 
@@ -56,9 +55,7 @@ def _start_cli_server(
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
-        log_file_path: Path to write application logs. If provided, configures
-            a file handler on the root logger before invoking the CLI so that
-            logs are persisted even though CliRunner captures stderr.
+        log_file_path: Path to persist application logs to a file.
     """
     if log_file_path is not None:
         log_file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -70,28 +67,19 @@ def _start_cli_server(
         logging.getLogger().addHandler(file_handler)
         logging.getLogger().setLevel(logging.DEBUG)
 
-    runner = CliRunner()
-    args = [
-        "--config-file",
-        str(config_file_path),
-        "--host",
-        host,
-        "--port",
-        str(port),
-        "--log-level",
-        "DEBUG",
-    ]
-
-    result = runner.invoke(
-        main,
-        args,
-        catch_exceptions=False,
+    main(
+        [
+            "--config-file",
+            str(config_file_path),
+            "--host",
+            host,
+            "--port",
+            str(port),
+            "--log-level",
+            "DEBUG",
+        ],
+        standalone_mode=False,
     )
-    if result.exit_code != 0:
-        logger.error("CLI exited with code %d", result.exit_code)
-        logger.error("Output: %s", result.output)
-    else:
-        logger.info("CLI output: %s", result.output)
 
 
 @dataclass
