@@ -42,9 +42,7 @@ def planner_app(
         Tuple of (RunningApplication, PlannerStub) for use in the test.
     """
     flavor_name = openstack_config.flavor or "small"
-    stub = PlannerStub(
-        PlannerStubConfig(initial_pressure=1, flavor_name=flavor_name, pressure_dir=tmp_test_dir)
-    )
+    stub = PlannerStub(PlannerStubConfig(initial_pressure=1, flavor_name=flavor_name))
     stub.start()
     config = create_default_config(
         github_config=github_config,

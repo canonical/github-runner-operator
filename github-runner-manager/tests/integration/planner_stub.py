@@ -13,11 +13,9 @@ from __future__ import annotations
 
 import json
 import logging
-import multiprocessing
+import threading
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Iterable
+from dataclasses import dataclass
 
 import requests
 from flask import Flask, Response, request
@@ -36,118 +34,54 @@ class PlannerStubConfig:
     token: str = "stub-token"
     flavor_name: str = "small"
     initial_pressure: int = 1
-    pressure_dir: Path = field(default_factory=lambda: Path("/tmp"))
 
 
-def _pressure_file_path(config: PlannerStubConfig) -> Path:
-    """Return the path to the pressure state file.
-
-    File-based because the stub Flask app runs in a child process
-    (multiprocessing.Process) and needs shared mutable state that the test
-    can update mid-run via POST /control/pressure.
-    """
-    return config.pressure_dir / f"planner_stub_{config.port}_pressure.json"
-
-
-def _read_pressure(pressure_path: Path, default: int) -> int:
-    """Read the current pressure value from the state file.
-
-    Args:
-        pressure_path: Path to the JSON pressure state file.
-        default: Value to return if the file is missing or malformed.
-
-    Returns:
-        The pressure value from the file, or ``default`` on error.
-    """
-    try:
-        data = json.loads(pressure_path.read_text(encoding="utf-8"))
-        return int(data.get("pressure", default))
-    except (json.JSONDecodeError, OSError):
-        return default
-
-
-def _pressure_stream_gen(pressure_path: Path, default: int, flavor_name: str) -> Iterable[bytes]:
-    """Yield NDJSON-encoded pressure values indefinitely, re-reading the file each time.
-
-    Yields one line every 10 seconds so that calls to ``/control/pressure`` are
-    reflected in streaming consumers without restarting the server.
-
-    The stream format uses the flavor name as the key (e.g. ``{"small": 1}``)
-    to match what PlannerClient.stream_pressure expects.
-
-    Args:
-        pressure_path: Path to the JSON pressure state file.
-        default: Pressure value to use when the file is missing or malformed.
-        flavor_name: Flavor name used as the JSON key in each line.
-
-    Yields:
-        Iterable[bytes]: NDJSON lines as byte strings.
-    """
-    while True:
-        p = _read_pressure(pressure_path, default)
-        logger.info("Stream: yielding pressure=%d (path=%s)", p, pressure_path)
-        yield (json.dumps({flavor_name: p}) + "\n").encode("utf-8")
-        time.sleep(10)
-
-
-def _make_app(config: PlannerStubConfig) -> Flask:
+def _make_app(config: PlannerStubConfig, state: dict[str, int]) -> Flask:
     """Create a Flask app configured as a planner stub server.
-
-    Writes the initial pressure to a temp file so pressure persists across
-    requests and can be updated dynamically via ``POST /control/pressure``.
 
     Args:
         config: Configuration for the planner stub.
+        state: Shared mutable dict holding {"pressure": <int>}.
 
     Returns:
         Flask: Configured Flask app instance.
     """
     app = Flask(__name__)
-    pressure_path = _pressure_file_path(config)
-    pressure_path.write_text(json.dumps({"pressure": config.initial_pressure}), encoding="utf-8")
 
     @app.get("/health")
     def health() -> Response:
-        """Health endpoint for readiness checks.
-
-        Returns:
-            Response: Empty 204 response indicating the server is ready.
-        """
+        """Health endpoint for readiness checks."""
         return Response(status=204)
 
     @app.get(f"/api/v1/flavors/{config.flavor_name}/pressure")
     def get_pressure() -> Response:
-        """Return the current pressure as a snapshot or NDJSON stream.
-
-        When ``stream=true`` is present in the query string, an NDJSON stream
-        is returned that re-reads the pressure file on every iteration.
-        Otherwise, a single JSON snapshot is returned.
-
-        Returns:
-            Response: JSON snapshot or infinite NDJSON stream.
-        """
+        """Return the current pressure as a snapshot or NDJSON stream."""
         if request.args.get("stream") != "true":
-            p = _read_pressure(pressure_path, config.initial_pressure)
-            return Response(json.dumps({"pressure": p}), mimetype="application/json")
-        return Response(
-            _pressure_stream_gen(pressure_path, config.initial_pressure, config.flavor_name),
-            mimetype="application/x-ndjson",
-        )
+            return Response(
+                json.dumps({"pressure": state["pressure"]}), mimetype="application/json"
+            )
+
+        def stream():
+            """Yield NDJSON pressure lines indefinitely.
+
+            Yields:
+                NDJSON-encoded bytes with the current pressure.
+            """
+            while True:
+                p = state["pressure"]
+                logger.info("Stream: yielding pressure=%d", p)
+                yield (json.dumps({config.flavor_name: p}) + "\n").encode("utf-8")
+                time.sleep(10)
+
+        return Response(stream(), mimetype="application/x-ndjson")
 
     @app.post("/control/pressure")
     def control_pressure() -> Response:
-        """Update the pressure served by all subsequent requests.
-
-        Writes the new value to the pressure file so both snapshot and
-        streaming endpoints pick it up without a server restart.
-
-        Returns:
-            Response: JSON body with the newly set `pressure` value.
-        """
+        """Update the pressure served by all subsequent requests."""
         payload = request.get_json(force=True)
         pressure = int(payload.get("pressure", 0))
-        pressure_path.write_text(json.dumps({"pressure": pressure}), encoding="utf-8")
-        logger.info("Control: pressure set to %d (path=%s)", pressure, pressure_path)
+        state["pressure"] = pressure
+        logger.info("Control: pressure set to %d", pressure)
         return Response(json.dumps({"pressure": pressure}), mimetype="application/json")
 
     return app
@@ -161,11 +95,11 @@ class PlannerStub:
 
         Args:
             config: Optional configuration for host, port, token, flavor name,
-                minimum pressure, and initial pressure. If not provided,
-                defaults from `PlannerStubConfig` are used.
+                and initial pressure. If not provided, defaults from
+                `PlannerStubConfig` are used.
         """
         self._config = config or PlannerStubConfig()
-        self._process: multiprocessing.Process | None = None
+        self._thread: threading.Thread | None = None
         self._port = self._config.port
 
     @property
@@ -179,9 +113,10 @@ class PlannerStub:
         return self._config.token
 
     def start(self) -> None:
-        """Start the planner stub server in a separate process."""
-        app = _make_app(self._config)
-        self._process = multiprocessing.Process(
+        """Start the planner stub server in a daemon thread."""
+        state = {"pressure": self._config.initial_pressure}
+        app = _make_app(self._config, state)
+        self._thread = threading.Thread(
             target=app.run,
             kwargs={
                 "host": self._config.host,
@@ -191,22 +126,20 @@ class PlannerStub:
             },
             daemon=True,
         )
-        self._process.start()
+        self._thread.start()
         if not wait_for_server(self._config.host, self._port, timeout=5.0):
-            self.stop()
             raise TimeoutError(
                 f"PlannerStub server did not become ready on"
                 f" {self._config.host}:{self._port} within 5 seconds"
             )
 
     def stop(self) -> None:
-        """Stop the planner stub server if it is running."""
-        if self._process and self._process.is_alive():
-            self._process.terminate()
-            self._process.join(timeout=2)
-            if self._process.is_alive():
-                self._process.kill()
-                self._process.join()
+        """Stop the planner stub server if it is running.
+
+        Since Flask's dev server has no clean shutdown API and the thread is a
+        daemon, it will be cleaned up automatically when the process exits.
+        """
+        self._thread = None
 
     def set_pressure(self, value: int) -> None:
         """Update the pressure served by the stub server.
