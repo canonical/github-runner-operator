@@ -217,7 +217,7 @@ def create_default_config(
             "manager_proxy_command": None,
             "proxy_config": runner_proxy,
             "runner_proxy_config": openstack_proxy,
-            "use_aproxy": True,
+            "use_aproxy": openstack_proxy is not None,
             "aproxy_exclude_addresses": [],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
