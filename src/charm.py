@@ -524,7 +524,7 @@ class GithubRunnerCharm(CharmBase):
         if self.unit.is_leader():
             flavor_data = PlannerRelationData(
                 flavor=self.app.name,
-                labels=state.charm_config.labels,
+                labels=tuple(self._create_labels(state)),
                 minimum_pressure=state.runner_config.base_virtual_machines,
             )
             for relation in self.model.relations[PLANNER_INTEGRATION_NAME]:
