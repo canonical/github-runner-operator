@@ -10,15 +10,30 @@ access to the underlying RunnerManager via the provided lock.
 
 from __future__ import annotations
 
+import getpass
+import grp
 import logging
+import os
 import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional
 
+from github_runner_manager.configuration import ApplicationConfiguration
+from github_runner_manager.configuration.base import NonReactiveCombination, UserInfo
 from github_runner_manager.errors import MissingServerConfigError
 from github_runner_manager.manager.runner_manager import RunnerManager, RunnerMetadata
-from github_runner_manager.planner_client import PlannerApiError, PlannerClient
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
+)
+from github_runner_manager.planner_client import (
+    PlannerApiError,
+    PlannerClient,
+    PlannerConfiguration,
+)
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +44,13 @@ class PressureReconcilerConfig:
 
     Attributes:
         flavor_name: Name of the planner flavor to reconcile.
-        reconcile_interval: Seconds between timer-based delete reconciliations.
+        reconcile_interval: Minutes between timer-based delete reconciliations.
         min_pressure: Minimum desired runner count (floor) for the flavor.
             Also used as fallback when the planner is unavailable.
     """
 
     flavor_name: str
-    reconcile_interval: int = 5 * 60
+    reconcile_interval: int = 5
     min_pressure: int = 0
 
 
@@ -108,8 +123,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def start_delete_loop(self) -> None:
         """Continuously delete runners using last seen pressure on a timer."""
-        logger.debug("Delete loop: starting, interval=%ss", self._config.reconcile_interval)
-        while not self._stop.wait(self._config.reconcile_interval):
+        interval_seconds = self._config.reconcile_interval * 60
+        logger.debug("Delete loop: starting, interval=%ss", interval_seconds)
+        while not self._stop.wait(interval_seconds):
             logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
                 logger.debug("Delete loop: no pressure seen yet, skipping.")
@@ -213,3 +229,74 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             The desired total number of runners.
         """
         return max(pressure, self._config.min_pressure, 0)
+
+
+def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> PressureReconciler:
+    """Construct a PressureReconciler from application configuration.
+
+    Args:
+        config: Application configuration.
+        lock: Shared lock to serialize operations with other reconcile loops.
+
+    Raises:
+        ValueError: If no non-reactive combinations are configured.
+
+    Returns:
+        A fully constructed PressureReconciler.
+    """
+    combinations = config.non_reactive_configuration.combinations
+    if not combinations:
+        raise ValueError(
+            "Cannot build PressureReconciler: no non-reactive combinations configured."
+        )
+    first = combinations[0]
+    manager = _build_runner_manager(config, first)
+    return PressureReconciler(
+        manager=manager,
+        planner_client=PlannerClient(
+            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+        ),
+        config=PressureReconcilerConfig(
+            flavor_name=first.flavor.name,
+            reconcile_interval=config.reconcile_interval,
+            min_pressure=first.base_virtual_machines,
+        ),
+        lock=lock,
+    )
+
+
+def _build_runner_manager(
+    config: ApplicationConfiguration, combination: NonReactiveCombination
+) -> RunnerManager:
+    """Build a RunnerManager from application config and a flavor/image combination.
+
+    Args:
+        config: Application configuration.
+        combination: The flavor/image combination to use for OpenStack VMs.
+
+    Returns:
+        A configured RunnerManager instance.
+    """
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
+    return RunnerManager(
+        manager_name=config.name,
+        platform_provider=GitHubRunnerPlatform.build(
+            prefix=config.openstack_configuration.vm_prefix,
+            github_configuration=config.github_config,
+        ),
+        cloud_runner_manager=OpenStackRunnerManager(
+            config=OpenStackRunnerManagerConfig(
+                allow_external_contributor=config.allow_external_contributor,
+                prefix=config.openstack_configuration.vm_prefix,
+                credentials=config.openstack_configuration.credentials,
+                server_config=OpenStackServerConfig(
+                    image=combination.image.name,
+                    flavor=combination.flavor.name,
+                    network=config.openstack_configuration.network,
+                ),
+                service_config=config.service_config,
+            ),
+            user=user,
+        ),
+        labels=list(config.extra_labels) + combination.image.labels + combination.flavor.labels,
+    )

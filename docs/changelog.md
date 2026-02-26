@@ -4,6 +4,10 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-02-25
 
+- Introduce planner-driven pressure reconciler.
+
+## 2026-02-25
+
 - Add the  `How to upgrade` documentation.
 
 ## 2026-02-12

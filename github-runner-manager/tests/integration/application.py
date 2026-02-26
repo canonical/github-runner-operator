@@ -13,7 +13,6 @@ from typing import Any
 
 import requests
 import yaml
-from click.testing import CliRunner
 
 from src.github_runner_manager.cli import main
 
@@ -44,36 +43,43 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(
+    config_file_path: Path,
+    port: int,
+    host: str = "127.0.0.1",
+    log_file_path: Path | None = None,
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        log_file_path: Path to persist application logs to a file.
     """
-    runner = CliRunner()
-    args = [
-        "--config-file",
-        str(config_file_path),
-        "--host",
-        host,
-        "--port",
-        str(port),
-        "--log-level",
-        "DEBUG",
-    ]
+    if log_file_path is not None:
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_handler = logging.FileHandler(log_file_path)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+        )
+        logging.getLogger().addHandler(file_handler)
+        logging.getLogger().setLevel(logging.DEBUG)
 
-    result = runner.invoke(
-        main,
-        args,
-        catch_exceptions=False,
+    main(
+        [
+            "--config-file",
+            str(config_file_path),
+            "--host",
+            host,
+            "--port",
+            str(port),
+            "--log-level",
+            "DEBUG",
+        ],
+        standalone_mode=False,
     )
-    if result.exit_code != 0:
-        logger.error("CLI exited with code %d", result.exit_code)
-        logger.error("Output: %s", result.output)
-    else:
-        logger.info("CLI output: %s", result.output)
 
 
 @dataclass
@@ -168,7 +174,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, log_file_path),
         )
         process.start()
 
