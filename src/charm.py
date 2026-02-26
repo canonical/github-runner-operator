@@ -511,6 +511,7 @@ class GithubRunnerCharm(CharmBase):
 
         state = self._setup_state()
         self._setup_service(state)
+        self._update_planner_flavor(state)
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
@@ -521,15 +522,23 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Setup planner")
         state = self._setup_state()
         self._setup_service(state)
-        if self.unit.is_leader():
-            flavor_data = PlannerRelationData(
-                flavor=self.app.name,
-                labels=tuple(self._create_labels(state)),
-                minimum_pressure=state.runner_config.base_virtual_machines,
-            )
-            for relation in self.model.relations[PLANNER_INTEGRATION_NAME]:
-                relation.data[self.app].update(flavor_data.to_relation_data())
+        self._update_planner_flavor(state)
         self.unit.status = ActiveStatus()
+
+    def _update_planner_flavor(self, state: CharmState) -> None:
+        """Update the planner relation with current flavor labels including image tags."""
+        if not self.unit.is_leader():
+            return
+        relations = self.model.relations.get(PLANNER_INTEGRATION_NAME)
+        if not relations:
+            return
+        flavor_data = PlannerRelationData(
+            flavor=self.app.name,
+            labels=tuple(self._create_labels(state)),
+            minimum_pressure=state.runner_config.base_virtual_machines,
+        )
+        for relation in relations:
+            relation.data[self.app].update(flavor_data.to_relation_data())
 
     @catch_charm_errors
     def _on_planner_relation_broken(self, _: ops.RelationBrokenEvent) -> None:
