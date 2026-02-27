@@ -214,11 +214,13 @@ class NonReactiveCombination(BaseModel):
         image: Information about the image to spawn.
         flavor: Information about the flavor to spawn.
         base_virtual_machines: Number of instances to spawn for this combination.
+        max_total_virtual_machines: Maximum number of instances to spawn. 0 means no cap.
     """
 
     image: "Image"
     flavor: "Flavor"
     base_virtual_machines: int
+    max_total_virtual_machines: int = 0
 
 
 class ReactiveConfiguration(BaseModel):

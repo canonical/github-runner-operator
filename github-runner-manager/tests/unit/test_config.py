@@ -43,6 +43,7 @@ github_config:
 non_reactive_configuration:
   combinations:
   - base_virtual_machines: 1
+    max_total_virtual_machines: 2
     flavor:
       labels:
       - flavorlabel
@@ -142,6 +143,7 @@ def app_config_fixture() -> ApplicationConfiguration:
                         labels=["flavorlabel"],
                     ),
                     base_virtual_machines=1,
+                    max_total_virtual_machines=2,
                 )
             ]
         ),

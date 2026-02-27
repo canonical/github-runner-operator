@@ -158,6 +158,35 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
     assert mgr.cleanup_called == 0
 
 
+@pytest.mark.parametrize(
+    "pressure, min_pressure, max_pressure, expected",
+    [
+        pytest.param(5, 0, 10, 5, id="within_bounds"),
+        pytest.param(15, 0, 10, 10, id="clamped_to_max"),
+        pytest.param(1, 3, 10, 3, id="raised_to_min"),
+        pytest.param(15, 3, 10, 10, id="max_wins_over_pressure"),
+        pytest.param(5, 0, 0, 5, id="zero_max_means_no_cap"),
+        pytest.param(-1, 0, 0, 0, id="negative_clamped_to_zero"),
+    ],
+)
+def test_desired_total_from_pressure_respects_bounds(
+    pressure: int, min_pressure: int, max_pressure: int, expected: int
+):
+    """
+    arrange: A reconciler with various min/max pressure configurations.
+    act: Call _desired_total_from_pressure.
+    assert: The result is clamped within the configured bounds.
+    """
+    mgr = _FakeManager()
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(
+        flavor_name="small", min_pressure=min_pressure, max_pressure=max_pressure
+    )
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    assert reconciler._desired_total_from_pressure(pressure) == expected
+
+
 def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
     """
     arrange: A reconciler with 4 runners and min_pressure=5.

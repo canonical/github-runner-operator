@@ -47,11 +47,13 @@ class PressureReconcilerConfig:
         reconcile_interval: Minutes between timer-based delete reconciliations.
         min_pressure: Minimum desired runner count (floor) for the flavor.
             Also used as fallback when the planner is unavailable.
+        max_pressure: Maximum desired runner count (ceiling). 0 means no cap.
     """
 
     flavor_name: str
     reconcile_interval: int = 5
     min_pressure: int = 0
+    max_pressure: int = 0
 
 
 class PressureReconciler:  # pylint: disable=too-few-public-methods
@@ -228,7 +230,10 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         Returns:
             The desired total number of runners.
         """
-        return max(pressure, self._config.min_pressure, 0)
+        total = max(pressure, self._config.min_pressure, 0)
+        if self._config.max_pressure > 0:
+            total = min(total, self._config.max_pressure)
+        return total
 
 
 def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> PressureReconciler:
@@ -260,6 +265,7 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
             flavor_name=config.name,
             reconcile_interval=config.reconcile_interval,
             min_pressure=first.base_virtual_machines,
+            max_pressure=first.max_total_virtual_machines,
         ),
         lock=lock,
     )

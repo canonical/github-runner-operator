@@ -236,6 +236,7 @@ def create_default_config(
                     },
                     "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
                     "base_virtual_machines": 1,
+                    "max_total_virtual_machines": 0,
                 }
             ]
         },
