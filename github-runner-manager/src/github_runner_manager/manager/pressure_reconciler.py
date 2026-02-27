@@ -257,7 +257,7 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
             PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
         ),
         config=PressureReconcilerConfig(
-            flavor_name=first.flavor.name,
+            flavor_name=config.name,
             reconcile_interval=config.reconcile_interval,
             min_pressure=first.base_virtual_machines,
         ),
