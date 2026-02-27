@@ -345,7 +345,7 @@ class GithubRunnerCharm(CharmBase):
         self._common_install_code()
         _disable_legacy_service()
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
         self._manager_client.flush_runner()
 
     @catch_charm_errors
@@ -374,7 +374,7 @@ class GithubRunnerCharm(CharmBase):
 
         self._check_image_ready()
 
-        self._setup_service(state)
+        self._reconcile(state)
 
         if flush_runners:
             logger.info("Flush runners on config-changed")
@@ -400,6 +400,15 @@ class GithubRunnerCharm(CharmBase):
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
         self._log_juju_processes()
+
+    def _reconcile(self, state: CharmState) -> None:
+        """Reconcile the service and relations.
+
+        Args:
+            state: The charm state.
+        """
+        self._setup_service(state)
+        self._update_planner_flavor(state)
 
     def _setup_service(self, state: CharmState) -> None:
         """Set up services.
@@ -487,7 +496,7 @@ class GithubRunnerCharm(CharmBase):
         self._check_image_ready()
 
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
@@ -510,8 +519,7 @@ class GithubRunnerCharm(CharmBase):
         self._check_image_ready()
 
         state = self._setup_state()
-        self._setup_service(state)
-        self._update_planner_flavor(state)
+        self._reconcile(state)
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
@@ -521,50 +529,34 @@ class GithubRunnerCharm(CharmBase):
         """Handle planner relation changed event."""
         self.unit.status = MaintenanceStatus("Setup planner")
         state = self._setup_state()
-        self._setup_service(state)
-        self._update_planner_flavor(state)
+        self._reconcile(state)
         self.unit.status = ActiveStatus()
-
-    def _update_planner_flavor(self, state: CharmState) -> None:
-        """Update the planner relation with current flavor labels including image tags."""
-        if not self.unit.is_leader():
-            return
-        relations = self.model.relations.get(PLANNER_INTEGRATION_NAME)
-        if not relations:
-            return
-        flavor_data = PlannerRelationData(
-            flavor=self.app.name,
-            labels=tuple(self._create_labels(state)),
-            minimum_pressure=state.runner_config.base_virtual_machines,
-        )
-        for relation in relations:
-            relation.data[self.app].update(flavor_data.to_relation_data())
 
     @catch_charm_errors
     def _on_planner_relation_broken(self, _: ops.RelationBrokenEvent) -> None:
         """Handle planner relation broken event."""
         self.unit.status = MaintenanceStatus("Cleanup planner data")
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
         self.unit.status = ActiveStatus()
 
     @catch_charm_errors
     def _on_database_created(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB database created event."""
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
 
     @catch_charm_errors
     def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB endpoints changed event."""
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
 
     @catch_charm_errors
     def _on_mongodb_relation_broken(self, _: ops.RelationDepartedEvent) -> None:
         """Handle the MongoDB relation broken event."""
         state = self._setup_state()
-        self._setup_service(state)
+        self._reconcile(state)
 
     def _check_image_ready(self) -> None:
         """Check if image is ready raises error if not.
@@ -578,6 +570,22 @@ class GithubRunnerCharm(CharmBase):
             raise ImageIntegrationMissingError("No image integration found")
         if not openstack_image.id:
             raise ImageNotFoundError("No image found in the image integration")
+
+    def _update_planner_flavor(self, state: CharmState) -> None:
+        """Update the planner relation with current flavor labels including image tags."""
+        if not self.unit.is_leader():
+            return
+        relations = self.model.relations.get(PLANNER_INTEGRATION_NAME)
+        if not relations:
+            logger.debug("No planner relation found. Skipping flavor update.")
+            return
+        flavor_data = PlannerRelationData(
+            flavor=self.app.name,
+            labels=tuple(self._create_labels(state)),
+            minimum_pressure=state.runner_config.base_virtual_machines,
+        )
+        for relation in relations:
+            relation.data[self.app].update(flavor_data.to_relation_data())
 
     @staticmethod
     def _create_labels(state: CharmState) -> list[str]:
