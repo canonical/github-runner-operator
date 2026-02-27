@@ -71,7 +71,8 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
         Raises:
             PlannerApiError: On HTTP or stream errors.
         """
-        url = urljoin(str(self._config.base_url), f"/api/v1/flavors/{name}/pressure?stream=true")
+        base = str(self._config.base_url).rstrip("/") + "/"
+        url = urljoin(base, f"api/v1/flavors/{name}/pressure?stream=true")
         try:
             with self._session.get(
                 url,
