@@ -993,8 +993,8 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
                     )
 
                 def _on_planner_relation_changed(self, event):
-                    event.relation.data[self.unit]["endpoint"] = "http://mock:8080"
-                    event.relation.data[self.unit]["token"] = "{planner_token_secret}"
+                    event.relation.data[self.app]["endpoint"] = "http://mock:8080"
+                    event.relation.data[self.app]["token"] = "{planner_token_secret}"
             """),
     }
 
