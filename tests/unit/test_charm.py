@@ -728,6 +728,8 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     state_mock = MagicMock()
     state_mock.charm_config.labels = ("label1", "label2")
     state_mock.runner_config.base_virtual_machines = 3
+    state_mock.runner_config.openstack_image.id = "image-id"
+    state_mock.runner_config.openstack_image.tags = ["x64", "noble"]
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._setup_service = MagicMock()
 
@@ -735,7 +737,7 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
 
     assert harness.get_relation_data(relation_id, harness.charm.app) == {
         PLANNER_FLAVOR_RELATION_KEY: harness.charm.app.name,
-        PLANNER_LABELS_RELATION_KEY: '["label1", "label2"]',
+        PLANNER_LABELS_RELATION_KEY: '["label1", "label2", "x64", "noble"]',
         PLANNER_PLATFORM_RELATION_KEY: PLANNER_DEFAULT_PLATFORM,
         PLANNER_PRIORITY_RELATION_KEY: str(PLANNER_DEFAULT_PRIORITY),
         PLANNER_MINIMUM_PRESSURE_RELATION_KEY: "3",
