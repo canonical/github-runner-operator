@@ -730,38 +730,37 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
         PlannerConfig if planner relation data is ready; otherwise None.
     """
     relations = charm.model.relations[PLANNER_INTEGRATION_NAME]
-    if not relations or not (relation := relations[0]).units:
+    if not relations or not (relation := relations[0]).app:
         return None
 
-    for unit in relation.units:
-        relation_data = relation.data[unit]
-        if not (endpoint := relation_data.get("endpoint")) or not (
-            token_secret_id := relation_data.get("token")
-        ):
+    relation_data = relation.data[relation.app]
+    if not (endpoint := relation_data.get("endpoint")) or not (
+        token_secret_id := relation_data.get("token")
+    ):
+        logger.warning(
+            "%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, relation.app
+        )
+        return None
+    try:
+        token_secret = charm.model.get_secret(id=token_secret_id)
+        # no need for refresh - there shouldn't be multiple secret revisions
+        token_content = token_secret.get_content()
+        token = token_content.get("token")
+        if not token:
             logger.warning(
-                "%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, unit
-            )
-            continue
-        try:
-            token_secret = charm.model.get_secret(id=token_secret_id)
-            # no need for refresh - there shouldn't be multiple secret revisions
-            token_content = token_secret.get_content()
-            token = token_content.get("token")
-            if not token:
-                logger.warning(
-                    "Token secret content for %s relation unit %s is missing token field.",
-                    PLANNER_INTEGRATION_NAME,
-                    unit.name,
-                )
-                continue
-            return PlannerConfig(endpoint=endpoint, token=token)
-        except SecretNotFoundError:
-            logger.warning(
-                "Token secret %s for %s relation unit %s is not found or not granted yet.",
-                token_secret_id,
+                "Token secret content for %s relation app %s is missing token field.",
                 PLANNER_INTEGRATION_NAME,
-                unit.name,
+                relation.app,
             )
+            return None
+        return PlannerConfig(endpoint=endpoint, token=token)
+    except SecretNotFoundError:
+        logger.warning(
+            "Token secret %s for %s relation app %s is not found or not granted yet.",
+            token_secret_id,
+            PLANNER_INTEGRATION_NAME,
+            relation.app,
+        )
     return None
 
 
