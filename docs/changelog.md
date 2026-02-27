@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-02-27
+
+- Fix a bug where image labels (base,arch) are not propagated to the planner charm.
+
 ## 2026-02-25
 
 - Introduce planner-driven pressure reconciler.
