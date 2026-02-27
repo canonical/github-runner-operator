@@ -738,11 +738,10 @@ def test_planner_config_from_charm_extracts_endpoint_token():
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()
-    unit_mock = MagicMock()
-    unit_mock.name = "planner-app/0"
-    relation_mock.units = [unit_mock]
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
     relation_mock.data = {
-        unit_mock: {"endpoint": "http://planner.example.com", "token": "secret:abc123"},
+        app_mock: {"endpoint": "http://planner.example.com", "token": "secret:abc123"},
     }
     secret_mock = MagicMock()
     secret_mock.get_content.return_value = {"token": "planner-token-value"}
@@ -771,16 +770,15 @@ def test_planner_config_from_charm_no_relation():
 
 def test_planner_config_from_charm_data_not_ready():
     """
-    arrange: Mock charm with planner relation but no endpoint/token in unit data.
+    arrange: Mock charm with planner relation but no endpoint/token in app data.
     act: Call _build_planner_config_from_charm.
     assert: Returns None.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     relation_mock = MagicMock()
-    unit_mock = MagicMock()
-    unit_mock.name = "planner-app/0"
-    relation_mock.units = [unit_mock]
-    relation_mock.data = {unit_mock: {}}
+    app_mock = MagicMock()
+    relation_mock.app = app_mock
+    relation_mock.data = {app_mock: {}}
     mock_charm.model.relations[PLANNER_INTEGRATION_NAME] = [relation_mock]
 
     assert _build_planner_config_from_charm(mock_charm) is None
