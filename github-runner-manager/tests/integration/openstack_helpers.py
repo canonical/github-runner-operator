@@ -71,32 +71,6 @@ def wait_for_no_runners(
 
 def resolve_runner_ssh_key_path(
     runner: OpenstackServer,
-    key_dir: Path | None = None,
 ) -> Path:
-    """Resolve the local SSH private key path for an OpenStack runner.
-
-    The manager writes keypairs under ``~/.ssh/<key_name>.key`` where ``key_name``
-    is usually the OpenStack keypair name. Fallbacks are included to make test
-    failures easier to diagnose when naming differs.
-    """
-    key_dir = key_dir or (Path.home() / ".ssh")
-    key_name = getattr(runner, "key_name", None)
-    candidate_names = []
-    if key_name:
-        candidate_names.append(key_name)
-    candidate_names.append(runner.name)
-
-    for name in candidate_names:
-        path = key_dir / f"{name}.key"
-        if path.exists():
-            return path
-
-    runner_tokens = {token for token in candidate_names if token}
-    for path in key_dir.glob("*.key"):
-        if any(token in path.stem for token in runner_tokens):
-            return path
-
-    raise FileNotFoundError(
-        f"Unable to find SSH key for runner {runner.name}. Looked in {key_dir} "
-        f"for keys matching {candidate_names}."
-    )
+    """Resolve the local SSH private key path for an OpenStack runner."""
+    return Path.home() / ".ssh" / f"{runner.name}.key"

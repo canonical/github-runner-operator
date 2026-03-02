@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from github.Repository import Repository
+
 from github_runner_manager.manager.vm_manager import PostJobStatus
 from github_runner_manager.types_.github import JobConclusion
 
@@ -65,9 +66,11 @@ def assert_events_after_reconciliation(
 ) -> None:
     """Assert runner-start/stop/reconciliation metrics for a completed test flow."""
     emitted = {event.get("event") for event in events}
-    assert {"runner_start", "runner_stop", "reconciliation"} <= emitted, (
-        "Not all metrics events were logged"
-    )
+    assert {
+        "runner_start",
+        "runner_stop",
+        "reconciliation",
+    } <= emitted, "Not all metrics events were logged"
 
     for metric in events:
         if metric.get("event") == "runner_start":
