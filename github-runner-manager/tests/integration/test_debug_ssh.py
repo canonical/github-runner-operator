@@ -433,9 +433,9 @@ def test_tmate_ssh_connection(
 ):
     """Test that a tmate SSH connection can be established via the runner manager.
 
-    Arrange: Application configured with tmate SSH server connection details.
-    Act: Dispatch workflow that connects to the tmate SSH server.
-    Assert: Workflow completes successfully and logs contain server connection details.
+    arrange: application is configured with tmate SSH server connection details.
+    act: dispatch workflow that connects to the tmate SSH server.
+    assert: workflow completes successfully and logs contain server connection details.
 
     Args:
         test_config: Test-specific configuration for unique identification.
