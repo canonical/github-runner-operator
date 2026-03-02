@@ -214,11 +214,36 @@ class NonReactiveCombination(BaseModel):
         image: Information about the image to spawn.
         flavor: Information about the flavor to spawn.
         base_virtual_machines: Number of instances to spawn for this combination.
+        max_total_virtual_machines: Maximum number of instances to spawn. 0 means no cap.
     """
 
     image: "Image"
     flavor: "Flavor"
     base_virtual_machines: int
+    max_total_virtual_machines: int = 0
+
+    @root_validator(pre=False, skip_on_failure=True)
+    @classmethod
+    def check_max_ge_base(cls, values: dict) -> dict:
+        """Validate that max_total_virtual_machines is not below base_virtual_machines.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Raises:
+            ValueError: if max_total_virtual_machines is set but lower than base_virtual_machines.
+
+        Returns:
+            Values in the pydantic model.
+        """
+        max_vms = values.get("max_total_virtual_machines", 0)
+        base_vms = values.get("base_virtual_machines", 0)
+        if 0 < max_vms < base_vms:
+            raise ValueError(
+                f"max_total_virtual_machines ({max_vms}) must be >= base_virtual_machines"
+                f" ({base_vms})"
+            )
+        return values
 
 
 class ReactiveConfiguration(BaseModel):

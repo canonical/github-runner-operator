@@ -846,6 +846,12 @@ def test_parse_virtual_machine_numbers(
             1,
             "deprecated and new configuration are set for the number of machines to spawn",
         ),
+        (
+            0,
+            5,
+            3,
+            "max-total-virtual-machines (3) must be >= base-virtual-machines (5)",
+        ),
     ],
 )
 def test_error_parse_virtual_machine_numbers(

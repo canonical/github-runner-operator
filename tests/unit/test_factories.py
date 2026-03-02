@@ -77,6 +77,7 @@ def test_create_application_configuration(
                     image=Image(name="image_id", labels=["arm64", "noble"]),
                     flavor=Flavor(name="flavor", labels=["flavorlabel"]),
                     base_virtual_machines=1,
+                    max_total_virtual_machines=2,
                 )
             ]
         ),

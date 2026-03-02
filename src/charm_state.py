@@ -626,6 +626,12 @@ class OpenstackRunnerConfig(BaseModel):
                 "Both deprecated and new configuration are set for the number of machines to spawn."
             )
 
+        if 0 < max_total_virtual_machines < base_virtual_machines:
+            raise CharmConfigInvalidError(
+                f"max-total-virtual-machines ({max_total_virtual_machines})"
+                f" must be >= base-virtual-machines ({base_virtual_machines})"
+            )
+
         flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
         flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
         if len(flavor_label_combinations) == 0:
