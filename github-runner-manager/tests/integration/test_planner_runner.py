@@ -15,7 +15,6 @@ import pytest
 import yaml
 
 from .application import RunningApplication
-from .conftest import wait_for_no_runners, wait_for_runner
 from .factories import (
     GitHubConfig,
     OpenStackConfig,
@@ -23,6 +22,7 @@ from .factories import (
     TestConfig,
     create_default_config,
 )
+from .openstack_helpers import wait_for_no_runners, wait_for_runner
 from .planner_stub import PlannerStub, PlannerStubConfig
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,9 @@ def planner_app(
     Yields:
         Tuple of (RunningApplication, PlannerStub) for use in the test.
     """
-    stub = PlannerStub(PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name))
+    stub = PlannerStub(
+        PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name)
+    )
     stub.start()
     config = create_default_config(
         github_config=github_config,
@@ -50,13 +52,9 @@ def planner_app(
         test_config=test_config,
         planner_url=stub.base_url,
         planner_token=stub.token,
+        reconcile_interval=5,
+        base_virtual_machines=0,
     )
-    # Fire the reconcile loop every 5 minutes so scale-down is visible within the
-    # 15-minute test timeout. The default factory value (60) waits 60 minutes.
-    config["reconcile_interval"] = 5
-    # Set base_virtual_machines to 0 so min_pressure doesn't override planner pressure.
-    # Without this, min_pressure=1 acts as a floor and prevents scaling down to zero.
-    config["non_reactive_configuration"]["combinations"][0]["base_virtual_machines"] = 0
     config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
     log_file_path = test_config.debug_log_dir / f"app-{test_config.test_id}.log"
