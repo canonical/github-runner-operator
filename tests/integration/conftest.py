@@ -45,11 +45,9 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
-    MONGODB_APP_NAME,
     deploy_github_runner_charm,
     get_github_runner_manager_service_log,
     get_github_runner_metrics_log,
-    get_github_runner_reactive_log,
     wait_for,
     wait_for_runner_ready,
 )
@@ -655,8 +653,6 @@ async def app_openstack_runner_fixture(
         try:
             app_log = await get_github_runner_manager_service_log(unit=application.units[0])
             logging.info("Application log: \n%s", app_log)
-            reactive_log = await get_github_runner_reactive_log(unit=application.units[0])
-            logging.info("Reactive log: \n%s", reactive_log)
             metrics_log = await get_github_runner_metrics_log(unit=application.units[0])
             logging.info("Metrics log: \n%s", metrics_log)
         except AssertionError:
@@ -872,45 +868,6 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
     yield get_branch()
 
     branch_ref.delete()
-
-
-@pytest_asyncio.fixture(scope="module", name="app_for_metric")
-async def app_for_metric_fixture(
-    basic_app: Application,
-) -> AsyncIterator[Application]:
-    yield basic_app
-
-
-@pytest_asyncio.fixture(scope="module", name="mongodb")
-async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Application:
-    """Deploy MongoDB."""
-    if not existing_app_suffix:
-        mongodb = await model.deploy(
-            MONGODB_APP_NAME,
-            channel="6/edge",
-            # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
-            # https://github.com/canonical/snapd/pull/16131
-            constraints={"virt-type": "virtual-machine"},
-        )
-    else:
-        mongodb = model.applications["mongodb"]
-    return mongodb
-
-
-@pytest_asyncio.fixture(scope="module", name="app_for_reactive")
-async def app_for_reactive_fixture(
-    model: Model,
-    mongodb: Application,
-    app_openstack_runner: Application,
-    existing_app_suffix: Optional[str],
-) -> Application:
-    """Application for testing reactive."""
-    if not existing_app_suffix:
-        await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
-
-    await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
-
-    return app_openstack_runner
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")

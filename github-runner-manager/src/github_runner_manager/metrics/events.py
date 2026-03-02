@@ -13,8 +13,7 @@ from pydantic import BaseModel, NonNegativeFloat
 from github_runner_manager.errors import IssueMetricEventError
 from github_runner_manager.manager.vm_manager import CodeInformation
 
-METRICS_LOG_PATH = Path(os.getenv("METRICS_LOG_PATH", "/var/log/github-runner-metrics.log"))
-
+_DEFAULT_METRICS_LOG_PATH = "/var/log/github-runner-metrics.log"
 
 logger = logging.getLogger(__name__)
 
@@ -156,8 +155,14 @@ def issue_event(event: Event) -> None:
     Raises:
         IssueMetricEventError: If the event cannot be logged.
     """
+    metrics_log_path = _get_metrics_log_path()
     try:
-        with METRICS_LOG_PATH.open(mode="a", encoding="utf-8") as metrics_file:
+        with metrics_log_path.open(mode="a", encoding="utf-8") as metrics_file:
             metrics_file.write(f"{event.json(exclude_none=True)}\n")
     except OSError as exc:
-        raise IssueMetricEventError(f"Cannot write to {METRICS_LOG_PATH}") from exc
+        raise IssueMetricEventError(f"Cannot write to {metrics_log_path}") from exc
+
+
+def _get_metrics_log_path() -> Path:
+    """Get the metrics log path, reading the env var at call time rather than import time."""
+    return Path(os.getenv("METRICS_LOG_PATH", _DEFAULT_METRICS_LOG_PATH))
