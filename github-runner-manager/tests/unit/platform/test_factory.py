@@ -31,7 +31,9 @@ def test_platform_factory_invalid_configurations(github_config, expected_error):
 @pytest.mark.parametrize(
     "github_config, expected_platform",
     [
-        pytest.param(MagicMock(), GitHubRunnerPlatform, id="GitHub configuration"),
+        pytest.param(
+            MagicMock(token="fake-token"), GitHubRunnerPlatform, id="GitHub configuration"
+        ),
     ],
 )
 def test_platform_factory(github_config, expected_platform):

@@ -77,7 +77,6 @@ class SelfHostedRunner(BaseModel):
 
         Returns:
             A SelfHostedRunner from the input data.
-        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
         """
         github_dict["labels"] = [label["name"] for label in github_dict["labels"]]
         github_dict["identity"] = RunnerIdentity(

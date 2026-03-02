@@ -774,7 +774,7 @@ def github_repository(github_client: Github, github_config: GitHubConfig) -> Rep
 @pytest.fixture(scope="module")
 def forked_github_repository(
     github_repository: Repository,
-) -> Iterator[Repository]:
+) -> Repository:
     """Create a fork for a GitHub repository."""
     # After fork creation, the repository workflow run must be enabled manually. Otherwise, a 404
     # on the workflow get API will be returned.

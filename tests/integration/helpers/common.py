@@ -240,7 +240,10 @@ def get_job_logs(job: WorkflowJob) -> str:
 
 
 def get_workflow_runs(
-    start_time: datetime, workflow: Workflow, runner_name: str, branch: Branch = None
+    start_time: datetime,
+    workflow: Workflow,
+    runner_name: str,
+    branch: Branch | None = None,
 ) -> typing.Generator[WorkflowRun, None, None]:
     """Fetch the latest matching runs of a workflow for a given runner.
 
@@ -253,10 +256,9 @@ def get_workflow_runs(
     Yields:
         The workflow run.
     """
-    if branch is None:
-        branch = github.GithubObject.NotSet
-
-    for run in workflow.get_runs(created=f">={start_time.isoformat()}", branch=branch):
+    for run in workflow.get_runs(
+        created=f">={start_time.isoformat()}", branch=branch or github.GithubObject.NotSet
+    ):
         latest_job: WorkflowJob = run.jobs()[0]
         logs = get_job_logs(job=latest_job)
 
@@ -279,7 +281,8 @@ def _get_latest_run(
     """
     try:
         return workflow.get_runs(
-            branch=branch, created=f">={start_time.isoformat(timespec='seconds')}"
+            branch=branch or github.GithubObject.NotSet,
+            created=f">={start_time.isoformat(timespec='seconds')}",
         )[0]
     except IndexError:
         return None
