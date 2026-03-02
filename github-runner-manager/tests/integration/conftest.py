@@ -4,7 +4,6 @@
 """Fixtures for github-runner-manager integration tests."""
 
 import logging
-import subprocess
 import time
 from pathlib import Path
 from typing import Generator
@@ -280,16 +279,9 @@ def github_branch(
     """
     test_branch = f"test-{test_config.test_id}"
 
-    sha_result = subprocess.run(
-        ["/usr/bin/git", "rev-parse", "HEAD"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    current_commit_sha = sha_result.stdout.strip()
-
+    default_branch = github_repository.get_branch(github_repository.default_branch)
     branch_ref = github_repository.create_git_ref(
-        ref=f"refs/heads/{test_branch}", sha=current_commit_sha
+        ref=f"refs/heads/{test_branch}", sha=default_branch.commit.sha
     )
 
     # Wait for branch to be available, GitHub is eventually consistent
@@ -301,7 +293,11 @@ def github_branch(
     while time.time() - start_time < timeout:
         try:
             branch = github_repository.get_branch(test_branch)
-            logger.info("Created test branch: %s at SHA: %s", test_branch, current_commit_sha)
+            logger.info(
+                "Created test branch: %s at SHA: %s",
+                test_branch,
+                default_branch.commit.sha,
+            )
             break
         except Exception as e:
             elapsed = time.time() - start_time
