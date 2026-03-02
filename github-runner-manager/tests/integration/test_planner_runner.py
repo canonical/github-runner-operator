@@ -75,7 +75,7 @@ def test_planner_pressure_spawns_and_cleans_runner(
         1. wait for a runner VM to appear on OpenStack.
         2. set planner pressure to 0.
         3. wait for the runner VM to disappear from OpenStack.
-    Assert: runner lifecycle is driven entirely by planner pressure.
+    assert: runner lifecycle is driven entirely by planner pressure.
     """
     app, stub = planner_app
 

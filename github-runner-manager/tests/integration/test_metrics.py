@@ -144,7 +144,14 @@ def test_runner_installed_metric(
     openstack_connection: openstack.connection.Connection,
     test_config: TestConfig,
 ) -> None:
-    """Assert `runner_installed` metric is issued for an installed runner."""
+    """
+    arrange: planner-driven app is running with pressure=1.
+    act:
+        1. wait for runner creation.
+        2. set pressure to 0 and wait for cleanup.
+        3. read metrics events.
+    assert: `runner_installed` event is present with expected flavor and duration.
+    """
     _, stub, metrics_log_path = planner_app_with_metrics
     clear_metrics_log(metrics_log_path)
 
@@ -174,7 +181,14 @@ def test_metrics_after_workflow_completion(
     github_repository: Repository,
     github_branch: Branch,
 ) -> None:
-    """Assert normal runner start/stop/reconciliation metrics after a successful workflow."""
+    """
+    arrange: planner-driven app is running with one runner.
+    act:
+        1. dispatch success workflow and wait for completion.
+        2. scale pressure down to 0 and wait for cleanup.
+        3. read metrics events.
+    assert: runner_start, runner_stop and reconciliation metrics are logged as normal.
+    """
     _, stub, metrics_log_path = planner_app_with_metrics
     clear_metrics_log(metrics_log_path)
 
@@ -217,7 +231,15 @@ def test_metrics_for_abnormal_termination(
     github_repository: Repository,
     github_branch: Branch,
 ) -> None:
-    """Assert abnormal status metrics when run.sh is terminated in the runner VM."""
+    """
+    arrange: planner-driven app is running with one runner.
+    act:
+        1. dispatch crash workflow and wait for it to start.
+        2. terminate run.sh in the runner VM and cancel the workflow.
+        3. scale pressure down to 0 and wait for cleanup.
+        4. read metrics events.
+    assert: runner_stop and reconciliation metrics reflect abnormal termination.
+    """
     _, stub, metrics_log_path = planner_app_with_metrics
     clear_metrics_log(metrics_log_path)
 
