@@ -141,6 +141,8 @@ def create_default_config(
     test_config: TestConfig | None = None,
     planner_url: str | None = None,
     planner_token: str | None = None,
+    reconcile_interval: int = 60,
+    base_virtual_machines: int = 1,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -154,6 +156,8 @@ def create_default_config(
             Defaults to new unique values.
         planner_url: Planner service URL. Omitted from config when not provided.
         planner_token: Planner service token. Omitted from config when not provided.
+        reconcile_interval: Minutes between delete-loop reconciliation ticks.
+        base_virtual_machines: Floor for non-reactive desired runners.
 
     Returns:
         Configuration dictionary for the application.
@@ -235,7 +239,7 @@ def create_default_config(
                         "labels": ["noble", "x64"],
                     },
                     "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
-                    "base_virtual_machines": 1,
+                    "base_virtual_machines": base_virtual_machines,
                     "max_total_virtual_machines": 0,
                 }
             ]
@@ -256,5 +260,5 @@ def create_default_config(
         },
         **({"planner_url": planner_url} if planner_url else {}),
         **({"planner_token": planner_token} if planner_token else {}),
-        "reconcile_interval": 60,
+        "reconcile_interval": reconcile_interval,
     }

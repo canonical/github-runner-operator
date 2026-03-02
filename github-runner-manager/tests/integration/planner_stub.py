@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import logging
+import socket
 import threading
 import time
 from dataclasses import dataclass
@@ -30,7 +31,6 @@ class PlannerStubConfig:
     """Configuration for the planner stub server."""
 
     host: str = "127.0.0.1"
-    port: int = 8081
     token: str = "stub-token"
     flavor_name: str = "small"
     initial_pressure: int = 1
@@ -94,13 +94,13 @@ class PlannerStub:
         """Initialize the planner stub manager.
 
         Args:
-            config: Optional configuration for host, port, token, flavor name,
-                and initial pressure. If not provided, defaults from
-                `PlannerStubConfig` are used.
+            config: Optional configuration for host, token, flavor name, and
+                initial pressure. If not provided, defaults from
+                ``PlannerStubConfig`` are used.
         """
         self._config = config or PlannerStubConfig()
         self._thread: threading.Thread | None = None
-        self._port = self._config.port
+        self._port = 0
 
     @property
     def base_url(self) -> str:
@@ -114,6 +114,10 @@ class PlannerStub:
 
     def start(self) -> None:
         """Start the planner stub server in a daemon thread."""
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.bind((self._config.host, 0))
+            self._port = int(sock.getsockname()[1])
+
         state = {"pressure": self._config.initial_pressure}
         app = _make_app(self._config, state)
         self._thread = threading.Thread(
