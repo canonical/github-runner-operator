@@ -15,8 +15,9 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.WorkflowRun import WorkflowRun
-from github_runner_manager.manager.vm_manager import PostJobStatus
 from openstack.compute.v2.server import Server as OpenstackServer
+
+from github_runner_manager.manager.vm_manager import PostJobStatus
 
 from .application import RunningApplication
 from .factories import (
@@ -87,9 +88,7 @@ def _kill_run_script(runner: OpenstackServer, runner_ip: str) -> None:
 @pytest.fixture
 def metrics_planner_stub(test_config: TestConfig) -> Iterator[PlannerStub]:
     """Start a planner stub compatible with this module's flavor name."""
-    stub = PlannerStub(
-        PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name)
-    )
+    stub = PlannerStub(PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name))
     stub.start()
     try:
         yield stub
@@ -163,7 +162,9 @@ def test_runner_installed_metric(
     assert runner_installed_events, "runner_installed event has not been logged"
     for metric in runner_installed_events:
         assert metric.get("flavor") == test_config.runner_name
-        assert metric.get("duration") >= 0
+        duration = metric.get("duration")
+        assert isinstance(duration, (int, float))
+        assert duration >= 0
 
 
 def test_metrics_after_workflow_completion(
@@ -191,9 +192,9 @@ def test_metrics_after_workflow_completion(
         workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
     assert _wait_for_workflow_status(workflow_run, "in_progress"), "Workflow never started running"
-    assert wait_for_workflow_completion(workflow_run, timeout=20 * 60), (
-        "Workflow did not complete or timed out."
-    )
+    assert wait_for_workflow_completion(
+        workflow_run, timeout=20 * 60
+    ), "Workflow did not complete or timed out."
     assert workflow_run.conclusion == "success"
 
     stub.set_pressure(0)

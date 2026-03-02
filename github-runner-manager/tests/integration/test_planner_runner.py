@@ -41,9 +41,7 @@ def planner_app(
     Yields:
         Tuple of (RunningApplication, PlannerStub) for use in the test.
     """
-    stub = PlannerStub(
-        PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name)
-    )
+    stub = PlannerStub(PlannerStubConfig(initial_pressure=1, flavor_name=test_config.runner_name))
     stub.start()
     config = create_default_config(
         github_config=github_config,
