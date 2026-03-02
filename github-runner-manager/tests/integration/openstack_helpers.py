@@ -4,6 +4,7 @@
 """OpenStack helper functions shared by integration tests."""
 
 import logging
+import socket
 import time
 from pathlib import Path
 
@@ -66,6 +67,27 @@ def wait_for_no_runners(
         if not servers:
             return True
         time.sleep(interval)
+    return False
+
+
+def wait_for_ssh(
+    runner_ip: str,
+    port: int = 22,
+    timeout: int = 120,
+    interval: int = 2,
+    connect_timeout: int = 5,
+) -> bool:
+    """Wait for SSH port to become available on the runner."""
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((runner_ip, port), timeout=connect_timeout):
+                logger.info("SSH port %d is now available on %s", port, runner_ip)
+                return True
+        except (socket.timeout, socket.error, OSError):
+            time.sleep(interval)
+
+    logger.error("SSH port %d never became available on %s", port, runner_ip)
     return False
 
 
