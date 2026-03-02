@@ -24,7 +24,6 @@ from github.Repository import Repository
 from openstack.compute.v2.server import Server as OpenstackServer
 
 from .application import RunningApplication
-from .conftest import wait_for_runner
 from .factories import (
     GitHubConfig,
     OpenStackConfig,
@@ -39,6 +38,7 @@ from .github_helpers import (
     get_workflow_dispatch_run,
     wait_for_workflow_completion,
 )
+from .openstack_helpers import resolve_runner_ssh_key_path, wait_for_runner
 from .planner_stub import PlannerStub
 
 logger = logging.getLogger(__name__)
@@ -119,8 +119,7 @@ def setup_reverse_ssh_tunnel(
     Returns:
         True if tunnel and DNAT were successfully established, False otherwise.
     """
-    key_name = runner.name
-    key_path = Path.home() / ".ssh" / f"{key_name}.key"
+    key_path = resolve_runner_ssh_key_path(runner)
 
     logger.info("Waiting for SSH on runner %s at %s...", runner.name, runner_ip)
     if not wait_for_ssh(runner_ip):
