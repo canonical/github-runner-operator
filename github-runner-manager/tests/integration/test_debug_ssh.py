@@ -4,9 +4,7 @@
 """Integration tests for tmate ssh connection."""
 
 import logging
-import socket
 import subprocess
-import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,7 +36,7 @@ from .github_helpers import (
     get_workflow_dispatch_run,
     wait_for_workflow_completion,
 )
-from .openstack_helpers import resolve_runner_ssh_key_path, wait_for_runner
+from .openstack_helpers import resolve_runner_ssh_key_path, wait_for_runner, wait_for_ssh
 from .planner_stub import PlannerStub
 
 logger = logging.getLogger(__name__)
@@ -77,31 +75,6 @@ class TmateServer:
     port: int
     rsa_fingerprint: str
     ed25519_fingerprint: str
-
-
-def wait_for_ssh(runner_ip: str, port: int = 22, timeout: int = 120, interval: int = 2) -> bool:
-    """Wait for SSH port to become available on the runner.
-
-    Args:
-        runner_ip: IP address of the runner.
-        port: SSH port to check (default: 22).
-        timeout: Maximum time to wait in seconds.
-        interval: Time between connection attempts in seconds.
-
-    Returns:
-        True if SSH is available, False if timeout reached.
-    """
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            with socket.create_connection((runner_ip, port), timeout=5):
-                logger.info("SSH port %d is now available on %s", port, runner_ip)
-                return True
-        except (socket.timeout, socket.error, OSError):
-            time.sleep(interval)
-
-    logger.error("SSH port %d never became available on %s", port, runner_ip)
-    return False
 
 
 def setup_reverse_ssh_tunnel(

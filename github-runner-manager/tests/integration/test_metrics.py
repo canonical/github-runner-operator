@@ -34,21 +34,29 @@ from .github_helpers import (
 )
 from .metrics_helpers import (
     assert_events_after_reconciliation,
-    clear_metrics_log,
     wait_for_events,
     wait_for_runner_to_be_marked_offline,
 )
-from .openstack_helpers import resolve_runner_ssh_key_path, wait_for_no_runners, wait_for_runner
+from .openstack_helpers import (
+    resolve_runner_ssh_key_path,
+    wait_for_no_runners,
+    wait_for_runner,
+    wait_for_ssh,
+)
 from .planner_stub import PlannerStub, PlannerStubConfig
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 RUNNER_CRASH_WAIT_SECONDS = 10
+SSH_CONNECT_TIMEOUT_SECONDS = 10
+SSH_READY_TIMEOUT_SECONDS = 3 * 60
+SSH_RETRY_INTERVAL_SECONDS = 5
 
 
 def _wait_for_workflow_status(
     workflow_run: WorkflowRun,
     status: str,
+    acceptable_terminal_statuses: tuple[str, ...] = (),
     timeout: int = 15 * 60,
     interval: int = 10,
 ) -> bool:
@@ -56,7 +64,7 @@ def _wait_for_workflow_status(
     deadline = time.time() + timeout
     while time.time() < deadline:
         workflow_run.update()
-        if workflow_run.status == status:
+        if workflow_run.status == status or workflow_run.status in acceptable_terminal_statuses:
             return True
         time.sleep(interval)
     return False
@@ -64,25 +72,39 @@ def _wait_for_workflow_status(
 
 def _kill_run_script(runner: OpenstackServer, runner_ip: str) -> None:
     """Kill actions-runner run.sh inside a runner VM."""
+    assert wait_for_ssh(
+        runner_ip,
+        timeout=SSH_READY_TIMEOUT_SECONDS,
+        interval=SSH_RETRY_INTERVAL_SECONDS,
+        connect_timeout=SSH_CONNECT_TIMEOUT_SECONDS,
+    ), f"SSH did not become reachable on runner {runner.name}"
     key_path = resolve_runner_ssh_key_path(runner)
+    command = [
+        "/usr/bin/ssh",
+        "-i",
+        str(key_path),
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=10",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        f"ubuntu@{runner_ip}",
+        "pkill -9 run.sh",
+    ]
     result = subprocess.run(
-        [
-            "/usr/bin/ssh",
-            "-i",
-            str(key_path),
-            "-o",
-            "StrictHostKeyChecking=no",
-            "-o",
-            "UserKnownHostsFile=/dev/null",
-            f"ubuntu@{runner_ip}",
-            "pkill -9 run.sh",
-        ],
+        command,
         check=False,
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=SSH_CONNECT_TIMEOUT_SECONDS + 5,
     )
-    assert result.returncode == 0, f"Failed to kill run.sh: {result.stderr}"
+    assert result.returncode == 0, (
+        f"Failed to kill run.sh (exit code {result.returncode}). "
+        f"stdout={result.stdout!r} stderr={result.stderr!r}"
+    )
 
 
 @pytest.fixture
@@ -153,7 +175,6 @@ def test_runner_installed_metric(
     assert: `runner_installed` event is present with expected flavor and duration.
     """
     _, stub, metrics_log_path = planner_app_with_metrics
-    clear_metrics_log(metrics_log_path)
 
     runner, _ = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None, "Runner did not appear within timeout"
@@ -190,7 +211,6 @@ def test_metrics_after_workflow_completion(
     assert: runner_start, runner_stop and reconciliation metrics are logged as normal.
     """
     _, stub, metrics_log_path = planner_app_with_metrics
-    clear_metrics_log(metrics_log_path)
 
     runner, _ = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None, "Runner did not appear within timeout"
@@ -205,7 +225,9 @@ def test_metrics_after_workflow_completion(
     workflow_run = get_workflow_dispatch_run(
         workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
-    assert _wait_for_workflow_status(workflow_run, "in_progress"), "Workflow never started running"
+    assert _wait_for_workflow_status(
+        workflow_run, "in_progress", acceptable_terminal_statuses=("completed",)
+    ), "Workflow never started running"
     assert wait_for_workflow_completion(
         workflow_run, timeout=20 * 60
     ), "Workflow did not complete or timed out."
@@ -241,7 +263,6 @@ def test_metrics_for_abnormal_termination(
     assert: runner_stop and reconciliation metrics reflect abnormal termination.
     """
     _, stub, metrics_log_path = planner_app_with_metrics
-    clear_metrics_log(metrics_log_path)
 
     runner, runner_ip = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None and runner_ip, "Runner did not appear within timeout"
