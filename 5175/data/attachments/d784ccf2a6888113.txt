@@ -1,0 +1,98 @@
+06:43:20 WARNING unexpected facade SSHServer received from the controller
+06:43:20 INFO Adding model github-pr-098e2-lxd:test-multi-unit-same-machine-dzyn on cloud localhost
+06:43:20 WARNING unexpected facade SSHServer received from the controller
+06:43:20 WARNING unexpected facade SSHSession received from the controller
+06:43:20 WARNING unexpected facade SSHTunneler received from the controller
+06:43:20 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:43:23 INFO Deploying ch:amd64/noble/any-charm-133
+06:43:38 INFO Deploying local:jammy/github-runner-0
+06:43:38 INFO Waiting for model:
+  test-j8ddn7iq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j8ddn7iq/0 [allocating] waiting: waiting for machine
+06:44:09 INFO Waiting for model:
+  test-j8ddn7iq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j8ddn7iq/0 [idle] active: 
+06:44:39 INFO Waiting for model:
+  test-j8ddn7iq/0 [allocating] waiting: waiting for machine
+06:45:09 INFO Waiting for model:
+  test-j8ddn7iq/0 [allocating] waiting: agent initialising
+06:45:39 INFO Waiting for model:
+  test-j8ddn7iq/0 [executing] maintenance: installing charm software
+06:46:10 INFO Waiting for model:
+  test-j8ddn7iq/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-j8ddn7iq/0 [idle] active:
+06:46:35 INFO Waiting for model:
+  test-j8ddn7iq/0 [idle] active: 
+  test-j8ddn7iq/1 [allocating] waiting: installing agent
+06:47:05 INFO Waiting for model:
+  test-j8ddn7iq/0 [idle] active: 
+  test-j8ddn7iq/1 [executing] maintenance: installing charm software
+06:47:35 INFO Waiting for model:
+  test-j8ddn7iq/0 [idle] active: 
+  test-j8ddn7iq/1 [executing] maintenance: Update image for runners
+06:47:55 INFO File content of /var/lib/github-runner-manager/test-j8ddn7iq-0/http_port: 55555
+06:47:56 INFO File content of /var/lib/github-runner-manager/test-j8ddn7iq-1/http_port: 55556
+06:47:59 INFO File content of /var/lib/github-runner-manager/test-j8ddn7iq-1/http_port: 55556
+06:48:02 INFO File content of /var/lib/github-runner-manager/test-j8ddn7iq-1/http_port: 55556
+06:48:02 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-dzyn  github-pr-098e2-lxd  localhost/localhost  3.6.14   unsupported  06:48:02Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-j8ddn7iq           active      1  any-charm      latest/beta  133  no       
+test-j8ddn7iq                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-j8ddn7iq/0*  active    idle   0        10.232.49.22           
+test-j8ddn7iq/0*                         active    idle   1        10.232.49.195          
+test-j8ddn7iq/1                          active    idle   1        10.232.49.195          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.232.49.22   juju-1c3ce0-0  ubuntu@24.04  github-runner  Running
+1        started  10.232.49.195  juju-1c3ce0-1  ubuntu@22.04  github-runner  Running
+
+06:48:03 INFO Juju error logs:
+
+machine-0: 06:43:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:43:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:44:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:44:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-j8ddn7iq-0: 06:45:56 ERROR unit.test-j8ddn7iq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-j8ddn7iq-0: 06:45:57 ERROR unit.test-j8ddn7iq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-j8ddn7iq-1: 06:47:12 ERROR unit.test-j8ddn7iq/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-j8ddn7iq-1: 06:47:13 ERROR unit.test-j8ddn7iq/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j8ddn7iq-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:48:03 INFO Forgetting model main...
