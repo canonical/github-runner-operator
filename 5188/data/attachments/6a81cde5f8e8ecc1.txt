@@ -1,0 +1,99 @@
+18:37:59 WARNING unexpected facade SSHServer received from the controller
+18:37:59 INFO Adding model github-pr-2e67e-lxd:test-multi-unit-same-machine-055o on cloud localhost
+18:38:00 WARNING unexpected facade SSHServer received from the controller
+18:38:00 WARNING unexpected facade SSHSession received from the controller
+18:38:00 WARNING unexpected facade SSHTunneler received from the controller
+18:38:00 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:38:02 INFO Deploying ch:amd64/noble/any-charm-133
+18:38:18 INFO Deploying local:jammy/github-runner-0
+18:38:19 INFO Waiting for model:
+  test-apvjb75y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-apvjb75y/0 [allocating] waiting: waiting for machine
+18:38:49 INFO Waiting for model:
+  test-apvjb75y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-apvjb75y/0 [executing] maintenance: installing charm software
+18:39:19 INFO Waiting for model:
+  test-apvjb75y/0 [allocating] waiting: waiting for machine
+18:39:49 INFO Waiting for model:
+  test-apvjb75y/0 [allocating] waiting: agent initialising
+18:40:20 INFO Waiting for model:
+  test-apvjb75y/0 [executing] maintenance: installing charm software
+18:40:50 INFO Waiting for model:
+  test-apvjb75y/0 [executing] maintenance: installing charm software
+18:41:20 INFO Waiting for model:
+  test-apvjb75y/0 [executing] maintenance: Update image for runners
+18:41:41 INFO Waiting for model:
+  test-apvjb75y/0 [idle] active: 
+  test-apvjb75y/1 [allocating] waiting: installing agent
+18:42:11 INFO Waiting for model:
+  test-apvjb75y/0 [idle] active: 
+  test-apvjb75y/1 [executing] maintenance: installing charm software
+18:42:41 INFO Waiting for model:
+  test-apvjb75y/0 [idle] active: 
+  test-apvjb75y/1 [executing] maintenance: Update image for runners
+18:43:11 INFO File content of /var/lib/github-runner-manager/test-apvjb75y-0/http_port: 55555
+18:43:12 INFO File content of /var/lib/github-runner-manager/test-apvjb75y-1/http_port: 55556
+18:43:15 INFO File content of /var/lib/github-runner-manager/test-apvjb75y-1/http_port: 55556
+18:43:18 INFO File content of /var/lib/github-runner-manager/test-apvjb75y-1/http_port: 55556
+18:43:18 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-055o  github-pr-2e67e-lxd  localhost/localhost  3.6.14   unsupported  18:43:18Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-apvjb75y           active      1  any-charm      latest/beta  133  no       
+test-apvjb75y                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-apvjb75y/0*  active    idle   0        10.104.55.249          
+test-apvjb75y/0*                         active    idle   1        10.104.55.24           
+test-apvjb75y/1                          active    idle   1        10.104.55.24           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.104.55.249  juju-8f4b55-0  ubuntu@24.04  github-runner  Running
+1        started  10.104.55.24   juju-8f4b55-1  ubuntu@22.04  github-runner  Running
+
+18:43:19 INFO Juju error logs:
+
+machine-0: 18:38:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:38:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:39:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:39:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-apvjb75y-0: 18:41:00 ERROR unit.test-apvjb75y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-apvjb75y-0: 18:41:02 ERROR unit.test-apvjb75y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-apvjb75y-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-apvjb75y-1: 18:42:27 ERROR unit.test-apvjb75y/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-apvjb75y-1: 18:42:28 ERROR unit.test-apvjb75y/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-apvjb75y-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:43:19 INFO Forgetting model main...
