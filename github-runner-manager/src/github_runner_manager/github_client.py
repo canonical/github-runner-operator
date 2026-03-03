@@ -310,8 +310,9 @@ class GithubClient:
             Job information.
         """
         try:
-            page = 1
-            while True:
+            # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
+            # See: https://docs.github.com/en/actions/reference/limits
+            for page in range(1, 4):
                 _headers, data = self._requester.requestJsonAndCheck(
                     "GET",
                     f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
@@ -323,7 +324,6 @@ class GithubClient:
                 for job in jobs:
                     if job["runner_name"] == runner_name:
                         return self._to_job_info(job)
-                page += 1
         except GithubException as exc:
             if exc.status in (401, 403):
                 raise TokenError from exc
