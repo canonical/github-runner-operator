@@ -267,18 +267,6 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
-def _make_mock_runner(raw_runner: dict) -> MagicMock:
-    """Create a MagicMock that mimics a PyGithub SelfHostedActionsRunner."""
-    mock = MagicMock()
-    mock.id = raw_runner["id"]
-    mock.name = raw_runner["name"]
-    mock.os = raw_runner["os"]
-    mock.status = raw_runner["status"]
-    mock.busy = raw_runner["busy"]
-    mock.labels = raw_runner["labels"]
-    return mock
-
-
 def test_list_runners(github_client: GithubClient):
     """
     arrange: A mocked Github Client that returns two runners, one for the requested prefix.
@@ -326,6 +314,18 @@ def test_list_runners(github_client: GithubClient):
     assert runner0.identity.instance_id.name == runners_data[0]["name"]
     assert runner0.busy == runners_data[0]["busy"]
     assert runner0.status == runners_data[0]["status"]
+
+
+def _make_mock_runner(raw_runner: dict) -> MagicMock:
+    """Create a MagicMock that mimics a PyGithub SelfHostedActionsRunner."""
+    mock = MagicMock()
+    mock.id = raw_runner["id"]
+    mock.name = raw_runner["name"]
+    mock.os = raw_runner["os"]
+    mock.status = raw_runner["status"]
+    mock.busy = raw_runner["busy"]
+    mock.labels = raw_runner["labels"]
+    return mock
 
 
 def test_catch_http_errors(github_client: GithubClient):
