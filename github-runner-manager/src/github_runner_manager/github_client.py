@@ -114,7 +114,7 @@ class GithubClient:
             "busy": runner.busy,  # type: ignore[attr-defined]
             "labels": [
                 {"id": label["id"], "name": label["name"], "type": label["type"]}
-                for label in runner.labels()  # type: ignore[attr-defined]
+                for label in runner.labels  # type: ignore[attr-defined]
             ],
         }
 
