@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-03
+
+- Replaced `ghapi` with `PyGithub` to fix stuck GitHub API calls caused by missing timeout support in `ghapi`.
+
 ## 2026-02-27
 
 - Fix a bug where image labels (base,arch) are not propagated to the planner charm.
