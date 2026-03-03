@@ -9,7 +9,13 @@ from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
 
 import github
-from github import BadCredentialsException, Github, GithubException, UnknownObjectException
+from github import (
+    BadCredentialsException,
+    Github,
+    GithubException,
+    RateLimitExceededException,
+    UnknownObjectException,
+)
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
@@ -67,11 +73,11 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             return func(*args, **kwargs)
         except BadCredentialsException as exc:
             raise TokenError("Invalid token.") from exc
+        except RateLimitExceededException as exc:
+            raise PlatformApiError("GitHub API rate limit exceeded.") from exc
         except GithubException as exc:
             if exc.status == 403:
-                raise TokenError(
-                    "Provided token has not enough permissions or has reached rate-limit."
-                ) from exc
+                raise TokenError("Provided token does not have enough permissions.") from exc
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
