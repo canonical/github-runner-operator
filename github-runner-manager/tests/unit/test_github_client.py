@@ -275,7 +275,7 @@ def _make_mock_runner(raw_runner: dict) -> MagicMock:
     mock.os = raw_runner["os"]
     mock.status = raw_runner["status"]
     mock.busy = raw_runner["busy"]
-    mock.labels.return_value = raw_runner["labels"]
+    mock.labels = raw_runner["labels"]
     return mock
 
 

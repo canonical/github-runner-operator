@@ -8,6 +8,7 @@ import logging
 from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
 
+import github
 from github import BadCredentialsException, Github, GithubException, UnknownObjectException
 from typing_extensions import assert_never
 
@@ -90,7 +91,7 @@ class GithubClient:
             token: GitHub personal token for API requests.
         """
         self._token = token
-        self._github = Github(login_or_token=self._token, timeout=TIMEOUT_IN_SECS)
+        self._github = Github(auth=github.Auth.Token(self._token), timeout=TIMEOUT_IN_SECS)
         # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
         # runner groups). Use the internal requester for raw REST calls that still inherit
         # auth and timeout from the client.
@@ -282,7 +283,7 @@ class GithubClient:
                 _headers, data = self._requester.requestJsonAndCheck(
                     "GET",
                     f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
-                    parameters={"per_page": 30, "page": page},
+                    parameters={"per_page": 100, "page": page},
                 )
                 jobs = data["jobs"]
                 if not jobs:
