@@ -16,6 +16,7 @@ from github import (
     RateLimitExceededException,
     UnknownObjectException,
 )
+from github.SelfHostedActionsRunner import SelfHostedActionsRunner
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
@@ -150,6 +151,7 @@ class GithubClient:
             The information for the requested runner.
         """
         try:
+            runner: SelfHostedActionsRunner
             if isinstance(path, GitHubRepo):
                 runner = self._github.get_repo(f"{path.owner}/{path.repo}").get_self_hosted_runner(
                     runner_id
@@ -158,12 +160,12 @@ class GithubClient:
                 runner = self._github.get_organization(path.org).get_self_hosted_runner(runner_id)
         except UnknownObjectException as err:
             raise GithubRunnerNotFoundError from err
-        instance_id = InstanceID.build_from_name(prefix, runner.name)  # type: ignore[attr-defined]
+        instance_id = InstanceID.build_from_name(prefix, runner.name)
         return self._build_runner(
-            runner_id=runner.id,  # type: ignore[attr-defined]
-            busy=runner.busy,  # type: ignore[attr-defined]
-            status=runner.status,  # type: ignore[attr-defined]
-            labels=runner.labels,  # type: ignore[attr-defined]
+            runner_id=runner.id,
+            busy=runner.busy,
+            status=runner.status,
+            labels=runner.labels,
             instance_id=instance_id,
         )
 
@@ -185,16 +187,16 @@ class GithubClient:
             runners = self._github.get_organization(path.org).get_self_hosted_runners()
 
         managed_runners_list = []
+        runner: SelfHostedActionsRunner
         for runner in runners:
-            name: str = runner.name  # type: ignore[attr-defined]
-            if InstanceID.name_has_prefix(prefix, name):
-                instance_id = InstanceID.build_from_name(prefix, name)
+            if InstanceID.name_has_prefix(prefix, runner.name):
+                instance_id = InstanceID.build_from_name(prefix, runner.name)
                 managed_runners_list.append(
                     self._build_runner(
-                        runner_id=runner.id,  # type: ignore[attr-defined]
-                        busy=runner.busy,  # type: ignore[attr-defined]
-                        status=runner.status,  # type: ignore[attr-defined]
-                        labels=runner.labels,  # type: ignore[attr-defined]
+                        runner_id=runner.id,
+                        busy=runner.busy,
+                        status=runner.status,
+                        labels=runner.labels,
                         instance_id=instance_id,
                     )
                 )
