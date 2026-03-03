@@ -99,9 +99,8 @@ class GithubClient:
         self._token = token
         self._github = Github(auth=github.Auth.Token(self._token), timeout=TIMEOUT_IN_SECS)
         # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
-        # runner groups). Use the internal requester for raw REST calls that still inherit
-        # auth and timeout from the client.
-        self._requester = self._github._Github__requester  # type: ignore[attr-defined]  # pylint: disable=protected-access  # noqa: E501
+        # runner groups). Use the requester for raw REST calls that inherit auth and timeout.
+        self._requester = self._github.requester
 
     @staticmethod
     def _build_runner(
