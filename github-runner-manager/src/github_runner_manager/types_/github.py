@@ -11,7 +11,7 @@ from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
 
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.models import RunnerIdentity
 
 
 class GitHubRunnerStatus(str, Enum):
@@ -66,24 +66,6 @@ class SelfHostedRunner(BaseModel):
     labels: list[str]
     status: GitHubRunnerStatus
     deletable: bool = False
-
-    @classmethod
-    def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":
-        """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
-
-        Args:
-            github_dict: GitHub dictionary from the list_runners endpoint.
-            instance_id: InstanceID for the runner.
-
-        Returns:
-            A SelfHostedRunner from the input data.
-        """
-        github_dict["labels"] = [label["name"] for label in github_dict["labels"]]
-        github_dict["identity"] = RunnerIdentity(
-            instance_id=instance_id,
-            metadata=RunnerMetadata(platform_name="github", runner_id=github_dict["id"]),
-        )
-        return cls.parse_obj(github_dict)
 
 
 class JobConclusion(str, Enum):

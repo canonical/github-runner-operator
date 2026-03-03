@@ -13,7 +13,7 @@ from github import BadCredentialsException, Github, GithubException, UnknownObje
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -98,26 +98,35 @@ class GithubClient:
         self._requester = self._github._Github__requester  # type: ignore[attr-defined]  # pylint: disable=protected-access  # noqa: E501
 
     @staticmethod
-    def _pygithub_runner_to_dict(runner: object) -> dict:
-        """Convert a PyGithub SelfHostedActionsRunner to a dict for build_from_github.
+    def _build_runner(
+        runner_id: int,
+        busy: bool,
+        status: str,
+        labels: list[dict],
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Build a SelfHostedRunner from GitHub runner fields.
 
         Args:
-            runner: PyGithub runner object.
+            runner_id: The runner's GitHub id.
+            busy: Whether the runner is executing a job.
+            status: The runner status string.
+            labels: List of label dicts with a "name" key.
+            instance_id: InstanceID for the runner.
 
         Returns:
-            A dict compatible with SelfHostedRunner.build_from_github().
+            A SelfHostedRunner.
         """
-        return {
-            "id": runner.id,  # type: ignore[attr-defined]
-            "name": runner.name,  # type: ignore[attr-defined]
-            "os": runner.os,  # type: ignore[attr-defined]
-            "status": runner.status,  # type: ignore[attr-defined]
-            "busy": runner.busy,  # type: ignore[attr-defined]
-            "labels": [
-                {"id": label["id"], "name": label["name"], "type": label["type"]}
-                for label in runner.labels  # type: ignore[attr-defined]
-            ],
-        }
+        return SelfHostedRunner(
+            id=runner_id,
+            busy=busy,
+            status=status,
+            labels=[label["name"] for label in labels],
+            identity=RunnerIdentity(
+                instance_id=instance_id,
+                metadata=RunnerMetadata(platform_name="github", runner_id=runner_id),
+            ),
+        )
 
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
@@ -144,9 +153,14 @@ class GithubClient:
                 runner = self._github.get_organization(path.org).get_self_hosted_runner(runner_id)
         except UnknownObjectException as err:
             raise GithubRunnerNotFoundError from err
-        raw_runner = self._pygithub_runner_to_dict(runner)
-        instance_id = InstanceID.build_from_name(prefix, raw_runner["name"])
-        return SelfHostedRunner.build_from_github(raw_runner, instance_id)
+        instance_id = InstanceID.build_from_name(prefix, runner.name)  # type: ignore[attr-defined]
+        return self._build_runner(
+            runner_id=runner.id,  # type: ignore[attr-defined]
+            busy=runner.busy,  # type: ignore[attr-defined]
+            status=runner.status,  # type: ignore[attr-defined]
+            labels=runner.labels,  # type: ignore[attr-defined]
+            instance_id=instance_id,
+        )
 
     @catch_http_errors
     def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
@@ -167,11 +181,18 @@ class GithubClient:
 
         managed_runners_list = []
         for runner in runners:
-            raw_runner = self._pygithub_runner_to_dict(runner)
-            if InstanceID.name_has_prefix(prefix, raw_runner["name"]):
-                instance_id = InstanceID.build_from_name(prefix, raw_runner["name"])
-                managed_runner = SelfHostedRunner.build_from_github(raw_runner, instance_id)
-                managed_runners_list.append(managed_runner)
+            name: str = runner.name  # type: ignore[attr-defined]
+            if InstanceID.name_has_prefix(prefix, name):
+                instance_id = InstanceID.build_from_name(prefix, name)
+                managed_runners_list.append(
+                    self._build_runner(
+                        runner_id=runner.id,  # type: ignore[attr-defined]
+                        busy=runner.busy,  # type: ignore[attr-defined]
+                        status=runner.status,  # type: ignore[attr-defined]
+                        labels=runner.labels,  # type: ignore[attr-defined]
+                        instance_id=instance_id,
+                    )
+                )
         return managed_runners_list
 
     @catch_http_errors
@@ -210,7 +231,14 @@ class GithubClient:
         else:
             assert_never(token)
 
-        runner = SelfHostedRunner.build_from_github(token["runner"], instance_id)
+        raw_runner = token["runner"]
+        runner = self._build_runner(
+            runner_id=raw_runner["id"],
+            busy=raw_runner["busy"],
+            status=raw_runner["status"],
+            labels=raw_runner["labels"],
+            instance_id=instance_id,
+        )
         return token["encoded_jit_config"], runner
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
