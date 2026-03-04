@@ -129,6 +129,7 @@ def _get_non_reactive_configuration(state: CharmState) -> NonReactiveConfigurati
                 image=image,
                 flavor=flavor,
                 base_virtual_machines=state.runner_config.base_virtual_machines,
+                max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
             )
         ]
     return NonReactiveConfiguration(combinations=combinations)
