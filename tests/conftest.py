@@ -29,7 +29,19 @@ def pytest_addoption(parser: Parser):
         default=os.environ.get("INTEGRATION_TOKEN"),
     )
     parser.addoption(
-        "--charm-file", action="store", help="The prebuilt github-runner-operator charm file."
+        "--charm-file",
+        action="append",
+        help="The prebuilt github-runner-operator charm file.",
+        default=[],
+    )
+    parser.addoption(
+        "--base",
+        action="store",
+        default="22.04",
+        help=(
+            "Ubuntu base token (e.g., 22.04, 24.04). Used to select the matching charm"
+            " artifact when multiple --charm-file values are provided."
+        ),
     )
     parser.addoption(
         "--http-proxy",

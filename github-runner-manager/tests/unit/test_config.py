@@ -43,6 +43,7 @@ github_config:
 non_reactive_configuration:
   combinations:
   - base_virtual_machines: 1
+    max_total_virtual_machines: 2
     flavor:
       labels:
       - flavorlabel
@@ -93,6 +94,8 @@ openstack_configuration:
       username: test_username
     network: test_network
     vm_prefix: test_unit
+planner_token: planner-testing-token
+planner_url: http://planner.example.com
 reconcile_interval: 10
 """
 
@@ -140,6 +143,7 @@ def app_config_fixture() -> ApplicationConfiguration:
                         labels=["flavorlabel"],
                     ),
                     base_virtual_machines=1,
+                    max_total_virtual_machines=2,
                 )
             ]
         ),
@@ -175,6 +179,8 @@ def app_config_fixture() -> ApplicationConfiguration:
                 region_name="test_region",
             ),
         ),
+        planner_token="planner-testing-token",
+        planner_url="http://planner.example.com",
         reconcile_interval=10,
     )
 
@@ -200,3 +206,47 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     yaml_config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
     loaded_app_config = ApplicationConfiguration.validate(yaml_config)
     assert loaded_app_config == app_config
+
+
+def test_non_reactive_combination_rejects_max_below_base():
+    """
+    arrange: A NonReactiveCombination where max_total_virtual_machines < base_virtual_machines.
+    act: Construct the model.
+    assert: A ValidationError is raised.
+    """
+    with pytest.raises(
+        ValueError, match="max_total_virtual_machines.*must be.*base_virtual_machines"
+    ):
+        NonReactiveCombination(
+            image=Image(name="img", labels=[]),
+            flavor=Flavor(name="flv", labels=[]),
+            base_virtual_machines=5,
+            max_total_virtual_machines=3,
+        )
+
+
+def test_non_reactive_combination_allows_zero_max():
+    """
+    arrange: A NonReactiveCombination where max_total_virtual_machines is 0 (no cap).
+    act: Construct the model.
+    assert: No error is raised.
+    """
+    combo = NonReactiveCombination(
+        image=Image(name="img", labels=[]),
+        flavor=Flavor(name="flv", labels=[]),
+        base_virtual_machines=5,
+        max_total_virtual_machines=0,
+    )
+    assert combo.max_total_virtual_machines == 0
+
+
+def test_configuration_allows_empty_planner_fields():
+    """Planner URL/token are optional for non-planner mode."""
+    config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
+    config["planner_url"] = None
+    config["planner_token"] = None
+
+    loaded = ApplicationConfiguration.validate(config)
+
+    assert loaded.planner_url is None
+    assert loaded.planner_token is None

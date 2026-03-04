@@ -1,6 +1,6 @@
 name: Enhancement Proposal
 description: File an enhancement proposal
-labels: ["Type: Enhancement", "Status: Triage"]
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
@@ -15,3 +15,22 @@ body:
         Describe the enhancement you would like to see in as much detail as needed.      
     validations:
       required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      description: What is the impact of this feature?
+      options:
+        - Low (The feature is nice to have)
+        - Medium (The feature may be helpful in the future)
+        - High (The feature has short-term technical value)
+        - Critical (The feature has big short-term business value)
+    validations:
+      required: true
+  - type: textarea
+    id: impact-rationale
+    attributes:
+      label: Impact Rationale
+      description: >
+        If impact is high or critical, please provide the rationale behind your assessment with as
+        much context as possible.

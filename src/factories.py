@@ -95,6 +95,8 @@ def create_application_configuration(
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,
         openstack_configuration=openstack_configuration,
+        planner_url=state.planner_config.endpoint if state.planner_config else None,
+        planner_token=state.planner_config.token if state.planner_config else None,
         reconcile_interval=state.charm_config.reconcile_interval,
     )
 
@@ -127,6 +129,7 @@ def _get_non_reactive_configuration(state: CharmState) -> NonReactiveConfigurati
                 image=image,
                 flavor=flavor,
                 base_virtual_machines=state.runner_config.base_virtual_machines,
+                max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
             )
         ]
     return NonReactiveConfiguration(combinations=combinations)

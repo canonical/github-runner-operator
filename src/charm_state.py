@@ -9,7 +9,7 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Literal, cast
+from typing import Final, Literal, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -17,7 +17,14 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
+from ops.model import SecretNotFoundError
+from pydantic import (
+    BaseModel,
+    MongoDsn,
+    ValidationError,
+    create_model_from_typeddict,
+    validator,
+)
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -61,8 +68,64 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
+PLANNER_INTEGRATION_NAME = "planner"
+
+# Keys and defaults for planner relation app data bag
+PLANNER_FLAVOR_RELATION_KEY: Final[str] = "flavor"
+PLANNER_LABELS_RELATION_KEY: Final[str] = "labels"
+PLANNER_PLATFORM_RELATION_KEY: Final[str] = "platform"
+PLANNER_PRIORITY_RELATION_KEY: Final[str] = "priority"
+PLANNER_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
+PLANNER_DEFAULT_PLATFORM: Final[str] = "github"
+PLANNER_DEFAULT_PRIORITY: Final[int] = 50
 
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+
+
+@dataclasses.dataclass(frozen=True)
+class PlannerRelationData:
+    """Data written to the planner relation app databag.
+
+    Attributes:
+        flavor: The flavor name (app name).
+        labels: Runner labels for this flavor.
+        platform: The platform identifier.
+        priority: Scheduling priority.
+        minimum_pressure: Minimum number of runners to maintain.
+    """
+
+    flavor: str
+    labels: tuple[str, ...]
+    platform: str = PLANNER_DEFAULT_PLATFORM
+    priority: int = PLANNER_DEFAULT_PRIORITY
+    minimum_pressure: int = 0
+
+    def to_relation_data(self) -> dict[str, str]:
+        """Serialize to relation databag format.
+
+        Returns:
+            Dictionary of string key-value pairs for the Juju relation databag.
+        """
+        return {
+            PLANNER_FLAVOR_RELATION_KEY: self.flavor,
+            PLANNER_LABELS_RELATION_KEY: json.dumps(list(self.labels)),
+            PLANNER_PLATFORM_RELATION_KEY: self.platform,
+            PLANNER_PRIORITY_RELATION_KEY: str(self.priority),
+            PLANNER_MINIMUM_PRESSURE_RELATION_KEY: str(self.minimum_pressure),
+        }
+
+
+@dataclasses.dataclass(frozen=True)
+class PlannerConfig:
+    """Data read from planner relation unit databag.
+
+    Attributes:
+        endpoint: Planner service endpoint URL.
+        token: Planner authentication bearer token.
+    """
+
+    endpoint: str
+    token: str
 
 
 @dataclasses.dataclass
@@ -455,7 +518,6 @@ class CharmConfig(BaseModel):
         runner_manager_log_level = cast(
             LogLevel, charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
         )
-        # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             allow_external_contributor=cast(
                 bool, charm.config.get(ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, False)
@@ -564,6 +626,12 @@ class OpenstackRunnerConfig(BaseModel):
                 "Both deprecated and new configuration are set for the number of machines to spawn."
             )
 
+        if 0 < max_total_virtual_machines < base_virtual_machines:
+            raise CharmConfigInvalidError(
+                f"max-total-virtual-machines ({max_total_virtual_machines})"
+                f" must be >= base-virtual-machines ({base_virtual_machines})"
+            )
+
         flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
         flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
         if len(flavor_label_combinations) == 0:
@@ -658,6 +726,50 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
     return ssh_debug_connections
 
 
+def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
+    """Initialize planner endpoint and token from relation data.
+
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        PlannerConfig if planner relation data is ready; otherwise None.
+    """
+    relations = charm.model.relations[PLANNER_INTEGRATION_NAME]
+    if not relations or not (relation := relations[0]).app:
+        return None
+
+    relation_data = relation.data[relation.app]
+    if not (endpoint := relation_data.get("endpoint")) or not (
+        token_secret_id := relation_data.get("token")
+    ):
+        logger.warning(
+            "%s relation data for %s not yet ready.", PLANNER_INTEGRATION_NAME, relation.app
+        )
+        return None
+    try:
+        token_secret = charm.model.get_secret(id=token_secret_id)
+        # no need for refresh - there shouldn't be multiple secret revisions
+        token_content = token_secret.get_content()
+        token = token_content.get("token")
+        if not token:
+            logger.warning(
+                "Token secret content for %s relation app %s is missing token field.",
+                PLANNER_INTEGRATION_NAME,
+                relation.app,
+            )
+            return None
+        return PlannerConfig(endpoint=endpoint, token=token)
+    except SecretNotFoundError:
+        logger.warning(
+            "Token secret %s for %s relation app %s is not found or not granted yet.",
+            token_secret_id,
+            PLANNER_INTEGRATION_NAME,
+            relation.app,
+        )
+    return None
+
+
 class ReactiveConfig(BaseModel):
     """Represents the configuration for reactive scheduling.
 
@@ -715,6 +827,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
+        planner_config: Planner endpoint and token from relation data.
     """
 
     is_metrics_logging_available: bool
@@ -724,6 +837,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
+    planner_config: PlannerConfig | None
 
     @classmethod
     def _store_state(cls, state: "CharmState") -> None:
@@ -823,6 +937,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        planner_config = _build_planner_config_from_charm(charm)
         reactive_config = ReactiveConfig.from_database(database)
 
         state = cls(
@@ -833,6 +948,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             runner_config=runner_config,
             reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
+            planner_config=planner_config,
         )
 
         cls._store_state(state)

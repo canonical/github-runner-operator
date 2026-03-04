@@ -188,4 +188,5 @@ def complete_charm_state_fixture():
                 ed25519_fingerprint="SHA256:ed25519",
             ),
         ],
+        planner_config=None,
     )

@@ -264,10 +264,15 @@ class RunnerManager:
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
-        """Delete runners.
+        """Delete up to `num` runners, preferring idle ones over busy.
+
+        Runners are selected in order: deletable → idle → busy. Busy runners
+        are only targeted when there are not enough idle runners to satisfy
+        `num`, and the GitHub API will reject deletion of runners actively
+        executing a job, so the actual number deleted may be less than `num`.
 
         Args:
-            num: The number of runner to delete.
+            num: The maximum number of runners to delete.
 
         Returns:
             Stats on metrics events issued during the deletion of runners.

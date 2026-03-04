@@ -20,7 +20,12 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from tests.integration.conftest import GitHubConfig, OpenStackConfig
+from tests.integration.conftest import (
+    DeploymentContext,
+    GitHubConfig,
+    OpenStackConfig,
+    ProxyConfig,
+)
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
     is_upgrade_charm_event_emitted,
@@ -34,7 +39,7 @@ pytestmark = pytest.mark.openstack
 async def test_charm_upgrade(
     juju: jubilant.Juju,
     model: Model,
-    charm_file: str,
+    deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig,
@@ -71,11 +76,12 @@ async def test_charm_upgrade(
         model=model,
         charm_file=str(latest_edge_path),
         app_name=app_name,
-        path=github_config.path,
-        token=github_config.token,
-        http_proxy=openstack_config.http_proxy,
-        https_proxy=openstack_config.https_proxy,
-        no_proxy=openstack_config.no_proxy,
+        github_config=github_config,
+        proxy_config=ProxyConfig(
+            http_proxy=openstack_config.http_proxy,
+            https_proxy=openstack_config.https_proxy,
+            no_proxy=openstack_config.no_proxy,
+        ),
         reconcile_interval=5,
         # override default virtual_machines=0 config.
         config={
@@ -109,7 +115,7 @@ async def test_charm_upgrade(
 
     # upgrade the charm with current local charm
     await application.local_refresh(
-        path=charm_file,
+        path=deployment_context.charm_path,
         charm_origin=origin,
         force=False,
         force_series=False,
