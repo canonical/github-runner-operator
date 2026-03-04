@@ -8,6 +8,7 @@ import json
 import logging
 from time import sleep
 
+import github
 from github.Branch import Branch
 from github.GithubException import GithubException
 from github.Repository import Repository
@@ -66,7 +67,10 @@ async def wait_for_workflow_to_start(
         Returns:
             Whether the log exists.
         """
-        for run in workflow.get_runs(branch=branch, created=created_at):
+        for run in workflow.get_runs(
+            branch=branch or github.GithubObject.NotSet,
+            created=created_at or github.GithubObject.NotSet,
+        ):
             jobs = run.jobs()
             if not jobs:
                 return False
@@ -125,7 +129,7 @@ async def cancel_workflow_run(
     """
     runner_name = await instance_helper.get_runner_name(unit)
 
-    for run in workflow.get_runs(branch=branch):
+    for run in workflow.get_runs(branch=branch or github.GithubObject.NotSet):
         jobs = run.jobs()
         if not jobs:
             continue

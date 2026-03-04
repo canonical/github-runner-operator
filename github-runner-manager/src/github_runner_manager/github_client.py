@@ -1,31 +1,25 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""GitHub API client.
-
-Migrate to PyGithub in the future. PyGithub is still lacking some API such as get runner groups.
-"""
+"""GitHub API client."""
 
 import functools
 import logging
 from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
-from urllib.error import HTTPError, URLError
 
-import requests
-
-# These exceptions are not found by pylint
-from fastcore.net import (  # pylint: disable=no-name-in-module
-    HTTP404NotFoundError,
-    HTTP422UnprocessableEntityError,
+import github
+from github import (
+    BadCredentialsException,
+    Github,
+    GithubException,
+    RateLimitExceededException,
+    UnknownObjectException,
 )
-from ghapi.all import GhApi
-from ghapi.page import paged
-from requests import RequestException
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -36,9 +30,7 @@ from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRu
 
 logger = logging.getLogger(__name__)
 
-# Timeout in seconds for HTTP calls made directly with the requests library.
-# Note: ghapi calls via _GhVerb.__call__ silently drop the timeout kwarg, so this constant
-# is only effective for requests.get/post calls (e.g. _get_runner_group_id).
+# Timeout in seconds for all PyGithub HTTP calls.
 TIMEOUT_IN_SECS = 5 * 60
 
 
@@ -79,20 +71,13 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         try:
             return func(*args, **kwargs)
-        # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
-        except HTTPError as exc:
-            if exc.code in (401, 403):
-                if exc.code == 401:
-                    msg = "Invalid token."
-                else:
-                    msg = "Provided token has not enough permissions or has reached rate-limit."
-                raise TokenError(msg) from exc
-            logger.warning("Error in GitHub request: %s", exc)
-            raise PlatformApiError from exc
-        except URLError as exc:
-            logger.warning("General error in GitHub request: %s", exc)
-            raise PlatformApiError from exc
-        except RequestException as exc:
+        except BadCredentialsException as exc:
+            raise TokenError("Invalid token.") from exc
+        except RateLimitExceededException as exc:
+            raise PlatformApiError("GitHub API rate limit exceeded.") from exc
+        except GithubException as exc:
+            if exc.status == 403:
+                raise TokenError("Provided token does not have enough permissions.") from exc
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
@@ -112,7 +97,41 @@ class GithubClient:
             token: GitHub personal token for API requests.
         """
         self._token = token
-        self._client = GhApi(token=self._token)
+        self._github = Github(auth=github.Auth.Token(self._token), timeout=TIMEOUT_IN_SECS)
+        # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
+        # runner groups). Use the requester for raw REST calls that inherit auth and timeout.
+        self._requester = self._github.requester
+
+    @staticmethod
+    def _build_runner(
+        runner_id: int,
+        busy: bool,
+        status: str,
+        labels: list[dict],
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Build a SelfHostedRunner from GitHub runner fields.
+
+        Args:
+            runner_id: The runner's GitHub id.
+            busy: Whether the runner is executing a job.
+            status: The runner status string.
+            labels: List of label dicts with a "name" key.
+            instance_id: InstanceID for the runner.
+
+        Returns:
+            A SelfHostedRunner.
+        """
+        return SelfHostedRunner(
+            id=runner_id,
+            busy=busy,
+            status=status,
+            labels=[label["name"] for label in labels],
+            identity=RunnerIdentity(
+                instance_id=instance_id,
+                metadata=RunnerMetadata(platform_name="github", runner_id=runner_id),
+            ),
+        )
 
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
@@ -132,17 +151,21 @@ class GithubClient:
         """
         try:
             if isinstance(path, GitHubRepo):
-                raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
-                    path.owner, path.repo, runner_id
+                runner = self._github.get_repo(f"{path.owner}/{path.repo}").get_self_hosted_runner(
+                    runner_id
                 )
             else:
-                raw_runner = self._client.actions.get_self_hosted_runner_for_org(
-                    path.org, runner_id
-                )
-        except HTTP404NotFoundError as err:
+                runner = self._github.get_organization(path.org).get_self_hosted_runner(runner_id)
+        except UnknownObjectException as err:
             raise GithubRunnerNotFoundError from err
-        instance_id = InstanceID.build_from_name(prefix, raw_runner["name"])
-        return SelfHostedRunner.build_from_github(raw_runner, instance_id)
+        instance_id = InstanceID.build_from_name(prefix, runner.name)
+        return self._build_runner(
+            runner_id=runner.id,
+            busy=runner.busy,
+            status=runner.status,
+            labels=runner.labels,
+            instance_id=instance_id,
+        )
 
     @catch_http_errors
     def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
@@ -156,37 +179,24 @@ class GithubClient:
         Returns:
             List of runner information.
         """
-        remote_runners_list: list[dict] = []
-
         if isinstance(path, GitHubRepo):
-            for page in paged(
-                self._client.actions.list_self_hosted_runners_for_repo,
-                owner=path.owner,
-                repo=path.repo,
-                per_page=100,
-            ):
-                runners = page["runners"]
-                if not runners:
-                    break
-                remote_runners_list.extend(runners)
-        elif isinstance(path, GitHubOrg):
-            for page in paged(
-                self._client.actions.list_self_hosted_runners_for_org,
-                org=path.org,
-                per_page=100,
-            ):
-                runners = page["runners"]
-                if not runners:
-                    break
-                remote_runners_list.extend(runners)
+            runners = self._github.get_repo(f"{path.owner}/{path.repo}").get_self_hosted_runners()
+        else:
+            runners = self._github.get_organization(path.org).get_self_hosted_runners()
 
-        # Filter by prefix and create the SelfHostedRunner instances.
         managed_runners_list = []
-        for runner in remote_runners_list:
-            if InstanceID.name_has_prefix(prefix, runner["name"]):
-                instance_id = InstanceID.build_from_name(prefix, runner["name"])
-                managed_runner = SelfHostedRunner.build_from_github(runner, instance_id)
-                managed_runners_list.append(managed_runner)
+        for runner in runners:
+            if InstanceID.name_has_prefix(prefix, runner.name):
+                instance_id = InstanceID.build_from_name(prefix, runner.name)
+                managed_runners_list.append(
+                    self._build_runner(
+                        runner_id=runner.id,
+                        busy=runner.busy,
+                        status=runner.status,
+                        labels=runner.labels,
+                        instance_id=instance_id,
+                    )
+                )
         return managed_runners_list
 
     @catch_http_errors
@@ -206,49 +216,46 @@ class GithubClient:
         """
         token: JITConfig
         if isinstance(path, GitHubRepo):
-            # The supposition is that the runner_group_id 1 is the default.
-            # If the repo does not belong to an org, there is no way to get the runner_group_id.
-            token = self._client.actions.generate_runner_jitconfig_for_repo(
-                owner=path.owner,
-                repo=path.repo,
-                name=instance_id.name,
-                runner_group_id=1,
-                labels=labels,
+            _headers, token = self._requester.requestJsonAndCheck(
+                "POST",
+                f"/repos/{path.owner}/{path.repo}/actions/runners/generate-jitconfig",
+                input={"name": instance_id.name, "runner_group_id": 1, "labels": labels},
             )
         elif isinstance(path, GitHubOrg):
-            # We cannot cache it in here, as we are running in a forked process.
-            # Pending to review.
             runner_group_id = self._get_runner_group_id(path)
-            token = self._client.actions.generate_runner_jitconfig_for_org(
-                org=path.org,
-                name=instance_id.name,
-                runner_group_id=runner_group_id,
-                labels=labels,
+            _headers, token = self._requester.requestJsonAndCheck(
+                "POST",
+                f"/orgs/{path.org}/actions/runners/generate-jitconfig",
+                input={
+                    "name": instance_id.name,
+                    "runner_group_id": runner_group_id,
+                    "labels": labels,
+                },
             )
         else:
             assert_never(token)
 
-        runner = SelfHostedRunner.build_from_github(token["runner"], instance_id)
+        raw_runner = token["runner"]
+        runner = self._build_runner(
+            runner_id=raw_runner["id"],
+            busy=raw_runner["busy"],
+            status=raw_runner["status"],
+            labels=raw_runner["labels"],
+            instance_id=instance_id,
+        )
         return token["encoded_jit_config"], runner
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
         """Get runner_group_id from group name for an org.
 
-        Once this function is implemented in the ghapi library, we should
-        use that instead. See https://github.com/AnswerDotAI/ghapi/issues/189.
-
         No pagination is used, so if there are more than 100 groups, this
         function could fail.
         """
-        url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups?per_page=100"
-        headers = {
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {self._token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
-        response = requests.get(url, headers=headers, timeout=TIMEOUT_IN_SECS)
-        response.raise_for_status()
-        data = response.json()
+        _headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            f"/orgs/{org.org}/actions/runner-groups",
+            parameters={"per_page": 100},
+        )
         try:
             for group in data["runner_groups"]:
                 if group["name"] == org.group:
@@ -275,20 +282,15 @@ class GithubClient:
         """
         try:
             if isinstance(path, GitHubRepo):
-                self._client.actions.delete_self_hosted_runner_from_repo(
-                    owner=path.owner,
-                    repo=path.repo,
-                    runner_id=runner_id,
+                self._github.get_repo(f"{path.owner}/{path.repo}").remove_self_hosted_runner(
+                    runner_id
                 )
             else:
-                self._client.actions.delete_self_hosted_runner_from_org(
-                    org=path.org,
-                    runner_id=runner_id,
-                )
-        # The function delete_self_hosted_runner fails in GitHub if the runner does not exist,
-        # so we do not have to worry about that.
-        except HTTP422UnprocessableEntityError as err:
-            raise DeleteRunnerBusyError from err
+                self._github.get_organization(path.org).delete_self_hosted_runner(runner_id)
+        except GithubException as err:
+            if err.status == 422:
+                raise DeleteRunnerBusyError from err
+            raise
 
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str
@@ -307,26 +309,23 @@ class GithubClient:
         Returns:
             Job information.
         """
-        paged_kwargs = {
-            "owner": path.owner,
-            "repo": path.repo,
-            "run_id": workflow_run_id,
-        }
         try:
-            for wf_run_page in paged(
-                self._client.actions.list_jobs_for_workflow_run, **paged_kwargs
-            ):
-                jobs = wf_run_page["jobs"]
-                # ghapi performs endless pagination,
-                # so we have to break out of the loop if there are no more jobs
+            # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
+            # See: https://docs.github.com/en/actions/reference/limits
+            for page in range(1, 4):
+                _headers, data = self._requester.requestJsonAndCheck(
+                    "GET",
+                    f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
+                    parameters={"per_page": 100, "page": page},
+                )
+                jobs = data["jobs"]
                 if not jobs:
                     break
                 for job in jobs:
                     if job["runner_name"] == runner_name:
                         return self._to_job_info(job)
-
-        except HTTPError as exc:
-            if exc.code in (401, 403):
+        except GithubException as exc:
+            if exc.status in (401, 403):
                 raise TokenError from exc
             raise JobNotFoundError(
                 f"Could not find job for runner {runner_name}. "
@@ -350,15 +349,12 @@ class GithubClient:
             The JSON response from the API.
         """
         try:
-            job_raw = self._client.actions.get_job_for_workflow_run(
-                owner=path.owner,
-                repo=path.repo,
-                job_id=job_id,
+            _headers, job_raw = self._requester.requestJsonAndCheck(
+                "GET",
+                f"/repos/{path.owner}/{path.repo}/actions/jobs/{job_id}",
             )
-        except HTTPError as exc:
-            if exc.code == 404:
-                raise JobNotFoundError(f"Could not find job for job id {job_id}.") from exc
-            raise
+        except UnknownObjectException as exc:
+            raise JobNotFoundError(f"Could not find job for job id {job_id}.") from exc
         return self._to_job_info(job_raw)
 
     @staticmethod

@@ -393,6 +393,7 @@ def github_branch(
                 logger.error("Failed to get branch %s after %.1fs", test_branch, elapsed)
                 raise
 
+    assert branch is not None, f"Timed out waiting for branch {test_branch} to be available"
     yield branch
 
     try:
