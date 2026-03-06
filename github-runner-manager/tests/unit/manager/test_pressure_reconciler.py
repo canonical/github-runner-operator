@@ -120,10 +120,10 @@ def test_fallback_preserves_last_pressure_when_higher(monkeypatch: pytest.Monkey
     assert 10 in mgr.created_args
 
 
-def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
+def test_timer_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with a cached last_pressure value.
-    act: Call start_delete_loop.
+    act: Call the reconcile loop (start_reconcile_loop).
     assert: Cleanup runs and runners are created based on the cached pressure.
     """
     mgr = _FakeManager()
@@ -139,16 +139,16 @@ def test_delete_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
         return wait_calls["count"] > 1
 
     monkeypatch.setattr(reconciler._stop, "wait", _wait)
-    reconciler.start_delete_loop()
+    reconciler.start_reconcile_loop()
 
     assert mgr.cleanup_called == 1
     assert mgr.created_args == [3]
 
 
-def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
+def test_timer_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with no cached pressure (None).
-    act: Call start_delete_loop.
+    act: Call the reconcile loop (start_reconcile_loop).
     assert: No cleanup or creation occurs.
     """
     mgr = _FakeManager()
@@ -163,7 +163,7 @@ def test_delete_loop_skips_when_no_cached_pressure(monkeypatch: pytest.MonkeyPat
         return wait_calls["count"] > 1
 
     monkeypatch.setattr(reconciler._stop, "wait", _wait)
-    reconciler.start_delete_loop()
+    reconciler.start_reconcile_loop()
 
     assert mgr.cleanup_called == 0
 
@@ -252,10 +252,10 @@ def test_in_memory_count_incremented_by_actual_successes():
     assert reconciler._runner_count == 3
 
 
-def test_delete_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
+def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with _runner_count out of sync with actual runners.
-    act: Run the delete loop once.
+    act: Run the reconcile loop (start_reconcile_loop) once.
     assert: _runner_count is synced to the actual get_runners() count.
     """
     mgr = _FakeManager(runners_count=5)
@@ -272,7 +272,7 @@ def test_delete_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
         return wait_calls["count"] > 1
 
     monkeypatch.setattr(reconciler._stop, "wait", _wait)
-    reconciler.start_delete_loop()
+    reconciler.start_reconcile_loop()
 
     assert reconciler._runner_count == 5
 

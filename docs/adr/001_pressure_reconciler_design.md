@@ -39,7 +39,7 @@ with the existing reconcile path:
    whenever the desired total exceeds the current count. Tracks runner count
    in memory to avoid expensive OpenStack/GitHub API calls on every event.
 
-2. **Timer loop** – wakes on a configurable timer, cleans up stale runners,
+2. **Reconcile loop** – wakes on a configurable timer, cleans up stale runners,
    syncs the in-memory count with reality, and scales up if needed. Does not
    actively scale down — excess healthy runners drain naturally through cleanup.
 
@@ -63,20 +63,20 @@ this project in the past, and OpenStack also degrades under high call rates.
 Separate loops let creates react in near-real-time while keeping API call volume
 proportional to the configured cleanup interval.
 
-**Fetching fresh pressure in the delete loop.** Having the delete loop call
+**Fetching fresh pressure in the reconcile loop.** Having the reconcile loop call
 `GET /api/v1/flavors/{name}/pressure` itself would give it an up-to-date reading.
 However, this adds an extra network round-trip on every timer tick, couples the
-delete loop to planner availability, and is unnecessary because any over-deletion
+reconcile loop to planner availability, and is unnecessary because any over-deletion
 caused by a stale reading is self-correcting: the create loop will scale back up
 on the next streaming event.
 
 ## Tradeoffs
 
-- The timer loop uses the last pressure seen by the create loop, not a live
+- The reconcile loop uses the last pressure seen by the create loop, not a live
   reading. Staleness is bounded by the stream update frequency.
 - The in-memory runner count can drift from reality (e.g. VMs that fail after
   creation). This acts as a natural backoff — no further creates until the
-  timer loop syncs. The timer loop corrects drift on every tick.
+  reconcile loop syncs. The reconcile loop corrects drift on every tick.
 - Excess healthy runners are not forcibly killed. They drain through cleanup,
   which avoids killing in-flight jobs but may temporarily exceed the desired
   count.

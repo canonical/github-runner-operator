@@ -63,7 +63,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     indicated by the planner's pressure for a given flavor. It operates in two
     threads:
     - create loop: scales up when desired exceeds current total
-    - timer loop: cleans up stale runners, syncs state, scales up if needed
+    - reconcile loop: cleans up stale runners, syncs state, scales up if needed
 
     Concurrency with any other reconcile loop is protected by a shared lock.
 
@@ -73,14 +73,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     incremented by the number of IDs returned, even though VMs may fail to
     boot afterwards. This provides a natural backoff for post-creation
     failures (e.g. VMs that fail to boot): the in-memory count stays high
-    and prevents further creation attempts until the timer loop runs,
+    and prevents further creation attempts until the reconcile loop runs,
     queries the real OpenStack state via get_runners(), and syncs the count
     back down. Note that API-level creation failures (where no IDs are
     returned) do not benefit from this backoff — the create loop will retry
     on the next pressure event, which is the desired behavior when the API
     recovers quickly.
 
-    The timer loop uses the last pressure seen by the create loop rather than
+    The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
     between stream events. This is an accepted trade-off: the window is bounded
     by the stream update frequency.
@@ -140,14 +140,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 self._handle_create_runners(fallback)
                 time.sleep(5)
 
-    def start_delete_loop(self) -> None:
-        """Continuously delete runners using last seen pressure on a timer."""
+    def start_reconcile_loop(self) -> None:
+        """Continuously cleanup runners on a timer."""
         interval_seconds = self._config.reconcile_interval * 60
-        logger.debug("Delete loop: starting, interval=%ss", interval_seconds)
+        logger.debug("Reconcile loop: starting, interval=%ss", interval_seconds)
         while not self._stop.wait(interval_seconds):
-            logger.debug("Delete loop: woke up, _last_pressure=%s", self._last_pressure)
+            logger.debug("Reconcile loop: woke up, _last_pressure=%s", self._last_pressure)
             if self._last_pressure is None:
-                logger.debug("Delete loop: no pressure seen yet, skipping.")
+                logger.debug("Reconcile loop: no pressure seen yet, skipping.")
                 continue
             self._handle_timer_reconcile(self._last_pressure)
 
@@ -207,15 +207,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             if current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
-                    "Timer: scaling up %s runners (desired=%s current=%s)",
+                    "Reconcile loop: scaling up %s runners (desired=%s current=%s)",
                     to_create,
                     desired_total,
                     current_total,
                 )
-                self._create_and_track(to_create, label="Timer")
+                self._create_and_track(to_create, label="Reconcile loop")
             else:
                 logger.info(
-                    "Timer: no scale-up needed (desired=%s current=%s)",
+                    "Reconcile loop: no scale-up needed (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )
