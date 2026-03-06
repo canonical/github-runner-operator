@@ -292,7 +292,8 @@ class RunnerManager:
         Returns:
             The number of VMs actually deleted.
         """
-        deleted_vms, _ = self._delete_runners_core(num)
+        deleted_vms, extracted_metrics = self._delete_runners_core(num)
+        self._issue_runner_metrics(metrics=iter(extracted_metrics))
         return len(deleted_vms)
 
     def _delete_runners_core(
