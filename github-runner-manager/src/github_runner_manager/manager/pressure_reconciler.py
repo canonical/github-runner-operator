@@ -69,12 +69,16 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     The create loop tracks runners via an in-memory count rather than calling
     get_runners() on every pressure event, avoiding expensive OpenStack and
-    GitHub API calls. Runner creation is fire-and-forget: the count is incremented by the
-    number of IDs returned, even though VMs may fail to boot afterwards. This
-    provides a natural backoff — if a batch of creations silently fails, the
-    in-memory count stays high and prevents further creation attempts until
-    the delete loop runs, queries the real OpenStack state via get_runners(),
-    and syncs the count back down.
+    GitHub API calls. Runner creation is fire-and-forget: the count is
+    incremented by the number of IDs returned, even though VMs may fail to
+    boot afterwards. This provides a natural backoff for post-creation
+    failures (e.g. VMs that fail to boot): the in-memory count stays high
+    and prevents further creation attempts until the delete loop runs,
+    queries the real OpenStack state via get_runners(), and syncs the count
+    back down. Note that API-level creation failures (where no IDs are
+    returned) do not benefit from this backoff — the create loop will retry
+    on the next pressure event, which is the desired behavior when the API
+    recovers quickly.
 
     The delete loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
