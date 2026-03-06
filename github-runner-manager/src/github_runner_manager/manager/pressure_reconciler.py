@@ -63,15 +63,27 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     indicated by the planner's pressure for a given flavor. It operates in two
     threads:
     - create loop: scales up when desired exceeds current total
-    - delete loop: scales down when current exceeds desired
+    - timer loop: cleans up stale runners, syncs state, scales up if needed
 
     Concurrency with any other reconcile loop is protected by a shared lock.
 
-    The delete loop uses the last pressure seen by the create loop rather than
+    The create loop tracks runners via an in-memory count rather than calling
+    get_runners() on every pressure event, avoiding expensive OpenStack and
+    GitHub API calls. Runner creation is fire-and-forget: the count is
+    incremented by the number of IDs returned, even though VMs may fail to
+    boot afterwards. This provides a natural backoff for post-creation
+    failures (e.g. VMs that fail to boot): the in-memory count stays high
+    and prevents further creation attempts until the timer loop runs,
+    queries the real OpenStack state via get_runners(), and syncs the count
+    back down. Note that API-level creation failures (where no IDs are
+    returned) do not benefit from this backoff — the create loop will retry
+    on the next pressure event, which is the desired behavior when the API
+    recovers quickly.
+
+    The timer loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
     between stream events. This is an accepted trade-off: the window is bounded
-    by the stream update frequency, and any over-deletion is self-correcting
-    because the create loop will scale back up on the next pressure event.
+    by the stream update frequency.
 
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
@@ -80,6 +92,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         _lock: Shared lock to serialize operations with other reconcile loops.
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
+        _runner_count: In-memory runner count used by the create loop.
     """
 
     def __init__(
@@ -105,9 +118,13 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
         self._stop = Event()
         self._last_pressure: Optional[int] = None
+        self._runner_count: int = 0
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
+        with self._lock:
+            self._runner_count = len(self._manager.get_runners())
+        logger.info("Create loop: initial sync, _runner_count=%s", self._runner_count)
         while not self._stop.is_set():
             try:
                 for update in self._planner.stream_pressure(self._config.flavor_name):
@@ -141,6 +158,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     def _handle_create_runners(self, pressure: int) -> None:
         """Create runners when desired exceeds current total.
 
+        Uses an in-memory runner count instead of calling get_runners() to
+        avoid expensive OpenStack and GitHub API calls on every pressure event.
+
         Args:
             pressure: Current pressure value used to compute desired total.
         """
@@ -152,7 +172,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         )
         self._last_pressure = pressure
         with self._lock:
-            current_total = len(self._manager.get_runners())
+            current_total = self._runner_count
             to_create = max(desired_total - current_total, 0)
             if to_create <= 0:
                 logger.info(
@@ -167,18 +187,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 desired_total,
                 current_total,
             )
-            try:
-                self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
-            except MissingServerConfigError:
-                logger.exception(
-                    "Unable to create runners due to missing server configuration (image/flavor)."
-                )
+            self._create_and_track(to_create, label="Create loop")
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
-        """Clean up stale runners, then converge toward the desired count.
+        """Clean up stale runners, sync in-memory count, then scale up if needed.
 
-        Scales down (deletes) when current exceeds desired, and scales up
-        (creates) when current falls below desired after cleanup.
+        Runs cleanup to remove unhealthy/stale runners, syncs _runner_count
+        from get_runners(), and creates runners if current falls below desired.
+        Excess healthy runners are not killed — they drain naturally.
 
         Args:
             pressure: Current pressure value used to compute desired total.
@@ -187,16 +203,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         with self._lock:
             self._manager.cleanup()
             current_total = len(self._manager.get_runners())
-            if current_total > desired_total:
-                to_delete = current_total - desired_total
-                logger.info(
-                    "Timer: scaling down %s runners (desired=%s current=%s)",
-                    to_delete,
-                    desired_total,
-                    current_total,
-                )
-                self._manager.delete_runners(num=to_delete)
-            elif current_total < desired_total:
+            self._runner_count = current_total
+            if current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
                     "Timer: scaling up %s runners (desired=%s current=%s)",
@@ -204,19 +212,37 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                try:
-                    self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
-                except MissingServerConfigError:
-                    logger.exception(
-                        "Unable to create runners due to missing server configuration"
-                        " (image/flavor)."
-                    )
+                self._create_and_track(to_create, label="Timer")
             else:
                 logger.info(
-                    "Timer: no changes needed (desired=%s current=%s)",
+                    "Timer: no scale-up needed (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )
+
+    def _create_and_track(self, num: int, label: str) -> None:
+        """Create runners and update the in-memory count.
+
+        Args:
+            num: Number of runners to create.
+            label: Log prefix identifying the caller (e.g. "Create loop", "Timer").
+        """
+        try:
+            created_ids = self._manager.create_runners(num=num, metadata=RunnerMetadata())
+        except MissingServerConfigError:
+            logger.exception(
+                "Unable to create runners due to missing server configuration (image/flavor)."
+            )
+            return
+        actually_created = len(created_ids)
+        if actually_created < num:
+            logger.error(
+                "%s: only %s/%s runners created successfully",
+                label,
+                actually_created,
+                num,
+            )
+        self._runner_count += actually_created
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.

@@ -37,12 +37,17 @@ with the existing reconcile path:
 
 1. **Create loop** – opens a long-lived streaming HTTP connection to the planner's
    `GET /api/v1/flavors/{name}/pressure?stream=true` endpoint and creates runners
-   whenever the desired total exceeds the current total. Each pressure event updates
-   a shared `_last_pressure` field consumed by the delete loop.
+   whenever the desired total exceeds the current in-memory runner count. The count
+   is tracked in memory (incremented by actual creation successes) to avoid calling
+   `get_runners()` on every pressure event. Each pressure event updates a shared
+   `_last_pressure` field consumed by the timer loop.
 
-2. **Delete loop** – wakes on a configurable timer, removes stale VMs, then
-   converges the runner count toward the most recently observed pressure from the
-   create loop. It does not fetch fresh pressure from the planner.
+2. **Timer loop** – wakes on a configurable timer, runs cleanup to remove
+   stale/unhealthy VMs, syncs the in-memory runner count from `get_runners()`,
+   and scales up if the current count falls below the last observed pressure.
+   It does not actively scale down — excess healthy runners drain naturally
+   through cleanup. Forced removal of busy runners is available via the flush
+   action.
 
 Planner mode is activated only when `planner_url` and `planner_token` are present
 in configuration, allowing staged rollout before the legacy reconcile path is
@@ -73,9 +78,20 @@ on the next streaming event.
 
 ## Tradeoffs
 
-The delete loop operates on a stale pressure value: it sees the last pressure
+The timer loop operates on a stale pressure value: it sees the last pressure
 reported to the create loop rather than a live reading. The staleness window is
-bounded by the planner's stream update frequency. Any over-deletion in that window
-is self-correcting because the create loop re-scales up on the next event. This is
-an acceptable trade-off given that scale-down correctness is less time-critical
-than scale-up.
+bounded by the planner's stream update frequency.
+
+The create loop uses an in-memory runner count rather than querying OpenStack and
+GitHub on every pressure event. This avoids expensive API calls but means the
+count can drift from reality (e.g. VMs that fail to boot after IDs are returned).
+This drift provides a natural backoff for post-creation failures: the in-memory
+count stays high, preventing further creation attempts until the timer loop syncs
+the count from `get_runners()`. API-level creation failures (where no IDs are
+returned) do not benefit from this backoff — the create loop will retry on the
+next pressure event, which is the desired behavior when the API recovers quickly.
+
+The timer loop does not forcibly scale down healthy runners. If pressure drops,
+excess runners remain until they are cleaned up as stale. This avoids killing
+in-flight jobs but means the actual runner count may temporarily exceed the
+desired count.
