@@ -243,7 +243,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         " (image/flavor)."
                     )
                 else:
-                    self._runner_count += len(created_ids)
+                    actually_created = len(created_ids)
+                    if actually_created < to_create:
+                        logger.error(
+                            "Timer: only %s/%s runners created successfully",
+                            actually_created,
+                            to_create,
+                        )
+                    self._runner_count += actually_created
             else:
                 logger.info(
                     "Timer: no changes needed (desired=%s current=%s)",
