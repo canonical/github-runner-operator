@@ -1,0 +1,98 @@
+06:41:12 WARNING unexpected facade SSHServer received from the controller
+06:41:12 INFO Adding model github-pr-82c29-lxd:test-multi-unit-same-machine-thbw on cloud localhost
+06:41:12 WARNING unexpected facade SSHServer received from the controller
+06:41:12 WARNING unexpected facade SSHSession received from the controller
+06:41:12 WARNING unexpected facade SSHTunneler received from the controller
+06:41:13 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:41:15 INFO Deploying ch:amd64/noble/any-charm-133
+06:41:28 INFO Deploying local:jammy/github-runner-0
+06:41:28 INFO Waiting for model:
+  test-nktzdr6h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nktzdr6h/0 [allocating] waiting: waiting for machine
+06:41:59 INFO Waiting for model:
+  test-nktzdr6h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nktzdr6h/0 [idle] active: 
+06:42:29 INFO Waiting for model:
+  test-nktzdr6h/0 [allocating] waiting: waiting for machine
+06:42:59 INFO Waiting for model:
+  test-nktzdr6h/0 [allocating] waiting: agent initialising
+06:43:30 INFO Waiting for model:
+  test-nktzdr6h/0 [executing] maintenance: installing charm software
+06:44:00 INFO Waiting for model:
+  test-nktzdr6h/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-nktzdr6h/0 [idle] active:
+06:44:28 INFO Waiting for model:
+  test-nktzdr6h/0 [idle] active: 
+  test-nktzdr6h/1 [allocating] waiting: installing agent
+06:44:58 INFO Waiting for model:
+  test-nktzdr6h/0 [idle] active: 
+  test-nktzdr6h/1 [executing] maintenance: installing charm software
+06:45:28 INFO Waiting for model:
+  test-nktzdr6h/0 [idle] active: 
+  test-nktzdr6h/1 [idle] active: 
+06:45:46 INFO File content of /var/lib/github-runner-manager/test-nktzdr6h-0/http_port: 55555
+06:45:47 INFO File content of /var/lib/github-runner-manager/test-nktzdr6h-1/http_port: 55556
+06:45:50 INFO File content of /var/lib/github-runner-manager/test-nktzdr6h-1/http_port: 55556
+06:45:53 INFO File content of /var/lib/github-runner-manager/test-nktzdr6h-1/http_port: 55556
+06:45:54 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-thbw  github-pr-82c29-lxd  localhost/localhost  3.6.14   unsupported  06:45:54Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-nktzdr6h           active      1  any-charm      latest/beta  133  no       
+test-nktzdr6h                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-nktzdr6h/0*  active    idle   0        10.164.246.120         
+test-nktzdr6h/0*                         active    idle   1        10.164.246.132         
+test-nktzdr6h/1                          active    idle   1        10.164.246.132         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.164.246.120  juju-5a40de-0  ubuntu@24.04  github-runner  Running
+1        started  10.164.246.132  juju-5a40de-1  ubuntu@22.04  github-runner  Running
+
+06:45:54 INFO Juju error logs:
+
+machine-0: 06:41:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:41:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:42:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:42:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nktzdr6h-0: 06:43:49 ERROR unit.test-nktzdr6h/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nktzdr6h-0: 06:43:50 ERROR unit.test-nktzdr6h/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nktzdr6h-1: 06:45:02 ERROR unit.test-nktzdr6h/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nktzdr6h-1: 06:45:04 ERROR unit.test-nktzdr6h/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nktzdr6h-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:45:54 INFO Forgetting model main...
