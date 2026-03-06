@@ -279,3 +279,47 @@ def test_delete_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
     reconciler.start_delete_loop()
 
     assert reconciler._runner_count == 5
+
+
+def test_timer_reconcile_scale_up_updates_in_memory_count():
+    """
+    arrange: A reconciler with 2 runners and a higher desired pressure.
+    act: Call _handle_timer_reconcile so that it scales up from 2 to 5 runners.
+    assert: _runner_count is updated to reflect the new total after scale-up.
+    """
+    mgr = _FakeManager(runners_count=2)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_timer_reconcile(5)
+
+    assert mgr.created_args == [3]
+    assert reconciler._runner_count == 5
+
+
+def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with pre-existing runners and pressure matching the count.
+    act: Call start_create_loop.
+    assert: _runner_count is synced from get_runners() before processing pressure events,
+        so no unnecessary runners are created.
+    """
+    mgr = _FakeManager(runners_count=3)
+    planner = _FakePlanner(stream_updates=[3])
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    # stop after stream exhausts to avoid infinite loop
+    original_stream = planner.stream_pressure
+
+    def _stream_once(name):
+        """Yield from original stream, then stop the reconciler."""
+        yield from original_stream(name)
+        reconciler.stop()
+
+    monkeypatch.setattr(planner, "stream_pressure", _stream_once)
+    reconciler.start_create_loop()
+
+    assert reconciler._runner_count == 3
+    assert mgr.created_args == []

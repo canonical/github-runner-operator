@@ -119,6 +119,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
+        self._runner_count = len(self._manager.get_runners())
+        logger.info("Create loop: initial sync, _runner_count=%s", self._runner_count)
         while not self._stop.is_set():
             try:
                 for update in self._planner.stream_pressure(self._config.flavor_name):
@@ -232,12 +234,16 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 try:
-                    self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+                    created_ids = self._manager.create_runners(
+                        num=to_create, metadata=RunnerMetadata()
+                    )
                 except MissingServerConfigError:
                     logger.exception(
                         "Unable to create runners due to missing server configuration"
                         " (image/flavor)."
                     )
+                else:
+                    self._runner_count += len(created_ids)
             else:
                 logger.info(
                     "Timer: no changes needed (desired=%s current=%s)",
