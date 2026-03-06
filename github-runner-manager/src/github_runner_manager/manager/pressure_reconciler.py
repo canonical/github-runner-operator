@@ -222,7 +222,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 actually_deleted = self._manager.soft_delete_runners(num=to_delete)
-                self._runner_count = current_total - actually_deleted
+                self._runner_count = max(current_total - actually_deleted, 0)
             else:
                 logger.info(
                     "Reconcile loop: at desired count (desired=%s current=%s)",

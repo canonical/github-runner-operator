@@ -676,10 +676,8 @@ def _get_platform_runners_to_scale_down(
         num: number of runners to scale down by.
         soft: When True, exclude busy runners from the candidate pool.
     """
-    candidates = runners
-    if soft:
-        candidates = [r for r in runners if not r.busy]
-    # prioritize deletable --> idle
+    candidates = [r for r in runners if not r.busy] if soft else runners
+    # prioritize deletable --> idle --> busy (busy unreachable when soft=True)
     sorted_runners = sorted(
         candidates, key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
     )
