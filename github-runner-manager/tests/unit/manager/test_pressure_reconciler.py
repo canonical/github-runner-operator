@@ -18,25 +18,39 @@ from github_runner_manager.planner_client import PlannerApiError
 class _FakeManager:
     """Lightweight runner manager stub for testing the reconciler."""
 
-    def __init__(self, runners_count: int = 0):
-        """Initialize with an optional number of pre-existing runners."""
+    def __init__(self, runners_count: int = 0, create_success_ratio: float = 1.0):
+        """Initialize with an optional number of pre-existing runners.
+
+        Args:
+            runners_count: Number of pre-existing runners.
+            create_success_ratio: Fraction of requested runners that succeed (0.0-1.0).
+        """
         self._runners = [object() for _ in range(runners_count)]
         self.created_args: list[int] = []
         self.cleanup_called = 0
+        self.get_runners_calls = 0
+        self._create_success_ratio = create_success_ratio
 
     def get_runners(self) -> list[object]:
         """Return the current list of runners."""
+        self.get_runners_calls += 1
         return list(self._runners)
 
-    def create_runners(self, num: int, metadata: object):  # noqa: ARG002
+    def create_runners(self, num: int, metadata: object) -> tuple[str, ...]:  # noqa: ARG002
         """Record the creation request and extend the internal runner list."""
         self.created_args.append(num)
-        if num > 0:
-            self._runners.extend(object() for _ in range(num))
+        actually_created = max(int(num * self._create_success_ratio), 0)
+        if actually_created > 0:
+            self._runners.extend(object() for _ in range(actually_created))
+        return tuple(f"instance-{i}" for i in range(actually_created))
 
     def cleanup(self):
         """Increment the cleanup counter."""
         self.cleanup_called += 1
+
+    def delete_runners(self, num: int):
+        """Remove runners from the internal list."""
+        self._runners = self._runners[: max(len(self._runners) - num, 0)]
 
 
 class _FakePlanner:
@@ -202,3 +216,66 @@ def test_handle_timer_reconcile_uses_desired_total_not_raw_pressure():
 
     assert mgr.cleanup_called == 1
     assert mgr.created_args == [1]
+
+
+def test_create_loop_uses_in_memory_count():
+    """
+    arrange: A reconciler with no runners.
+    act: Call _handle_create_runners twice with same pressure.
+    assert: get_runners() is NOT called — only the in-memory count is used.
+    """
+    mgr = _FakeManager()
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(3)
+    reconciler._handle_create_runners(3)
+
+    assert mgr.get_runners_calls == 0
+    assert mgr.created_args == [3]
+
+
+def test_in_memory_count_incremented_by_actual_successes():
+    """
+    arrange: A manager where only half of requested runners succeed.
+    act: Call _handle_create_runners twice requesting 4 total.
+    assert: _runner_count reflects only actual successes, causing a second create attempt.
+    """
+    mgr = _FakeManager(create_success_ratio=0.5)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(4)
+    reconciler._handle_create_runners(4)
+
+    # First call: desired=4, current=0, create 4, only 2 succeed -> _runner_count=2
+    # Second call: desired=4, current=2, create 2, only 1 succeeds -> _runner_count=3
+    assert mgr.created_args == [4, 2]
+    assert reconciler._runner_count == 3
+
+
+def test_delete_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with _runner_count out of sync with actual runners.
+    act: Run the delete loop once.
+    assert: _runner_count is synced to the actual get_runners() count.
+    """
+    mgr = _FakeManager(runners_count=5)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small", reconcile_interval=60)
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+    reconciler._last_pressure = 5
+    reconciler._runner_count = 10  # Out of sync
+    wait_calls = {"count": 0}
+
+    def _wait(_interval: int) -> bool:
+        """Return False once to enter the loop, then True to exit."""
+        wait_calls["count"] += 1
+        return wait_calls["count"] > 1
+
+    monkeypatch.setattr(reconciler._stop, "wait", _wait)
+    reconciler.start_delete_loop()
+
+    assert reconciler._runner_count == 5

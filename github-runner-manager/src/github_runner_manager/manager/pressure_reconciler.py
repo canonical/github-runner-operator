@@ -105,6 +105,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
         self._stop = Event()
         self._last_pressure: Optional[int] = None
+        self._runner_count: int = 0
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
@@ -141,6 +142,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     def _handle_create_runners(self, pressure: int) -> None:
         """Create runners when desired exceeds current total.
 
+        Uses an in-memory runner count instead of calling get_runners() to
+        avoid expensive OpenStack API calls on every pressure event.
+
         Args:
             pressure: Current pressure value used to compute desired total.
         """
@@ -152,7 +156,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         )
         self._last_pressure = pressure
         with self._lock:
-            current_total = len(self._manager.get_runners())
+            current_total = self._runner_count
             to_create = max(desired_total - current_total, 0)
             if to_create <= 0:
                 logger.info(
@@ -168,11 +172,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 current_total,
             )
             try:
-                self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+                created_ids = self._manager.create_runners(
+                    num=to_create, metadata=RunnerMetadata()
+                )
             except MissingServerConfigError:
                 logger.exception(
                     "Unable to create runners due to missing server configuration (image/flavor)."
                 )
+                return
+            self._runner_count += len(created_ids)
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, then converge toward the desired count.
@@ -186,7 +194,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         desired_total = self._desired_total_from_pressure(pressure)
         with self._lock:
             self._manager.cleanup()
-            current_total = len(self._manager.get_runners())
+            current_runners = self._manager.get_runners()
+            current_total = len(current_runners)
+            self._runner_count = current_total
             if current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
