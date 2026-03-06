@@ -323,3 +323,19 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
 
     assert reconciler._runner_count == 3
     assert mgr.created_args == []
+
+
+def test_timer_reconcile_scale_down_updates_in_memory_count():
+    """
+    arrange: A reconciler with 5 runners and a lower desired pressure.
+    act: Call _handle_timer_reconcile so that it scales down from 5 to 2 runners.
+    assert: _runner_count is updated to reflect the post-deletion count.
+    """
+    mgr = _FakeManager(runners_count=5)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_timer_reconcile(2)
+
+    assert reconciler._runner_count == 2

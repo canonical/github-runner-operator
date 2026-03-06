@@ -119,7 +119,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
-        self._runner_count = len(self._manager.get_runners())
+        with self._lock:
+            self._runner_count = len(self._manager.get_runners())
         logger.info("Create loop: initial sync, _runner_count=%s", self._runner_count)
         while not self._stop.is_set():
             try:
@@ -225,6 +226,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 self._manager.delete_runners(num=to_delete)
+                self._runner_count -= to_delete
             elif current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
