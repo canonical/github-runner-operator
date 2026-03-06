@@ -67,6 +67,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     Concurrency with any other reconcile loop is protected by a shared lock.
 
+    The create loop tracks runners via an in-memory count rather than calling
+    get_runners() on every pressure event, avoiding expensive OpenStack and
+    GitHub API calls. Runner creation is fire-and-forget: the count is incremented by the
+    number of IDs returned, even though VMs may fail to boot afterwards. This
+    provides a natural backoff — if a batch of creations silently fails, the
+    in-memory count stays high and prevents further creation attempts until
+    the delete loop runs, queries the real OpenStack state via get_runners(),
+    and syncs the count back down.
+
     The delete loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
     between stream events. This is an accepted trade-off: the window is bounded
@@ -80,6 +89,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         _lock: Shared lock to serialize operations with other reconcile loops.
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
+        _runner_count: In-memory runner count used by the create loop.
     """
 
     def __init__(
@@ -143,7 +153,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         """Create runners when desired exceeds current total.
 
         Uses an in-memory runner count instead of calling get_runners() to
-        avoid expensive OpenStack API calls on every pressure event.
+        avoid expensive OpenStack and GitHub API calls on every pressure event.
 
         Args:
             pressure: Current pressure value used to compute desired total.
@@ -180,7 +190,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     "Unable to create runners due to missing server configuration (image/flavor)."
                 )
                 return
-            self._runner_count += len(created_ids)
+            actually_created = len(created_ids)
+            if actually_created < to_create:
+                logger.error(
+                    "Create loop: only %s/%s runners created successfully",
+                    actually_created,
+                    to_create,
+                )
+            self._runner_count += actually_created
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, then converge toward the desired count.
