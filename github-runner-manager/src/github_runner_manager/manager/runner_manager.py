@@ -277,8 +277,8 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        _, extracted_metrics = self._delete_runners_core(num)
-        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        _, metric_stats = self._delete_runners_core(num)
+        return metric_stats
 
     def scale_down(self, num: int) -> int:
         """Delete up to `num` runners and return the actual number deleted.
@@ -292,23 +292,25 @@ class RunnerManager:
         Returns:
             The number of VMs actually deleted.
         """
-        deleted_vms, extracted_metrics = self._delete_runners_core(num)
-        self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        deleted_vms, _ = self._delete_runners_core(num)
         return len(deleted_vms)
 
     def _delete_runners_core(
         self,
         num: int,
-    ) -> tuple[list[InstanceID], list[RunnerMetrics]]:
+    ) -> tuple[list[InstanceID], IssuedMetricEventsStats]:
         """Core deletion logic shared by delete_runners and scale_down.
+
+        Selects runners for deletion, removes them from the platform and
+        cloud, extracts and issues runner metrics.
 
         Args:
             num: The maximum number of runners to delete.
 
         Returns:
-            A tuple of (deleted VM IDs, extracted metrics).
+            A tuple of (deleted VM IDs, issued metric event stats).
         """
-        logger.info("runner_manager::delete_runners Deleting %s runners", num)
+        logger.info("runner_manager::_delete_runners_core Deleting up to %s runners", num)
         vms = self._cloud.get_vms()
         logger.info("VMs: %s", vms)
         runners_health_response = self._platform.get_runners_health(requested_runners=vms)
@@ -349,7 +351,8 @@ class RunnerManager:
         deleted_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
         logger.info("deleted VMs: %s", deleted_vms)
 
-        return deleted_vms, list(extracted_metrics)
+        metric_stats = self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        return deleted_vms, metric_stats
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
