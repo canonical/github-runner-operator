@@ -52,6 +52,12 @@ class _FakeManager:
         """Remove runners from the internal list."""
         self._runners = self._runners[: max(len(self._runners) - num, 0)]
 
+    def scale_down(self, num: int) -> int:
+        """Remove runners and return the actual number removed."""
+        before = len(self._runners)
+        self._runners = self._runners[: max(before - num, 0)]
+        return before - len(self._runners)
+
 
 class _FakePlanner:
     """Planner client stub supplying pressure data for tests."""

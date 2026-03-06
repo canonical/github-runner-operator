@@ -277,6 +277,36 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
+        _, extracted_metrics = self._delete_runners_core(num)
+        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+
+    def scale_down(self, num: int) -> int:
+        """Delete up to `num` runners and return the actual number deleted.
+
+        Same selection logic as delete_runners (deletable → idle → busy),
+        but returns the count of actually deleted VMs instead of metric stats.
+
+        Args:
+            num: The maximum number of runners to delete.
+
+        Returns:
+            The number of VMs actually deleted.
+        """
+        deleted_vms, _ = self._delete_runners_core(num)
+        return len(deleted_vms)
+
+    def _delete_runners_core(
+        self,
+        num: int,
+    ) -> tuple[list[InstanceID], list[RunnerMetrics]]:
+        """Core deletion logic shared by delete_runners and scale_down.
+
+        Args:
+            num: The maximum number of runners to delete.
+
+        Returns:
+            A tuple of (deleted VM IDs, extracted metrics).
+        """
         logger.info("runner_manager::delete_runners Deleting %s runners", num)
         vms = self._cloud.get_vms()
         logger.info("VMs: %s", vms)
@@ -318,7 +348,7 @@ class RunnerManager:
         deleted_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
         logger.info("deleted VMs: %s", deleted_vms)
 
-        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        return deleted_vms, list(extracted_metrics)
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE

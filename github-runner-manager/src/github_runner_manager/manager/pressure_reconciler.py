@@ -225,8 +225,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                self._manager.delete_runners(num=to_delete)
-                self._runner_count -= to_delete
+                actually_deleted = self._manager.scale_down(num=to_delete)
+                self._runner_count -= actually_deleted
+                if actually_deleted < to_delete:
+                    logger.error(
+                        "Timer: only %s/%s runners deleted successfully",
+                        actually_deleted,
+                        to_delete,
+                    )
             elif current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
