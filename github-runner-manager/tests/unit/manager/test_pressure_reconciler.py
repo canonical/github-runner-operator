@@ -27,6 +27,7 @@ class _FakeManager:
         """
         self._runners = [object() for _ in range(runners_count)]
         self.created_args: list[int] = []
+        self.deleted_args: list[int] = []
         self.cleanup_called = 0
         self.get_runners_calls = 0
         self._create_success_ratio = create_success_ratio
@@ -43,6 +44,14 @@ class _FakeManager:
         if actually_created > 0:
             self._runners.extend(object() for _ in range(actually_created))
         return tuple(f"instance-{i}" for i in range(actually_created))
+
+    def soft_delete_runners(self, num: int) -> int:
+        """Record the deletion request and shrink the internal runner list."""
+        self.deleted_args.append(num)
+        to_remove = min(num, len(self._runners))
+        if to_remove:
+            self._runners = self._runners[:-to_remove]
+        return to_remove
 
     def cleanup(self):
         """Increment the cleanup counter."""
@@ -321,11 +330,11 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
     assert mgr.created_args == []
 
 
-def test_timer_reconcile_does_not_scale_down_healthy_runners():
+def test_timer_reconcile_scales_down_with_soft_delete():
     """
     arrange: A reconciler with 5 runners and a lower desired pressure of 2.
     act: Call _handle_timer_reconcile.
-    assert: No runners are deleted; _runner_count reflects the actual count.
+    assert: delete_runners is called with soft=True to remove excess idle runners.
     """
     mgr = _FakeManager(runners_count=5)
     planner = _FakePlanner()
@@ -335,4 +344,5 @@ def test_timer_reconcile_does_not_scale_down_healthy_runners():
     reconciler._handle_timer_reconcile(2)
 
     assert mgr.created_args == []
-    assert reconciler._runner_count == 5
+    assert mgr.deleted_args == [3]
+    assert reconciler._runner_count == 2

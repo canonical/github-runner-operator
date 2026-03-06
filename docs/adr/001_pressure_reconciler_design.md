@@ -40,8 +40,9 @@ with the existing reconcile path:
    in memory to avoid expensive OpenStack/GitHub API calls on every event.
 
 2. **Reconcile loop** – wakes on a configurable timer, cleans up stale runners,
-   syncs the in-memory count with reality, and scales up if needed. Does not
-   actively scale down — excess healthy runners drain naturally through cleanup.
+   syncs the in-memory count with reality, scales up if needed, and soft-deletes
+   idle runners when the current count exceeds the desired total. Busy runners
+   are never targeted for scale-down.
 
 Planner mode is activated only when `planner_url` and `planner_token` are present
 in configuration, allowing staged rollout before the legacy reconcile path is
@@ -77,6 +78,6 @@ on the next streaming event.
 - The in-memory runner count can drift from reality (e.g. VMs that fail after
   creation). This acts as a natural backoff — no further creates until the
   reconcile loop syncs. The reconcile loop corrects drift on every tick.
-- Excess healthy runners are not forcibly killed. They drain through cleanup,
-  which avoids killing in-flight jobs but may temporarily exceed the desired
-  count.
+- Scale-down uses soft deletion: only idle runners are removed, busy runners
+  are skipped. This avoids killing in-flight jobs but may temporarily exceed
+  the desired count when all excess runners are busy.

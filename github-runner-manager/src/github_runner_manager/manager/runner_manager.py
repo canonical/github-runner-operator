@@ -277,7 +277,35 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        logger.info("runner_manager::delete_runners Deleting %s runners", num)
+        _, extracted_metrics = self._delete_runners_core(num=num, soft=False)
+        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+
+    def soft_delete_runners(self, num: int) -> int:
+        """Delete up to `num` idle runners, never targeting busy ones.
+
+        Args:
+            num: The maximum number of runners to delete.
+
+        Returns:
+            The number of VMs actually deleted.
+        """
+        deleted_vms, extracted_metrics = self._delete_runners_core(num=num, soft=True)
+        self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        return len(deleted_vms)
+
+    def _delete_runners_core(
+        self, num: int, soft: bool
+    ) -> tuple[list[InstanceID], list[RunnerMetrics]]:
+        """Core deletion logic shared by delete_runners and soft_delete_runners.
+
+        Args:
+            num: The maximum number of runners to delete.
+            soft: When True, exclude busy runners from the scale-down pool.
+
+        Returns:
+            Tuple of (deleted VM instance IDs, extracted runner metrics).
+        """
+        logger.info("runner_manager::delete_runners Deleting %s runners (soft=%s)", num, soft)
         vms = self._cloud.get_vms()
         logger.info("VMs: %s", vms)
         runners_health_response = self._platform.get_runners_health(requested_runners=vms)
@@ -297,6 +325,7 @@ class RunnerManager:
         platform_runner_ids_to_scaledown = _get_platform_runners_to_scale_down(
             runners=runners_not_marked_for_cleanup,
             num=num_runners_to_scale_down,
+            soft=soft,
         )
         logger.info("Runners to scale down: %s", platform_runner_ids_to_scaledown)
         platform_runner_ids_to_delete = list(
@@ -313,12 +342,12 @@ class RunnerManager:
             )
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
+        extracted_metrics = list(self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup))
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
         deleted_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
         logger.info("deleted VMs: %s", deleted_vms)
 
-        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
+        return deleted_vms, extracted_metrics
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
@@ -638,17 +667,21 @@ def _get_platform_runners_to_flush(
 
 
 def _get_platform_runners_to_scale_down(
-    runners: Sequence[PlatformRunnerHealth], num: int
+    runners: Sequence[PlatformRunnerHealth], num: int, soft: bool = False
 ) -> set[str]:
     """Determine the number of runners to scale down.
 
     Args:
         runners: pool of runners to select to scale down.
         num: number of runners to scale down by.
+        soft: When True, exclude busy runners from the candidate pool.
     """
-    # prioritize deletable --> idle --> busy
+    candidates = runners
+    if soft:
+        candidates = [r for r in runners if not r.busy]
+    # prioritize deletable --> idle
     sorted_runners = sorted(
-        runners, key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
+        candidates, key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
     )
     return set(
         runner.identity.metadata.runner_id

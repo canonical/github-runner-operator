@@ -63,7 +63,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     indicated by the planner's pressure for a given flavor. It operates in two
     threads:
     - create loop: scales up when desired exceeds current total
-    - reconcile loop: cleans up stale runners, syncs state, scales up if needed
+    - reconcile loop: cleans up stale runners, syncs state, scales up/down as needed
 
     Concurrency with any other reconcile loop is protected by a shared lock.
 
@@ -190,11 +190,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             self._create_and_track(to_create, label="Create loop")
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
-        """Clean up stale runners, sync in-memory count, then scale up if needed.
+        """Clean up stale runners, sync in-memory count, then scale up or down.
 
         Runs cleanup to remove unhealthy/stale runners, syncs _runner_count
-        from get_runners(), and creates runners if current falls below desired.
-        Excess healthy runners are not killed — they drain naturally.
+        from get_runners(), creates runners if current falls below desired,
+        and soft-deletes idle runners if current exceeds desired.
 
         Args:
             pressure: Current pressure value used to compute desired total.
@@ -213,9 +213,19 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 self._create_and_track(to_create, label="Reconcile loop")
+            elif current_total > desired_total:
+                to_delete = current_total - desired_total
+                logger.info(
+                    "Reconcile loop: scaling down %s runners (desired=%s current=%s)",
+                    to_delete,
+                    desired_total,
+                    current_total,
+                )
+                actually_deleted = self._manager.soft_delete_runners(num=to_delete)
+                self._runner_count = current_total - actually_deleted
             else:
                 logger.info(
-                    "Reconcile loop: no scale-up needed (desired=%s current=%s)",
+                    "Reconcile loop: at desired count (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )
