@@ -63,7 +63,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     indicated by the planner's pressure for a given flavor. It operates in two
     threads:
     - create loop: scales up when desired exceeds current total
-    - delete loop: scales down when current exceeds desired
+    - timer loop: cleans up stale runners, syncs state, scales up if needed
 
     Concurrency with any other reconcile loop is protected by a shared lock.
 
@@ -207,10 +207,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             self._runner_count += actually_created
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
-        """Clean up stale runners, then converge toward the desired count.
+        """Clean up stale runners, sync in-memory count, then scale up if needed.
 
-        Scales down (deletes) when current exceeds desired, and scales up
-        (creates) when current falls below desired after cleanup.
+        Runs cleanup to remove unhealthy/stale runners, syncs _runner_count
+        from get_runners(), and creates runners if current falls below desired.
+        Excess healthy runners are not killed — they drain naturally.
 
         Args:
             pressure: Current pressure value used to compute desired total.
@@ -221,23 +222,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             current_runners = self._manager.get_runners()
             current_total = len(current_runners)
             self._runner_count = current_total
-            if current_total > desired_total:
-                to_delete = current_total - desired_total
-                logger.info(
-                    "Timer: scaling down %s runners (desired=%s current=%s)",
-                    to_delete,
-                    desired_total,
-                    current_total,
-                )
-                actually_deleted = self._manager.scale_down(num=to_delete)
-                self._runner_count -= actually_deleted
-                if actually_deleted < to_delete:
-                    logger.error(
-                        "Timer: only %s/%s runners deleted successfully",
-                        actually_deleted,
-                        to_delete,
-                    )
-            elif current_total < desired_total:
+            if current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
                     "Timer: scaling up %s runners (desired=%s current=%s)",
@@ -265,7 +250,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     self._runner_count += actually_created
             else:
                 logger.info(
-                    "Timer: no changes needed (desired=%s current=%s)",
+                    "Timer: no scale-up needed (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )

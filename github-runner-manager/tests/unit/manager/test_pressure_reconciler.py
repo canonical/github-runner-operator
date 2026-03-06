@@ -52,12 +52,6 @@ class _FakeManager:
         """Remove runners from the internal list."""
         self._runners = self._runners[: max(len(self._runners) - num, 0)]
 
-    def scale_down(self, num: int) -> int:
-        """Remove runners and return the actual number removed."""
-        before = len(self._runners)
-        self._runners = self._runners[: max(before - num, 0)]
-        return before - len(self._runners)
-
 
 class _FakePlanner:
     """Planner client stub supplying pressure data for tests."""
@@ -331,11 +325,11 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
     assert mgr.created_args == []
 
 
-def test_timer_reconcile_scale_down_updates_in_memory_count():
+def test_timer_reconcile_does_not_scale_down_healthy_runners():
     """
-    arrange: A reconciler with 5 runners and a lower desired pressure.
-    act: Call _handle_timer_reconcile so that it scales down from 5 to 2 runners.
-    assert: _runner_count is updated to reflect the post-deletion count.
+    arrange: A reconciler with 5 runners and a lower desired pressure of 2.
+    act: Call _handle_timer_reconcile.
+    assert: No runners are deleted; _runner_count reflects the actual count.
     """
     mgr = _FakeManager(runners_count=5)
     planner = _FakePlanner()
@@ -344,4 +338,5 @@ def test_timer_reconcile_scale_down_updates_in_memory_count():
 
     reconciler._handle_timer_reconcile(2)
 
-    assert reconciler._runner_count == 2
+    assert mgr.created_args == []
+    assert reconciler._runner_count == 5
