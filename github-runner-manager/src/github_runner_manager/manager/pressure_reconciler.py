@@ -73,18 +73,17 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     incremented by the number of IDs returned, even though VMs may fail to
     boot afterwards. This provides a natural backoff for post-creation
     failures (e.g. VMs that fail to boot): the in-memory count stays high
-    and prevents further creation attempts until the delete loop runs,
+    and prevents further creation attempts until the timer loop runs,
     queries the real OpenStack state via get_runners(), and syncs the count
     back down. Note that API-level creation failures (where no IDs are
     returned) do not benefit from this backoff — the create loop will retry
     on the next pressure event, which is the desired behavior when the API
     recovers quickly.
 
-    The delete loop uses the last pressure seen by the create loop rather than
+    The timer loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
     between stream events. This is an accepted trade-off: the window is bounded
-    by the stream update frequency, and any over-deletion is self-correcting
-    because the create loop will scale back up on the next pressure event.
+    by the stream update frequency.
 
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
@@ -219,8 +218,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         desired_total = self._desired_total_from_pressure(pressure)
         with self._lock:
             self._manager.cleanup()
-            current_runners = self._manager.get_runners()
-            current_total = len(current_runners)
+            current_total = len(self._manager.get_runners())
             self._runner_count = current_total
             if current_total < desired_total:
                 to_create = desired_total - current_total
