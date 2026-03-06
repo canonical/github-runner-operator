@@ -187,23 +187,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 desired_total,
                 current_total,
             )
-            try:
-                created_ids = self._manager.create_runners(
-                    num=to_create, metadata=RunnerMetadata()
-                )
-            except MissingServerConfigError:
-                logger.exception(
-                    "Unable to create runners due to missing server configuration (image/flavor)."
-                )
-                return
-            actually_created = len(created_ids)
-            if actually_created < to_create:
-                logger.error(
-                    "Create loop: only %s/%s runners created successfully",
-                    actually_created,
-                    to_create,
-                )
-            self._runner_count += actually_created
+            self._create_and_track(to_create, label="Create loop")
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up if needed.
@@ -228,30 +212,37 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                try:
-                    created_ids = self._manager.create_runners(
-                        num=to_create, metadata=RunnerMetadata()
-                    )
-                except MissingServerConfigError:
-                    logger.exception(
-                        "Unable to create runners due to missing server configuration"
-                        " (image/flavor)."
-                    )
-                else:
-                    actually_created = len(created_ids)
-                    if actually_created < to_create:
-                        logger.error(
-                            "Timer: only %s/%s runners created successfully",
-                            actually_created,
-                            to_create,
-                        )
-                    self._runner_count += actually_created
+                self._create_and_track(to_create, label="Timer")
             else:
                 logger.info(
                     "Timer: no scale-up needed (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )
+
+    def _create_and_track(self, num: int, label: str) -> None:
+        """Create runners and update the in-memory count.
+
+        Args:
+            num: Number of runners to create.
+            label: Log prefix identifying the caller (e.g. "Create loop", "Timer").
+        """
+        try:
+            created_ids = self._manager.create_runners(num=num, metadata=RunnerMetadata())
+        except MissingServerConfigError:
+            logger.exception(
+                "Unable to create runners due to missing server configuration (image/flavor)."
+            )
+            return
+        actually_created = len(created_ids)
+        if actually_created < num:
+            logger.error(
+                "%s: only %s/%s runners created successfully",
+                label,
+                actually_created,
+                num,
+            )
+        self._runner_count += actually_created
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.

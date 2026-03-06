@@ -48,10 +48,6 @@ class _FakeManager:
         """Increment the cleanup counter."""
         self.cleanup_called += 1
 
-    def delete_runners(self, num: int):
-        """Remove runners from the internal list."""
-        self._runners = self._runners[: max(len(self._runners) - num, 0)]
-
 
 class _FakePlanner:
     """Planner client stub supplying pressure data for tests."""
