@@ -1,0 +1,53 @@
+18:31:14 WARNING unexpected facade SSHServer received from the controller
+18:31:14 INFO Adding model github-pr-82c29-lxd:test-charm-metrics-success-jitb on cloud localhost
+18:31:14 WARNING unexpected facade SSHServer received from the controller
+18:31:14 WARNING unexpected facade SSHSession received from the controller
+18:31:14 WARNING unexpected facade SSHTunneler received from the controller
+18:31:14 WARNING unexpected facade SSHServer received from the controller
+18:31:14 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:31:16 INFO Deploying ch:amd64/noble/any-charm-133
+18:31:29 INFO Deploying local:jammy/github-runner-0
+18:31:29 INFO Waiting for model:
+  test-gav114qg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gav114qg/0 [allocating] waiting: waiting for machine
+18:32:00 INFO Waiting for model:
+  test-gav114qg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gav114qg/0 [idle] active: 
+18:32:30 INFO Waiting for model:
+  test-gav114qg/0 [allocating] waiting: waiting for machine
+18:33:00 INFO Waiting for model:
+  test-gav114qg/0 [allocating] waiting: agent initialising
+18:33:30 INFO Waiting for model:
+  test-gav114qg/0 [executing] maintenance: installing charm software
+18:34:00 INFO Waiting for model:
+  test-gav114qg/0 [executing] maintenance: installing charm software
+18:34:30 INFO Waiting for model:
+  test-gav114qg/0 [executing] maintenance: Update image for runners
+18:34:56 INFO Waiting for model:
+  test-gav114qg/0 [idle] active: 
+18:35:26 INFO Waiting for model:
+  test-gav114qg/0 [idle] active: 
+18:35:28 INFO Current reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:35:28 INFO Waiting for reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:36:29 INFO Current reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:36:29 INFO Current reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590, expected reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:36:29 INFO Waiting for reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:37:30 INFO Current reconcile ID: c6ba27d7-91fc-40d6-98aa-14e8c03397e4
+18:37:30 INFO Current reconcile ID: c6ba27d7-91fc-40d6-98aa-14e8c03397e4, expected reconcile ID: 68be46de-a1a7-4d50-b45e-50bec54e0590
+18:38:06 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-success-jitb test-gav114qg base-virtual-machines=0
+18:38:06 INFO Waiting for model:
+  test-gav114qg/0 [idle] active: 
+18:38:36 INFO Waiting for model:
+  test-gav114qg/0 [idle] active: 
+18:38:39 INFO Current reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:38:39 INFO Waiting for reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:39:40 INFO Current reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:39:40 INFO Current reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422, expected reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:39:40 INFO Waiting for reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:40:41 INFO Current reconcile ID: 1f620398-1987-4314-88b0-af868dbc9467
+18:40:41 INFO Current reconcile ID: 1f620398-1987-4314-88b0-af868dbc9467, expected reconcile ID: 87b62e83-bbad-488c-911b-21967ca76422
+18:40:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1772908504.8447542, "event": "reconciliation", "flavor": "test-gav114qg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.08077096939087}
+{"timestamp": 1772908630.9544332, "event": "reconciliation", "flavor": "test-gav114qg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.06404972076416}
+{"timestamp": 1772908676.0, "event": "runner_installed", "flavor": "test-gav114qg", "duration": 173.0}
+{"timestamp": 1772908698.0843794, "event": "reconciliation", "flavor": "test-gav114qg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.370615243911743}
+{"timestamp": 1772908822.5280101, "event": "reconciliation", "flavor": "test-gav114qg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 4.421830415725708}

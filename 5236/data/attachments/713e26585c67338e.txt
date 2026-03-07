@@ -1,0 +1,100 @@
+18:33:04 WARNING unexpected facade SSHServer received from the controller
+18:33:04 INFO Adding model github-pr-82c29-lxd:test-multi-unit-same-machine-m42m on cloud localhost
+18:33:04 WARNING unexpected facade SSHServer received from the controller
+18:33:04 WARNING unexpected facade SSHSession received from the controller
+18:33:04 WARNING unexpected facade SSHTunneler received from the controller
+18:33:04 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:33:07 INFO Deploying ch:amd64/noble/any-charm-133
+18:33:22 INFO Deploying local:jammy/github-runner-0
+18:33:22 INFO Waiting for model:
+  test-ihooe50k/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ihooe50k/0 [allocating] waiting: waiting for machine
+18:33:52 INFO Waiting for model:
+  test-ihooe50k/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ihooe50k/0 [allocating] waiting: waiting for machine
+18:34:22 INFO Waiting for model:
+  test-ihooe50k/0 [allocating] waiting: waiting for machine
+18:34:52 INFO Waiting for model:
+  test-ihooe50k/0 [allocating] waiting: agent initialising
+18:35:23 INFO Waiting for model:
+  test-ihooe50k/0 [executing] maintenance: installing charm software
+18:35:53 INFO Waiting for model:
+  test-ihooe50k/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ihooe50k/0 [executing] active: 
+18:36:23 INFO Waiting for model:
+  test-ihooe50k/0 [idle] active:
+18:36:34 INFO Waiting for model:
+  test-ihooe50k/0 [idle] active: 
+  test-ihooe50k/1 [allocating] waiting: installing agent
+18:37:04 INFO Waiting for model:
+  test-ihooe50k/0 [idle] active: 
+  test-ihooe50k/1 [executing] maintenance: installing charm software
+18:37:34 INFO Waiting for model:
+  test-ihooe50k/0 [idle] active: 
+  test-ihooe50k/1 [idle] active: 
+18:37:52 INFO File content of /var/lib/github-runner-manager/test-ihooe50k-0/http_port: 55555
+18:37:53 INFO File content of /var/lib/github-runner-manager/test-ihooe50k-1/http_port: 55556
+18:37:56 INFO File content of /var/lib/github-runner-manager/test-ihooe50k-1/http_port: 55556
+18:37:59 INFO File content of /var/lib/github-runner-manager/test-ihooe50k-1/http_port: 55556
+18:38:00 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-m42m  github-pr-82c29-lxd  localhost/localhost  3.6.14   unsupported  18:38:00Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ihooe50k           active      1  any-charm      latest/beta  133  no       
+test-ihooe50k                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ihooe50k/0*  active    idle   0        10.92.162.38           
+test-ihooe50k/0*                         active    idle   1        10.92.162.140          
+test-ihooe50k/1                          active    idle   1        10.92.162.140          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.92.162.38   juju-5dfa98-0  ubuntu@24.04  github-runner  Running
+1        started  10.92.162.140  juju-5dfa98-1  ubuntu@22.04  github-runner  Running
+
+18:38:00 INFO Juju error logs:
+
+machine-0: 18:33:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:33:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:34:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:34:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ihooe50k-0: 18:35:54 ERROR unit.test-ihooe50k/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ihooe50k-0: 18:35:55 ERROR unit.test-ihooe50k/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ihooe50k-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ihooe50k-1: 18:37:10 ERROR unit.test-ihooe50k/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ihooe50k-1: 18:37:12 ERROR unit.test-ihooe50k/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ihooe50k-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:38:00 INFO Forgetting model main...
