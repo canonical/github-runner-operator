@@ -1,0 +1,58 @@
+06:35:32 WARNING unexpected facade SSHServer received from the controller
+06:35:32 INFO Adding model github-pr-82c29-lxd:test-charm-runner-lad6 on cloud localhost
+06:35:32 WARNING unexpected facade SSHServer received from the controller
+06:35:32 WARNING unexpected facade SSHSession received from the controller
+06:35:32 WARNING unexpected facade SSHTunneler received from the controller
+06:35:33 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:35:35 INFO Deploying ch:amd64/noble/any-charm-133
+06:36:02 INFO Deploying local:noble/github-runner-0
+06:36:02 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbyqqnaj/0 [allocating] waiting: waiting for machine
+06:36:32 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbyqqnaj/0 [allocating] waiting: waiting for machine
+06:37:03 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbyqqnaj/0 [idle] active: 
+06:37:33 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+06:38:04 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+06:38:34 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: waiting for machine
+06:39:04 INFO Waiting for model:
+  test-sbyqqnaj/0 [allocating] waiting: agent initialising
+06:39:35 INFO Waiting for model:
+  test-sbyqqnaj/0 [executing] maintenance: installing charm software
+06:40:05 INFO Waiting for model:
+  test-sbyqqnaj/0 [executing] maintenance: installing charm software
+06:40:36 INFO Waiting for model:
+  test-sbyqqnaj/0 [executing] maintenance: installing charm software
+06:41:06 INFO Waiting for model:
+  test-sbyqqnaj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-sbyqqnaj/0 [idle] active: 
+06:41:37 INFO Waiting for model:
+  test-sbyqqnaj/0 [executing] maintenance: Update image for runners
+06:41:53 INFO Waiting for model:
+  test-sbyqqnaj/0 [idle] active: 
+06:42:23 INFO Waiting for model:
+  test-sbyqqnaj/0 [idle] active: 
+06:42:28 INFO Current reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:42:28 INFO Waiting for reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:43:29 INFO Current reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:43:29 INFO Current reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5, expected reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:43:29 INFO Waiting for reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:44:30 INFO Current reconcile ID: cc609f27-9ce3-43d7-89aa-d7ec66f323da
+06:44:30 INFO Current reconcile ID: cc609f27-9ce3-43d7-89aa-d7ec66f323da, expected reconcile ID: cb5661b6-3831-463c-87dc-aa2fc96592c5
+06:45:16 INFO Waiting for model:
+  test-sbyqqnaj/0 [idle] active: 
+06:45:47 INFO Waiting for model:
+  test-sbyqqnaj/0 [idle] active: 
+06:45:51 INFO Current reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
+06:45:51 INFO Waiting for reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
+06:46:52 INFO Current reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
+06:46:52 INFO Current reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906, expected reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
+06:46:52 INFO Waiting for reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
+06:47:54 INFO Current reconcile ID: a52e52f8-f5ac-4fe0-b40c-8b98fc06e70d
+06:47:54 INFO Current reconcile ID: a52e52f8-f5ac-4fe0-b40c-8b98fc06e70d, expected reconcile ID: 9e7ad25f-5170-4a2d-9bfa-f4feaf0cf906
