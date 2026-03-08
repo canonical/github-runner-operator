@@ -1,0 +1,66 @@
+06:58:00 INFO Waiting for model:
+  test-oe2fxdar/0 [idle] active: 
+06:58:31 INFO Waiting for model:
+  test-oe2fxdar/0 [idle] active: 
+06:58:34 INFO Current reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+06:58:34 INFO Waiting for reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+06:59:35 INFO Current reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+06:59:35 INFO Current reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609, expected reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+06:59:35 INFO Waiting for reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+07:00:36 INFO Current reconcile ID: d0f0b000-c73d-45c7-af91-5848f5c37a9d
+07:00:36 INFO Current reconcile ID: d0f0b000-c73d-45c7-af91-5848f5c37a9d, expected reconcile ID: a52328d3-7fa3-40cf-a089-e52d558a6609
+07:01:15 INFO Wait for condition not met, sleeping 10
+07:01:27 INFO Waiting for model:
+  test-oe2fxdar/0 [idle] active: 
+07:01:57 INFO Waiting for model:
+  test-oe2fxdar/0 [idle] active: 
+07:02:00 INFO Current reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:02:00 INFO Waiting for reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:03:01 INFO Current reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:03:01 INFO Current reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead, expected reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:03:01 INFO Waiting for reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:04:02 INFO Current reconcile ID: 70f96070-1eec-484e-94e4-a07c50b24df5
+07:04:02 INFO Current reconcile ID: 70f96070-1eec-484e-94e4-a07c50b24df5, expected reconcile ID: 0d649eb5-2004-458f-bae5-bc358f229ead
+07:04:03 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-p44i  github-pr-82c29-lxd  localhost/localhost  3.6.14   unsupported  07:04:03Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-oe2fxdar           active      1  any-charm      latest/beta  133  no       
+test-oe2fxdar                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-oe2fxdar/0*  active    idle   0        10.156.111.84          
+test-oe2fxdar/0*                         active    idle   1        10.156.111.86          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.156.111.84  juju-515a52-0  ubuntu@24.04  github-runner  Running
+1        started  10.156.111.86  juju-515a52-1  ubuntu@22.04  github-runner  Running
+
+07:04:03 INFO Juju error logs:
+
+machine-0: 06:39:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:39:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:39:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:39:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oe2fxdar-0: 06:41:03 ERROR unit.test-oe2fxdar/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oe2fxdar-0: 06:41:05 ERROR unit.test-oe2fxdar/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oe2fxdar-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:04:03 INFO Forgetting model main...

@@ -1,0 +1,119 @@
+06:39:39 WARNING unexpected facade SSHServer received from the controller
+06:39:39 INFO Adding model github-pr-82c29-lxd:test-charm-metrics-failure-rrcd on cloud localhost
+06:39:39 WARNING unexpected facade SSHServer received from the controller
+06:39:39 WARNING unexpected facade SSHSession received from the controller
+06:39:39 WARNING unexpected facade SSHTunneler received from the controller
+06:39:39 WARNING unexpected facade SSHServer received from the controller
+06:39:39 INFO GitHub token rate limit: Rate(reset=2026-03-08 07:32:46+00:00, remaining=4995, limit=5000)
+06:39:42 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:39:43 INFO Deploying ch:amd64/noble/any-charm-133
+06:39:57 INFO Deploying local:jammy/github-runner-0
+06:39:57 INFO Waiting for model:
+  test-yvicqwvo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yvicqwvo/0 [allocating] waiting: waiting for machine
+06:40:27 INFO Waiting for model:
+  test-yvicqwvo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yvicqwvo/0 [idle] active: 
+06:40:57 INFO Waiting for model:
+  test-yvicqwvo/0 [allocating] waiting: waiting for machine
+06:41:28 INFO Waiting for model:
+  test-yvicqwvo/0 [allocating] waiting: agent initialising
+06:41:58 INFO Waiting for model:
+  test-yvicqwvo/0 [executing] maintenance: installing charm software
+06:42:29 INFO Waiting for model:
+  test-yvicqwvo/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-yvicqwvo/0 [idle] active: 
+06:42:50 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-rrcd test-yvicqwvo base-virtual-machines=0
+06:42:50 INFO Waiting for model:
+  test-yvicqwvo/0 [idle] active: 
+06:43:06 INFO Current reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:43:06 INFO Waiting for reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:44:07 INFO Current reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:44:07 INFO Current reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7, expected reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:44:07 INFO Waiting for reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:45:08 INFO Current reconcile ID: 98099f64-fb17-4a72-9fd5-b756b86500a8
+06:45:08 INFO Current reconcile ID: 98099f64-fb17-4a72-9fd5-b756b86500a8, expected reconcile ID: 41e2113e-ddf8-4956-9b18-f3b1102a0ac7
+06:45:08 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-rrcd test-yvicqwvo path=canonical/github-runner-operator
+06:45:08 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-rrcd test-yvicqwvo base-virtual-machines=1
+06:45:09 INFO Waiting for model:
+  test-yvicqwvo/0 [idle] active: 
+06:45:39 INFO Waiting for model:
+  test-yvicqwvo/0 [idle] active: 
+06:45:41 INFO Current reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:45:41 INFO Waiting for reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:46:42 INFO Current reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:46:42 INFO Current reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea, expected reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:46:42 INFO Waiting for reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:47:43 INFO Current reconcile ID: 32eccfdb-6418-453a-8d61-ff50076e7907
+06:47:43 INFO Current reconcile ID: 32eccfdb-6418-453a-8d61-ff50076e7907, expected reconcile ID: c9f9f115-78fe-40b3-b0a2-df0cf6311dea
+06:48:24 INFO Wait for condition not met, sleeping 30
+06:49:06 INFO [TEST SETUP] Run command pkill -9 run.sh on test-yvicqwvo-0-n-b0e903e49cd6
+06:49:06 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.102', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ea:7c:85'}]])
+06:49:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yvicqwvo-0-n-b0e903e49cd6.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.102 pkill -9 run.sh'
+06:49:08 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.102' (ED25519) to the list of known hosts.
+'
+06:49:11 INFO Runner test-yvicqwvo-0-n-b0e903e49cd6 status: online
+06:49:11 INFO Runner still marked as online, waiting for it to be marked offline
+06:50:11 INFO Waiting for model:
+  test-yvicqwvo/0 [idle] active: 
+06:50:42 INFO Waiting for model:
+  test-yvicqwvo/0 [idle] active: 
+06:50:44 INFO Current reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:50:44 INFO Waiting for reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:51:45 INFO Current reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:51:45 INFO Current reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03, expected reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:51:45 INFO Waiting for reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:52:46 INFO Current reconcile ID: a85e1891-721b-4bb5-b6d1-d17243f3a021
+06:52:46 INFO Current reconcile ID: a85e1891-721b-4bb5-b6d1-d17243f3a021, expected reconcile ID: 15be005a-80bf-469a-abdb-15f6a476bc03
+06:52:47 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1772952266.8414474, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.797152996063232}
+{"timestamp": 1772952320.472836, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.678116083145142}
+{"timestamp": 1772952447.3989031, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.842526912689209}
+{"timestamp": 1772952483.0, "event": "runner_installed", "flavor": "test-yvicqwvo", "duration": 164.0}
+{"timestamp": 1772952507.0, "event": "runner_start", "flavor": "test-yvicqwvo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 24.0, "queue_duration": 2.0}
+{"timestamp": 1772952548.0, "event": "runner_stop", "flavor": "test-yvicqwvo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1772952580.1550238, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.750588417053223}
+{"timestamp": 1772952618.766098, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.362714767456055}
+{"timestamp": 1772952745.0194142, "event": "reconciliation", "flavor": "test-yvicqwvo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.150629043579102}
+06:52:48 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-rrcd  github-pr-82c29-lxd  localhost/localhost  3.6.14   unsupported  06:52:48Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-yvicqwvo           active      1  any-charm      latest/beta  133  no       
+test-yvicqwvo                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-yvicqwvo/0*  active    idle   0        10.238.132.97          
+test-yvicqwvo/0*                         active    idle   1        10.238.132.67          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.238.132.97  juju-cff6bb-0  ubuntu@24.04  github-runner  Running
+1        started  10.238.132.67  juju-cff6bb-1  ubuntu@22.04  github-runner  Running
+
+06:52:48 INFO Juju error logs:
+
+machine-0: 06:40:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:40:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:41:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:41:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yvicqwvo-0: 06:42:10 ERROR unit.test-yvicqwvo/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yvicqwvo-0: 06:42:11 ERROR unit.test-yvicqwvo/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yvicqwvo-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:52:48 INFO Forgetting model main...
