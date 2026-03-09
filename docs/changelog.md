@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-09
 
-- Reduced OpenStack API calls when listing managed runners by requesting bare server results and skipping per-server Neutron interface enrichment.
+- Reduced OpenStack API calls when listing managed runners by requesting bare server results and skipping Neutron interface enrichment for each server.
 
 ## 2026-03-03
 
