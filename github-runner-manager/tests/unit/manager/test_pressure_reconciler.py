@@ -334,7 +334,7 @@ def test_timer_reconcile_scales_down_with_soft_delete():
     """
     arrange: A reconciler with 5 runners and a lower desired pressure of 2.
     act: Call _handle_timer_reconcile.
-    assert: delete_runners is called with soft=True to remove excess idle runners.
+    assert: soft_delete_runners is used to remove excess idle runners.
     """
     mgr = _FakeManager(runners_count=5)
     planner = _FakePlanner()

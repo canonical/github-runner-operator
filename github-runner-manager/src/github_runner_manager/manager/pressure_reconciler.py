@@ -141,7 +141,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 time.sleep(5)
 
     def start_reconcile_loop(self) -> None:
-        """Continuously cleanup runners on a timer."""
+        """Periodically reconcile runners based on last known pressure, syncing state, scaling, and cleaning up on a timer."""
         interval_seconds = self._config.reconcile_interval * 60
         logger.debug("Reconcile loop: starting, interval=%ss", interval_seconds)
         while not self._stop.wait(interval_seconds):
