@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-06
+
+- Use in-memory runner count in pressure reconciler create loop to avoid expensive OpenStack and GitHub API calls on every pressure event.
+- Scale-down in the reconcile loop now uses soft deletion, which excludes busy runners from the candidate pool to avoid killing in-flight jobs.
+
 ## 2026-03-03
 
 - Replaced `ghapi` with `PyGithub` to fix stuck GitHub API calls caused by missing timeout support in `ghapi`.

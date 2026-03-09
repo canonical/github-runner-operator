@@ -428,3 +428,59 @@ def test_runner_manager_non_deterministic_delete_runners(
 
     assert len(mock_platform._runners.values()) == expected_runners_count
     assert len(mock_platform._runners.values()) == expected_cloud_runners_count
+
+
+@pytest.mark.parametrize(
+    "initial_runners, initial_cloud_runners, num_delete,"
+    "expected_deleted, expected_runners, expected_cloud_runners",
+    [
+        pytest.param(
+            [
+                idle_runner := SelfHostedRunnerFactory(busy=False),
+                busy_runner := SelfHostedRunnerFactory(busy=True, deletable=False),
+            ],
+            [
+                CloudRunnerInstanceFactory.from_self_hosted_runner(idle_runner),
+                busy_vm := CloudRunnerInstanceFactory.from_self_hosted_runner(busy_runner),
+            ],
+            2,
+            1,
+            [busy_runner],
+            [busy_vm],
+            id="idle runner deleted, busy runner and VM preserved",
+        ),
+        pytest.param(
+            [busy_runner := SelfHostedRunnerFactory(busy=True, deletable=False)],
+            [busy_vm := CloudRunnerInstanceFactory.from_self_hosted_runner(busy_runner)],
+            1,
+            0,
+            [busy_runner],
+            [busy_vm],
+            id="only busy runners, nothing deleted",
+        ),
+    ],
+)
+def test_soft_delete_runners(
+    initial_runners: list[SelfHostedRunner],
+    initial_cloud_runners: list[VM],
+    num_delete: int,
+    expected_deleted: int,
+    expected_runners: list[SelfHostedRunner],
+    expected_cloud_runners: list[VM],
+):
+    """
+    arrange: Given initial runners (platform and cloud) with busy runners present.
+    act: Call soft_delete_runners.
+    assert: Busy runners and their VMs are never deleted.
+    """
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    manager = RunnerManager(
+        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+    )
+
+    deleted_count = manager.soft_delete_runners(num=num_delete)
+
+    assert deleted_count == expected_deleted
+    assert list(mock_platform._runners.values()) == expected_runners
+    assert list(mock_cloud._cloud_runners.values()) == expected_cloud_runners
