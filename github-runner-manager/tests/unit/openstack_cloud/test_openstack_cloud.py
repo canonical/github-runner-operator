@@ -422,6 +422,21 @@ def test_delete_instances(
     assert deleted_instance_ids == [successful_delete_id]
 
 
+def test_get_instances_uses_bare_server_listing(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock
+):
+    """
+    arrange: given a mocked openstack connection with no servers.
+    act: when get_instances is called.
+    assert: list_servers is requested with bare=True to skip Neutron enrichment.
+    """
+    mock_openstack_conn.list_servers.return_value = []
+
+    assert openstack_cloud.get_instances() == ()
+
+    mock_openstack_conn.list_servers.assert_called_once_with(bare=True)
+
+
 @pytest.mark.parametrize(
     "max_compute_api_version, expected_version",
     [
