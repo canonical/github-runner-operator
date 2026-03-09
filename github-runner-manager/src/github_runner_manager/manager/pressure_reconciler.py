@@ -187,7 +187,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 desired_total,
                 current_total,
             )
-            self._create_and_track(to_create, label="Create loop")
+            self._create_and_track(to_create)
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up or down.
@@ -212,7 +212,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     desired_total,
                     current_total,
                 )
-                self._create_and_track(to_create, label="Reconcile loop")
+                self._create_and_track(to_create)
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
@@ -230,12 +230,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
 
-    def _create_and_track(self, num: int, label: str) -> None:
+    def _create_and_track(self, num: int) -> None:
         """Create runners and update the in-memory count.
 
         Args:
             num: Number of runners to create.
-            label: Log prefix identifying the caller (e.g. "Create loop", "Timer").
         """
         try:
             created_ids = self._manager.create_runners(num=num, metadata=RunnerMetadata())
@@ -247,8 +246,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         actually_created = len(created_ids)
         if actually_created < num:
             logger.error(
-                "%s: only %s/%s runners created successfully",
-                label,
+                "Only %s/%s runners created successfully",
                 actually_created,
                 num,
             )
