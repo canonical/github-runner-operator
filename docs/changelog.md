@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-09
+
+- Reduced OpenStack API calls when listing managed runners by requesting bare server results and skipping per-server Neutron interface enrichment.
+
 ## 2026-03-03
 
 - Replaced `ghapi` with `PyGithub` to fix stuck GitHub API calls caused by missing timeout support in `ghapi`.
