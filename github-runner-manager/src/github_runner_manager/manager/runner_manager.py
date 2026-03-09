@@ -305,9 +305,7 @@ class RunnerManager:
         Returns:
             Tuple of (deleted VM instance IDs, extracted runner metrics).
         """
-        logger.info(
-            "runner_manager::_delete_runners_core Deleting %s runners (soft=%s)", num, soft
-        )
+        logger.info("runner_manager::delete_runners Deleting %s runners (soft=%s)", num, soft)
         vms = self._cloud.get_vms()
         logger.info("VMs: %s", vms)
         runners_health_response = self._platform.get_runners_health(requested_runners=vms)
