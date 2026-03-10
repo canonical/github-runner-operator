@@ -335,8 +335,10 @@ class RunnerManager:
         deleted_runner_ids = self._delete_runners(runner_ids=platform_runner_ids_to_delete)
         logger.info("Deleted runners: %s", deleted_runner_ids)
 
-        # In soft mode, only clean up VMs for runners actually deleted by the platform
-        # to avoid destroying VMs for runners that became busy between selection and deletion.
+        # In soft mode, only clean up VMs for runners the platform actually deleted.
+        # A runner can become busy between _get_platform_runners_to_scale_down and
+        # _delete_runners; the platform will refuse to delete it, so we must not destroy
+        # its VM.
         runner_ids_for_vm_cleanup = deleted_runner_ids if soft else platform_runner_ids_to_delete
         vm_ids_to_cleanup = list(
             _get_vms_to_cleanup(
