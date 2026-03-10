@@ -1,0 +1,120 @@
+18:42:25 WARNING unexpected facade SSHServer received from the controller
+18:42:25 INFO Adding model github-pr-82c29-lxd:test-charm-metrics-failure-tenb on cloud localhost
+18:42:25 WARNING unexpected facade SSHServer received from the controller
+18:42:25 WARNING unexpected facade SSHSession received from the controller
+18:42:25 WARNING unexpected facade SSHTunneler received from the controller
+18:42:25 WARNING unexpected facade SSHServer received from the controller
+18:42:26 INFO GitHub token rate limit: Rate(reset=2026-03-09 18:53:50+00:00, remaining=4967, limit=5000)
+18:42:28 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:42:30 INFO Deploying ch:amd64/noble/any-charm-133
+18:42:45 INFO Deploying local:jammy/github-runner-0
+18:42:45 INFO Waiting for model:
+  test-pkmx8cv5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pkmx8cv5/0 [allocating] waiting: waiting for machine
+18:43:15 INFO Waiting for model:
+  test-pkmx8cv5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pkmx8cv5/0 [allocating] waiting: waiting for machine
+18:43:46 INFO Waiting for model:
+  test-pkmx8cv5/0 [allocating] waiting: waiting for machine
+18:44:16 INFO Waiting for model:
+  test-pkmx8cv5/0 [allocating] waiting: waiting for machine
+18:44:46 INFO Waiting for model:
+  test-pkmx8cv5/0 [executing] maintenance: installing charm software
+18:45:16 INFO Waiting for model:
+  test-pkmx8cv5/0 [executing] maintenance: installing charm software
+18:45:46 INFO Waiting for model:
+  test-pkmx8cv5/0 [executing] maintenance: Update image for runners
+18:46:05 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-tenb test-pkmx8cv5 base-virtual-machines=0
+18:46:06 INFO Waiting for model:
+  test-pkmx8cv5/0 [idle] active: 
+18:46:22 INFO Current reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:46:22 INFO Waiting for reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:47:23 INFO Current reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:47:23 INFO Current reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3, expected reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:47:23 INFO Waiting for reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:48:24 INFO Current reconcile ID: 28988dd5-e4b7-4ee4-a717-368ec0650427
+18:48:24 INFO Current reconcile ID: 28988dd5-e4b7-4ee4-a717-368ec0650427, expected reconcile ID: 8b5aa9d4-d338-4178-8a41-f6fde13542e3
+18:48:24 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-tenb test-pkmx8cv5 path=canonical/github-runner-operator
+18:48:24 INFO cli: juju config --model github-pr-82c29-lxd:test-charm-metrics-failure-tenb test-pkmx8cv5 base-virtual-machines=1
+18:48:24 INFO Waiting for model:
+  test-pkmx8cv5/0 [idle] active: 
+18:48:54 INFO Waiting for model:
+  test-pkmx8cv5/0 [idle] active: 
+18:48:57 INFO Current reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:48:57 INFO Waiting for reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:49:58 INFO Current reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:49:58 INFO Current reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b, expected reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:49:58 INFO Waiting for reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:50:59 INFO Current reconcile ID: 557a0dd9-ad1a-4422-8523-e012d3023479
+18:50:59 INFO Current reconcile ID: 557a0dd9-ad1a-4422-8523-e012d3023479, expected reconcile ID: dea294e9-64c9-43f0-89e6-2bc9fe2ada3b
+18:52:13 INFO Wait for condition not met, sleeping 30
+18:52:55 INFO [TEST SETUP] Run command pkill -9 run.sh on test-pkmx8cv5-0-n-dd7925d203e4
+18:52:55 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.153', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b8:a6:00'}]])
+18:52:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pkmx8cv5-0-n-dd7925d203e4.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.153 pkill -9 run.sh'
+18:52:58 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.153' (ED25519) to the list of known hosts.
+'
+18:53:00 INFO Runner test-pkmx8cv5-0-n-dd7925d203e4 status: online
+18:53:00 INFO Runner still marked as online, waiting for it to be marked offline
+18:54:00 INFO Waiting for model:
+  test-pkmx8cv5/0 [idle] active: 
+18:54:30 INFO Waiting for model:
+  test-pkmx8cv5/0 [idle] active: 
+18:54:34 INFO Current reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:54:34 INFO Waiting for reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:55:35 INFO Current reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:55:35 INFO Current reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2, expected reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:55:35 INFO Waiting for reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:56:36 INFO Current reconcile ID: 352b6d4c-97f6-4f9d-a1c8-5b3e30d14acf
+18:56:36 INFO Current reconcile ID: 352b6d4c-97f6-4f9d-a1c8-5b3e30d14acf, expected reconcile ID: 5b38bff5-6e8d-41b1-bf0a-aa78a0f2d8d2
+18:56:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773082063.7013278, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.392544746398926}
+{"timestamp": 1773082117.9980946, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.672851324081421}
+{"timestamp": 1773082244.8460555, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.805463552474976}
+{"timestamp": 1773082371.721641, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 1, "duration": 6.7728354930877686}
+{"timestamp": 1773082315.0, "event": "runner_installed", "flavor": "test-pkmx8cv5", "duration": 200.0}
+{"timestamp": 1773082337.0, "event": "runner_start", "flavor": "test-pkmx8cv5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 22.0, "queue_duration": 2.0}
+{"timestamp": 1773082377.0, "event": "runner_stop", "flavor": "test-pkmx8cv5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773082457.1590445, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.452702522277832}
+{"timestamp": 1773082583.6974287, "event": "reconciliation", "flavor": "test-pkmx8cv5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.435863018035889}
+18:56:37 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-tenb  github-pr-82c29-lxd  localhost/localhost  3.6.14   unsupported  18:56:37Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-pkmx8cv5           active      1  any-charm      latest/beta  133  no       
+test-pkmx8cv5                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-pkmx8cv5/0*  active    idle   0        10.58.112.18           
+test-pkmx8cv5/0*                         active    idle   1        10.58.112.65           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.58.112.18  juju-0497b7-0  ubuntu@24.04  github-runner  Running
+1        started  10.58.112.65  juju-0497b7-1  ubuntu@22.04  github-runner  Running
+
+18:56:37 INFO Juju error logs:
+
+machine-0: 18:43:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pkmx8cv5-0: 18:45:26 ERROR unit.test-pkmx8cv5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pkmx8cv5-0: 18:45:27 ERROR unit.test-pkmx8cv5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pkmx8cv5-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:56:37 INFO Forgetting model main...
