@@ -145,7 +145,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         signal.signal(signal.SIGTERM, shutdown)
         signal.signal(signal.SIGINT, shutdown)
         thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
-        thread_manager.add_thread(target=pressure_reconciler.start_delete_loop, daemon=True)
+        thread_manager.add_thread(target=pressure_reconciler.start_reconcile_loop, daemon=True)
     # Legacy mode is still supported for deployments without planner config.
     else:
         thread_manager.add_thread(
