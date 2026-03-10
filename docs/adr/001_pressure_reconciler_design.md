@@ -35,14 +35,14 @@ Two competing concerns shape the design:
 The `PressureReconciler` runs two independent, long-lived loops that share a mutex
 with the existing reconcile path:
 
-1. **Create loop** – opens a long-lived streaming HTTP connection to the planner's
-   `GET /api/v1/flavors/{name}/pressure?stream=true` endpoint and creates runners
-   whenever the desired total exceeds the current total. Each pressure event updates
-   a shared `_last_pressure` field consumed by the delete loop.
+1. **Create loop** – streams pressure from the planner and creates runners
+   whenever the desired total exceeds the current count. Tracks runner count
+   in memory to avoid expensive OpenStack/GitHub API calls on every event.
 
-2. **Delete loop** – wakes on a configurable timer, removes stale VMs, then
-   converges the runner count toward the most recently observed pressure from the
-   create loop. It does not fetch fresh pressure from the planner.
+2. **Reconcile loop** – wakes on a configurable timer, cleans up stale runners,
+   syncs the in-memory count with reality, scales up if needed, and soft-deletes
+   idle runners when the current count exceeds the desired total. Busy runners
+   are never targeted for scale-down.
 
 Planner mode is activated only when `planner_url` and `planner_token` are present
 in configuration, allowing staged rollout before the legacy reconcile path is
@@ -64,18 +64,20 @@ this project in the past, and OpenStack also degrades under high call rates.
 Separate loops let creates react in near-real-time while keeping API call volume
 proportional to the configured cleanup interval.
 
-**Fetching fresh pressure in the delete loop.** Having the delete loop call
+**Fetching fresh pressure in the reconcile loop.** Having the reconcile loop call
 `GET /api/v1/flavors/{name}/pressure` itself would give it an up-to-date reading.
 However, this adds an extra network round-trip on every timer tick, couples the
-delete loop to planner availability, and is unnecessary because any over-deletion
+reconcile loop to planner availability, and is unnecessary because any over-deletion
 caused by a stale reading is self-correcting: the create loop will scale back up
 on the next streaming event.
 
 ## Tradeoffs
 
-The delete loop operates on a stale pressure value: it sees the last pressure
-reported to the create loop rather than a live reading. The staleness window is
-bounded by the planner's stream update frequency. Any over-deletion in that window
-is self-correcting because the create loop re-scales up on the next event. This is
-an acceptable trade-off given that scale-down correctness is less time-critical
-than scale-up.
+- The reconcile loop uses the last pressure seen by the create loop, not a live
+  reading. Staleness is bounded by the stream update frequency.
+- The in-memory runner count can drift from reality (e.g. VMs that fail after
+  creation). This acts as a natural backoff — no further creates until the
+  reconcile loop syncs. The reconcile loop corrects drift on every tick.
+- Scale-down uses soft deletion: only idle runners are removed, busy runners
+  are skipped. This avoids killing in-flight jobs but may temporarily exceed
+  the desired count when all excess runners are busy.
