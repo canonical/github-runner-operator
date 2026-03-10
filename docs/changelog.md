@@ -5,6 +5,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-10
 
+- Added Prometheus metrics and Grafana panels for GitHub API call counts, errors, latency, and rate-limit visibility.
 - Use in-memory runner count in pressure reconciler create loop to avoid expensive OpenStack and GitHub API calls on every pressure event.
 - Scale-down in the reconcile loop now uses soft deletion, which excludes busy runners from the candidate pool to avoid killing in-flight jobs.
 

@@ -20,6 +20,10 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.metrics.github_api import (
+    record_github_api_metrics,
+    track_github_api_metrics,
+)
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -133,6 +137,7 @@ class GithubClient:
             ),
         )
 
+    @track_github_api_metrics
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
         """Get a specific self-hosted runner information under a repo or org.
@@ -167,6 +172,7 @@ class GithubClient:
             instance_id=instance_id,
         )
 
+    @track_github_api_metrics
     @catch_http_errors
     def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
         """Get all runners information on GitHub under a repo or org.
@@ -199,6 +205,7 @@ class GithubClient:
                 )
         return managed_runners_list
 
+    @track_github_api_metrics
     @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
@@ -267,6 +274,7 @@ class GithubClient:
             " The group does not exist or there are more than 100 groups."
         )
 
+    @track_github_api_metrics
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
@@ -302,38 +310,44 @@ class GithubClient:
             workflow_run_id: Id of the workflow run.
             runner_name: Name of the runner.
 
-        Raises:
-            TokenError: if there was an error with the Github token credential provided.
-            JobNotFoundError: If no jobs were found.
-
         Returns:
             Job information.
         """
-        try:
-            # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
-            # See: https://docs.github.com/en/actions/reference/limits
-            for page in range(1, 4):
-                _headers, data = self._requester.requestJsonAndCheck(
-                    "GET",
-                    f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
-                    parameters={"per_page": 100, "page": page},
-                )
-                jobs = data["jobs"]
-                if not jobs:
-                    break
-                for job in jobs:
-                    if job["runner_name"] == runner_name:
-                        return self._to_job_info(job)
-        except GithubException as exc:
-            if exc.status in (401, 403):
-                raise TokenError from exc
-            raise JobNotFoundError(
-                f"Could not find job for runner {runner_name}. "
-                f"Could not list jobs for workflow run {workflow_run_id}"
-            ) from exc
 
-        raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
+        def _get_job_info_by_runner_name() -> JobInfo:
+            """Fetch job information for a runner from workflow run job pages."""
+            try:
+                # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
+                # See: https://docs.github.com/en/actions/reference/limits
+                for page in range(1, 4):
+                    _headers, data = self._requester.requestJsonAndCheck(
+                        "GET",
+                        f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
+                        parameters={"per_page": 100, "page": page},
+                    )
+                    jobs = data["jobs"]
+                    if not jobs:
+                        break
+                    for job in jobs:
+                        if job["runner_name"] == runner_name:
+                            return self._to_job_info(job)
+            except GithubException as exc:
+                if exc.status in (401, 403):
+                    raise TokenError from exc
+                raise JobNotFoundError(
+                    f"Could not find job for runner {runner_name}. "
+                    f"Could not list jobs for workflow run {workflow_run_id}"
+                ) from exc
 
+            raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
+
+        return record_github_api_metrics(
+            method="get_job_info_by_runner_name",
+            requester=self._requester,
+            func=_get_job_info_by_runner_name,
+        )
+
+    @track_github_api_metrics
     @catch_http_errors
     def get_job_info(self, path: GitHubRepo, job_id: str) -> JobInfo:
         """Get information about a job identified by the job id.
