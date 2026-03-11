@@ -10,8 +10,7 @@ from github import GithubException, RateLimitExceededException
 from prometheus_client import REGISTRY
 
 from github_runner_manager.configuration.github import GitHubRepo
-from github_runner_manager.github_client import GithubClient
-from github_runner_manager.metrics.github_api import track_github_api_metrics
+from github_runner_manager.github_client import GithubClient, _track_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
     JobNotFoundError,
     PlatformApiError,
@@ -33,24 +32,24 @@ class _DummyGitHubClient:
         self.requester = MagicMock()
         self.requester.rate_limiting = (4999, 5000)
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     def successful_call(self) -> str:
         """Return a successful result."""
         return "ok"
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     def rate_limit_error(self) -> None:
         """Raise a translated rate limit error with a chained cause."""
         raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
             403, {}, {}
         )
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     def bad_credentials_error(self) -> None:
         """Raise a translated token error."""
         raise TokenError("Invalid token.")
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     def github_error(self) -> None:
         """Raise a translated generic platform API error."""
         raise PlatformApiError("unexpected github failure")

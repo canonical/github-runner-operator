@@ -52,6 +52,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     gh_client = GithubClient("token")
     gh_client._github = MagicMock()
     gh_client.requester = MagicMock()
+    gh_client.requester.rate_limiting = (4999, 5000)
 
     # Default mock for requestJsonAndCheck (used by get_job_info_by_runner_name, etc.)
     gh_client.requester.requestJsonAndCheck.return_value = (

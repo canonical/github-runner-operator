@@ -3,11 +3,11 @@
 
 """Prometheus metrics for GitHub API client calls."""
 
-import functools
 from time import perf_counter
-from typing import Any, Callable, ParamSpec, TypeVar
+from typing import Callable, TypeVar
 
 from github import RateLimitExceededException
+from github.Requester import Requester
 from prometheus_client import Counter, Gauge, Histogram
 
 from github_runner_manager.metrics import labels
@@ -17,7 +17,6 @@ from github_runner_manager.platform.platform_provider import (
     TokenError,
 )
 
-ParamT = ParamSpec("ParamT")
 ReturnT = TypeVar("ReturnT")
 
 GITHUB_API_CALLS_TOTAL = Counter(
@@ -45,39 +44,8 @@ GITHUB_API_RATE_LIMIT_LIMIT = Gauge(
 )
 
 
-def track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
-    """Track call count, errors, duration, and rate limit state for GitHub client methods.
-
-    Args:
-        func: GithubClient method to instrument.
-
-    Returns:
-        A wrapped method that emits GitHub API metrics.
-    """
-
-    @functools.wraps(func)
-    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
-        """Wrap the target method with GitHub API metric collection.
-
-        Args:
-            args: Positional arguments for the wrapped method.
-            kwargs: Keyword arguments for the wrapped method.
-
-        Returns:
-            The wrapped method result.
-        """
-        requester = getattr(args[0], "requester", None) if args else None
-        return _record_github_api_metrics(
-            method=func.__name__,
-            requester=requester,
-            func=lambda: func(*args, **kwargs),
-        )
-
-    return wrapper
-
-
-def _record_github_api_metrics(
-    method: str, requester: Any, func: Callable[[], ReturnT]
+def record_github_api_metrics(
+    method: str, requester: Requester, func: Callable[[], ReturnT]
 ) -> ReturnT:
     """Record GitHub API metrics around a callback.
 
@@ -120,13 +88,8 @@ def _classify_error(exc: Exception) -> str:
     return "other"
 
 
-def _update_rate_limit_metrics(requester: Any) -> None:
+def _update_rate_limit_metrics(requester: Requester) -> None:
     """Update rate limit gauges from the PyGithub requester."""
-    rate_limiting = getattr(requester, "rate_limiting", None)
-    if not isinstance(rate_limiting, tuple) or len(rate_limiting) != 2:
-        return
-    remaining, limit = rate_limiting
-    if remaining is not None:
-        GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
-    if limit is not None:
-        GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
+    remaining, limit = requester.rate_limiting
+    GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
+    GITHUB_API_RATE_LIMIT_LIMIT.set(limit)

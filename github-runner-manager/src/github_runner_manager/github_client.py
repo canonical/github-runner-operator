@@ -20,7 +20,7 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.metrics.github_api import track_github_api_metrics
+from github_runner_manager.metrics.github_api import record_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -88,6 +88,27 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
     return wrapper
 
 
+def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
+    """Track call count, errors, duration, and rate limit for GithubClient methods.
+
+    Args:
+        func: GithubClient method to instrument.
+
+    Returns:
+        A wrapped method that emits GitHub API metrics.
+    """
+
+    @functools.wraps(func)
+    def wrapper(self: "GithubClient", *args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+        return record_github_api_metrics(
+            method=func.__name__,
+            requester=self.requester,
+            func=lambda: func(self, *args, **kwargs),
+        )
+
+    return wrapper  # type: ignore[return-value]
+
+
 class GithubClient:
     """GitHub API client."""
 
@@ -134,7 +155,7 @@ class GithubClient:
             ),
         )
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
         """Get a specific self-hosted runner information under a repo or org.
@@ -169,7 +190,7 @@ class GithubClient:
             instance_id=instance_id,
         )
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     @catch_http_errors
     def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
         """Get all runners information on GitHub under a repo or org.
@@ -202,7 +223,7 @@ class GithubClient:
                 )
         return managed_runners_list
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
@@ -271,7 +292,7 @@ class GithubClient:
             " The group does not exist or there are more than 100 groups."
         )
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
@@ -297,7 +318,7 @@ class GithubClient:
                 raise DeleteRunnerBusyError from err
             raise
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str
     ) -> JobInfo:
@@ -340,7 +361,7 @@ class GithubClient:
 
         raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
 
-    @track_github_api_metrics
+    @_track_github_api_metrics
     @catch_http_errors
     def get_job_info(self, path: GitHubRepo, job_id: str) -> JobInfo:
         """Get information about a job identified by the job id.
