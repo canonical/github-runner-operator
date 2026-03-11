@@ -6,6 +6,7 @@
 import functools
 import logging
 from datetime import datetime
+from time import perf_counter
 from typing import Callable, ParamSpec, TypeVar
 
 import github
@@ -20,7 +21,13 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.metrics.github_api import RateLimiting, record_github_api_metrics
+from github_runner_manager.metrics.github_api import (
+    GITHUB_API_RATE_LIMIT_LIMIT,
+    GITHUB_API_RATE_LIMIT_REMAINING,
+    GITHUB_CLIENT_CALLS_TOTAL,
+    GITHUB_CLIENT_DURATION_SECONDS,
+    GITHUB_CLIENT_ERRORS_TOTAL,
+)
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -106,21 +113,49 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
             args: Placeholder for positional arguments.
             kwargs: Placeholder for keyword arguments.
 
+        Raises:
+            PlatformApiError: If the wrapped method raises a translated GitHub API error.
+            JobNotFoundError: If the wrapped method cannot find the requested job.
+            TokenError: If the wrapped method raises a token-related error.
+
         Returns:
             The result of the wrapped method.
         """
         client: GithubClient = args[0]  # type: ignore[assignment]
-        return record_github_api_metrics(
-            method=func.__name__,
-            get_rate_limiting=(
-                lambda: RateLimiting(
-                    *client._requester.rate_limiting  # pylint: disable=protected-access
-                )
-            ),
-            func=lambda: func(*args, **kwargs),
-        )
+        start = perf_counter()
+        try:
+            return func(*args, **kwargs)
+        except PlatformApiError as exc:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(
+                method=func.__name__, error_type=_classify_github_metric_error(exc)
+            ).inc()
+            raise
+        except JobNotFoundError:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(method=func.__name__, error_type="other").inc()
+            raise
+        except TokenError:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(method=func.__name__, error_type="token_error").inc()
+            raise
+        finally:
+            GITHUB_CLIENT_CALLS_TOTAL.labels(method=func.__name__).inc()
+            GITHUB_CLIENT_DURATION_SECONDS.labels(method=func.__name__).observe(
+                perf_counter() - start
+            )
+            remaining, limit = client._requester.rate_limiting  # pylint: disable=protected-access
+            GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
+            GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
 
     return wrapper
+
+
+def _classify_github_metric_error(exc: PlatformApiError) -> str:
+    """Map translated GitHub client exceptions to metric label values."""
+    current: BaseException | None = exc
+    while current is not None:
+        if isinstance(current, RateLimitExceededException):
+            return "rate_limit"
+        current = current.__cause__ if current.__cause__ is not None else current.__context__
+    return "platform_api_error"
 
 
 class GithubClient:

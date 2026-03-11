@@ -7,7 +7,13 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
-from github import BadCredentialsException, GithubException, UnknownObjectException
+from github import (
+    BadCredentialsException,
+    GithubException,
+    RateLimitExceededException,
+    UnknownObjectException,
+)
+from prometheus_client import REGISTRY
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.github_client import (
@@ -59,6 +65,29 @@ class _DecoratedClientMethodTarget:
     def token_error(self) -> None:
         """Raise TokenError to verify propagation through the decorator."""
         raise TokenError("Invalid token.")
+
+    @_track_github_api_metrics
+    def rate_limit_error(self) -> None:
+        """Raise a rate-limit-flavoured PlatformApiError."""
+        raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
+            403, {}, {}
+        )
+
+    @_track_github_api_metrics
+    def platform_api_error(self) -> None:
+        """Raise a generic PlatformApiError."""
+        raise PlatformApiError("unexpected github failure")
+
+    @_track_github_api_metrics
+    def job_not_found(self) -> None:
+        """Raise JobNotFoundError to verify generic error labelling."""
+        raise JobNotFoundError("missing job")
+
+
+def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
+    """Get a sample value from the default Prometheus registry."""
+    value = REGISTRY.get_sample_value(name, labels or {})
+    return 0.0 if value is None else value
 
 
 @pytest.fixture(name="job_stats_raw")
@@ -620,87 +649,60 @@ def test_delete_runner_busy(github_client: GithubClient):
         _ = github_client.delete_runner(path, runner_id)
 
 
-def test_track_github_api_metrics_passes_method_and_rate_limit(
-    monkeypatch: pytest.MonkeyPatch,
-):
+def test_track_github_api_metrics_records_success_metrics():
     """
-    arrange: a decorated client-like method and a spy for record_github_api_metrics.
+    arrange: a decorated client-like method.
     act: call the decorated method.
-    assert: the decorator forwards the method name, rate limit tuple, and callback correctly.
+    assert: the decorator records call count and duration metrics.
     """
     client = _DecoratedClientMethodTarget()
-    captured: dict[str, object] = {}
-
-    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
-        """Capture the decorator inputs and execute the wrapped callback."""
-        captured["method"] = method
-        captured["result"] = func()
-        captured["rate_limiting"] = get_rate_limiting()
-        return captured["result"]
-
-    monkeypatch.setattr(
-        "github_runner_manager.github_client.record_github_api_metrics",
-        fake_record_github_api_metrics,
-    )
+    labels = {"method": "successful_call"}
+    before_calls = _sample_value("github_client_calls_total", labels)
+    before_duration = _sample_value("github_client_duration_seconds_count", labels)
 
     assert client.successful_call() == "ok"
-    assert captured == {
-        "method": "successful_call",
-        "rate_limiting": (4999, 5000),
-        "result": "ok",
-    }
+
+    assert _sample_value("github_client_calls_total", labels) - before_calls == pytest.approx(1)
+    assert _sample_value("github_client_duration_seconds_count", labels) - before_duration == (
+        pytest.approx(1)
+    )
 
 
-def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call(
-    monkeypatch: pytest.MonkeyPatch,
-):
+def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call():
     """
     arrange: a decorated client-like method that mutates requester rate limits during execution.
     act: call the decorated method.
-    assert: the decorator passes the original method name and reads rate limits after the call.
+    assert: the rate-limit gauges reflect the post-call values.
     """
     client = _DecoratedClientMethodTarget()
-    captured: dict[str, object] = {}
-
-    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
-        """Capture post-call rate limiting from the decorator."""
-        captured["method"] = method
-        captured["result"] = func()
-        captured["rate_limiting"] = get_rate_limiting()
-        return captured["result"]
-
-    monkeypatch.setattr(
-        "github_runner_manager.github_client.record_github_api_metrics",
-        fake_record_github_api_metrics,
-    )
 
     assert client.successful_call_updates_rate_limit() == "ok"
-
-    assert captured == {
-        "method": "successful_call_updates_rate_limit",
-        "rate_limiting": (1234, 5000),
-        "result": "ok",
-    }
+    assert _sample_value("github_api_rate_limit_remaining") == pytest.approx(1234)
+    assert _sample_value("github_api_rate_limit_limit") == pytest.approx(5000)
 
 
-def test_track_github_api_metrics_propagates_exceptions(monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize(
+    ("method_name", "error_type", "expected_exception"),
+    [
+        ("token_error", "token_error", TokenError),
+        ("rate_limit_error", "rate_limit", PlatformApiError),
+        ("platform_api_error", "platform_api_error", PlatformApiError),
+        ("job_not_found", "other", JobNotFoundError),
+    ],
+)
+def test_track_github_api_metrics_records_error_metrics(
+    method_name: str, error_type: str, expected_exception: type[Exception]
+):
     """
-    arrange: a decorated client-like method that raises TokenError.
-    act: call the decorated method through a fake metrics recorder.
-    assert: the original exception is propagated through the decorator callback.
+    arrange: a decorated client-like method that raises a translated platform error.
+    act: call the decorated method.
+    assert: the matching error metric increases by one.
     """
     client = _DecoratedClientMethodTarget()
+    labels = {"method": method_name, "error_type": error_type}
+    before = _sample_value("github_client_errors_total", labels)
 
-    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
-        """Assert decorator inputs before propagating the wrapped exception."""
-        assert method == "token_error"
-        assert get_rate_limiting() == (4999, 5000)
-        return func()
+    with pytest.raises(expected_exception):
+        getattr(client, method_name)()
 
-    monkeypatch.setattr(
-        "github_runner_manager.github_client.record_github_api_metrics",
-        fake_record_github_api_metrics,
-    )
-
-    with pytest.raises(TokenError, match="Invalid token."):
-        client.token_error()
+    assert _sample_value("github_client_errors_total", labels) - before == pytest.approx(1)
