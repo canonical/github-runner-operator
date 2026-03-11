@@ -20,7 +20,7 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.metrics.github_api import record_github_api_metrics
+from github_runner_manager.metrics.github_api import RateLimiting, record_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -113,7 +113,9 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         return record_github_api_metrics(
             method=func.__name__,
             get_rate_limiting=(
-                lambda: client._requester.rate_limiting  # pylint: disable=protected-access
+                lambda: RateLimiting(
+                    *client._requester.rate_limiting  # pylint: disable=protected-access
+                )
             ),
             func=lambda: func(*args, **kwargs),
         )

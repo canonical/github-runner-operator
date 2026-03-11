@@ -31,18 +31,18 @@ class RateLimiting(NamedTuple):
     limit: int
 
 
-GITHUB_API_CALLS_TOTAL = Counter(
-    name="github_api_calls_total",
+GITHUB_CLIENT_CALLS_TOTAL = Counter(
+    name="github_client_calls_total",
     documentation="Total number of GithubClient method calls.",
     labelnames=[labels.METHOD],
 )
-GITHUB_API_ERRORS_TOTAL = Counter(
-    name="github_api_errors_total",
+GITHUB_CLIENT_ERRORS_TOTAL = Counter(
+    name="github_client_errors_total",
     documentation="Total number of failed GithubClient method calls.",
     labelnames=[labels.METHOD, labels.ERROR_TYPE],
 )
-GITHUB_API_DURATION_SECONDS = Histogram(
-    name="github_api_duration_seconds",
+GITHUB_CLIENT_DURATION_SECONDS = Histogram(
+    name="github_client_duration_seconds",
     documentation="Time taken in seconds for GithubClient method calls.",
     labelnames=[labels.METHOD],
 )
@@ -76,11 +76,11 @@ def record_github_api_metrics(
     try:
         return func()
     except PlatformError as exc:
-        GITHUB_API_ERRORS_TOTAL.labels(method=method, error_type=_classify_error(exc)).inc()
+        GITHUB_CLIENT_ERRORS_TOTAL.labels(method=method, error_type=_classify_error(exc)).inc()
         raise
     finally:
-        GITHUB_API_CALLS_TOTAL.labels(method=method).inc()
-        GITHUB_API_DURATION_SECONDS.labels(method=method).observe(perf_counter() - start)
+        GITHUB_CLIENT_CALLS_TOTAL.labels(method=method).inc()
+        GITHUB_CLIENT_DURATION_SECONDS.labels(method=method).observe(perf_counter() - start)
         rate_limiting = get_rate_limiting()
         GITHUB_API_RATE_LIMIT_REMAINING.set(rate_limiting.remaining)
         GITHUB_API_RATE_LIMIT_LIMIT.set(rate_limiting.limit)

@@ -16,7 +16,6 @@ from github_runner_manager.github_client import (
     _track_github_api_metrics,
 )
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.metrics.github_api import RateLimiting
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -43,7 +42,7 @@ class _DecoratedClientMethodTarget:
     def __init__(self):
         """Create the minimal client-like state expected by the decorator."""
         self._requester = MagicMock()
-        self._requester.rate_limiting = RateLimiting(4999, 5000)
+        self._requester.rate_limiting = (4999, 5000)
 
     @_track_github_api_metrics
     def successful_call(self) -> str:
@@ -82,7 +81,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     gh_client = GithubClient("token")
     gh_client._github = MagicMock()
     gh_client._requester = MagicMock()
-    gh_client._requester.rate_limiting = RateLimiting(4999, 5000)
+    gh_client._requester.rate_limiting = (4999, 5000)
 
     # Default mock for requestJsonAndCheck (used by get_job_info_by_runner_name, etc.)
     gh_client._requester.requestJsonAndCheck.return_value = (
@@ -647,7 +646,7 @@ def test_track_github_api_metrics_passes_method_and_rate_limit(
     assert client.successful_call() == "ok"
     assert captured == {
         "method": "successful_call",
-        "rate_limiting": RateLimiting(4999, 5000),
+        "rate_limiting": (4999, 5000),
         "result": "ok",
     }
 
@@ -679,7 +678,7 @@ def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call(
 
     assert captured == {
         "method": "successful_call_updates_rate_limit",
-        "rate_limiting": RateLimiting(1234, 5000),
+        "rate_limiting": (1234, 5000),
         "result": "ok",
     }
 
@@ -695,7 +694,7 @@ def test_track_github_api_metrics_propagates_exceptions(monkeypatch: pytest.Monk
     def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
         """Assert decorator inputs before propagating the wrapped exception."""
         assert method == "token_error"
-        assert get_rate_limiting() == RateLimiting(4999, 5000)
+        assert get_rate_limiting() == (4999, 5000)
         return func()
 
     monkeypatch.setattr(

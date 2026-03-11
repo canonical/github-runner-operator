@@ -51,8 +51,8 @@ def _raise_nested_rate_limit_error() -> None:
 @pytest.mark.parametrize(
     ("sample_name", "expected_delta"),
     [
-        ("github_api_calls_total", 1),
-        ("github_api_duration_seconds_count", 1),
+        ("github_client_calls_total", 1),
+        ("github_client_duration_seconds_count", 1),
     ],
 )
 def test_successful_call_records_metrics(sample_name: str, expected_delta: int):
@@ -129,7 +129,7 @@ def test_error_metrics_are_classified(
     """
     labels = {"method": method, "error_type": error_type}
 
-    before = _sample_value("github_api_errors_total", labels)
+    before = _sample_value("github_client_errors_total", labels)
 
     with pytest.raises(expected_exception):
         record_github_api_metrics(
@@ -138,5 +138,5 @@ def test_error_metrics_are_classified(
             func=callback,
         )
 
-    after = _sample_value("github_api_errors_total", labels)
+    after = _sample_value("github_client_errors_total", labels)
     assert after - before == pytest.approx(1)
