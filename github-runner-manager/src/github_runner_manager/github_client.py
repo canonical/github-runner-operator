@@ -112,7 +112,9 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         client: GithubClient = args[0]  # type: ignore[assignment]
         return record_github_api_metrics(
             method=func.__name__,
-            get_rate_limiting=lambda: client._requester.rate_limiting,  # pylint: disable=protected-access
+            get_rate_limiting=(
+                lambda: client._requester.rate_limiting  # pylint: disable=protected-access
+            ),
             func=lambda: func(*args, **kwargs),
         )
 

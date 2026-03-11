@@ -65,11 +65,14 @@ def test_successful_call_records_metrics(sample_name: str, expected_delta: int):
 
     before = _sample_value(sample_name, labels)
 
-    assert record_github_api_metrics(
-        method="successful_call",
-        get_rate_limiting=lambda: RateLimiting(4999, 5000),
-        func=lambda: "ok",
-    ) == "ok"
+    assert (
+        record_github_api_metrics(
+            method="successful_call",
+            get_rate_limiting=lambda: RateLimiting(4999, 5000),
+            func=lambda: "ok",
+        )
+        == "ok"
+    )
 
     after = _sample_value(sample_name, labels)
     assert after - before == pytest.approx(expected_delta)
@@ -84,6 +87,7 @@ def test_rate_limit_gauge_updated_from_post_call_value():
     rate_limiting = RateLimiting(4999, 5000)
 
     def callback() -> str:
+        """Update the rate-limit snapshot during the wrapped call."""
         nonlocal rate_limiting
         rate_limiting = RateLimiting(1234, 5000)
         return "ok"
@@ -102,7 +106,12 @@ def test_rate_limit_gauge_updated_from_post_call_value():
     ("method", "error_type", "callback", "expected_exception"),
     [
         ("rate_limit_error", "rate_limit", _raise_rate_limit_error, PlatformApiError),
-        ("nested_rate_limit_error", "rate_limit", _raise_nested_rate_limit_error, PlatformApiError),
+        (
+            "nested_rate_limit_error",
+            "rate_limit",
+            _raise_nested_rate_limit_error,
+            PlatformApiError,
+        ),
         ("bad_credentials_error", "token_error", _raise_token_error, TokenError),
         ("github_error", "platform_api_error", _raise_platform_api_error, PlatformApiError),
     ],

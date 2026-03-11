@@ -20,10 +20,16 @@ ReturnT = TypeVar("ReturnT")
 
 
 class RateLimiting(NamedTuple):
-    """GitHub API rate-limit snapshot."""
+    """GitHub API rate-limit snapshot.
+
+    Attributes:
+        remaining: Remaining requests in the current rate-limit window.
+        limit: Total requests allowed in the current rate-limit window.
+    """
 
     remaining: int
     limit: int
+
 
 GITHUB_API_CALLS_TOTAL = Counter(
     name="github_api_calls_total",
@@ -88,7 +94,7 @@ def _classify_error(exc: Exception) -> str:
     """
     if isinstance(exc, TokenError):
         return "token_error"
-    current: Exception | None = exc
+    current: BaseException | None = exc
     while current is not None:
         if isinstance(current, RateLimitExceededException):
             return "rate_limit"

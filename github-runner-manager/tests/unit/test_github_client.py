@@ -633,6 +633,7 @@ def test_track_github_api_metrics_passes_method_and_rate_limit(
     captured: dict[str, object] = {}
 
     def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
+        """Capture the decorator inputs and execute the wrapped callback."""
         captured["method"] = method
         captured["result"] = func()
         captured["rate_limiting"] = get_rate_limiting()
@@ -663,6 +664,7 @@ def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call(
     captured: dict[str, object] = {}
 
     def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
+        """Capture post-call rate limiting from the decorator."""
         captured["method"] = method
         captured["result"] = func()
         captured["rate_limiting"] = get_rate_limiting()
@@ -691,6 +693,7 @@ def test_track_github_api_metrics_propagates_exceptions(monkeypatch: pytest.Monk
     client = _DecoratedClientMethodTarget()
 
     def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
+        """Assert decorator inputs before propagating the wrapped exception."""
         assert method == "token_error"
         assert get_rate_limiting() == RateLimiting(4999, 5000)
         return func()
