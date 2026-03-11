@@ -99,7 +99,7 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
     """
 
     @functools.wraps(func)
-    def wrapper(self: "GithubClient", *args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
         """Wrap a GithubClient method with metrics recording.
 
         Args:
@@ -109,13 +109,14 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         Returns:
             The result of the wrapped method.
         """
+        client: GithubClient = args[0]  # type: ignore[assignment]
         return record_github_api_metrics(
             method=func.__name__,
-            rate_limiting=self._requester.rate_limiting,  # pylint: disable=protected-access
-            func=lambda: func(self, *args, **kwargs),  # type: ignore[arg-type]
+            rate_limiting=client._requester.rate_limiting,  # pylint: disable=protected-access
+            func=lambda: func(*args, **kwargs),
         )
 
-    return wrapper  # type: ignore[return-value]
+    return wrapper
 
 
 class GithubClient:
