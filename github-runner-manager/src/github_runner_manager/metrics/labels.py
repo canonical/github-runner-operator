@@ -1,7 +1,7 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Module for collecting metrics related to the reconciliation process."""
+"""Shared Prometheus metric label constants."""
 
 FLAVOR = "flavor"
 CLOUD = "cloud"
