@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-11
 
-- Added Prometheus metrics for GitHub API call counts, errors, latency, and rate-limit visibility.
+- Added Prometheus metrics for GithubClient operation counts, errors, latency, and rate-limit visibility.
 
 ## 2026-03-10
 
