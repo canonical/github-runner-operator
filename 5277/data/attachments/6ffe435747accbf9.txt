@@ -1,0 +1,47 @@
+18:43:26 WARNING unexpected facade SSHServer received from the controller
+18:43:26 INFO Adding model github-pr-bed5c-lxd:test-charm-runner-weyt on cloud localhost
+18:43:27 WARNING unexpected facade SSHServer received from the controller
+18:43:27 WARNING unexpected facade SSHSession received from the controller
+18:43:27 WARNING unexpected facade SSHTunneler received from the controller
+18:43:27 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:43:29 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:42 INFO Deploying local:jammy/github-runner-0
+18:43:42 INFO Waiting for model:
+  test-kbalmlf6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kbalmlf6/0 [allocating] waiting: waiting for machine
+18:44:12 INFO Waiting for model:
+  test-kbalmlf6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kbalmlf6/0 [executing] active: 
+18:44:43 INFO Waiting for model:
+  test-kbalmlf6/0 [allocating] waiting: waiting for machine
+18:45:13 INFO Waiting for model:
+  test-kbalmlf6/0 [allocating] waiting: waiting for machine
+18:45:43 INFO Waiting for model:
+  test-kbalmlf6/0 [allocating] waiting: agent initialising
+18:46:13 INFO Waiting for model:
+  test-kbalmlf6/0 [executing] maintenance: installing charm software
+18:46:44 INFO Waiting for model:
+  test-kbalmlf6/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kbalmlf6/0 [idle] active:
+18:47:10 INFO Waiting for model:
+  test-kbalmlf6/0 [idle] active: 
+18:47:40 INFO Waiting for model:
+  test-kbalmlf6/0 [idle] active: 
+18:47:42 INFO Current reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:47:42 INFO Waiting for reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:48:43 INFO Current reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:48:43 INFO Current reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93, expected reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:48:43 INFO Waiting for reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:49:44 INFO Current reconcile ID: 1e4ba569-8830-4e6a-ad8e-1f3ff47cb59f
+18:49:44 INFO Current reconcile ID: 1e4ba569-8830-4e6a-ad8e-1f3ff47cb59f, expected reconcile ID: da018e3f-a557-42ca-90da-d797cf8dba93
+18:49:52 INFO Waiting for model:
+  test-kbalmlf6/0 [idle] active: 
+18:50:23 INFO Waiting for model:
+  test-kbalmlf6/0 [idle] active: 
+18:50:25 INFO Current reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
+18:50:25 INFO Waiting for reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
+18:51:26 INFO Current reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
+18:51:26 INFO Current reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd, expected reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
+18:51:26 INFO Waiting for reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
+18:52:27 INFO Current reconcile ID: 65137b06-f929-4d60-80c0-0496f7751acc
+18:52:27 INFO Current reconcile ID: 65137b06-f929-4d60-80c0-0496f7751acc, expected reconcile ID: af32ff8a-0876-40e7-8277-3edf2db47cdd
