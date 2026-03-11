@@ -6,6 +6,7 @@
 import functools
 import logging
 from datetime import datetime
+from time import perf_counter
 from typing import Callable, ParamSpec, TypeVar
 
 import github
@@ -20,6 +21,13 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.metrics.github_api import (
+    GITHUB_API_RATE_LIMIT_LIMIT,
+    GITHUB_API_RATE_LIMIT_REMAINING,
+    GITHUB_CLIENT_CALLS_TOTAL,
+    GITHUB_CLIENT_DURATION_SECONDS,
+    GITHUB_CLIENT_ERRORS_TOTAL,
+)
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -87,6 +95,83 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
     return wrapper
 
 
+def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
+    """Track call count, errors, duration, and rate limit for GithubClient methods.
+
+    Args:
+        func: GithubClient method to instrument.
+
+    Returns:
+        A wrapped method that emits GitHub API metrics.
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args: ParamT.args, **kwargs: ParamT.kwargs) -> ReturnT:
+        """Wrap a GithubClient method with metrics recording.
+
+        Args:
+            args: Placeholder for positional arguments.
+            kwargs: Placeholder for keyword arguments.
+
+        Raises:
+            PlatformApiError: If the wrapped method raises a translated GitHub API error.
+            JobNotFoundError: If the wrapped method cannot find the requested job.
+            TokenError: If the wrapped method raises a token-related error.
+            Exception: If the wrapped method raises an unexpected exception.
+
+        Returns:
+            The result of the wrapped method.
+        """
+        client: GithubClient = args[0]  # type: ignore[assignment]
+        start = perf_counter()
+        try:
+            return func(*args, **kwargs)
+        except (
+            PlatformApiError,
+            JobNotFoundError,
+            GithubRunnerNotFoundError,
+            TokenError,
+            DeleteRunnerBusyError,
+        ) as exc:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(
+                method=func.__name__, error_type=_classify_github_metric_error(exc)
+            ).inc()
+            raise
+        except Exception:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(
+                method=func.__name__, error_type="unhandled_exception"
+            ).inc()
+            raise
+        finally:
+            GITHUB_CLIENT_CALLS_TOTAL.labels(method=func.__name__).inc()
+            GITHUB_CLIENT_DURATION_SECONDS.labels(method=func.__name__).observe(
+                perf_counter() - start
+            )
+            remaining, limit = client._requester.rate_limiting  # pylint: disable=protected-access
+            GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
+            GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
+
+    return wrapper
+
+
+def _classify_github_metric_error(exc: Exception) -> str:
+    """Map translated GitHub client exceptions to metric label values."""
+    if isinstance(exc, TokenError):
+        return "token_error"
+    if isinstance(exc, JobNotFoundError):
+        return "job_not_found"
+    if isinstance(exc, GithubRunnerNotFoundError):
+        return "runner_not_found"
+    if isinstance(exc, DeleteRunnerBusyError):
+        return "delete_runner_busy"
+    current: BaseException | None = exc
+    while current is not None:
+        if isinstance(current, RateLimitExceededException):
+            return "rate_limit"
+        current = current.__cause__ if current.__cause__ is not None else current.__context__
+    return "platform_api_error"
+
+
 class GithubClient:
     """GitHub API client."""
 
@@ -133,6 +218,7 @@ class GithubClient:
             ),
         )
 
+    @_track_github_api_metrics
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
         """Get a specific self-hosted runner information under a repo or org.
@@ -167,6 +253,7 @@ class GithubClient:
             instance_id=instance_id,
         )
 
+    @_track_github_api_metrics
     @catch_http_errors
     def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
         """Get all runners information on GitHub under a repo or org.
@@ -199,6 +286,7 @@ class GithubClient:
                 )
         return managed_runners_list
 
+    @_track_github_api_metrics
     @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
@@ -267,6 +355,7 @@ class GithubClient:
             " The group does not exist or there are more than 100 groups."
         )
 
+    @_track_github_api_metrics
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
         """Delete the self-hosted runner from GitHub.
@@ -292,6 +381,7 @@ class GithubClient:
                 raise DeleteRunnerBusyError from err
             raise
 
+    @_track_github_api_metrics
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str
     ) -> JobInfo:
@@ -303,6 +393,7 @@ class GithubClient:
             runner_name: Name of the runner.
 
         Raises:
+            PlatformApiError: If the GitHub API rate limit is exceeded.
             TokenError: if there was an error with the Github token credential provided.
             JobNotFoundError: If no jobs were found.
 
@@ -324,6 +415,8 @@ class GithubClient:
                 for job in jobs:
                     if job["runner_name"] == runner_name:
                         return self._to_job_info(job)
+        except RateLimitExceededException as exc:
+            raise PlatformApiError("GitHub API rate limit exceeded.") from exc
         except GithubException as exc:
             if exc.status in (401, 403):
                 raise TokenError from exc
@@ -334,6 +427,7 @@ class GithubClient:
 
         raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
 
+    @_track_github_api_metrics
     @catch_http_errors
     def get_job_info(self, path: GitHubRepo, job_id: str) -> JobInfo:
         """Get information about a job identified by the job id.
