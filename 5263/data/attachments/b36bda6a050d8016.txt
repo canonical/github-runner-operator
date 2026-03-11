@@ -1,0 +1,96 @@
+18:40:05 WARNING unexpected facade SSHServer received from the controller
+18:40:05 INFO Adding model github-pr-bed5c-lxd:test-reactive-n68q on cloud localhost
+18:40:06 WARNING unexpected facade SSHServer received from the controller
+18:40:06 WARNING unexpected facade SSHSession received from the controller
+18:40:06 WARNING unexpected facade SSHTunneler received from the controller
+18:40:06 INFO GitHub token rate limit: Rate(reset=2026-03-10 19:23:28+00:00, remaining=4991, limit=5000)
+18:40:10 INFO Deploying ch:amd64/jammy/mongodb-286
+18:40:10 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:40:13 INFO Deploying ch:amd64/noble/any-charm-133
+18:40:32 INFO Deploying local:jammy/github-runner-0
+18:40:32 INFO Waiting for model:
+  test-goraletq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-goraletq/0 [allocating] waiting: waiting for machine
+18:41:03 INFO Waiting for model:
+  test-goraletq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-goraletq/0 [executing] maintenance: installing charm software
+18:41:33 INFO Waiting for model:
+  test-goraletq/0 [allocating] waiting: waiting for machine
+18:42:03 INFO Waiting for model:
+  test-goraletq/0 [allocating] waiting: waiting for machine
+18:42:33 INFO Waiting for model:
+  test-goraletq/0 [executing] maintenance: installing charm software
+18:43:04 INFO Waiting for model:
+  test-goraletq/0 [executing] maintenance: installing charm software
+18:43:34 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:43:47 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:43:47 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:44:18 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:44:26 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:44:57 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:44:59 INFO Current reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:44:59 INFO Waiting for reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:46:00 INFO Current reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:46:00 INFO Current reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404, expected reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:46:00 INFO Waiting for reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:47:01 INFO Current reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:47:01 INFO Current reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd, expected reconcile ID: d6d80024-c488-41ed-9c2c-21a976b6e404
+18:47:05 INFO Wait for condition not met, sleeping 10
+18:47:26 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:47:42 INFO Current reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:47:42 INFO Waiting for reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:48:43 INFO Current reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:48:43 INFO Current reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd, expected reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:48:43 INFO Waiting for reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:49:44 INFO Current reconcile ID: c403fda0-b208-41b8-a9bd-51cafecdc265
+18:49:44 INFO Current reconcile ID: c403fda0-b208-41b8-a9bd-51cafecdc265, expected reconcile ID: d163f41c-79c2-41a3-854a-0c7467c48fdd
+18:49:45 INFO Wait for condition not met, sleeping 60
+18:50:45 INFO Wait for condition not met, sleeping 60
+18:51:46 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:52:02 INFO Current reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:52:02 INFO Waiting for reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:53:03 INFO Current reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:53:03 INFO Current reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4, expected reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:53:03 INFO Waiting for reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:54:04 INFO Current reconcile ID: a77249fa-ed3b-489e-bf70-07f7dcbeb7eb
+18:54:04 INFO Current reconcile ID: a77249fa-ed3b-489e-bf70-07f7dcbeb7eb, expected reconcile ID: dc2bd97c-f98f-45fa-91d3-c877f8cffdd4
+18:54:05 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773168530.1931343, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.6090476512908936}
+{"timestamp": 1773168657.0620158, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.778446912765503}
+{"timestamp": 1773168669.0, "event": "runner_installed", "flavor": "test-goraletq", "duration": 230.0}
+{"timestamp": 1773168675.0, "event": "runner_start", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 248.0}
+{"timestamp": 1773168679.0, "event": "runner_stop", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1773168790.490819, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.352263689041138}
+
+18:54:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773168530.1931343, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.6090476512908936}
+{"timestamp": 1773168657.0620158, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.778446912765503}
+{"timestamp": 1773168669.0, "event": "runner_installed", "flavor": "test-goraletq", "duration": 230.0}
+{"timestamp": 1773168675.0, "event": "runner_start", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 248.0}
+{"timestamp": 1773168679.0, "event": "runner_stop", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1773168790.490819, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.352263689041138}
+
+18:54:07 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773168530.1931343, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.6090476512908936}
+{"timestamp": 1773168657.0620158, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.778446912765503}
+{"timestamp": 1773168669.0, "event": "runner_installed", "flavor": "test-goraletq", "duration": 230.0}
+{"timestamp": 1773168675.0, "event": "runner_start", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 248.0}
+{"timestamp": 1773168679.0, "event": "runner_stop", "flavor": "test-goraletq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1773168790.490819, "event": "reconciliation", "flavor": "test-goraletq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.352263689041138}
+18:54:07 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:54:37 INFO Waiting for model:
+  test-goraletq/0 [idle] active: 
+18:54:40 INFO Current reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6
+18:54:40 INFO Waiting for reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6
+18:55:41 INFO Current reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6
+18:55:41 INFO Current reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6, expected reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6
+18:55:41 INFO Waiting for reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6
+18:56:42 INFO Current reconcile ID: cfec202c-dcbb-470f-87c3-c1ffdd112d76
+18:56:42 INFO Current reconcile ID: cfec202c-dcbb-470f-87c3-c1ffdd112d76, expected reconcile ID: b3d6a231-22df-4f47-a8c6-e9d22302d9f6

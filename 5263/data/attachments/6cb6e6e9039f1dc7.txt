@@ -1,0 +1,122 @@
+18:40:05 WARNING unexpected facade SSHServer received from the controller
+18:40:05 INFO Adding model github-pr-bed5c-lxd:test-charm-metrics-failure-8188 on cloud localhost
+18:40:05 WARNING unexpected facade SSHServer received from the controller
+18:40:05 WARNING unexpected facade SSHSession received from the controller
+18:40:05 WARNING unexpected facade SSHTunneler received from the controller
+18:40:05 WARNING unexpected facade SSHServer received from the controller
+18:40:06 INFO GitHub token rate limit: Rate(reset=2026-03-10 19:23:28+00:00, remaining=4991, limit=5000)
+18:40:08 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:40:10 INFO Deploying ch:amd64/noble/any-charm-133
+18:40:25 INFO Deploying local:jammy/github-runner-0
+18:40:25 INFO Waiting for model:
+  test-dnt21mie/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dnt21mie/0 [allocating] waiting: waiting for machine
+18:40:56 INFO Waiting for model:
+  test-dnt21mie/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dnt21mie/0 [idle] active: 
+18:41:26 INFO Waiting for model:
+  test-dnt21mie/0 [allocating] waiting: waiting for machine
+18:41:56 INFO Waiting for model:
+  test-dnt21mie/0 [allocating] waiting: agent initialising
+18:42:26 INFO Waiting for model:
+  test-dnt21mie/0 [executing] maintenance: installing charm software
+18:42:57 INFO Waiting for model:
+  test-dnt21mie/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-dnt21mie/0 [idle] active: 
+18:43:27 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:43:32 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-8188 test-dnt21mie base-virtual-machines=0
+18:43:32 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:43:49 INFO Current reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:43:49 INFO Waiting for reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:44:50 INFO Current reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:44:50 INFO Current reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f, expected reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:44:50 INFO Waiting for reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:45:51 INFO Current reconcile ID: 237d9c38-2ce6-441d-bf36-78c899d619b5
+18:45:51 INFO Current reconcile ID: 237d9c38-2ce6-441d-bf36-78c899d619b5, expected reconcile ID: 409ee426-d3d1-4869-b72b-9061090aa23f
+18:45:51 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-8188 test-dnt21mie path=canonical/github-runner-operator
+18:45:51 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-8188 test-dnt21mie base-virtual-machines=1
+18:45:51 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:46:21 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:46:24 INFO Current reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:46:24 INFO Waiting for reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:47:25 INFO Current reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:47:25 INFO Current reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc, expected reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:47:25 INFO Waiting for reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:48:26 INFO Current reconcile ID: 81c1a450-f943-44db-a3e7-ed394edbdac4
+18:48:26 INFO Current reconcile ID: 81c1a450-f943-44db-a3e7-ed394edbdac4, expected reconcile ID: 0998ef61-b08e-45ba-9ef4-ab1a301083bc
+18:50:46 INFO Wait for condition not met, sleeping 30
+18:51:29 INFO [TEST SETUP] Run command pkill -9 run.sh on test-dnt21mie-0-n-794c8f1874df
+18:51:29 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.198', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:53:46:03'}]])
+18:51:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dnt21mie-0-n-794c8f1874df.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.198 pkill -9 run.sh'
+18:51:31 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.198' (ED25519) to the list of known hosts.
+'
+18:51:33 INFO Runner test-dnt21mie-0-n-794c8f1874df status: online
+18:51:33 INFO Runner still marked as online, waiting for it to be marked offline
+18:52:34 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:53:04 INFO Waiting for model:
+  test-dnt21mie/0 [idle] active: 
+18:53:08 INFO Current reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:53:08 INFO Waiting for reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:54:09 INFO Current reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:54:09 INFO Current reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910, expected reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:54:09 INFO Waiting for reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:55:10 INFO Current reconcile ID: ee35c63d-3561-4097-b910-2795700b42eb
+18:55:10 INFO Current reconcile ID: ee35c63d-3561-4097-b910-2795700b42eb, expected reconcile ID: 5199e6a8-d38a-4547-a7a3-3dbe473dd910
+18:55:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773168307.4371464, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.437753438949585}
+{"timestamp": 1773168360.510895, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.149976253509521}
+{"timestamp": 1773168486.308583, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 5.695265769958496}
+{"timestamp": 1773168611.8225672, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 5.445643901824951}
+{"timestamp": 1773168572.0, "event": "runner_installed", "flavor": "test-dnt21mie", "duration": 213.0}
+{"timestamp": 1773168649.0, "event": "runner_start", "flavor": "test-dnt21mie", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 77.0, "queue_duration": 2.0}
+{"timestamp": 1773168691.0, "event": "runner_stop", "flavor": "test-dnt21mie", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773168741.8750057, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.967049360275269}
+{"timestamp": 1773168760.468184, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.274923086166382}
+{"timestamp": 1773168886.0151856, "event": "reconciliation", "flavor": "test-dnt21mie", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.494926691055298}
+18:55:11 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-8188  github-pr-bed5c-lxd  localhost/localhost  3.6.14   unsupported  18:55:11Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-dnt21mie           active      1  any-charm      latest/beta  133  no       
+test-dnt21mie                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dnt21mie/0*  active    idle   0        10.173.67.201          
+test-dnt21mie/0*                         active    idle   1        10.173.67.43           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.173.67.201  juju-264cf0-0  ubuntu@24.04  github-runner  Running
+1        started  10.173.67.43   juju-264cf0-1  ubuntu@22.04  github-runner  Running
+
+18:55:12 INFO Juju error logs:
+
+machine-0: 18:40:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:40:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:41:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:41:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dnt21mie-0: 18:42:53 ERROR unit.test-dnt21mie/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dnt21mie-0: 18:42:54 ERROR unit.test-dnt21mie/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dnt21mie-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:55:12 INFO Forgetting model main...
