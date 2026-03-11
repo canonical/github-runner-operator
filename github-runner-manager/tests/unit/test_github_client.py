@@ -16,6 +16,7 @@ from github_runner_manager.github_client import (
     _track_github_api_metrics,
 )
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.metrics.github_api import RateLimiting
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -42,11 +43,17 @@ class _DecoratedClientMethodTarget:
     def __init__(self):
         """Create the minimal client-like state expected by the decorator."""
         self._requester = MagicMock()
-        self._requester.rate_limiting = (4999, 5000)
+        self._requester.rate_limiting = RateLimiting(4999, 5000)
 
     @_track_github_api_metrics
     def successful_call(self) -> str:
         """Return a successful result."""
+        return "ok"
+
+    @_track_github_api_metrics
+    def successful_call_updates_rate_limit(self) -> str:
+        """Update the requester's rate limit before returning."""
+        self._requester.rate_limiting = (1234, 5000)
         return "ok"
 
     @_track_github_api_metrics
@@ -75,7 +82,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     gh_client = GithubClient("token")
     gh_client._github = MagicMock()
     gh_client._requester = MagicMock()
-    gh_client._requester.rate_limiting = (4999, 5000)
+    gh_client._requester.rate_limiting = RateLimiting(4999, 5000)
 
     # Default mock for requestJsonAndCheck (used by get_job_info_by_runner_name, etc.)
     gh_client._requester.requestJsonAndCheck.return_value = (
@@ -625,10 +632,10 @@ def test_track_github_api_metrics_passes_method_and_rate_limit(
     client = _DecoratedClientMethodTarget()
     captured: dict[str, object] = {}
 
-    def fake_record_github_api_metrics(*, method: str, rate_limiting: tuple[int, int], func):
+    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
         captured["method"] = method
-        captured["rate_limiting"] = rate_limiting
         captured["result"] = func()
+        captured["rate_limiting"] = get_rate_limiting()
         return captured["result"]
 
     monkeypatch.setattr(
@@ -639,7 +646,38 @@ def test_track_github_api_metrics_passes_method_and_rate_limit(
     assert client.successful_call() == "ok"
     assert captured == {
         "method": "successful_call",
-        "rate_limiting": (4999, 5000),
+        "rate_limiting": RateLimiting(4999, 5000),
+        "result": "ok",
+    }
+
+
+def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: a decorated client-like method that mutates requester rate limits during execution.
+    act: call the decorated method.
+    assert: the decorator passes the original method name and reads rate limits after the call.
+    """
+    client = _DecoratedClientMethodTarget()
+    captured: dict[str, object] = {}
+
+    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
+        captured["method"] = method
+        captured["result"] = func()
+        captured["rate_limiting"] = get_rate_limiting()
+        return captured["result"]
+
+    monkeypatch.setattr(
+        "github_runner_manager.github_client.record_github_api_metrics",
+        fake_record_github_api_metrics,
+    )
+
+    assert client.successful_call_updates_rate_limit() == "ok"
+
+    assert captured == {
+        "method": "successful_call_updates_rate_limit",
+        "rate_limiting": RateLimiting(1234, 5000),
         "result": "ok",
     }
 
@@ -652,9 +690,9 @@ def test_track_github_api_metrics_propagates_exceptions(monkeypatch: pytest.Monk
     """
     client = _DecoratedClientMethodTarget()
 
-    def fake_record_github_api_metrics(*, method: str, rate_limiting: tuple[int, int], func):
+    def fake_record_github_api_metrics(*, method: str, get_rate_limiting, func):
         assert method == "token_error"
-        assert rate_limiting == (4999, 5000)
+        assert get_rate_limiting() == RateLimiting(4999, 5000)
         return func()
 
     monkeypatch.setattr(

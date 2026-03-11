@@ -4,7 +4,7 @@
 """Prometheus metrics for GitHub API client calls."""
 
 from time import perf_counter
-from typing import Callable, TypeVar
+from typing import Callable, NamedTuple, TypeVar
 
 from github import RateLimitExceededException
 from prometheus_client import Counter, Gauge, Histogram
@@ -17,6 +17,13 @@ from github_runner_manager.platform.platform_provider import (
 )
 
 ReturnT = TypeVar("ReturnT")
+
+
+class RateLimiting(NamedTuple):
+    """GitHub API rate-limit snapshot."""
+
+    remaining: int
+    limit: int
 
 GITHUB_API_CALLS_TOTAL = Counter(
     name="github_api_calls_total",
@@ -44,13 +51,13 @@ GITHUB_API_RATE_LIMIT_LIMIT = Gauge(
 
 
 def record_github_api_metrics(
-    method: str, rate_limiting: tuple[int, int], func: Callable[[], ReturnT]
+    method: str, get_rate_limiting: Callable[[], RateLimiting], func: Callable[[], ReturnT]
 ) -> ReturnT:
     """Record GitHub API metrics around a callback.
 
     Args:
         method: Method name to use for the Prometheus label.
-        rate_limiting: ``(remaining, limit)`` tuple from the most recent GitHub API response.
+        get_rate_limiting: Callback returning the most recent GitHub API rate-limit snapshot.
         func: Callback that executes the GitHub API operation.
 
     Raises:
@@ -68,9 +75,9 @@ def record_github_api_metrics(
     finally:
         GITHUB_API_CALLS_TOTAL.labels(method=method).inc()
         GITHUB_API_DURATION_SECONDS.labels(method=method).observe(perf_counter() - start)
-        remaining, limit = rate_limiting
-        GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
-        GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
+        rate_limiting = get_rate_limiting()
+        GITHUB_API_RATE_LIMIT_REMAINING.set(rate_limiting.remaining)
+        GITHUB_API_RATE_LIMIT_LIMIT.set(rate_limiting.limit)
 
 
 def _classify_error(exc: Exception) -> str:
@@ -81,9 +88,11 @@ def _classify_error(exc: Exception) -> str:
     """
     if isinstance(exc, TokenError):
         return "token_error"
-    cause = exc.__cause__
-    if isinstance(cause, RateLimitExceededException):
-        return "rate_limit"
+    current: Exception | None = exc
+    while current is not None:
+        if isinstance(current, RateLimitExceededException):
+            return "rate_limit"
+        current = current.__cause__ if current.__cause__ is not None else current.__context__
     if isinstance(exc, PlatformApiError):
         return "platform_api_error"
     return "other"

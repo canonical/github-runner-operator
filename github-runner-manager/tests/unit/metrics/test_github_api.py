@@ -7,7 +7,7 @@ import pytest
 from github import RateLimitExceededException
 from prometheus_client import REGISTRY
 
-from github_runner_manager.metrics.github_api import record_github_api_metrics
+from github_runner_manager.metrics.github_api import RateLimiting, record_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
     PlatformApiError,
     TokenError,
@@ -37,6 +37,17 @@ def _raise_platform_api_error() -> None:
     raise PlatformApiError("unexpected github failure")
 
 
+def _raise_nested_rate_limit_error() -> None:
+    """Raise a PlatformApiError with a nested rate-limit cause chain."""
+    try:
+        try:
+            raise RateLimitExceededException(403, {}, {})
+        except RateLimitExceededException as exc:
+            raise RuntimeError("intermediate wrapper") from exc
+    except RuntimeError as exc:
+        raise PlatformApiError("GitHub API rate limit exceeded.") from exc
+
+
 @pytest.mark.parametrize(
     ("sample_name", "expected_delta"),
     [
@@ -56,7 +67,7 @@ def test_successful_call_records_metrics(sample_name: str, expected_delta: int):
 
     assert record_github_api_metrics(
         method="successful_call",
-        rate_limiting=(4999, 5000),
+        get_rate_limiting=lambda: RateLimiting(4999, 5000),
         func=lambda: "ok",
     ) == "ok"
 
@@ -64,16 +75,23 @@ def test_successful_call_records_metrics(sample_name: str, expected_delta: int):
     assert after - before == pytest.approx(expected_delta)
 
 
-def test_rate_limit_gauge_updated():
+def test_rate_limit_gauge_updated_from_post_call_value():
     """
-    arrange: a callback and a rate limit tuple.
+    arrange: a callback that updates the latest rate limit state.
     act: record metrics around the callback.
-    assert: the global rate limit gauges match the provided values.
+    assert: the global rate limit gauges match the post-call values.
     """
+    rate_limiting = RateLimiting(4999, 5000)
+
+    def callback() -> str:
+        nonlocal rate_limiting
+        rate_limiting = RateLimiting(1234, 5000)
+        return "ok"
+
     record_github_api_metrics(
         method="successful_call",
-        rate_limiting=(1234, 5000),
-        func=lambda: "ok",
+        get_rate_limiting=lambda: rate_limiting,
+        func=callback,
     )
 
     assert _sample_value("github_api_rate_limit_remaining") == pytest.approx(1234)
@@ -84,6 +102,7 @@ def test_rate_limit_gauge_updated():
     ("method", "error_type", "callback", "expected_exception"),
     [
         ("rate_limit_error", "rate_limit", _raise_rate_limit_error, PlatformApiError),
+        ("nested_rate_limit_error", "rate_limit", _raise_nested_rate_limit_error, PlatformApiError),
         ("bad_credentials_error", "token_error", _raise_token_error, TokenError),
         ("github_error", "platform_api_error", _raise_platform_api_error, PlatformApiError),
     ],
@@ -106,7 +125,7 @@ def test_error_metrics_are_classified(
     with pytest.raises(expected_exception):
         record_github_api_metrics(
             method=method,
-            rate_limiting=(4999, 5000),
+            get_rate_limiting=lambda: RateLimiting(4999, 5000),
             func=callback,
         )
 
