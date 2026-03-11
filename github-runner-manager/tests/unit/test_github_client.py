@@ -93,6 +93,11 @@ class _DecoratedClientMethodTarget:
         """Raise DeleteRunnerBusyError to verify generic error labelling."""
         raise DeleteRunnerBusyError("runner busy")
 
+    @_track_github_api_metrics
+    def unhandled_exception(self) -> None:
+        """Raise an unexpected exception to verify fallback error labelling."""
+        raise ValueError("unexpected failure")
+
 
 def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
     """Get a sample value from the default Prometheus registry."""
@@ -721,6 +726,7 @@ def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call():
         ("job_not_found", "job_not_found", JobNotFoundError),
         ("runner_not_found", "runner_not_found", GithubRunnerNotFoundError),
         ("delete_runner_busy", "delete_runner_busy", DeleteRunnerBusyError),
+        ("unhandled_exception", "unhandled_exception", ValueError),
     ],
 )
 def test_track_github_api_metrics_records_error_metrics(

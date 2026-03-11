@@ -117,6 +117,7 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
             PlatformApiError: If the wrapped method raises a translated GitHub API error.
             JobNotFoundError: If the wrapped method cannot find the requested job.
             TokenError: If the wrapped method raises a token-related error.
+            Exception: If the wrapped method raises an unexpected exception.
 
         Returns:
             The result of the wrapped method.
@@ -134,6 +135,11 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         ) as exc:
             GITHUB_CLIENT_ERRORS_TOTAL.labels(
                 method=func.__name__, error_type=_classify_github_metric_error(exc)
+            ).inc()
+            raise
+        except Exception:
+            GITHUB_CLIENT_ERRORS_TOTAL.labels(
+                method=func.__name__, error_type="unhandled_exception"
             ).inc()
             raise
         finally:
