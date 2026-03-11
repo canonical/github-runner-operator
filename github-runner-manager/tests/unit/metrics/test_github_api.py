@@ -244,7 +244,7 @@ def test_get_job_info_by_runner_name_job_not_found(monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(client, "_requester", requester)
     error_labels = {
         "method": "get_job_info_by_runner_name",
-        "error_type": "JobNotFoundError",
+        "error_type": "other",
     }
     before = _sample_value("github_api_errors_total", error_labels)
 

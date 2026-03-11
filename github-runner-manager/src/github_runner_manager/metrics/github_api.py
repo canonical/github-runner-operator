@@ -70,7 +70,7 @@ def _classify_error(exc: Exception) -> str:
         return "rate_limit"
     if isinstance(exc, PlatformApiError):
         return "platform_api_error"
-    return type(exc).__name__
+    return "other"
 
 
 def record_github_api_metrics(method: str, requester: Any, func: Callable[[], ReturnT]) -> ReturnT:
