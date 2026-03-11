@@ -111,7 +111,7 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         """
         return record_github_api_metrics(
             method=func.__name__,
-            rate_limiting=self.requester.rate_limiting,
+            rate_limiting=self._requester.rate_limiting,  # pylint: disable=protected-access
             func=lambda: func(self, *args, **kwargs),  # type: ignore[arg-type]
         )
 
@@ -131,7 +131,7 @@ class GithubClient:
         self._github = Github(auth=github.Auth.Token(self._token), timeout=TIMEOUT_IN_SECS)
         # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
         # runner groups). Use the requester for raw REST calls that inherit auth and timeout.
-        self.requester = self._github.requester
+        self._requester = self._github.requester
 
     @staticmethod
     def _build_runner(
@@ -250,14 +250,14 @@ class GithubClient:
         """
         token: JITConfig
         if isinstance(path, GitHubRepo):
-            _headers, token = self.requester.requestJsonAndCheck(
+            _headers, token = self._requester.requestJsonAndCheck(
                 "POST",
                 f"/repos/{path.owner}/{path.repo}/actions/runners/generate-jitconfig",
                 input={"name": instance_id.name, "runner_group_id": 1, "labels": labels},
             )
         elif isinstance(path, GitHubOrg):
             runner_group_id = self._get_runner_group_id(path)
-            _headers, token = self.requester.requestJsonAndCheck(
+            _headers, token = self._requester.requestJsonAndCheck(
                 "POST",
                 f"/orgs/{path.org}/actions/runners/generate-jitconfig",
                 input={
@@ -285,7 +285,7 @@ class GithubClient:
         No pagination is used, so if there are more than 100 groups, this
         function could fail.
         """
-        _headers, data = self.requester.requestJsonAndCheck(
+        _headers, data = self._requester.requestJsonAndCheck(
             "GET",
             f"/orgs/{org.org}/actions/runner-groups",
             parameters={"per_page": 100},
@@ -349,7 +349,7 @@ class GithubClient:
             # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
             # See: https://docs.github.com/en/actions/reference/limits
             for page in range(1, 4):
-                _headers, data = self.requester.requestJsonAndCheck(
+                _headers, data = self._requester.requestJsonAndCheck(
                     "GET",
                     f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
                     parameters={"per_page": 100, "page": page},
@@ -386,7 +386,7 @@ class GithubClient:
             The JSON response from the API.
         """
         try:
-            _headers, job_raw = self.requester.requestJsonAndCheck(
+            _headers, job_raw = self._requester.requestJsonAndCheck(
                 "GET",
                 f"/repos/{path.owner}/{path.repo}/actions/jobs/{job_id}",
             )
