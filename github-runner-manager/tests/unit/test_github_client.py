@@ -10,7 +10,11 @@ import pytest
 from github import BadCredentialsException, GithubException, UnknownObjectException
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.github_client import (
+    GithubClient,
+    GithubRunnerNotFoundError,
+    _track_github_api_metrics,
+)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
@@ -30,6 +34,25 @@ JobStatsRawData = namedtuple(
     "JobStatsRawData",
     ["created_at", "started_at", "runner_name", "conclusion", "id", "status"],
 )
+
+
+class _DecoratedClientMethodTarget:
+    """Minimal target for testing GithubClient metrics decoration."""
+
+    def __init__(self):
+        """Create the minimal client-like state expected by the decorator."""
+        self._requester = MagicMock()
+        self._requester.rate_limiting = (4999, 5000)
+
+    @_track_github_api_metrics
+    def successful_call(self) -> str:
+        """Return a successful result."""
+        return "ok"
+
+    @_track_github_api_metrics
+    def token_error(self) -> None:
+        """Raise TokenError to verify propagation through the decorator."""
+        raise TokenError("Invalid token.")
 
 
 @pytest.fixture(name="job_stats_raw")
@@ -589,3 +612,55 @@ def test_delete_runner_busy(github_client: GithubClient):
     )
     with pytest.raises(DeleteRunnerBusyError):
         _ = github_client.delete_runner(path, runner_id)
+
+
+def test_track_github_api_metrics_passes_method_and_rate_limit(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: a decorated client-like method and a spy for record_github_api_metrics.
+    act: call the decorated method.
+    assert: the decorator forwards the method name, rate limit tuple, and callback correctly.
+    """
+    client = _DecoratedClientMethodTarget()
+    captured: dict[str, object] = {}
+
+    def fake_record_github_api_metrics(*, method: str, rate_limiting: tuple[int, int], func):
+        captured["method"] = method
+        captured["rate_limiting"] = rate_limiting
+        captured["result"] = func()
+        return captured["result"]
+
+    monkeypatch.setattr(
+        "github_runner_manager.github_client.record_github_api_metrics",
+        fake_record_github_api_metrics,
+    )
+
+    assert client.successful_call() == "ok"
+    assert captured == {
+        "method": "successful_call",
+        "rate_limiting": (4999, 5000),
+        "result": "ok",
+    }
+
+
+def test_track_github_api_metrics_propagates_exceptions(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: a decorated client-like method that raises TokenError.
+    act: call the decorated method through a fake metrics recorder.
+    assert: the original exception is propagated through the decorator callback.
+    """
+    client = _DecoratedClientMethodTarget()
+
+    def fake_record_github_api_metrics(*, method: str, rate_limiting: tuple[int, int], func):
+        assert method == "token_error"
+        assert rate_limiting == (4999, 5000)
+        return func()
+
+    monkeypatch.setattr(
+        "github_runner_manager.github_client.record_github_api_metrics",
+        fake_record_github_api_metrics,
+    )
+
+    with pytest.raises(TokenError, match="Invalid token."):
+        client.token_error()

@@ -3,16 +3,12 @@
 
 """Unit tests for GitHub API Prometheus metrics."""
 
-from unittest.mock import MagicMock
-
 import pytest
-from github import GithubException, RateLimitExceededException
+from github import RateLimitExceededException
 from prometheus_client import REGISTRY
 
-from github_runner_manager.configuration.github import GitHubRepo
-from github_runner_manager.github_client import GithubClient, _track_github_api_metrics
+from github_runner_manager.metrics.github_api import record_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
-    JobNotFoundError,
     PlatformApiError,
     TokenError,
 )
@@ -24,235 +20,95 @@ def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
     return 0.0 if value is None else value
 
 
-class _DummyGitHubClient:
-    """Test helper exposing the GitHub API metrics decorator."""
-
-    def __init__(self):
-        """Create a dummy requester with default rate limit state."""
-        self._requester = MagicMock()
-        self._requester.rate_limiting = (4999, 5000)
-
-    @_track_github_api_metrics
-    def successful_call(self) -> str:
-        """Return a successful result."""
-        return "ok"
-
-    @_track_github_api_metrics
-    def rate_limit_error(self) -> None:
-        """Raise a translated rate limit error with a chained cause."""
-        raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
-            403, {}, {}
-        )
-
-    @_track_github_api_metrics
-    def bad_credentials_error(self) -> None:
-        """Raise a translated token error."""
-        raise TokenError("Invalid token.")
-
-    @_track_github_api_metrics
-    def github_error(self) -> None:
-        """Raise a translated generic platform API error."""
-        raise PlatformApiError("unexpected github failure")
+def _raise_rate_limit_error() -> None:
+    """Raise a PlatformApiError with a rate-limit cause."""
+    raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
+        403, {}, {}
+    )
 
 
-def test_successful_call_increments_counter():
+def _raise_token_error() -> None:
+    """Raise TokenError."""
+    raise TokenError("Invalid token.")
+
+
+def _raise_platform_api_error() -> None:
+    """Raise PlatformApiError."""
+    raise PlatformApiError("unexpected github failure")
+
+
+@pytest.mark.parametrize(
+    ("sample_name", "expected_delta"),
+    [
+        ("github_api_calls_total", 1),
+        ("github_api_duration_seconds_count", 1),
+    ],
+)
+def test_successful_call_records_metrics(sample_name: str, expected_delta: int):
     """
-    arrange: a dummy GitHub client with a decorated method.
-    act: call the method.
-    assert: the method counter increases by one.
+    arrange: a callback and initial metric sample value.
+    act: record metrics around the callback.
+    assert: the selected success metric increases by one.
     """
-    client = _DummyGitHubClient()
     labels = {"method": "successful_call"}
 
-    before = _sample_value("github_api_calls_total", labels)
+    before = _sample_value(sample_name, labels)
 
-    assert client.successful_call() == "ok"
+    assert record_github_api_metrics(
+        method="successful_call",
+        rate_limiting=(4999, 5000),
+        func=lambda: "ok",
+    ) == "ok"
 
-    after = _sample_value("github_api_calls_total", labels)
-    assert after - before == pytest.approx(1)
-
-
-def test_successful_call_observes_duration():
-    """
-    arrange: a dummy GitHub client with a decorated method.
-    act: call the method.
-    assert: the histogram count increases by one.
-    """
-    client = _DummyGitHubClient()
-    labels = {"method": "successful_call"}
-
-    before = _sample_value("github_api_duration_seconds_count", labels)
-
-    client.successful_call()
-
-    after = _sample_value("github_api_duration_seconds_count", labels)
-    assert after - before == pytest.approx(1)
+    after = _sample_value(sample_name, labels)
+    assert after - before == pytest.approx(expected_delta)
 
 
 def test_rate_limit_gauge_updated():
     """
-    arrange: a dummy GitHub client with requester rate limit data.
-    act: call the method.
-    assert: the global rate limit gauges match the requester's current values.
+    arrange: a callback and a rate limit tuple.
+    act: record metrics around the callback.
+    assert: the global rate limit gauges match the provided values.
     """
-    client = _DummyGitHubClient()
-    client._requester.rate_limiting = (1234, 5000)
-
-    client.successful_call()
+    record_github_api_metrics(
+        method="successful_call",
+        rate_limiting=(1234, 5000),
+        func=lambda: "ok",
+    )
 
     assert _sample_value("github_api_rate_limit_remaining") == pytest.approx(1234)
     assert _sample_value("github_api_rate_limit_limit") == pytest.approx(5000)
 
 
-def test_rate_limit_error():
+@pytest.mark.parametrize(
+    ("method", "error_type", "callback", "expected_exception"),
+    [
+        ("rate_limit_error", "rate_limit", _raise_rate_limit_error, PlatformApiError),
+        ("bad_credentials_error", "token_error", _raise_token_error, TokenError),
+        ("github_error", "platform_api_error", _raise_platform_api_error, PlatformApiError),
+    ],
+)
+def test_error_metrics_are_classified(
+    method: str,
+    error_type: str,
+    callback,
+    expected_exception: type[Exception],
+):
     """
-    arrange: a decorated method that raises a translated rate limit error.
-    act: call the method.
-    assert: the rate_limit error counter increases by one.
+    arrange: a callback that raises a platform-related error.
+    act: record metrics around the callback.
+    assert: the matching error counter increases by one.
     """
-    client = _DummyGitHubClient()
-    labels = {"method": "rate_limit_error", "error_type": "rate_limit"}
+    labels = {"method": method, "error_type": error_type}
 
     before = _sample_value("github_api_errors_total", labels)
 
-    with pytest.raises(PlatformApiError):
-        client.rate_limit_error()
-
-    after = _sample_value("github_api_errors_total", labels)
-    assert after - before == pytest.approx(1)
-
-
-def test_bad_credentials_error():
-    """
-    arrange: a decorated method that raises TokenError.
-    act: call the method.
-    assert: the token_error counter increases by one.
-    """
-    client = _DummyGitHubClient()
-    labels = {"method": "bad_credentials_error", "error_type": "token_error"}
-
-    before = _sample_value("github_api_errors_total", labels)
-
-    with pytest.raises(TokenError):
-        client.bad_credentials_error()
-
-    after = _sample_value("github_api_errors_total", labels)
-    assert after - before == pytest.approx(1)
-
-
-def test_github_error():
-    """
-    arrange: a decorated method that raises PlatformApiError.
-    act: call the method.
-    assert: the platform_api_error counter increases by one.
-    """
-    client = _DummyGitHubClient()
-    labels = {"method": "github_error", "error_type": "platform_api_error"}
-
-    before = _sample_value("github_api_errors_total", labels)
-
-    with pytest.raises(PlatformApiError):
-        client.github_error()
-
-    after = _sample_value("github_api_errors_total", labels)
-    assert after - before == pytest.approx(1)
-
-
-def test_get_job_info_by_runner_name_tracks_metrics(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: a GithubClient with a mocked requester returning a matching job.
-    act: fetch the job information by runner name.
-    assert: the method call and duration metrics are recorded.
-    """
-    client = GithubClient(token="test-token")
-    requester = MagicMock()
-    requester.rate_limiting = (4321, 5000)
-    requester.requestJsonAndCheck.return_value = (
-        {},
-        {
-            "jobs": [
-                {
-                    "id": 1,
-                    "runner_name": "runner-1",
-                    "created_at": "2026-03-10T09:00:00Z",
-                    "started_at": "2026-03-10T09:01:00Z",
-                    "conclusion": "success",
-                    "status": "completed",
-                }
-            ]
-        },
-    )
-    monkeypatch.setattr(client, "_requester", requester)
-
-    call_labels = {"method": "get_job_info_by_runner_name"}
-    before_calls = _sample_value("github_api_calls_total", call_labels)
-    before_duration = _sample_value("github_api_duration_seconds_count", call_labels)
-
-    job_info = client.get_job_info_by_runner_name(
-        path=GitHubRepo(owner="owner", repo="repo"),
-        workflow_run_id="123",
-        runner_name="runner-1",
-    )
-
-    assert job_info.job_id == 1
-    assert _sample_value("github_api_calls_total", call_labels) - before_calls == pytest.approx(1)
-    assert _sample_value("github_api_duration_seconds_count", call_labels) - before_duration == (
-        pytest.approx(1)
-    )
-    assert _sample_value("github_api_rate_limit_remaining") == pytest.approx(4321)
-
-
-def test_get_job_info_by_runner_name_token_error(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: a GithubClient requester that raises an auth-related GithubException.
-    act: fetch the job information by runner name.
-    assert: the token_error counter increases by one.
-    """
-    client = GithubClient(token="test-token")
-    requester = MagicMock()
-    requester.rate_limiting = (4000, 5000)
-    requester.requestJsonAndCheck.side_effect = GithubException(status=401, data={})
-    monkeypatch.setattr(client, "_requester", requester)
-    labels = {"method": "get_job_info_by_runner_name", "error_type": "token_error"}
-    before = _sample_value("github_api_errors_total", labels)
-
-    with pytest.raises(TokenError):
-        client.get_job_info_by_runner_name(
-            path=GitHubRepo(owner="owner", repo="repo"),
-            workflow_run_id="123",
-            runner_name="runner-1",
+    with pytest.raises(expected_exception):
+        record_github_api_metrics(
+            method=method,
+            rate_limiting=(4999, 5000),
+            func=callback,
         )
 
     after = _sample_value("github_api_errors_total", labels)
-    assert after - before == pytest.approx(1)
-
-
-def test_get_job_info_by_runner_name_job_not_found(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: a GithubClient requester that returns no matching runner.
-    act: fetch the job information by runner name.
-    assert: the JobNotFoundError counter increases by one.
-    """
-    client = GithubClient(token="test-token")
-    requester = MagicMock()
-    requester.rate_limiting = (4000, 5000)
-    requester.requestJsonAndCheck.return_value = (
-        {},
-        {"jobs": [{"runner_name": "other-runner"}]},
-    )
-    monkeypatch.setattr(client, "_requester", requester)
-    error_labels = {
-        "method": "get_job_info_by_runner_name",
-        "error_type": "other",
-    }
-    before = _sample_value("github_api_errors_total", error_labels)
-
-    with pytest.raises(JobNotFoundError):
-        client.get_job_info_by_runner_name(
-            path=GitHubRepo(owner="owner", repo="repo"),
-            workflow_run_id="123",
-            runner_name="runner-1",
-        )
-
-    after = _sample_value("github_api_errors_total", error_labels)
     assert after - before == pytest.approx(1)
