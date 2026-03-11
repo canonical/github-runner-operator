@@ -7,7 +7,6 @@ from time import perf_counter
 from typing import Callable, TypeVar
 
 from github import RateLimitExceededException
-from github.Requester import Requester
 from prometheus_client import Counter, Gauge, Histogram
 
 from github_runner_manager.metrics import labels
@@ -45,13 +44,13 @@ GITHUB_API_RATE_LIMIT_LIMIT = Gauge(
 
 
 def record_github_api_metrics(
-    method: str, requester: Requester, func: Callable[[], ReturnT]
+    method: str, rate_limiting: tuple[int, int], func: Callable[[], ReturnT]
 ) -> ReturnT:
     """Record GitHub API metrics around a callback.
 
     Args:
         method: Method name to use for the Prometheus label.
-        requester: PyGithub requester used to read rate limit state.
+        rate_limiting: ``(remaining, limit)`` tuple from the most recent GitHub API response.
         func: Callback that executes the GitHub API operation.
 
     Raises:
@@ -69,7 +68,9 @@ def record_github_api_metrics(
     finally:
         GITHUB_API_CALLS_TOTAL.labels(method=method).inc()
         GITHUB_API_DURATION_SECONDS.labels(method=method).observe(perf_counter() - start)
-        _update_rate_limit_metrics(requester)
+        remaining, limit = rate_limiting
+        GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
+        GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
 
 
 def _classify_error(exc: Exception) -> str:
@@ -86,10 +87,3 @@ def _classify_error(exc: Exception) -> str:
     if isinstance(exc, PlatformApiError):
         return "platform_api_error"
     return "other"
-
-
-def _update_rate_limit_metrics(requester: Requester) -> None:
-    """Update rate limit gauges from the PyGithub requester."""
-    remaining, limit = requester.rate_limiting
-    GITHUB_API_RATE_LIMIT_REMAINING.set(remaining)
-    GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
