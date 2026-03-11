@@ -51,10 +51,10 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     """Create a GithubClient object with a mocked PyGithub object."""
     gh_client = GithubClient("token")
     gh_client._github = MagicMock()
-    gh_client._requester = MagicMock()
+    gh_client.requester = MagicMock()
 
     # Default mock for requestJsonAndCheck (used by get_job_info_by_runner_name, etc.)
-    gh_client._requester.requestJsonAndCheck.return_value = (
+    gh_client.requester.requestJsonAndCheck.return_value = (
         {},
         {
             "jobs": [
@@ -110,7 +110,7 @@ def _mock_multiple_pages_for_job_response(
         for i in range(no_of_pages)
     ] + [({}, {"jobs": []})]
 
-    github_client._requester.requestJsonAndCheck.side_effect = pages
+    github_client.requester.requestJsonAndCheck.side_effect = pages
 
 
 def test_get_job_info_by_runner_name(github_client: GithubClient, job_stats_raw: JobStatsRawData):
@@ -144,7 +144,7 @@ def test_get_job_info_by_runner_name_no_conclusion(
     act: Call get_job_info_by_runner_name.
     assert: JobStats object with conclusion set to None is returned.
     """
-    github_client._requester.requestJsonAndCheck.return_value = (
+    github_client.requester.requestJsonAndCheck.return_value = (
         {},
         {
             "jobs": [
@@ -180,7 +180,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
     act: Call get_job_info.
     assert: The response is returned.
     """
-    github_client._requester.requestJsonAndCheck.return_value = (
+    github_client.requester.requestJsonAndCheck.return_value = (
         {},
         {
             "created_at": job_stats_raw.created_at,
@@ -254,7 +254,7 @@ def test_github_api_pagination_job_not_found(
 
 
 def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobStatsRawData):
-    github_client._requester.requestJsonAndCheck.side_effect = GithubException(
+    github_client.requester.requestJsonAndCheck.side_effect = GithubException(
         500, "Internal Server Error", None
     )
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
@@ -366,7 +366,7 @@ def test_get_runner_context_repo(github_client: GithubClient):
     """
     instance_id = InstanceID.build("test-runner")
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    github_client._requester.requestJsonAndCheck.return_value = (
+    github_client.requester.requestJsonAndCheck.return_value = (
         {},
         {
             "runner": {
@@ -413,7 +413,7 @@ def test_catch_http_errors_from_getting_runner_group_id(github_client: GithubCli
     instance_id = InstanceID.build("test-runner")
     labels = ["label1", "label2"]
 
-    github_client._requester.requestJsonAndCheck.side_effect = GithubException(
+    github_client.requester.requestJsonAndCheck.side_effect = GithubException(
         500, "Internal Server Error", None
     )
 
@@ -475,7 +475,7 @@ def test_get_runner_context_org(github_client: GithubClient):
         },
     )
 
-    github_client._requester.requestJsonAndCheck.side_effect = [
+    github_client.requester.requestJsonAndCheck.side_effect = [
         runner_groups_response,
         jitconfig_response,
     ]
@@ -498,7 +498,7 @@ def test_get_runner_context_org(github_client: GithubClient):
     )
 
     # Verify the jitconfig call used the correct runner_group_id
-    calls = github_client._requester.requestJsonAndCheck.call_args_list
+    calls = github_client.requester.requestJsonAndCheck.call_args_list
     jitconfig_call = calls[1]
     assert jitconfig_call[0][1] == f"/orgs/{github_repo.org}/actions/runners/generate-jitconfig"
     assert jitconfig_call[1]["input"]["runner_group_id"] == 3

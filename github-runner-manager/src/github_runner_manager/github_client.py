@@ -20,10 +20,7 @@ from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.metrics.github_api import (
-    record_github_api_metrics,
-    track_github_api_metrics,
-)
+from github_runner_manager.metrics.github_api import track_github_api_metrics
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -104,7 +101,7 @@ class GithubClient:
         self._github = Github(auth=github.Auth.Token(self._token), timeout=TIMEOUT_IN_SECS)
         # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
         # runner groups). Use the requester for raw REST calls that inherit auth and timeout.
-        self._requester = self._github.requester
+        self.requester = self._github.requester
 
     @staticmethod
     def _build_runner(
@@ -223,14 +220,14 @@ class GithubClient:
         """
         token: JITConfig
         if isinstance(path, GitHubRepo):
-            _headers, token = self._requester.requestJsonAndCheck(
+            _headers, token = self.requester.requestJsonAndCheck(
                 "POST",
                 f"/repos/{path.owner}/{path.repo}/actions/runners/generate-jitconfig",
                 input={"name": instance_id.name, "runner_group_id": 1, "labels": labels},
             )
         elif isinstance(path, GitHubOrg):
             runner_group_id = self._get_runner_group_id(path)
-            _headers, token = self._requester.requestJsonAndCheck(
+            _headers, token = self.requester.requestJsonAndCheck(
                 "POST",
                 f"/orgs/{path.org}/actions/runners/generate-jitconfig",
                 input={
@@ -258,7 +255,7 @@ class GithubClient:
         No pagination is used, so if there are more than 100 groups, this
         function could fail.
         """
-        _headers, data = self._requester.requestJsonAndCheck(
+        _headers, data = self.requester.requestJsonAndCheck(
             "GET",
             f"/orgs/{org.org}/actions/runner-groups",
             parameters={"per_page": 100},
@@ -300,6 +297,7 @@ class GithubClient:
                 raise DeleteRunnerBusyError from err
             raise
 
+    @track_github_api_metrics
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str
     ) -> JobInfo:
@@ -310,42 +308,37 @@ class GithubClient:
             workflow_run_id: Id of the workflow run.
             runner_name: Name of the runner.
 
+        Raises:
+            TokenError: if there was an error with the Github token credential provided.
+            JobNotFoundError: If no jobs were found.
+
         Returns:
             Job information.
         """
+        try:
+            # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
+            # See: https://docs.github.com/en/actions/reference/limits
+            for page in range(1, 4):
+                _headers, data = self.requester.requestJsonAndCheck(
+                    "GET",
+                    f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
+                    parameters={"per_page": 100, "page": page},
+                )
+                jobs = data["jobs"]
+                if not jobs:
+                    break
+                for job in jobs:
+                    if job["runner_name"] == runner_name:
+                        return self._to_job_info(job)
+        except GithubException as exc:
+            if exc.status in (401, 403):
+                raise TokenError from exc
+            raise JobNotFoundError(
+                f"Could not find job for runner {runner_name}. "
+                f"Could not list jobs for workflow run {workflow_run_id}"
+            ) from exc
 
-        def _get_job_info_by_runner_name() -> JobInfo:
-            """Fetch job information for a runner from workflow run job pages."""
-            try:
-                # GitHub caps at 256 jobs per workflow run, so 3 pages of 100 is the upper bound.
-                # See: https://docs.github.com/en/actions/reference/limits
-                for page in range(1, 4):
-                    _headers, data = self._requester.requestJsonAndCheck(
-                        "GET",
-                        f"/repos/{path.owner}/{path.repo}/actions/runs/{workflow_run_id}/jobs",
-                        parameters={"per_page": 100, "page": page},
-                    )
-                    jobs = data["jobs"]
-                    if not jobs:
-                        break
-                    for job in jobs:
-                        if job["runner_name"] == runner_name:
-                            return self._to_job_info(job)
-            except GithubException as exc:
-                if exc.status in (401, 403):
-                    raise TokenError from exc
-                raise JobNotFoundError(
-                    f"Could not find job for runner {runner_name}. "
-                    f"Could not list jobs for workflow run {workflow_run_id}"
-                ) from exc
-
-            raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
-
-        return record_github_api_metrics(
-            method="get_job_info_by_runner_name",
-            requester=self._requester,
-            func=_get_job_info_by_runner_name,
-        )
+        raise JobNotFoundError(f"Could not find job for runner {runner_name}.")
 
     @track_github_api_metrics
     @catch_http_errors
@@ -363,7 +356,7 @@ class GithubClient:
             The JSON response from the API.
         """
         try:
-            _headers, job_raw = self._requester.requestJsonAndCheck(
+            _headers, job_raw = self.requester.requestJsonAndCheck(
                 "GET",
                 f"/repos/{path.owner}/{path.repo}/actions/jobs/{job_id}",
             )

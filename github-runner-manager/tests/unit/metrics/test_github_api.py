@@ -30,8 +30,8 @@ class _DummyGitHubClient:
 
     def __init__(self):
         """Create a dummy requester with default rate limit state."""
-        self._requester = MagicMock()
-        self._requester.rate_limiting = (4999, 5000)
+        self.requester = MagicMock()
+        self.requester.rate_limiting = (4999, 5000)
 
     @track_github_api_metrics
     def successful_call(self) -> str:
@@ -97,7 +97,7 @@ def test_rate_limit_gauge_updated():
     assert: the global rate limit gauges match the requester's current values.
     """
     client = _DummyGitHubClient()
-    client._requester.rate_limiting = (1234, 5000)
+    client.requester.rate_limiting = (1234, 5000)
 
     client.successful_call()
 
@@ -183,7 +183,7 @@ def test_get_job_info_by_runner_name_tracks_metrics(monkeypatch: pytest.MonkeyPa
             ]
         },
     )
-    monkeypatch.setattr(client, "_requester", requester)
+    monkeypatch.setattr(client, "requester", requester)
 
     call_labels = {"method": "get_job_info_by_runner_name"}
     before_calls = _sample_value("github_api_calls_total", call_labels)
@@ -213,7 +213,7 @@ def test_get_job_info_by_runner_name_token_error(monkeypatch: pytest.MonkeyPatch
     requester = MagicMock()
     requester.rate_limiting = (4000, 5000)
     requester.requestJsonAndCheck.side_effect = GithubException(status=401, data={})
-    monkeypatch.setattr(client, "_requester", requester)
+    monkeypatch.setattr(client, "requester", requester)
     labels = {"method": "get_job_info_by_runner_name", "error_type": "token_error"}
     before = _sample_value("github_api_errors_total", labels)
 
@@ -241,7 +241,7 @@ def test_get_job_info_by_runner_name_job_not_found(monkeypatch: pytest.MonkeyPat
         {},
         {"jobs": [{"runner_name": "other-runner"}]},
     )
-    monkeypatch.setattr(client, "_requester", requester)
+    monkeypatch.setattr(client, "requester", requester)
     error_labels = {
         "method": "get_job_info_by_runner_name",
         "error_type": "other",
