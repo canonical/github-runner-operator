@@ -125,16 +125,16 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
         start = perf_counter()
         try:
             return func(*args, **kwargs)
-        except PlatformApiError as exc:
+        except (
+            PlatformApiError,
+            JobNotFoundError,
+            GithubRunnerNotFoundError,
+            TokenError,
+            DeleteRunnerBusyError,
+        ) as exc:
             GITHUB_CLIENT_ERRORS_TOTAL.labels(
                 method=func.__name__, error_type=_classify_github_metric_error(exc)
             ).inc()
-            raise
-        except JobNotFoundError:
-            GITHUB_CLIENT_ERRORS_TOTAL.labels(method=func.__name__, error_type="other").inc()
-            raise
-        except TokenError:
-            GITHUB_CLIENT_ERRORS_TOTAL.labels(method=func.__name__, error_type="token_error").inc()
             raise
         finally:
             GITHUB_CLIENT_CALLS_TOTAL.labels(method=func.__name__).inc()
@@ -148,8 +148,16 @@ def _track_github_api_metrics(func: Callable[ParamT, ReturnT]) -> Callable[Param
     return wrapper
 
 
-def _classify_github_metric_error(exc: PlatformApiError) -> str:
+def _classify_github_metric_error(exc: Exception) -> str:
     """Map translated GitHub client exceptions to metric label values."""
+    if isinstance(exc, TokenError):
+        return "token_error"
+    if isinstance(exc, JobNotFoundError):
+        return "job_not_found"
+    if isinstance(exc, GithubRunnerNotFoundError):
+        return "runner_not_found"
+    if isinstance(exc, DeleteRunnerBusyError):
+        return "delete_runner_busy"
     current: BaseException | None = exc
     while current is not None:
         if isinstance(current, RateLimitExceededException):

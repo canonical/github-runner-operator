@@ -83,6 +83,16 @@ class _DecoratedClientMethodTarget:
         """Raise JobNotFoundError to verify generic error labelling."""
         raise JobNotFoundError("missing job")
 
+    @_track_github_api_metrics
+    def runner_not_found(self) -> None:
+        """Raise GithubRunnerNotFoundError to verify generic error labelling."""
+        raise GithubRunnerNotFoundError("missing runner")
+
+    @_track_github_api_metrics
+    def delete_runner_busy(self) -> None:
+        """Raise DeleteRunnerBusyError to verify generic error labelling."""
+        raise DeleteRunnerBusyError("runner busy")
+
 
 def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
     """Get a sample value from the default Prometheus registry."""
@@ -687,7 +697,9 @@ def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call():
         ("token_error", "token_error", TokenError),
         ("rate_limit_error", "rate_limit", PlatformApiError),
         ("platform_api_error", "platform_api_error", PlatformApiError),
-        ("job_not_found", "other", JobNotFoundError),
+        ("job_not_found", "job_not_found", JobNotFoundError),
+        ("runner_not_found", "runner_not_found", GithubRunnerNotFoundError),
+        ("delete_runner_busy", "delete_runner_busy", DeleteRunnerBusyError),
     ],
 )
 def test_track_github_api_metrics_records_error_metrics(
