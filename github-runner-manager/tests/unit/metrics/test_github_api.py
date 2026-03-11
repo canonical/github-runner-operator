@@ -1,16 +1,22 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+"""Unit tests for GitHub API Prometheus metrics."""
+
 from unittest.mock import MagicMock
 
 import pytest
-from github import GithubException
+from github import GithubException, RateLimitExceededException
 from prometheus_client import REGISTRY
 
 from github_runner_manager.configuration.github import GitHubRepo
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.metrics.github_api import track_github_api_metrics
-from github_runner_manager.platform.platform_provider import PlatformApiError, TokenError
+from github_runner_manager.platform.platform_provider import (
+    JobNotFoundError,
+    PlatformApiError,
+    TokenError,
+)
 
 
 def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
@@ -34,8 +40,10 @@ class _DummyGitHubClient:
 
     @track_github_api_metrics
     def rate_limit_error(self) -> None:
-        """Raise a translated rate limit error."""
-        raise PlatformApiError("GitHub API rate limit exceeded.")
+        """Raise a translated rate limit error with a chained cause."""
+        raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
+            403, {}, {}
+        )
 
     @track_github_api_metrics
     def bad_credentials_error(self) -> None:
@@ -217,4 +225,35 @@ def test_get_job_info_by_runner_name_token_error(monkeypatch: pytest.MonkeyPatch
         )
 
     after = _sample_value("github_api_errors_total", labels)
+    assert after - before == pytest.approx(1)
+
+
+def test_get_job_info_by_runner_name_job_not_found(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: a GithubClient requester that returns no matching runner.
+    act: fetch the job information by runner name.
+    assert: the JobNotFoundError counter increases by one.
+    """
+    client = GithubClient(token="test-token")
+    requester = MagicMock()
+    requester.rate_limiting = (4000, 5000)
+    requester.requestJsonAndCheck.return_value = (
+        {},
+        {"jobs": [{"runner_name": "other-runner"}]},
+    )
+    monkeypatch.setattr(client, "_requester", requester)
+    error_labels = {
+        "method": "get_job_info_by_runner_name",
+        "error_type": "JobNotFoundError",
+    }
+    before = _sample_value("github_api_errors_total", error_labels)
+
+    with pytest.raises(JobNotFoundError):
+        client.get_job_info_by_runner_name(
+            path=GitHubRepo(owner="owner", repo="repo"),
+            workflow_run_id="123",
+            runner_name="runner-1",
+        )
+
+    after = _sample_value("github_api_errors_total", error_labels)
     assert after - before == pytest.approx(1)

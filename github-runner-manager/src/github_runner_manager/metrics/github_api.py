@@ -7,10 +7,15 @@ import functools
 from time import perf_counter
 from typing import Any, Callable, ParamSpec, TypeVar
 
+from github import RateLimitExceededException
 from prometheus_client import Counter, Gauge, Histogram
 
 from github_runner_manager.metrics import labels
-from github_runner_manager.platform.platform_provider import PlatformApiError, TokenError
+from github_runner_manager.platform.platform_provider import (
+    PlatformApiError,
+    PlatformError,
+    TokenError,
+)
 
 ParamT = ParamSpec("ParamT")
 ReturnT = TypeVar("ReturnT")
@@ -52,15 +57,20 @@ def _update_rate_limit_metrics(requester: Any) -> None:
         GITHUB_API_RATE_LIMIT_LIMIT.set(limit)
 
 
-def _classify_error(exc: Exception) -> str | None:
-    """Map translated GitHub client exceptions to metric label values."""
+def _classify_error(exc: Exception) -> str:
+    """Map translated GitHub client exceptions to metric label values.
+
+    Checks the exception cause chain for RateLimitExceededException to reliably
+    identify rate limit errors regardless of message text.
+    """
     if isinstance(exc, TokenError):
         return "token_error"
+    cause = exc.__cause__
+    if isinstance(cause, RateLimitExceededException):
+        return "rate_limit"
     if isinstance(exc, PlatformApiError):
-        if "rate limit" in str(exc).lower():
-            return "rate_limit"
         return "platform_api_error"
-    return None
+    return type(exc).__name__
 
 
 def record_github_api_metrics(method: str, requester: Any, func: Callable[[], ReturnT]) -> ReturnT:
@@ -72,8 +82,7 @@ def record_github_api_metrics(method: str, requester: Any, func: Callable[[], Re
         func: Callback that executes the GitHub API operation.
 
     Raises:
-        PlatformApiError: If the callback raises a translated platform API error.
-        TokenError: If the callback raises a translated token error.
+        PlatformError: Re-raised after recording error metrics.
 
     Returns:
         The callback result.
@@ -81,10 +90,8 @@ def record_github_api_metrics(method: str, requester: Any, func: Callable[[], Re
     start = perf_counter()
     try:
         return func()
-    except (PlatformApiError, TokenError) as exc:
-        error_type = _classify_error(exc)
-        if error_type:
-            GITHUB_API_ERRORS_TOTAL.labels(method=method, error_type=error_type).inc()
+    except PlatformError as exc:
+        GITHUB_API_ERRORS_TOTAL.labels(method=method, error_type=_classify_error(exc)).inc()
         raise
     finally:
         GITHUB_API_CALLS_TOTAL.labels(method=method).inc()
