@@ -336,6 +336,27 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
+def test_get_job_info_by_runner_name_translates_rate_limit_error(
+    github_client: GithubClient, job_stats_raw: JobStatsRawData
+):
+    """
+    arrange: A mocked Github Client that hits the GitHub API rate limit.
+    act: Call get_job_info_by_runner_name.
+    assert: A PlatformApiError is raised instead of TokenError.
+    """
+    github_client._requester.requestJsonAndCheck.side_effect = RateLimitExceededException(
+        403, {}, {}
+    )
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+
+    with pytest.raises(PlatformApiError, match="GitHub API rate limit exceeded."):
+        github_client.get_job_info_by_runner_name(
+            path=github_repo,
+            workflow_run_id=secrets.token_hex(16),
+            runner_name=job_stats_raw.runner_name,
+        )
+
+
 def test_list_runners(github_client: GithubClient):
     """
     arrange: A mocked Github Client that returns two runners, one for the requested prefix.

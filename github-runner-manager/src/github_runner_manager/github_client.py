@@ -387,6 +387,7 @@ class GithubClient:
             runner_name: Name of the runner.
 
         Raises:
+            PlatformApiError: If the GitHub API rate limit is exceeded.
             TokenError: if there was an error with the Github token credential provided.
             JobNotFoundError: If no jobs were found.
 
@@ -408,6 +409,8 @@ class GithubClient:
                 for job in jobs:
                     if job["runner_name"] == runner_name:
                         return self._to_job_info(job)
+        except RateLimitExceededException as exc:
+            raise PlatformApiError("GitHub API rate limit exceeded.") from exc
         except GithubException as exc:
             if exc.status in (401, 403):
                 raise TokenError from exc
