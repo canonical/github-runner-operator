@@ -1,0 +1,122 @@
+06:44:14 WARNING unexpected facade SSHServer received from the controller
+06:44:14 INFO Adding model github-pr-bed5c-lxd:test-charm-metrics-failure-javo on cloud localhost
+06:44:14 WARNING unexpected facade SSHServer received from the controller
+06:44:14 WARNING unexpected facade SSHSession received from the controller
+06:44:14 WARNING unexpected facade SSHTunneler received from the controller
+06:44:14 WARNING unexpected facade SSHServer received from the controller
+06:44:15 INFO GitHub token rate limit: Rate(reset=2026-03-12 07:41:50+00:00, remaining=4995, limit=5000)
+06:44:17 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:44:19 INFO Deploying ch:amd64/noble/any-charm-133
+06:44:35 INFO Deploying local:jammy/github-runner-0
+06:44:35 INFO Waiting for model:
+  test-uxa8mxy4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uxa8mxy4/0 [allocating] waiting: waiting for machine
+06:45:05 INFO Waiting for model:
+  test-uxa8mxy4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uxa8mxy4/0 [allocating] waiting: waiting for machine
+06:45:35 INFO Waiting for model:
+  test-uxa8mxy4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uxa8mxy4/0 [idle] active: 
+06:46:06 INFO Waiting for model:
+  test-uxa8mxy4/0 [allocating] waiting: waiting for machine
+06:46:36 INFO Waiting for model:
+  test-uxa8mxy4/0 [executing] maintenance: installing charm software
+06:47:06 INFO Waiting for model:
+  test-uxa8mxy4/0 [executing] maintenance: installing charm software
+06:47:36 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:47:52 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-javo test-uxa8mxy4 base-virtual-machines=0
+06:47:53 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:48:09 INFO Current reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:48:09 INFO Waiting for reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:49:10 INFO Current reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:49:10 INFO Current reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5, expected reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:49:10 INFO Waiting for reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:50:11 INFO Current reconcile ID: 49f76e69-0c5b-4eb1-9419-fb8ecf9ff7f7
+06:50:11 INFO Current reconcile ID: 49f76e69-0c5b-4eb1-9419-fb8ecf9ff7f7, expected reconcile ID: 933a019f-8a51-49e0-b5df-7ec1c9227ce5
+06:50:11 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-javo test-uxa8mxy4 path=canonical/github-runner-operator
+06:50:11 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-failure-javo test-uxa8mxy4 base-virtual-machines=1
+06:50:11 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:50:41 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:50:44 INFO Current reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:50:44 INFO Waiting for reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:51:45 INFO Current reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:51:45 INFO Current reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915, expected reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:51:45 INFO Waiting for reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:52:46 INFO Current reconcile ID: 2399f3ee-7278-4cf6-afa9-020833e68c1a
+06:52:46 INFO Current reconcile ID: 2399f3ee-7278-4cf6-afa9-020833e68c1a, expected reconcile ID: f0629a81-6395-4866-986a-d76cd5a4e915
+06:53:25 INFO Wait for condition not met, sleeping 30
+06:53:55 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-c0715452&created=%3E%3D2026-03-12T06%3A53%3A22%2B00%3A00
+06:54:08 INFO [TEST SETUP] Run command pkill -9 run.sh on test-uxa8mxy4-0-n-d76766908125
+06:54:08 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.36', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c8:96:f9'}]])
+06:54:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uxa8mxy4-0-n-d76766908125.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.36 pkill -9 run.sh'
+06:54:10 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.36' (ED25519) to the list of known hosts.
+'
+06:54:12 INFO Runner test-uxa8mxy4-0-n-d76766908125 status: online
+06:54:12 INFO Runner still marked as online, waiting for it to be marked offline
+06:55:13 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:55:43 INFO Waiting for model:
+  test-uxa8mxy4/0 [idle] active: 
+06:55:45 INFO Current reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:55:45 INFO Waiting for reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:56:46 INFO Current reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:56:46 INFO Current reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6, expected reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:56:46 INFO Waiting for reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:57:47 INFO Current reconcile ID: 9534d45f-0dc6-40e4-8b79-3fb458b7ffbf
+06:57:47 INFO Current reconcile ID: 9534d45f-0dc6-40e4-8b79-3fb458b7ffbf, expected reconcile ID: f47e84c7-f7a0-49c4-b495-fb9f3eca16e6
+06:57:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773298167.5206006, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.318711519241333}
+{"timestamp": 1773298220.5539942, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.303446769714355}
+{"timestamp": 1773298346.0383499, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 5.393211364746094}
+{"timestamp": 1773298389.0, "event": "runner_installed", "flavor": "test-uxa8mxy4", "duration": 170.0}
+{"timestamp": 1773298408.0, "event": "runner_start", "flavor": "test-uxa8mxy4", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 19.0, "queue_duration": 1.0}
+{"timestamp": 1773298449.0, "event": "runner_stop", "flavor": "test-uxa8mxy4", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773298474.200815, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.059759855270386}
+{"timestamp": 1773298520.1398344, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.1618812084198}
+{"timestamp": 1773298645.5305333, "event": "reconciliation", "flavor": "test-uxa8mxy4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.365079402923584}
+06:57:49 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-javo  github-pr-bed5c-lxd  localhost/localhost  3.6.14   unsupported  06:57:49Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-uxa8mxy4           active      1  any-charm      latest/beta  133  no       
+test-uxa8mxy4                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-uxa8mxy4/0*  active    idle   0        10.106.184.193         
+test-uxa8mxy4/0*                         active    idle   1        10.106.184.233         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.106.184.193  juju-6caf4a-0  ubuntu@24.04  github-runner  Running
+1        started  10.106.184.233  juju-6caf4a-1  ubuntu@22.04  github-runner  Running
+
+06:57:49 INFO Juju error logs:
+
+machine-0: 06:45:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:45:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:46:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:46:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-uxa8mxy4-0: 06:47:13 ERROR unit.test-uxa8mxy4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-uxa8mxy4-0: 06:47:14 ERROR unit.test-uxa8mxy4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-uxa8mxy4-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:57:49 INFO Forgetting model main...

@@ -1,0 +1,48 @@
+06:43:37 WARNING unexpected facade SSHServer received from the controller
+06:43:37 INFO Adding model github-pr-bed5c-lxd:test-charm-runner-z869 on cloud localhost
+06:43:37 WARNING unexpected facade SSHServer received from the controller
+06:43:37 WARNING unexpected facade SSHSession received from the controller
+06:43:37 WARNING unexpected facade SSHTunneler received from the controller
+06:43:37 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:43:39 INFO Deploying ch:amd64/noble/any-charm-133
+06:43:53 INFO Deploying local:noble/github-runner-0
+06:43:54 INFO Waiting for model:
+  test-ipv46rwq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ipv46rwq/0 [allocating] waiting: waiting for machine
+06:44:24 INFO Waiting for model:
+  test-ipv46rwq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ipv46rwq/0 [idle] active: 
+06:44:54 INFO Waiting for model:
+  test-ipv46rwq/0 [allocating] waiting: waiting for machine
+06:45:25 INFO Waiting for model:
+  test-ipv46rwq/0 [allocating] waiting: waiting for machine
+06:45:55 INFO Waiting for model:
+  test-ipv46rwq/0 [allocating] waiting: agent initialising
+06:46:25 INFO Waiting for model:
+  test-ipv46rwq/0 [executing] maintenance: installing charm software
+06:46:55 INFO Waiting for model:
+  test-ipv46rwq/0 [executing] maintenance: installing charm software
+06:47:25 INFO Waiting for model:
+  test-ipv46rwq/0 [idle] active:
+06:47:38 INFO Waiting for model:
+  test-ipv46rwq/0 [idle] active: 
+06:48:08 INFO Waiting for model:
+  test-ipv46rwq/0 [idle] active: 
+06:48:11 INFO Current reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:48:11 INFO Waiting for reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:49:12 INFO Current reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:49:12 INFO Current reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a, expected reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:49:12 INFO Waiting for reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:50:13 INFO Current reconcile ID: beb589b5-e437-4ad6-bfa3-a511425ead34
+06:50:13 INFO Current reconcile ID: beb589b5-e437-4ad6-bfa3-a511425ead34, expected reconcile ID: 6fdaf38a-dbff-4590-aeac-eb01f3342b0a
+06:50:53 INFO Waiting for model:
+  test-ipv46rwq/0 [idle] active: 
+06:51:23 INFO Waiting for model:
+  test-ipv46rwq/0 [idle] active: 
+06:51:27 INFO Current reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e
+06:51:27 INFO Waiting for reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e
+06:52:28 INFO Current reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e
+06:52:28 INFO Current reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e, expected reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e
+06:52:28 INFO Waiting for reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e
+06:53:29 INFO Current reconcile ID: c949b2cc-ea56-4118-b35e-85d556133cd3
+06:53:29 INFO Current reconcile ID: c949b2cc-ea56-4118-b35e-85d556133cd3, expected reconcile ID: b5b2be9c-97b0-459f-ab61-220a8c2d000e

@@ -1,0 +1,55 @@
+06:44:12 WARNING unexpected facade SSHServer received from the controller
+06:44:12 INFO Adding model github-pr-bed5c-lxd:test-charm-metrics-success-9dxw on cloud localhost
+06:44:12 WARNING unexpected facade SSHServer received from the controller
+06:44:12 WARNING unexpected facade SSHSession received from the controller
+06:44:12 WARNING unexpected facade SSHTunneler received from the controller
+06:44:12 WARNING unexpected facade SSHServer received from the controller
+06:44:12 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:44:15 INFO Deploying ch:amd64/noble/any-charm-133
+06:44:28 INFO Deploying local:jammy/github-runner-0
+06:44:28 INFO Waiting for model:
+  test-yddgedxf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yddgedxf/0 [allocating] waiting: waiting for machine
+06:44:59 INFO Waiting for model:
+  test-yddgedxf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yddgedxf/0 [allocating] waiting: waiting for machine
+06:45:29 INFO Waiting for model:
+  test-yddgedxf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yddgedxf/0 [idle] active: 
+06:45:59 INFO Waiting for model:
+  test-yddgedxf/0 [allocating] waiting: waiting for machine
+06:46:29 INFO Waiting for model:
+  test-yddgedxf/0 [allocating] waiting: agent initialising
+06:46:59 INFO Waiting for model:
+  test-yddgedxf/0 [executing] maintenance: installing charm software
+06:47:30 INFO Waiting for model:
+  test-yddgedxf/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-yddgedxf/0 [idle] active:
+06:47:51 INFO Waiting for model:
+  test-yddgedxf/0 [idle] active: 
+06:48:21 INFO Waiting for model:
+  test-yddgedxf/0 [idle] active: 
+06:48:24 INFO Current reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:48:24 INFO Waiting for reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:49:25 INFO Current reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:49:25 INFO Current reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a, expected reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:49:25 INFO Waiting for reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:50:26 INFO Current reconcile ID: 70d71d21-878c-4c90-a827-3cc7c48f90d0
+06:50:26 INFO Current reconcile ID: 70d71d21-878c-4c90-a827-3cc7c48f90d0, expected reconcile ID: 4f20b00c-5e43-4876-9c96-7744b460901a
+06:51:02 INFO cli: juju config --model github-pr-bed5c-lxd:test-charm-metrics-success-9dxw test-yddgedxf base-virtual-machines=0
+06:51:03 INFO Waiting for model:
+  test-yddgedxf/0 [idle] active: 
+06:51:33 INFO Waiting for model:
+  test-yddgedxf/0 [idle] active: 
+06:51:35 INFO Current reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:51:35 INFO Waiting for reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:52:36 INFO Current reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:52:36 INFO Current reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3, expected reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:52:36 INFO Waiting for reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:53:37 INFO Current reconcile ID: 775c0845-dcec-4b53-a5f3-36ad6b0c5d02
+06:53:37 INFO Current reconcile ID: 775c0845-dcec-4b53-a5f3-36ad6b0c5d02, expected reconcile ID: e254c98e-e587-435a-83cf-c4ba240e1fc3
+06:53:38 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773298080.3711963, "event": "reconciliation", "flavor": "test-yddgedxf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.857201099395752}
+{"timestamp": 1773298205.6761742, "event": "reconciliation", "flavor": "test-yddgedxf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 5.2753190994262695}
+{"timestamp": 1773298243.0, "event": "runner_installed", "flavor": "test-yddgedxf", "duration": 164.0}
+{"timestamp": 1773298273.928174, "event": "reconciliation", "flavor": "test-yddgedxf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.069973707199097}
+{"timestamp": 1773298399.2849958, "event": "reconciliation", "flavor": "test-yddgedxf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.253835439682007}
