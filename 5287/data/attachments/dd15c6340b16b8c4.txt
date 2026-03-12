@@ -1,0 +1,55 @@
+18:42:47 WARNING unexpected facade SSHServer received from the controller
+18:42:47 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-hdi3 on cloud localhost
+18:42:47 WARNING unexpected facade SSHServer received from the controller
+18:42:47 WARNING unexpected facade SSHSession received from the controller
+18:42:47 WARNING unexpected facade SSHTunneler received from the controller
+18:42:47 WARNING unexpected facade SSHServer received from the controller
+18:42:47 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:42:49 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:08 INFO Deploying local:jammy/github-runner-0
+18:43:08 INFO Waiting for model:
+  test-hevi39uo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hevi39uo/0 [allocating] waiting: waiting for machine
+18:43:39 INFO Waiting for model:
+  test-hevi39uo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hevi39uo/0 [allocating] waiting: agent initialising
+18:44:09 INFO Waiting for model:
+  test-hevi39uo/0 [allocating] waiting: waiting for machine
+18:44:39 INFO Waiting for model:
+  test-hevi39uo/0 [allocating] waiting: waiting for machine
+18:45:09 INFO Waiting for model:
+  test-hevi39uo/0 [allocating] waiting: agent initialising
+18:45:39 INFO Waiting for model:
+  test-hevi39uo/0 [executing] maintenance: installing charm software
+18:46:10 INFO Waiting for model:
+  test-hevi39uo/0 [executing] maintenance: installing charm software
+18:46:40 INFO Waiting for model:
+  test-hevi39uo/0 [executing] maintenance: Update image for runners
+18:47:01 INFO Waiting for model:
+  test-hevi39uo/0 [idle] active: 
+18:47:32 INFO Waiting for model:
+  test-hevi39uo/0 [idle] active: 
+18:47:34 INFO Current reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:47:34 INFO Waiting for reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:48:35 INFO Current reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:48:35 INFO Current reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f, expected reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:48:35 INFO Waiting for reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:49:36 INFO Current reconcile ID: b5dfb43b-55c4-4eda-b633-f792f33195ef
+18:49:36 INFO Current reconcile ID: b5dfb43b-55c4-4eda-b633-f792f33195ef, expected reconcile ID: abbef6d3-08c7-4b75-832f-7bd24c1eec9f
+18:50:14 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-success-hdi3 test-hevi39uo base-virtual-machines=0
+18:50:15 INFO Waiting for model:
+  test-hevi39uo/0 [idle] active: 
+18:50:45 INFO Waiting for model:
+  test-hevi39uo/0 [idle] active: 
+18:50:47 INFO Current reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:50:47 INFO Waiting for reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:51:49 INFO Current reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:51:49 INFO Current reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807, expected reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:51:49 INFO Waiting for reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:52:50 INFO Current reconcile ID: 6c5c0645-86cb-4879-a124-2858c57b9468
+18:52:50 INFO Current reconcile ID: 6c5c0645-86cb-4879-a124-2858c57b9468, expected reconcile ID: b0f800f8-a086-4438-97eb-65dd9068e807
+18:52:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773341232.2817097, "event": "reconciliation", "flavor": "test-hevi39uo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.853402853012085}
+{"timestamp": 1773341359.628148, "event": "reconciliation", "flavor": "test-hevi39uo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.263794660568237}
+{"timestamp": 1773341402.0, "event": "runner_installed", "flavor": "test-hevi39uo", "duration": 172.0}
+{"timestamp": 1773341428.412226, "event": "reconciliation", "flavor": "test-hevi39uo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.335978507995605}
+{"timestamp": 1773341555.720933, "event": "reconciliation", "flavor": "test-hevi39uo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.205827713012695}

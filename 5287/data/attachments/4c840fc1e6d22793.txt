@@ -1,0 +1,121 @@
+18:42:48 WARNING unexpected facade SSHServer received from the controller
+18:42:48 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-failure-0fco on cloud localhost
+18:42:48 WARNING unexpected facade SSHServer received from the controller
+18:42:48 WARNING unexpected facade SSHSession received from the controller
+18:42:48 WARNING unexpected facade SSHTunneler received from the controller
+18:42:48 WARNING unexpected facade SSHServer received from the controller
+18:42:48 INFO GitHub token rate limit: Rate(reset=2026-03-12 18:45:52+00:00, remaining=4244, limit=5000)
+18:42:51 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:42:53 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:08 INFO Deploying local:jammy/github-runner-0
+18:43:08 INFO Waiting for model:
+  test-ermmtmua/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ermmtmua/0 [allocating] waiting: waiting for machine
+18:43:39 INFO Waiting for model:
+  test-ermmtmua/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ermmtmua/0 [allocating] waiting: agent initialising
+18:44:09 INFO Waiting for model:
+  test-ermmtmua/0 [allocating] waiting: waiting for machine
+18:44:39 INFO Waiting for model:
+  test-ermmtmua/0 [allocating] waiting: waiting for machine
+18:45:10 INFO Waiting for model:
+  test-ermmtmua/0 [allocating] waiting: agent initialising
+18:45:40 INFO Waiting for model:
+  test-ermmtmua/0 [executing] maintenance: installing charm software
+18:46:10 INFO Waiting for model:
+  test-ermmtmua/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ermmtmua/0 [idle] active: 
+18:46:36 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-0fco test-ermmtmua base-virtual-machines=0
+18:46:36 INFO Waiting for model:
+  test-ermmtmua/0 [idle] active: 
+18:46:52 INFO Current reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:46:52 INFO Waiting for reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:47:53 INFO Current reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:47:53 INFO Current reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3, expected reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:47:53 INFO Waiting for reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:48:54 INFO Current reconcile ID: 930a41be-682c-4581-b4ff-5506a1b4f25a
+18:48:54 INFO Current reconcile ID: 930a41be-682c-4581-b4ff-5506a1b4f25a, expected reconcile ID: 855e6d31-4fd7-41ba-b3f7-1455b241f4d3
+18:48:54 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-0fco test-ermmtmua path=canonical/github-runner-operator
+18:48:54 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-0fco test-ermmtmua base-virtual-machines=1
+18:48:54 INFO Waiting for model:
+  test-ermmtmua/0 [idle] active: 
+18:49:24 INFO Waiting for model:
+  test-ermmtmua/0 [idle] active: 
+18:49:27 INFO Current reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:49:27 INFO Waiting for reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:50:28 INFO Current reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:50:28 INFO Current reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2, expected reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:50:28 INFO Waiting for reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:51:29 INFO Current reconcile ID: 9783307b-9eb8-4d22-9f97-23378e6e71c7
+18:51:29 INFO Current reconcile ID: 9783307b-9eb8-4d22-9f97-23378e6e71c7, expected reconcile ID: 23b306d2-6a7a-493e-b7b7-f5b6380ab7d2
+18:52:10 INFO Wait for condition not met, sleeping 30
+18:52:53 INFO [TEST SETUP] Run command pkill -9 run.sh on test-ermmtmua-0-n-5709c1941e27
+18:52:53 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.72', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:b9:1d'}]])
+18:52:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ermmtmua-0-n-5709c1941e27.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.72 pkill -9 run.sh'
+18:52:55 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.72' (ED25519) to the list of known hosts.
+'
+18:52:57 INFO Runner test-ermmtmua-0-n-5709c1941e27 status: online
+18:52:57 INFO Runner still marked as online, waiting for it to be marked offline
+18:53:58 INFO Waiting for model:
+  test-ermmtmua/0 [idle] active: 
+18:54:29 INFO Waiting for model:
+  test-ermmtmua/0 [idle] active: 
+18:54:31 INFO Current reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:54:31 INFO Waiting for reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:55:32 INFO Current reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:55:32 INFO Current reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554, expected reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:55:32 INFO Waiting for reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:56:33 INFO Current reconcile ID: 431a5c85-b912-4f77-a82c-d49675e585e4
+18:56:33 INFO Current reconcile ID: 431a5c85-b912-4f77-a82c-d49675e585e4, expected reconcile ID: 22d76c6e-1087-4de5-bf7f-13915236e554
+18:56:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773341293.1780736, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.287381410598755}
+{"timestamp": 1773341345.1627452, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.488386869430542}
+{"timestamp": 1773341472.0562117, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.857089519500732}
+{"timestamp": 1773341515.0, "event": "runner_installed", "flavor": "test-ermmtmua", "duration": 172.0}
+{"timestamp": 1773341534.0, "event": "runner_start", "flavor": "test-ermmtmua", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 19.0, "queue_duration": 2.0}
+{"timestamp": 1773341575.0, "event": "runner_stop", "flavor": "test-ermmtmua", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773341601.9018946, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.79022741317749}
+{"timestamp": 1773341647.273407, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.494088649749756}
+{"timestamp": 1773341774.1095886, "event": "reconciliation", "flavor": "test-ermmtmua", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.755885362625122}
+18:56:35 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-0fco  github-pr-6c68c-lxd  localhost/localhost  3.6.14   unsupported  18:56:35Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ermmtmua           active      1  any-charm      latest/beta  133  no       
+test-ermmtmua                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ermmtmua/0*  active    idle   0        10.106.58.191          
+test-ermmtmua/0*                         active    idle   1        10.106.58.190          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.106.58.191  juju-234576-0  ubuntu@24.04  github-runner  Running
+1        started  10.106.58.190  juju-234576-1  ubuntu@22.04  github-runner  Running
+
+18:56:35 INFO Juju error logs:
+
+machine-0: 18:43:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:44:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ermmtmua-0: 18:45:54 ERROR unit.test-ermmtmua/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ermmtmua-0: 18:45:56 ERROR unit.test-ermmtmua/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ermmtmua-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:56:35 INFO Forgetting model main...
