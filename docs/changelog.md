@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-11
+
+- Added Prometheus metrics for GithubClient operation counts, errors, latency, and rate-limit visibility.
+- Fixed `get_job_info_by_runner_name` to surface GitHub API rate limiting as `PlatformApiError` instead of reporting it as `TokenError`.
 
 ## 2026-03-10
 
