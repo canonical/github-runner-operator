@@ -20,7 +20,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
+from github_runner_manager.metrics.events import get_metrics_log_path
 from juju.action import Action
 from juju.application import Application
 from juju.model import Model
@@ -468,7 +468,7 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
     Returns:
         Runner metrics logs.
     """
-    log_file_path = METRICS_LOG_PATH
+    log_file_path = get_metrics_log_path()
     _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",

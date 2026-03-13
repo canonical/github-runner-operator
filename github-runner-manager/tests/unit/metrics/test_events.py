@@ -26,7 +26,7 @@ def test_issue_events_logs_events(tmp_path: Path):
 
     events.issue_event(event)
 
-    assert json.loads(events._get_metrics_log_path().read_text()) == {
+    assert json.loads(events.get_metrics_log_path().read_text()) == {
         "event": "runner_installed",
         "timestamp": 123,
         "flavor": "small",
@@ -53,7 +53,7 @@ def test_issue_events_exclude_none_values(tmp_path: Path):
 
     events.issue_event(event)
 
-    assert json.loads(events._get_metrics_log_path().read_text()) == {
+    assert json.loads(events.get_metrics_log_path().read_text()) == {
         "event": "runner_stop",
         "timestamp": 123,
         "flavor": "small",

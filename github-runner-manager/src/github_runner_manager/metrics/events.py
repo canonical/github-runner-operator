@@ -155,7 +155,7 @@ def issue_event(event: Event) -> None:
     Raises:
         IssueMetricEventError: If the event cannot be logged.
     """
-    metrics_log_path = _get_metrics_log_path()
+    metrics_log_path = get_metrics_log_path()
     try:
         with metrics_log_path.open(mode="a", encoding="utf-8") as metrics_file:
             metrics_file.write(f"{event.json(exclude_none=True)}\n")
@@ -163,6 +163,10 @@ def issue_event(event: Event) -> None:
         raise IssueMetricEventError(f"Cannot write to {metrics_log_path}") from exc
 
 
-def _get_metrics_log_path() -> Path:
-    """Get the metrics log path, reading the env var at call time rather than import time."""
+def get_metrics_log_path() -> Path:
+    """Get the metrics log path, reading the env var at call time rather than import time.
+
+    Returns:
+        The metrics log file path.
+    """
     return Path(os.getenv("METRICS_LOG_PATH", _DEFAULT_METRICS_LOG_PATH))
