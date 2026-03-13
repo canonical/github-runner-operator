@@ -200,6 +200,7 @@ def test_stream_pressure_success(monkeypatch):
     [
         (requests.ConnectionError, "connection dropped"),
         (requests.Timeout, "timed out"),
+        (requests.exceptions.ChunkedEncodingError, "Response ended prematurely"),
     ],
 )
 def test_stream_pressure_raises_connection_error_on_transient_failures(
