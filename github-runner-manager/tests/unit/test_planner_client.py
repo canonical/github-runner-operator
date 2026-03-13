@@ -173,6 +173,7 @@ def test_stream_pressure_raises_connection_error_on_transient_failures(
     monkeypatch.setattr(client, "_session", fake_session)
 
     def _raise_transient_error(url, headers, timeout, stream=False):
+        """Raise the parametrized transient requests error."""
         raise request_error(message)
 
     monkeypatch.setattr(fake_session, "get", _raise_transient_error)
@@ -194,6 +195,7 @@ def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypat
     monkeypatch.setattr(client, "_session", fake_session)
 
     def _raise_request_exception(url, headers, timeout, stream=False):
+        """Raise a non-transient requests exception."""
         raise requests.RequestException("request failed")
 
     monkeypatch.setattr(fake_session, "get", _raise_request_exception)

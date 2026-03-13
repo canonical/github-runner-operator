@@ -14,7 +14,6 @@ import getpass
 import grp
 import logging
 import os
-import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional

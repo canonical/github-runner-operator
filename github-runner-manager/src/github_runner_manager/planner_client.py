@@ -73,7 +73,8 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             Parsed pressure updates.
 
         Raises:
-            PlannerApiError: On HTTP or stream errors.
+            PlannerConnectionError: On transient stream disconnects or timeouts.
+            PlannerApiError: On other HTTP or stream errors.
         """
         base = str(self._config.base_url).rstrip("/") + "/"
         url = urljoin(base, f"api/v1/flavors/{name}/pressure?stream=true")
