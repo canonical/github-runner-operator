@@ -132,14 +132,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     if self._stop.is_set():
                         return
                     self._handle_create_runners(update.pressure)
-            except PlannerConnectionError:
+            except PlannerConnectionError as exc:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.warning(
-                    "Pressure stream interrupted, falling back to %s runners.",
+                    "Pressure stream interrupted (%s), falling back to %s runners.",
+                    exc,
                     fallback,
                 )
                 self._handle_create_runners(fallback)
-                time.sleep(5)
+                self._stop.wait(5)
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
@@ -147,7 +148,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     fallback,
                 )
                 self._handle_create_runners(fallback)
-                time.sleep(5)
+                self._stop.wait(5)
 
     def start_reconcile_loop(self) -> None:
         """Periodically reconcile runners: sync state, scale up/down, and clean up."""

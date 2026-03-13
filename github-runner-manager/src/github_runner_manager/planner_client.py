@@ -97,9 +97,7 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                     except json.JSONDecodeError:
                         logger.warning("Skipping malformed stream line: %s", line)
                         continue
-        except requests.ConnectionError as exc:
-            raise PlannerConnectionError from exc
-        except requests.Timeout as exc:
+        except (requests.ConnectionError, requests.Timeout) as exc:
             raise PlannerConnectionError from exc
         except requests.RequestException as exc:
             raise PlannerApiError from exc
