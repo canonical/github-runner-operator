@@ -264,6 +264,12 @@ def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypat
             id="timeout",
         ),
         pytest.param(
+            requests.exceptions.ChunkedEncodingError("Response ended prematurely"),
+            PlannerConnectionError,
+            "Response ended prematurely",
+            id="chunked_encoding_error",
+        ),
+        pytest.param(
             requests.RequestException("stream request failed"),
             PlannerApiError,
             "stream request failed",
