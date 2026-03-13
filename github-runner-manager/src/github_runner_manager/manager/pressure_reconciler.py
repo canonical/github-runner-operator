@@ -134,7 +134,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             except PlannerConnectionError as exc:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.warning(
-                    "Pressure stream interrupted (%s), falling back to %s runners.",
+                    "Pressure stream interrupted for flavor %s (%s), falling back to %s runners.",
+                    self._config.flavor_name,
                     exc,
                     fallback,
                 )
@@ -143,7 +144,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
-                    "Error in pressure stream loop, falling back to %s runners.",
+                    "Error in pressure stream loop for flavor %s, falling back to %s runners.",
+                    self._config.flavor_name,
                     fallback,
                 )
                 self._handle_create_runners(fallback)

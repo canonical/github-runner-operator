@@ -20,15 +20,22 @@ from github_runner_manager.planner_client import (
 class _FakeResponse:
     """Minimal Response-like object used to stub `requests.Response`."""
 
-    def __init__(self, status_code: int = 200, lines: list[str] | None = None) -> None:
+    def __init__(
+        self,
+        status_code: int = 200,
+        lines: list[str] | None = None,
+        iter_lines_exception: Exception | None = None,
+    ) -> None:
         """Minimal Response-like object used to stub `requests.Response`.
 
         Args:
             status_code: HTTP status code to emulate.
             lines: Lines yielded by `iter_lines()` for streaming tests.
+            iter_lines_exception: Exception raised while iterating stream lines.
         """
         self.status_code = status_code
         self._lines = lines or []
+        self._iter_lines_exception = iter_lines_exception
         self._closed = False
 
     def raise_for_status(self) -> None:
@@ -51,6 +58,8 @@ class _FakeResponse:
         """
         for line in self._lines:
             yield line
+        if self._iter_lines_exception is not None:
+            raise self._iter_lines_exception
 
     def close(self) -> None:
         """Mark the response as closed (context manager support)."""
@@ -131,6 +140,41 @@ def _fake_get_stream_response(lines: list[str], status_code: int = 200):
     return _fake_get
 
 
+def _fake_get_stream_response_with_error(
+    lines: list[str], stream_error: Exception, status_code: int = 200
+):
+    """Build a stub `Session.get` returning stream lines followed by an error.
+
+    Args:
+        lines: List of NDJSON lines to yield before failing.
+        stream_error: Exception raised by `iter_lines()`.
+        status_code: HTTP status code for the response (default: 200).
+
+    Returns:
+        Callable: A function compatible with `Session.get` signature.
+    """
+
+    def _fake_get(url, headers, timeout, stream=False):
+        """Return a fake streaming response that fails during iteration.
+
+        Args:
+            url: Request URL (ignored by stub).
+            headers: Request headers (ignored by stub).
+            timeout: Request timeout in seconds (ignored by stub).
+            stream: Whether streaming is requested (ignored by stub).
+
+        Returns:
+            _FakeResponse: Response configured to raise while iterating lines.
+        """
+        return _FakeResponse(
+            status_code=status_code,
+            lines=lines,
+            iter_lines_exception=stream_error,
+        )
+
+    return _fake_get
+
+
 def test_stream_pressure_success(monkeypatch):
     """
     arrange: Fake session streams NDJSON lines with a blank heartbeat.
@@ -202,3 +246,52 @@ def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypat
 
     with pytest.raises(PlannerApiError, match="request failed"):
         next(client.stream_pressure("small"))
+
+
+@pytest.mark.parametrize(
+    ("stream_error", "expected_error", "message"),
+    [
+        pytest.param(
+            requests.ConnectionError("stream connection dropped"),
+            PlannerConnectionError,
+            "stream connection dropped",
+            id="connection_error",
+        ),
+        pytest.param(
+            requests.Timeout("stream timed out"),
+            PlannerConnectionError,
+            "stream timed out",
+            id="timeout",
+        ),
+        pytest.param(
+            requests.RequestException("stream request failed"),
+            PlannerApiError,
+            "stream request failed",
+            id="request_exception",
+        ),
+    ],
+)
+def test_stream_pressure_raises_expected_error_on_midstream_request_failures(
+    monkeypatch, stream_error, expected_error, message
+):
+    """
+    arrange: Fake response raises a requests error during `iter_lines()`.
+    act: Consume `stream_pressure('small')` until the stream fails.
+    assert: Raises the expected planner client error wrapper.
+    """
+    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
+    client = PlannerClient(cfg)
+
+    fake_session = _FakeSession()
+    monkeypatch.setattr(client, "_session", fake_session)
+    monkeypatch.setattr(
+        fake_session,
+        "get",
+        _fake_get_stream_response_with_error([json.dumps({"small": 2})], stream_error),
+    )
+
+    stream = client.stream_pressure("small")
+
+    assert next(stream).pressure == 2
+    with pytest.raises(expected_error, match=message):
+        next(stream)
