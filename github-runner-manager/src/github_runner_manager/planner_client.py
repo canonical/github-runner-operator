@@ -47,7 +47,7 @@ class PlannerApiError(Exception):
 
 
 class PlannerConnectionError(PlannerApiError):
-    """Transient connection error (dropped stream, timeout)."""
+    """Transient connection or stream interruption error."""
 
 
 class PlannerClient:  # pylint: disable=too-few-public-methods

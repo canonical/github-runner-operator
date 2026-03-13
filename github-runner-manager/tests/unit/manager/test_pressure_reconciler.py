@@ -71,7 +71,7 @@ class _FakePlanner:
         self._stream_exception = stream_exception
 
     def stream_pressure(self, name: str):  # noqa: ARG002
-        """Yield pressure updates or raise PlannerApiError based on configuration.
+        """Yield pressure updates or raise the configured exception.
 
         Yields:
             Namespace objects with a pressure attribute.
