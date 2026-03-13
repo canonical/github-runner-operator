@@ -129,6 +129,7 @@ def _fake_get_stream_response(
     """
 
     def _fake_get(url, headers, timeout, stream=False):
+        """Return a fake streaming response."""
         return _FakeResponse(
             status_code=status_code,
             lines=lines,
