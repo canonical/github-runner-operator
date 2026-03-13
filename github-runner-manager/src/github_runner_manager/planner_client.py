@@ -46,6 +46,10 @@ class PlannerApiError(Exception):
     """Represents an error while interacting with the planner service."""
 
 
+class PlannerConnectionError(PlannerApiError):
+    """Transient connection error (dropped stream, timeout)."""
+
+
 class PlannerClient:  # pylint: disable=too-few-public-methods
     """An HTTP client for the planner service."""
 
@@ -93,8 +97,11 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                     except json.JSONDecodeError:
                         logger.warning("Skipping malformed stream line: %s", line)
                         continue
+        except requests.ConnectionError as exc:
+            raise PlannerConnectionError from exc
+        except requests.Timeout as exc:
+            raise PlannerConnectionError from exc
         except requests.RequestException as exc:
-            logger.exception("Error while streaming pressure for flavor '%s' from planner.", name)
             raise PlannerApiError from exc
 
     @staticmethod

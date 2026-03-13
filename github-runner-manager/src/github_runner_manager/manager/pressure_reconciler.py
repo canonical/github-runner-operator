@@ -30,6 +30,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.planner_client import (
     PlannerApiError,
+    PlannerConnectionError,
     PlannerClient,
     PlannerConfiguration,
 )
@@ -131,6 +132,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     if self._stop.is_set():
                         return
                     self._handle_create_runners(update.pressure)
+            except PlannerConnectionError:
+                fallback = max(self._last_pressure or 0, self._config.min_pressure)
+                logger.warning(
+                    "Pressure stream interrupted, falling back to %s runners.",
+                    fallback,
+                )
+                self._handle_create_runners(fallback)
+                time.sleep(5)
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
