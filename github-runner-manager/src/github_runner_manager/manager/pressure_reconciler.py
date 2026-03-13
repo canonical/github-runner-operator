@@ -139,6 +139,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     exc,
                     fallback,
                 )
+                if self._stop.is_set():
+                    return
                 self._handle_create_runners(fallback)
                 self._stop.wait(5)
             except PlannerApiError:
@@ -148,6 +150,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     self._config.flavor_name,
                     fallback,
                 )
+                if self._stop.is_set():
+                    return
                 self._handle_create_runners(fallback)
                 self._stop.wait(5)
 

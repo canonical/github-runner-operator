@@ -145,6 +145,49 @@ def test_fallback_preserves_last_pressure_when_higher(
     assert 10 in mgr.created_args
 
 
+@pytest.mark.parametrize(
+    ("planner_error", "logger_method"),
+    [
+        pytest.param(PlannerApiError("request failed"), "exception", id="planner_api_error"),
+        pytest.param(
+            PlannerConnectionError("connection dropped"),
+            "warning",
+            id="planner_connection_error",
+        ),
+    ],
+)
+def test_create_loop_does_not_scale_up_after_stop_requested_during_error_handling(
+    monkeypatch: pytest.MonkeyPatch, planner_error: Exception, logger_method: str
+):
+    """
+    arrange: A reconciler whose stream fails and shutdown is requested during logging.
+    act: Call start_create_loop.
+    assert: No fallback runners are created after shutdown is requested.
+    """
+    mgr = _FakeManager()
+    planner = _FakePlanner(stream_exception=planner_error)
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    def _stop_during_logging(*args, **kwargs):
+        """Stop the reconciler while the exception handler is logging."""
+        reconciler.stop()
+
+    def _wait_should_not_run(_seconds: int) -> bool:
+        """Fail if backoff wait runs after shutdown has already been requested."""
+        raise AssertionError("_stop.wait() should not be called after shutdown")
+
+    monkeypatch.setattr(
+        f"github_runner_manager.manager.pressure_reconciler.logger.{logger_method}",
+        _stop_during_logging,
+    )
+    monkeypatch.setattr(reconciler._stop, "wait", _wait_should_not_run)
+
+    reconciler.start_create_loop()
+
+    assert mgr.created_args == []
+
+
 def test_timer_loop_uses_cached_pressure(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with a cached last_pressure value.
