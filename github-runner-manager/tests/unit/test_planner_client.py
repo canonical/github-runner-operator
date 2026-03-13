@@ -6,10 +6,13 @@
 import json
 from types import SimpleNamespace
 
+import pytest
 import requests
 
 from github_runner_manager.planner_client import (
+    PlannerApiError,
     PlannerClient,
+    PlannerConnectionError,
     PlannerConfiguration,
 )
 
@@ -146,3 +149,54 @@ def test_stream_pressure_success(monkeypatch):
     updates = list(client.stream_pressure("small"))
     assert updates[0].pressure == 2
     assert updates[1].pressure == 5
+
+
+@pytest.mark.parametrize(
+    ("request_error", "message"),
+    [
+        (requests.ConnectionError, "connection dropped"),
+        (requests.Timeout, "timed out"),
+    ],
+)
+def test_stream_pressure_raises_connection_error_on_transient_failures(
+    monkeypatch, request_error, message
+):
+    """
+    arrange: Fake session raises a transient requests error.
+    act: Consume `stream_pressure('small')`.
+    assert: Raises `PlannerConnectionError`.
+    """
+    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
+    client = PlannerClient(cfg)
+
+    fake_session = _FakeSession()
+    monkeypatch.setattr(client, "_session", fake_session)
+
+    def _raise_transient_error(url, headers, timeout, stream=False):
+        raise request_error(message)
+
+    monkeypatch.setattr(fake_session, "get", _raise_transient_error)
+
+    with pytest.raises(PlannerConnectionError):
+        next(client.stream_pressure("small"))
+
+
+def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypatch):
+    """
+    arrange: Fake session raises a non-transient `requests.RequestException`.
+    act: Consume `stream_pressure('small')`.
+    assert: Raises `PlannerApiError`.
+    """
+    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
+    client = PlannerClient(cfg)
+
+    fake_session = _FakeSession()
+    monkeypatch.setattr(client, "_session", fake_session)
+
+    def _raise_request_exception(url, headers, timeout, stream=False):
+        raise requests.RequestException("request failed")
+
+    monkeypatch.setattr(fake_session, "get", _raise_request_exception)
+
+    with pytest.raises(PlannerApiError):
+        next(client.stream_pressure("small"))
