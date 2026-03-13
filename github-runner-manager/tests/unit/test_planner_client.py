@@ -196,20 +196,41 @@ def test_stream_pressure_success(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("request_error", "message"),
+    ("request_error", "expected_error", "message"),
     [
-        (requests.ConnectionError, "connection dropped"),
-        (requests.Timeout, "timed out"),
-        (requests.exceptions.ChunkedEncodingError, "Response ended prematurely"),
+        pytest.param(
+            requests.ConnectionError,
+            PlannerConnectionError,
+            "connection dropped",
+            id="connection_error",
+        ),
+        pytest.param(
+            requests.Timeout,
+            PlannerConnectionError,
+            "timed out",
+            id="timeout",
+        ),
+        pytest.param(
+            requests.exceptions.ChunkedEncodingError,
+            PlannerConnectionError,
+            "Response ended prematurely",
+            id="chunked_encoding_error",
+        ),
+        pytest.param(
+            requests.RequestException,
+            PlannerApiError,
+            "request failed",
+            id="request_exception",
+        ),
     ],
 )
-def test_stream_pressure_raises_connection_error_on_transient_failures(
-    monkeypatch, request_error, message
+def test_stream_pressure_raises_expected_error_on_connection_failures(
+    monkeypatch, request_error, expected_error, message
 ):
     """
-    arrange: Fake session raises a transient requests error.
+    arrange: Fake session raises a requests error during connection.
     act: Consume `stream_pressure('small')`.
-    assert: Raises `PlannerConnectionError`.
+    assert: Raises the expected planner client error wrapper.
     """
     cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
     client = PlannerClient(cfg)
@@ -217,35 +238,13 @@ def test_stream_pressure_raises_connection_error_on_transient_failures(
     fake_session = _FakeSession()
     monkeypatch.setattr(client, "_session", fake_session)
 
-    def _raise_transient_error(url, headers, timeout, stream=False):
-        """Raise the parametrized transient requests error."""
+    def _raise_error(url, headers, timeout, stream=False):
+        """Raise the parametrized requests error."""
         raise request_error(message)
 
-    monkeypatch.setattr(fake_session, "get", _raise_transient_error)
+    monkeypatch.setattr(fake_session, "get", _raise_error)
 
-    with pytest.raises(PlannerConnectionError, match=message):
-        next(client.stream_pressure("small"))
-
-
-def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypatch):
-    """
-    arrange: Fake session raises a non-transient `requests.RequestException`.
-    act: Consume `stream_pressure('small')`.
-    assert: Raises `PlannerApiError`.
-    """
-    cfg = PlannerConfiguration(base_url="http://localhost:8080", token="t")
-    client = PlannerClient(cfg)
-
-    fake_session = _FakeSession()
-    monkeypatch.setattr(client, "_session", fake_session)
-
-    def _raise_request_exception(url, headers, timeout, stream=False):
-        """Raise a non-transient requests exception."""
-        raise requests.RequestException("request failed")
-
-    monkeypatch.setattr(fake_session, "get", _raise_request_exception)
-
-    with pytest.raises(PlannerApiError, match="request failed"):
+    with pytest.raises(expected_error, match=message):
         next(client.stream_pressure("small"))
 
 
