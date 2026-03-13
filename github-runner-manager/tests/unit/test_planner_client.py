@@ -112,11 +112,16 @@ class _FakeSession:
         return _FakeResponse(status_code=200)
 
 
-def _fake_get_stream_response(lines: list[str], status_code: int = 200):
-    """Build a stub `Session.get` returning stream lines (NDJSON).
+def _fake_get_stream_response(
+    lines: list[str],
+    stream_error: Exception | None = None,
+    status_code: int = 200,
+):
+    """Build a stub `Session.get` returning a fake streaming response.
 
     Args:
         lines: List of NDJSON lines to yield.
+        stream_error: Optional exception raised after all lines are yielded.
         status_code: HTTP status code for the response (default: 200).
 
     Returns:
@@ -124,48 +129,6 @@ def _fake_get_stream_response(lines: list[str], status_code: int = 200):
     """
 
     def _fake_get(url, headers, timeout, stream=False):
-        """Return a fake streaming response yielding predefined lines.
-
-        Args:
-            url: Request URL (ignored by stub).
-            headers: Request headers (ignored by stub).
-            timeout: Request timeout in seconds (ignored by stub).
-            stream: Whether streaming is requested (ignored by stub).
-
-        Returns:
-            _FakeResponse: Response configured with the provided NDJSON lines.
-        """
-        return _FakeResponse(status_code=status_code, lines=lines)
-
-    return _fake_get
-
-
-def _fake_get_stream_response_with_error(
-    lines: list[str], stream_error: Exception, status_code: int = 200
-):
-    """Build a stub `Session.get` returning stream lines followed by an error.
-
-    Args:
-        lines: List of NDJSON lines to yield before failing.
-        stream_error: Exception raised by `iter_lines()`.
-        status_code: HTTP status code for the response (default: 200).
-
-    Returns:
-        Callable: A function compatible with `Session.get` signature.
-    """
-
-    def _fake_get(url, headers, timeout, stream=False):
-        """Return a fake streaming response that fails during iteration.
-
-        Args:
-            url: Request URL (ignored by stub).
-            headers: Request headers (ignored by stub).
-            timeout: Request timeout in seconds (ignored by stub).
-            stream: Whether streaming is requested (ignored by stub).
-
-        Returns:
-            _FakeResponse: Response configured to raise while iterating lines.
-        """
         return _FakeResponse(
             status_code=status_code,
             lines=lines,
@@ -293,7 +256,7 @@ def test_stream_pressure_raises_expected_error_on_midstream_request_failures(
     monkeypatch.setattr(
         fake_session,
         "get",
-        _fake_get_stream_response_with_error([json.dumps({"small": 2})], stream_error),
+        _fake_get_stream_response([json.dumps({"small": 2})], stream_error=stream_error),
     )
 
     stream = client.stream_pressure("small")
