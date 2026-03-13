@@ -177,7 +177,7 @@ def test_stream_pressure_raises_connection_error_on_transient_failures(
 
     monkeypatch.setattr(fake_session, "get", _raise_transient_error)
 
-    with pytest.raises(PlannerConnectionError):
+    with pytest.raises(PlannerConnectionError, match=message):
         next(client.stream_pressure("small"))
 
 
@@ -198,5 +198,5 @@ def test_stream_pressure_raises_planner_api_error_on_request_exception(monkeypat
 
     monkeypatch.setattr(fake_session, "get", _raise_request_exception)
 
-    with pytest.raises(PlannerApiError):
+    with pytest.raises(PlannerApiError, match="request failed"):
         next(client.stream_pressure("small"))
