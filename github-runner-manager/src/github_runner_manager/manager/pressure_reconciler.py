@@ -30,9 +30,9 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.planner_client import (
     PlannerApiError,
-    PlannerConnectionError,
     PlannerClient,
     PlannerConfiguration,
+    PlannerConnectionError,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 

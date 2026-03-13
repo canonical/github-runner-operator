@@ -12,8 +12,8 @@ import requests
 from github_runner_manager.planner_client import (
     PlannerApiError,
     PlannerClient,
-    PlannerConnectionError,
     PlannerConfiguration,
+    PlannerConnectionError,
 )
 
 
