@@ -1,0 +1,107 @@
+18:36:38 WARNING unexpected facade SSHServer received from the controller
+18:36:38 INFO Adding model github-pr-6c68c-lxd:test-reactive-fqmn on cloud localhost
+18:36:38 WARNING unexpected facade SSHServer received from the controller
+18:36:38 WARNING unexpected facade SSHSession received from the controller
+18:36:38 WARNING unexpected facade SSHTunneler received from the controller
+18:36:38 INFO GitHub token rate limit: Rate(reset=2026-03-13 19:16:39+00:00, remaining=4988, limit=5000)
+18:36:42 INFO Deploying ch:amd64/jammy/mongodb-286
+18:36:43 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:36:45 INFO Deploying ch:amd64/noble/any-charm-133
+18:37:01 INFO Deploying local:jammy/github-runner-0
+18:37:01 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l7yga58b/0 [allocating] waiting: waiting for machine
+18:37:32 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l7yga58b/0 [allocating] waiting: waiting for machine
+18:38:02 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l7yga58b/0 [idle] active: 
+18:38:32 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+18:39:03 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+18:39:33 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: waiting for machine
+18:40:03 INFO Waiting for model:
+  test-l7yga58b/0 [allocating] waiting: agent initialising
+18:40:33 INFO Waiting for model:
+  test-l7yga58b/0 [executing] maintenance: installing charm software
+18:41:04 INFO Waiting for model:
+  test-l7yga58b/0 [executing] maintenance: installing charm software
+18:41:34 INFO Waiting for model:
+  test-l7yga58b/0 [executing] maintenance: installing charm software
+18:42:04 INFO Waiting for model:
+  test-l7yga58b/0 [executing] maintenance: installing charm software
+18:42:35 INFO Waiting for model:
+  test-l7yga58b/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-l7yga58b/0 [idle] active: 
+18:43:00 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:43:00 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:43:31 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:43:39 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+18:44:10 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+18:44:12 INFO Current reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:44:12 INFO Waiting for reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:45:13 INFO Current reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:45:13 INFO Current reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec, expected reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:45:13 INFO Waiting for reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:46:14 INFO Current reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:46:14 INFO Current reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f, expected reconcile ID: 72c4e9b1-4770-455b-a7d5-e945c96b0eec
+18:46:18 INFO Wait for condition not met, sleeping 10
+18:46:39 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+18:46:55 INFO Current reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:46:55 INFO Waiting for reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:47:56 INFO Current reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:47:56 INFO Current reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f, expected reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:47:56 INFO Waiting for reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:48:57 INFO Current reconcile ID: ab59d076-4040-4dab-8d72-63ac6ae98b49
+18:48:57 INFO Current reconcile ID: ab59d076-4040-4dab-8d72-63ac6ae98b49, expected reconcile ID: 13986956-e522-42ed-8ecd-e9f9563dab4f
+18:48:57 INFO Wait for condition not met, sleeping 60
+18:49:58 INFO Wait for condition not met, sleeping 60
+18:50:58 INFO Wait for condition not met, sleeping 60
+18:51:58 INFO Wait for condition not met, sleeping 60
+18:52:59 INFO Wait for condition not met, sleeping 60
+18:53:59 INFO Wait for condition not met, sleeping 60
+18:54:59 INFO Wait for condition not met, sleeping 60
+18:56:00 INFO Wait for condition not met, sleeping 60
+18:57:00 INFO Wait for condition not met, sleeping 60
+18:58:00 INFO Wait for condition not met, sleeping 60
+18:59:01 INFO Wait for condition not met, sleeping 60
+19:00:01 INFO Wait for condition not met, sleeping 60
+19:01:02 INFO Wait for condition not met, sleeping 60
+19:02:02 INFO Wait for condition not met, sleeping 60
+19:03:02 INFO Wait for condition not met, sleeping 60
+19:04:03 INFO Wait for condition not met, sleeping 60
+19:05:03 INFO Wait for condition not met, sleeping 60
+19:06:04 INFO Wait for condition not met, sleeping 60
+19:07:04 INFO Wait for condition not met, sleeping 60
+19:08:04 INFO Wait for condition not met, sleeping 60
+19:09:05 INFO Wait for condition not met, sleeping 60
+19:10:05 INFO Wait for condition not met, sleeping 60
+19:11:05 INFO Wait for condition not met, sleeping 60
+19:12:06 INFO Wait for condition not met, sleeping 60
+19:13:06 INFO Wait for condition not met, sleeping 60
+19:14:07 INFO Wait for condition not met, sleeping 60
+19:15:07 INFO Wait for condition not met, sleeping 60
+19:16:07 INFO Wait for condition not met, sleeping 60
+19:17:08 INFO Wait for condition not met, sleeping 60
+19:18:08 INFO Wait for condition not met, sleeping 60
+19:19:08 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+19:19:39 INFO Waiting for model:
+  test-l7yga58b/0 [idle] active: 
+19:19:41 INFO Current reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
+19:19:41 INFO Waiting for reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
+19:20:42 INFO Current reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
+19:20:42 INFO Current reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11, expected reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
+19:20:42 INFO Waiting for reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
+19:21:43 INFO Current reconcile ID: 0b600c5c-9c08-428f-addf-b52435d5b3c1
+19:21:43 INFO Current reconcile ID: 0b600c5c-9c08-428f-addf-b52435d5b3c1, expected reconcile ID: ea959f9a-d7dd-4f41-89ea-579813816e11
