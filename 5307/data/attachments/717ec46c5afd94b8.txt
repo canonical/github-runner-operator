@@ -1,0 +1,39 @@
+06:40:48 WARNING unexpected facade SSHServer received from the controller
+06:40:48 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-a5nw on cloud localhost
+06:40:48 WARNING unexpected facade SSHServer received from the controller
+06:40:48 WARNING unexpected facade SSHSession received from the controller
+06:40:48 WARNING unexpected facade SSHTunneler received from the controller
+06:40:48 WARNING unexpected facade SSHServer received from the controller
+06:40:48 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:40:50 INFO Deploying ch:amd64/noble/any-charm-133
+06:41:05 INFO Deploying local:jammy/github-runner-0
+06:41:06 INFO Waiting for model:
+  test-hhmh8uqq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hhmh8uqq/0 [allocating] waiting: waiting for machine
+06:41:36 INFO Waiting for model:
+  test-hhmh8uqq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hhmh8uqq/0 [executing] maintenance: installing charm software
+06:42:06 INFO Waiting for model:
+  test-hhmh8uqq/0 [allocating] waiting: waiting for machine
+06:42:36 INFO Waiting for model:
+  test-hhmh8uqq/0 [allocating] waiting: waiting for machine
+06:43:07 INFO Waiting for model:
+  test-hhmh8uqq/0 [allocating] waiting: waiting for machine
+06:43:37 INFO Waiting for model:
+  test-hhmh8uqq/0 [executing] maintenance: installing charm software
+06:44:07 INFO Waiting for model:
+  test-hhmh8uqq/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-hhmh8uqq/0 [executing] active: 
+06:44:37 INFO Waiting for model:
+  test-hhmh8uqq/0 [idle] active:
+06:44:44 INFO Waiting for model:
+  test-hhmh8uqq/0 [idle] active: 
+06:45:14 INFO Waiting for model:
+  test-hhmh8uqq/0 [idle] active: 
+06:45:16 INFO Current reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
+06:45:16 INFO Waiting for reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
+06:46:17 INFO Current reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
+06:46:17 INFO Current reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5, expected reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
+06:46:17 INFO Waiting for reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
+06:47:18 INFO Current reconcile ID: 10cab394-aa57-4f32-9195-41f959f1e819
+06:47:18 INFO Current reconcile ID: 10cab394-aa57-4f32-9195-41f959f1e819, expected reconcile ID: 4b7ab67b-97a1-4439-8117-186f693e24e5
