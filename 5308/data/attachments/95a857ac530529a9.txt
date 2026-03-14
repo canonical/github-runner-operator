@@ -1,0 +1,37 @@
+18:34:05 WARNING unexpected facade SSHServer received from the controller
+18:34:05 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-hjk9 on cloud localhost
+18:34:05 WARNING unexpected facade SSHServer received from the controller
+18:34:05 WARNING unexpected facade SSHSession received from the controller
+18:34:05 WARNING unexpected facade SSHTunneler received from the controller
+18:34:05 WARNING unexpected facade SSHServer received from the controller
+18:34:05 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:34:06 INFO Deploying ch:amd64/noble/any-charm-133
+18:34:19 INFO Deploying local:jammy/github-runner-0
+18:34:19 INFO Waiting for model:
+  test-d94oh874/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d94oh874/0 [allocating] waiting: waiting for machine
+18:34:50 INFO Waiting for model:
+  test-d94oh874/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d94oh874/0 [allocating] waiting: agent initialising
+18:35:20 INFO Waiting for model:
+  test-d94oh874/0 [allocating] waiting: waiting for machine
+18:35:51 INFO Waiting for model:
+  test-d94oh874/0 [allocating] waiting: waiting for machine
+18:36:21 INFO Waiting for model:
+  test-d94oh874/0 [allocating] waiting: agent initialising
+18:36:51 INFO Waiting for model:
+  test-d94oh874/0 [executing] maintenance: installing charm software
+18:37:21 INFO Waiting for model:
+  test-d94oh874/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-d94oh874/0 [idle] active:
+18:37:52 INFO Waiting for model:
+  test-d94oh874/0 [idle] active: 
+18:38:22 INFO Waiting for model:
+  test-d94oh874/0 [idle] active: 
+18:38:24 INFO Current reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
+18:38:24 INFO Waiting for reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
+18:39:25 INFO Current reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
+18:39:25 INFO Current reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef, expected reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
+18:39:25 INFO Waiting for reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
+18:40:26 INFO Current reconcile ID: 25764d4e-78ba-494f-a961-c1644d9907b4
+18:40:26 INFO Current reconcile ID: 25764d4e-78ba-494f-a961-c1644d9907b4, expected reconcile ID: 3d766876-88c5-4d48-a8ec-6e56e91cb3ef
