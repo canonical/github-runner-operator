@@ -1,0 +1,39 @@
+18:32:18 WARNING unexpected facade SSHServer received from the controller
+18:32:18 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-83za on cloud localhost
+18:32:19 WARNING unexpected facade SSHServer received from the controller
+18:32:19 WARNING unexpected facade SSHSession received from the controller
+18:32:19 WARNING unexpected facade SSHTunneler received from the controller
+18:32:19 WARNING unexpected facade SSHServer received from the controller
+18:32:19 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:32:20 INFO Deploying ch:amd64/noble/any-charm-133
+18:32:34 INFO Deploying local:jammy/github-runner-0
+18:32:34 INFO Waiting for model:
+  test-d2qh2xis/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d2qh2xis/0 [allocating] waiting: waiting for machine
+18:33:05 INFO Waiting for model:
+  test-d2qh2xis/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d2qh2xis/0 [executing] maintenance: installing charm software
+18:33:35 INFO Waiting for model:
+  test-d2qh2xis/0 [allocating] waiting: waiting for machine
+18:34:05 INFO Waiting for model:
+  test-d2qh2xis/0 [allocating] waiting: waiting for machine
+18:34:35 INFO Waiting for model:
+  test-d2qh2xis/0 [allocating] waiting: agent initialising
+18:35:05 INFO Waiting for model:
+  test-d2qh2xis/0 [executing] maintenance: installing charm software
+18:35:35 INFO Waiting for model:
+  test-d2qh2xis/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-d2qh2xis/0 [idle] active: 
+18:36:05 INFO Waiting for model:
+  test-d2qh2xis/0 [idle] active:
+18:36:16 INFO Waiting for model:
+  test-d2qh2xis/0 [idle] active: 
+18:36:46 INFO Waiting for model:
+  test-d2qh2xis/0 [idle] active: 
+18:36:48 INFO Current reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5
+18:36:48 INFO Waiting for reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5
+18:37:49 INFO Current reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5
+18:37:49 INFO Current reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5, expected reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5
+18:37:49 INFO Waiting for reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5
+18:38:50 INFO Current reconcile ID: fd94296f-f650-40e5-98fb-58ccb7d9420b
+18:38:50 INFO Current reconcile ID: fd94296f-f650-40e5-98fb-58ccb7d9420b, expected reconcile ID: be02b252-e1da-428c-967a-b14e8ed4eea5

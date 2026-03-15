@@ -1,0 +1,29 @@
+18:32:26 WARNING unexpected facade SSHServer received from the controller
+18:32:26 INFO Adding model github-pr-6c68c-lxd:test-charm-no-runner-gq9b on cloud localhost
+18:32:26 WARNING unexpected facade SSHServer received from the controller
+18:32:26 WARNING unexpected facade SSHSession received from the controller
+18:32:26 WARNING unexpected facade SSHTunneler received from the controller
+18:32:26 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:32:28 INFO Deploying ch:amd64/noble/any-charm-133
+18:32:44 INFO Deploying local:jammy/github-runner-0
+18:32:44 INFO Waiting for model:
+  test-lpo359vn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lpo359vn/0 [allocating] waiting: waiting for machine
+18:33:15 INFO Waiting for model:
+  test-lpo359vn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lpo359vn/0 [allocating] waiting: waiting for machine
+18:33:45 INFO Waiting for model:
+  test-lpo359vn/0 [allocating] waiting: waiting for machine
+18:34:15 INFO Waiting for model:
+  test-lpo359vn/0 [allocating] waiting: waiting for machine
+18:34:45 INFO Waiting for model:
+  test-lpo359vn/0 [allocating] waiting: agent initialising
+18:35:16 INFO Waiting for model:
+  test-lpo359vn/0 [executing] maintenance: installing charm software
+18:35:46 INFO Waiting for model:
+  test-lpo359vn/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-lpo359vn/0 [idle] active: 
+18:36:16 INFO Waiting for model:
+  test-lpo359vn/0 [idle] active: 
+18:36:22 INFO Waiting for model:
+  test-lpo359vn/0 [idle] active:
