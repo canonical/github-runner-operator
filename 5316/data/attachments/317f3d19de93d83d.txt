@@ -1,0 +1,38 @@
+06:59:12 WARNING unexpected facade SSHServer received from the controller
+06:59:12 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-6xzg on cloud localhost
+06:59:12 WARNING unexpected facade SSHServer received from the controller
+06:59:12 WARNING unexpected facade SSHSession received from the controller
+06:59:12 WARNING unexpected facade SSHTunneler received from the controller
+06:59:12 WARNING unexpected facade SSHServer received from the controller
+06:59:12 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:59:15 INFO Deploying ch:amd64/noble/any-charm-133
+06:59:29 INFO Deploying local:jammy/github-runner-0
+06:59:30 INFO Waiting for model:
+  test-xhvs2fpn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhvs2fpn/0 [allocating] waiting: waiting for machine
+07:00:00 INFO Waiting for model:
+  test-xhvs2fpn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhvs2fpn/0 [allocating] waiting: waiting for machine
+07:00:30 INFO Waiting for model:
+  test-xhvs2fpn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhvs2fpn/0 [idle] active: 
+07:01:00 INFO Waiting for model:
+  test-xhvs2fpn/0 [allocating] waiting: waiting for machine
+07:01:31 INFO Waiting for model:
+  test-xhvs2fpn/0 [allocating] waiting: agent initialising
+07:02:01 INFO Waiting for model:
+  test-xhvs2fpn/0 [executing] maintenance: installing charm software
+07:02:31 INFO Waiting for model:
+  test-xhvs2fpn/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-xhvs2fpn/0 [idle] active:
+07:02:56 INFO Waiting for model:
+  test-xhvs2fpn/0 [idle] active: 
+07:03:26 INFO Waiting for model:
+  test-xhvs2fpn/0 [idle] active: 
+07:03:29 INFO Current reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
+07:03:29 INFO Waiting for reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
+07:04:30 INFO Current reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
+07:04:30 INFO Current reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28, expected reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
+07:04:30 INFO Waiting for reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
+07:05:31 INFO Current reconcile ID: 3174dc1b-c672-43b0-a55e-a44e4b6bb874
+07:05:31 INFO Current reconcile ID: 3174dc1b-c672-43b0-a55e-a44e4b6bb874, expected reconcile ID: 1d7e68fd-81fa-473c-a606-3a39edf2be28
