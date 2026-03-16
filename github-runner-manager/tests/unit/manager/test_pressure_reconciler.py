@@ -339,6 +339,32 @@ def test_successful_create_resets_backoff(monkeypatch: pytest.MonkeyPatch):
     assert reconciler._create_backoff_until == 0.0
 
 
+def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with active create-loop backoff after a zero-create attempt.
+    act: Run timer reconcile after creation starts succeeding.
+    assert: The create-loop backoff is cleared.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+    monotonic_values = iter([0.0, 0.0])
+
+    monkeypatch.setattr(
+        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
+        lambda: next(monotonic_values),
+    )
+
+    reconciler._handle_create_runners(2)
+    mgr._create_success_ratio = 1.0
+    reconciler._handle_timer_reconcile(2)
+
+    assert mgr.created_args == [2, 2]
+    assert reconciler._create_backoff_delay == 0
+    assert reconciler._create_backoff_until == 0.0
+
+
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with _runner_count out of sync with actual runners.

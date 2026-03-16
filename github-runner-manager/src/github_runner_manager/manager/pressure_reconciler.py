@@ -266,6 +266,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         to_create,
                     )
                 self._runner_count += actually_created
+                if actually_created > 0:
+                    self._reset_create_backoff()
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
