@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-16
+
+- Pause pressure reconciler create loop after zero-create attempts until the next reconcile run re-syncs state and re-enables creation, reducing repeated retries during OpenStack quota and similar create failures.
+
 ## 2026-03-11
 
 - Added Prometheus metrics for GithubClient operation counts, errors, latency, and rate-limit visibility.
