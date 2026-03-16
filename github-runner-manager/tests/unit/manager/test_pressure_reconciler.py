@@ -339,6 +339,32 @@ def test_successful_create_resets_backoff(monkeypatch: pytest.MonkeyPatch):
     assert reconciler._create_backoff.until == 0.0
 
 
+def test_create_backoff_is_capped_at_max(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with repeated zero-create attempts after each backoff expires.
+    act: Repeatedly call _handle_create_runners after each backoff window passes.
+    assert: The backoff delay does not grow beyond the configured maximum.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+    monotonic_values = iter(
+        [0.0, 0.0, 5.0, 5.0, 15.0, 15.0, 35.0, 35.0, 75.0, 75.0, 155.0, 155.0, 315.0, 315.0]
+    )
+
+    monkeypatch.setattr(
+        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
+        lambda: next(monotonic_values),
+    )
+
+    for _ in range(7):
+        reconciler._handle_create_runners(1)
+
+    assert reconciler._create_backoff.delay == 300
+    assert reconciler._create_backoff.until == 615.0
+
+
 def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with active create-loop backoff after a zero-create attempt.
@@ -363,6 +389,33 @@ def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.
     assert mgr.created_args == [2, 2]
     assert reconciler._create_backoff.delay == 0
     assert reconciler._create_backoff.until == 0.0
+
+
+def test_timer_reconcile_zero_create_does_not_update_create_loop_backoff(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A reconciler with active create-loop backoff after a zero-create attempt.
+    act: Run timer reconcile while runner creation still returns zero IDs.
+    assert: The timer reconcile does not change the create-loop backoff state.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+    monotonic_values = iter([0.0, 0.0])
+
+    monkeypatch.setattr(
+        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
+        lambda: next(monotonic_values),
+    )
+
+    reconciler._handle_create_runners(2)
+    backoff_before = reconciler._create_backoff
+    reconciler._handle_timer_reconcile(2)
+
+    assert mgr.created_args == [2, 2]
+    assert reconciler._create_backoff == backoff_before
 
 
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):

@@ -279,6 +279,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                         to_create,
                     )
                 self._runner_count += actually_created
+                # The timer reconcile already runs at a bounded rate, so only
+                # successful timer-based creates should affect the event-driven
+                # create-loop backoff state.
                 if actually_created > 0:
                     self._reset_create_backoff()
             elif current_total > desired_total:
@@ -304,7 +307,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
 
     def _update_create_backoff(self) -> None:
         """Increase the create-loop backoff after a zero-create attempt."""
-        next_delay = self._create_backoff.delay * 2 or self._CREATE_BACKOFF_INITIAL_SECONDS
+        next_delay = max(
+            self._create_backoff.delay * 2, self._CREATE_BACKOFF_INITIAL_SECONDS
+        )
         delay = min(next_delay, self._CREATE_BACKOFF_MAX_SECONDS)
         self._create_backoff = _CreateBackoffState(
             delay=delay, until=time.monotonic() + delay
