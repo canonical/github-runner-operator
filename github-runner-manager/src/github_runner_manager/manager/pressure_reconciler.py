@@ -76,9 +76,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     and prevents further creation attempts until the reconcile loop runs,
     queries the real OpenStack state via get_runners(), and syncs the count
     back down. Note that API-level creation failures (where no IDs are
-    returned) do not benefit from this backoff — the create loop will retry
-    on the next pressure event, which is the desired behavior when the API
-    recovers quickly.
+    returned) pause direct create-loop retries until the periodic reconcile
+    loop runs again.
 
     The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
@@ -93,6 +92,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
         _runner_count: In-memory runner count used by the create loop.
+        _pause_direct_create_until_reconcile: Whether direct create-loop
+            retries are paused after an OpenStack create failure.
     """
 
     def __init__(
@@ -119,6 +120,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._stop = Event()
         self._last_pressure: Optional[int] = None
         self._runner_count: int = 0
+        self._pause_direct_create_until_reconcile = False
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
@@ -181,6 +183,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 return
+            if self._pause_direct_create_until_reconcile:
+                logger.warning(
+                    "Create loop: skipping %s runner creations until reconcile retries"
+                    " after OpenStack create failure (desired=%s current=%s)",
+                    to_create,
+                    desired_total,
+                    current_total,
+                )
+                return
             logger.info(
                 "Create loop: creating %s runners (desired=%s current=%s)",
                 to_create,
@@ -188,7 +199,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 current_total,
             )
             try:
-                created_ids = self._manager.create_runners(
+                create_result = self._manager.create_runners_with_outcome(
                     num=to_create, metadata=RunnerMetadata()
                 )
             except MissingServerConfigError:
@@ -197,6 +208,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     " (image/flavor)."
                 )
                 return
+            created_ids = create_result.created_ids
             actually_created = len(created_ids)
             if actually_created < to_create:
                 logger.error(
@@ -205,6 +217,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     to_create,
                 )
             self._runner_count = current_total + actually_created
+            if create_result.had_cloud_create_failure:
+                self._pause_direct_create_until_reconcile = True
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up or down.
@@ -223,6 +237,12 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             self._runner_count = current_total
             if current_total < desired_total:
                 to_create = desired_total - current_total
+                if self._pause_direct_create_until_reconcile:
+                    logger.info(
+                        "Reconcile loop: resuming create attempts after prior OpenStack"
+                        " create failure"
+                    )
+                self._pause_direct_create_until_reconcile = False
                 logger.info(
                     "Reconcile loop: scaling up %s runners (desired=%s current=%s)",
                     to_create,
@@ -230,7 +250,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 try:
-                    created_ids = self._manager.create_runners(
+                    create_result = self._manager.create_runners_with_outcome(
                         num=to_create, metadata=RunnerMetadata()
                     )
                 except MissingServerConfigError:
@@ -239,6 +259,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         " (image/flavor)."
                     )
                     return
+                created_ids = create_result.created_ids
                 actually_created = len(created_ids)
                 if actually_created < to_create:
                     logger.error(
@@ -247,6 +268,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         to_create,
                     )
                 self._runner_count += actually_created
+                self._pause_direct_create_until_reconcile = (
+                    create_result.had_cloud_create_failure
+                )
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(

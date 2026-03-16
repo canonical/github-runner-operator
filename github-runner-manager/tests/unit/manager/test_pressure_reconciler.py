@@ -12,18 +12,25 @@ from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     PressureReconcilerConfig,
 )
+from github_runner_manager.manager.runner_manager import CreateRunnersResult
 from github_runner_manager.planner_client import PlannerApiError
 
 
 class _FakeManager:
     """Lightweight runner manager stub for testing the reconciler."""
 
-    def __init__(self, runners_count: int = 0, create_success_ratio: float = 1.0):
+    def __init__(
+        self,
+        runners_count: int = 0,
+        create_success_ratio: float = 1.0,
+        cloud_failure_calls: set[int] | None = None,
+    ):
         """Initialize with an optional number of pre-existing runners.
 
         Args:
             runners_count: Number of pre-existing runners.
             create_success_ratio: Fraction of requested runners that succeed (0.0-1.0).
+            cloud_failure_calls: Create call indices that should report a cloud failure.
         """
         self._runners = [object() for _ in range(runners_count)]
         self.created_args: list[int] = []
@@ -31,6 +38,7 @@ class _FakeManager:
         self.cleanup_called = 0
         self.get_runners_calls = 0
         self._create_success_ratio = create_success_ratio
+        self._cloud_failure_calls = cloud_failure_calls or set()
 
     def get_runners(self) -> list[object]:
         """Return the current list of runners."""
@@ -38,12 +46,21 @@ class _FakeManager:
         return list(self._runners)
 
     def create_runners(self, num: int, metadata: object) -> tuple[str, ...]:  # noqa: ARG002
+        """Compatibility wrapper around create_runners_with_outcome."""
+        return self.create_runners_with_outcome(num, metadata).created_ids
+
+    def create_runners_with_outcome(
+        self, num: int, metadata: object
+    ) -> CreateRunnersResult:  # noqa: ARG002
         """Record the creation request and extend the internal runner list."""
         self.created_args.append(num)
         actually_created = max(int(num * self._create_success_ratio), 0)
         if actually_created > 0:
             self._runners.extend(object() for _ in range(actually_created))
-        return tuple(f"instance-{i}" for i in range(actually_created))
+        return CreateRunnersResult(
+            created_ids=tuple(f"instance-{i}" for i in range(actually_created)),
+            had_cloud_create_failure=len(self.created_args) in self._cloud_failure_calls,
+        )
 
     def soft_delete_runners(self, num: int) -> int:
         """Record the deletion request and shrink the internal runner list."""
@@ -259,6 +276,62 @@ def test_in_memory_count_incremented_by_actual_successes():
     # Second call: desired=4, current=2, create 2, only 1 succeeds -> _runner_count=3
     assert mgr.created_args == [4, 2]
     assert reconciler._runner_count == 3
+
+
+def test_create_loop_pauses_direct_retries_after_cloud_failure():
+    """
+    arrange: A reconciler whose first create call reports a cloud failure.
+    act: Call _handle_create_runners twice with the same desired pressure.
+    assert: The second call is skipped until the timer reconcile runs.
+    """
+    mgr = _FakeManager(create_success_ratio=0.5, cloud_failure_calls={1})
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(4)
+    reconciler._handle_create_runners(4)
+
+    assert mgr.created_args == [4]
+    assert reconciler._runner_count == 2
+
+
+def test_timer_reconcile_resumes_after_cloud_failure_pause():
+    """
+    arrange: A reconciler paused after a cloud failure in the create loop.
+    act: Run the timer reconcile, then process another pressure update.
+    assert: The timer reconcile retries once and later pressure updates can create again.
+    """
+    mgr = _FakeManager(create_success_ratio=0.5, cloud_failure_calls={1})
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(4)
+    reconciler._handle_timer_reconcile(4)
+    reconciler._handle_create_runners(4)
+
+    assert mgr.created_args == [4, 2, 1]
+    assert reconciler._runner_count == 3
+    assert not reconciler._pause_direct_create_until_reconcile
+
+
+def test_non_cloud_failures_do_not_pause_create_loop():
+    """
+    arrange: A reconciler with partial creation success but no cloud failure signal.
+    act: Call _handle_create_runners twice.
+    assert: The second pressure update still retries directly.
+    """
+    mgr = _FakeManager(create_success_ratio=0.5)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(4)
+    reconciler._handle_create_runners(4)
+
+    assert mgr.created_args == [4, 2]
+    assert not reconciler._pause_direct_create_until_reconcile
 
 
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):

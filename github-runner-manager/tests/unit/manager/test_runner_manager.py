@@ -7,8 +7,15 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.errors import RunnerCreateError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.models import RunnerMetadata
-from github_runner_manager.manager.runner_manager import FlushMode, RunnerInstance, RunnerManager
+from github_runner_manager.manager.runner_manager import (
+    CreateRunnersResult,
+    FlushMode,
+    RunnerInstance,
+    RunnerManager,
+)
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import SelfHostedRunner
@@ -224,6 +231,92 @@ def test_runner_manager_create_runners() -> None:
 
     assert instance_id
     cloud_runner_manager.create_runner.assert_called_once()
+
+
+def test_create_runners_with_outcome_marks_cloud_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    """
+    arrange: A runner manager whose single create attempt raises RunnerCreateError.
+    act: Call create_runners_with_outcome.
+    assert: The result marks a cloud create failure and no IDs are returned.
+    """
+    cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
+    cloud_runner_manager.name_prefix = "unit-0"
+    runner_manager = RunnerManager(
+        "managername",
+        platform_provider=MagicMock(spec=PlatformProvider),
+        cloud_runner_manager=cloud_runner_manager,
+        labels=[],
+    )
+
+    def _raise_cloud_failure(_args):
+        raise RunnerCreateError("quota exceeded")
+
+    monkeypatch.setattr(RunnerManager, "_create_runner", staticmethod(_raise_cloud_failure))
+
+    result = runner_manager.create_runners_with_outcome(1, RunnerMetadata(), True)
+
+    assert result == CreateRunnersResult(created_ids=tuple(), had_cloud_create_failure=True)
+
+
+def test_create_runners_with_outcome_aggregates_batched_cloud_failures(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """
+    arrange: A runner manager whose batched create path returns one success and one cloud failure.
+    act: Call create_runners_with_outcome for two runners.
+    assert: The result preserves successful IDs and reports the cloud failure.
+    """
+    cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
+    cloud_runner_manager.name_prefix = "unit-0"
+    runner_manager = RunnerManager(
+        "managername",
+        platform_provider=MagicMock(spec=PlatformProvider),
+        cloud_runner_manager=cloud_runner_manager,
+        labels=[],
+    )
+    expected_instance = InstanceID.build("unit-0")
+    monkeypatch.setattr(
+        RunnerManager,
+        "_spawn_runners_using_multiprocessing",
+        staticmethod(
+            lambda create_runner_args_sequence, num: CreateRunnersResult(  # noqa: ARG005
+                created_ids=(expected_instance,), had_cloud_create_failure=True
+            )
+        ),
+    )
+
+    result = runner_manager.create_runners_with_outcome(2, RunnerMetadata(), True)
+
+    assert result == CreateRunnersResult(
+        created_ids=(expected_instance,), had_cloud_create_failure=True
+    )
+
+
+def test_create_runners_returns_created_ids_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    """
+    arrange: A runner manager whose detailed create result includes a cloud failure flag.
+    act: Call create_runners.
+    assert: The legacy API still returns only the created IDs.
+    """
+    cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
+    cloud_runner_manager.name_prefix = "unit-0"
+    runner_manager = RunnerManager(
+        "managername",
+        platform_provider=MagicMock(spec=PlatformProvider),
+        cloud_runner_manager=cloud_runner_manager,
+        labels=[],
+    )
+    expected_instance = InstanceID.build("unit-0")
+
+    monkeypatch.setattr(
+        runner_manager,
+        "create_runners_with_outcome",
+        lambda num, metadata, reactive=False: CreateRunnersResult(  # noqa: ARG005
+            created_ids=(expected_instance,), had_cloud_create_failure=True
+        ),
+    )
+
+    assert runner_manager.create_runners(1, RunnerMetadata(), True) == (expected_instance,)
 
 
 @pytest.mark.parametrize(
