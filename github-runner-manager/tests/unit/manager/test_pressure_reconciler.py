@@ -261,161 +261,81 @@ def test_in_memory_count_incremented_by_actual_successes():
     assert reconciler._runner_count == 3
 
 
-def test_create_loop_applies_backoff_after_zero_create(monkeypatch: pytest.MonkeyPatch):
+def test_zero_create_pauses_create_loop_until_reconcile():
     """
-    arrange: A reconciler whose first create call returns zero runners.
+    arrange: A reconciler whose create call returns zero runners.
     act: Call _handle_create_runners twice with the same desired pressure.
-    assert: The second call is skipped while the create-loop backoff is active.
+    assert: The second call is skipped because creates are paused.
     """
     mgr = _FakeManager(create_success_ratio=0.0)
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small")
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter([0.0, 1.0, 1.0])
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
 
     reconciler._handle_create_runners(4)
     reconciler._handle_create_runners(4)
 
     assert mgr.created_args == [4]
-    assert reconciler._create_backoff.delay == 5
-    assert reconciler._create_backoff.until == 6.0
+    assert reconciler._create_paused is True
 
 
-def test_create_loop_exponential_backoff_grows_on_repeated_zero_create(
-    monkeypatch: pytest.MonkeyPatch,
-):
+def test_timer_reconcile_unpauses_create_loop_after_success():
     """
-    arrange: A reconciler with repeated zero-create attempts after each backoff expires.
-    act: Call _handle_create_runners twice after allowing each backoff window to pass.
-    assert: The backoff grows exponentially.
+    arrange: A reconciler paused after a zero-create, then timer reconcile succeeds.
+    act: Call _handle_create_runners (zero), then _handle_timer_reconcile (succeeds).
+    assert: _create_paused is cleared after a successful timer reconcile create.
     """
     mgr = _FakeManager(create_success_ratio=0.0)
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small")
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter([0.0, 0.0, 5.0, 5.0])
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
 
     reconciler._handle_create_runners(2)
-    reconciler._handle_create_runners(2)
+    assert reconciler._create_paused is True
 
-    assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff.delay == 10
-    assert reconciler._create_backoff.until == 15.0
-
-
-def test_successful_create_resets_backoff(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: A reconciler with a prior zero-create backoff and then a successful create.
-    act: Let the backoff expire and call _handle_create_runners again.
-    assert: The create-loop backoff state is cleared after success.
-    """
-    mgr = _FakeManager(create_success_ratio=0.0)
-    planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small")
-    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter([0.0, 0.0, 5.0])
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
-
-    reconciler._handle_create_runners(2)
-    mgr._create_success_ratio = 1.0
-    reconciler._handle_create_runners(2)
-
-    assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff.delay == 0
-    assert reconciler._create_backoff.until == 0.0
-
-
-def test_create_backoff_is_capped_at_max(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: A reconciler with repeated zero-create attempts after each backoff expires.
-    act: Repeatedly call _handle_create_runners after each backoff window passes.
-    assert: The backoff delay does not grow beyond the configured maximum.
-    """
-    mgr = _FakeManager(create_success_ratio=0.0)
-    planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small")
-    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter(
-        [0.0, 0.0, 5.0, 5.0, 15.0, 15.0, 35.0, 35.0, 75.0, 75.0, 155.0, 155.0, 315.0, 315.0]
-    )
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
-
-    for _ in range(7):
-        reconciler._handle_create_runners(1)
-
-    assert reconciler._create_backoff.delay == 300
-    assert reconciler._create_backoff.until == 615.0
-
-
-def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: A reconciler with active create-loop backoff after a zero-create attempt.
-    act: Run timer reconcile after creation starts succeeding.
-    assert: The create-loop backoff is cleared.
-    """
-    mgr = _FakeManager(create_success_ratio=0.0)
-    planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small")
-    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter([0.0, 0.0])
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
-
-    reconciler._handle_create_runners(2)
     mgr._create_success_ratio = 1.0
     reconciler._handle_timer_reconcile(2)
 
     assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff.delay == 0
-    assert reconciler._create_backoff.until == 0.0
+    assert reconciler._create_paused is False
 
 
-def test_timer_reconcile_zero_create_does_not_update_create_loop_backoff(
-    monkeypatch: pytest.MonkeyPatch,
-):
+def test_timer_reconcile_always_unpauses_create_loop():
     """
-    arrange: A reconciler with active create-loop backoff after a zero-create attempt.
-    act: Run timer reconcile while runner creation still returns zero IDs.
-    assert: The timer reconcile does not change the create-loop backoff state.
+    arrange: A reconciler paused after zero-create, at desired count.
+    act: Run timer reconcile when current matches desired (no create needed).
+    assert: _create_paused is cleared even though no runners were created.
     """
     mgr = _FakeManager(create_success_ratio=0.0)
     planner = _FakePlanner()
     cfg = PressureReconcilerConfig(flavor_name="small")
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-    monotonic_values = iter([0.0, 0.0])
-
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.monotonic",
-        lambda: next(monotonic_values),
-    )
 
     reconciler._handle_create_runners(2)
-    backoff_before = reconciler._create_backoff
+    assert reconciler._create_paused is True
+
+    mgr._create_success_ratio = 1.0
+    mgr._runners = [object(), object()]
     reconciler._handle_timer_reconcile(2)
 
-    assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff == backoff_before
+    assert mgr.created_args == [2]
+    assert reconciler._create_paused is False
+
+
+def test_successful_create_does_not_pause():
+    """
+    arrange: A reconciler where creates succeed.
+    act: Call _handle_create_runners with successful creation.
+    assert: _create_paused remains False.
+    """
+    mgr = _FakeManager(create_success_ratio=1.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(3)
+
+    assert reconciler._create_paused is False
 
 
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):

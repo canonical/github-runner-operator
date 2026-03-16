@@ -56,19 +56,6 @@ class PressureReconcilerConfig:
     max_pressure: int = 0
 
 
-@dataclass(frozen=True)
-class _CreateBackoffState:
-    """Create-loop backoff state.
-
-    Attributes:
-        delay: Current exponential backoff delay in seconds.
-        until: Monotonic time until direct create retries are allowed.
-    """
-
-    delay: int = 0
-    until: float = 0.0
-
-
 class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-instance-attributes
     """Continuously reconciles runner count against planner pressure.
 
@@ -88,9 +75,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
     failures (e.g. VMs that fail to boot): the in-memory count stays high
     and prevents further creation attempts until the reconcile loop runs,
     queries the real OpenStack state via get_runners(), and syncs the count
-    back down. API-level creation failures (where no IDs are returned) use an
-    exponential backoff in the create loop to avoid retrying on every
-    pressure event.
+    back down. API-level creation failures (where no IDs are returned) pause
+    the create loop entirely until the next reconcile loop run, which
+    re-syncs state and retries creation.
 
     The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
@@ -105,11 +92,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
         _runner_count: In-memory runner count used by the create loop.
-        _create_backoff: Current exponential backoff state for direct create retries.
+        _create_paused: True when creation returned zero IDs, cleared by reconcile loop.
     """
-
-    _CREATE_BACKOFF_INITIAL_SECONDS = 5
-    _CREATE_BACKOFF_MAX_SECONDS = 300
 
     def __init__(
         self,
@@ -135,7 +119,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         self._stop = Event()
         self._last_pressure: Optional[int] = None
         self._runner_count: int = 0
-        self._create_backoff = _CreateBackoffState()
+        self._create_paused: bool = False
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
@@ -198,13 +182,10 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                     current_total,
                 )
                 return
-            now = time.monotonic()
-            if now < self._create_backoff.until:
+            if self._create_paused:
                 logger.warning(
-                    "Create loop: backing off %s runner creations for %.1fs"
-                    " after zero-create attempt (desired=%s current=%s)",
-                    to_create,
-                    self._create_backoff.until - now,
+                    "Create loop: paused after zero-create, waiting for reconcile"
+                    " (desired=%s current=%s)",
                     desired_total,
                     current_total,
                 )
@@ -234,9 +215,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                 )
             self._runner_count = current_total + actually_created
             if actually_created == 0:
-                self._update_create_backoff()
-            else:
-                self._reset_create_backoff()
+                self._create_paused = True
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up or down.
@@ -253,6 +232,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             self._manager.cleanup()
             current_total = len(self._manager.get_runners())
             self._runner_count = current_total
+            self._create_paused = False
             if current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
@@ -279,11 +259,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                         to_create,
                     )
                 self._runner_count += actually_created
-                # The timer reconcile already runs at a bounded rate, so only
-                # successful timer-based creates should affect the event-driven
-                # create-loop backoff state.
-                if actually_created > 0:
-                    self._reset_create_backoff()
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
@@ -300,16 +275,6 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                     desired_total,
                     current_total,
                 )
-
-    def _reset_create_backoff(self) -> None:
-        """Clear the create-loop backoff after a successful create."""
-        self._create_backoff = _CreateBackoffState()
-
-    def _update_create_backoff(self) -> None:
-        """Increase the create-loop backoff after a zero-create attempt."""
-        next_delay = max(self._create_backoff.delay * 2, self._CREATE_BACKOFF_INITIAL_SECONDS)
-        delay = min(next_delay, self._CREATE_BACKOFF_MAX_SECONDS)
-        self._create_backoff = _CreateBackoffState(delay=delay, until=time.monotonic() + delay)
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.
