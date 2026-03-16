@@ -307,13 +307,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
 
     def _update_create_backoff(self) -> None:
         """Increase the create-loop backoff after a zero-create attempt."""
-        next_delay = max(
-            self._create_backoff.delay * 2, self._CREATE_BACKOFF_INITIAL_SECONDS
-        )
+        next_delay = max(self._create_backoff.delay * 2, self._CREATE_BACKOFF_INITIAL_SECONDS)
         delay = min(next_delay, self._CREATE_BACKOFF_MAX_SECONDS)
-        self._create_backoff = _CreateBackoffState(
-            delay=delay, until=time.monotonic() + delay
-        )
+        self._create_backoff = _CreateBackoffState(delay=delay, until=time.monotonic() + delay)
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.
