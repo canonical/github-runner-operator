@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-16
 
-- Added exponential backoff to the pressure reconciler create loop after zero-created runner attempts, reducing repeated retries during OpenStack quota and similar create failures.
+- Pause pressure reconciler create loop after zero-create attempts until the next reconcile run re-syncs state and re-enables creation, reducing repeated retries during OpenStack quota and similar create failures.
 
 ## 2026-03-11
 

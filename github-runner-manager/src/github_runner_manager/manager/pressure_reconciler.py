@@ -77,7 +77,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
     queries the real OpenStack state via get_runners(), and syncs the count
     back down. API-level creation failures (where no IDs are returned) pause
     the create loop entirely until the next reconcile loop run, which
-    re-syncs state and retries creation.
+    re-enables creation and creates if still needed.
 
     The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
