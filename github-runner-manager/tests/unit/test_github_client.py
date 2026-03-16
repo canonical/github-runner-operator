@@ -28,7 +28,7 @@ from github_runner_manager.types_.github import (
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
-    ["created_at", "started_at", "runner_name", "conclusion", "id", "status"],
+    ["created_at", "queued_at", "started_at", "runner_name", "conclusion", "id", "status"],
 )
 
 
@@ -38,6 +38,7 @@ def job_stats_fixture() -> JobStatsRawData:
     runner_name = secrets.token_hex(16)
     return JobStatsRawData(
         created_at="2021-10-01T00:00:00Z",
+        queued_at="2021-10-01T00:30:00Z",
         started_at="2021-10-01T01:00:00Z",
         conclusion="success",
         status="completed",
@@ -60,6 +61,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
             "jobs": [
                 {
                     "created_at": job_stats_raw.created_at,
+                    "queued_at": job_stats_raw.queued_at,
                     "started_at": job_stats_raw.started_at,
                     "runner_name": job_stats_raw.runner_name,
                     "conclusion": job_stats_raw.conclusion,
@@ -97,6 +99,7 @@ def _mock_multiple_pages_for_job_response(
                 "jobs": [
                     {
                         "created_at": job_stats_raw.created_at,
+                        "queued_at": job_stats_raw.queued_at,
                         "started_at": job_stats_raw.started_at,
                         "runner_name": runner_names[i * no_of_jobs_per_page + j],
                         "conclusion": job_stats_raw.conclusion,
@@ -128,6 +131,7 @@ def test_get_job_info_by_runner_name(github_client: GithubClient, job_stats_raw:
     )
     assert job_stats == JobInfo(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        queued_at=datetime(2021, 10, 1, 0, 30, 0, tzinfo=timezone.utc),
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         conclusion=JobConclusion.SUCCESS,
         status=JobStatus.COMPLETED,
@@ -150,6 +154,7 @@ def test_get_job_info_by_runner_name_no_conclusion(
             "jobs": [
                 {
                     "created_at": job_stats_raw.created_at,
+                    "queued_at": job_stats_raw.queued_at,
                     "started_at": job_stats_raw.started_at,
                     "runner_name": job_stats_raw.runner_name,
                     "conclusion": None,
@@ -167,6 +172,7 @@ def test_get_job_info_by_runner_name_no_conclusion(
     )
     assert job_stats == JobInfo(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        queued_at=datetime(2021, 10, 1, 0, 30, 0, tzinfo=timezone.utc),
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         conclusion=None,
         status=JobStatus.COMPLETED,
@@ -184,6 +190,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
         {},
         {
             "created_at": job_stats_raw.created_at,
+            "queued_at": job_stats_raw.queued_at,
             "started_at": job_stats_raw.started_at,
             "runner_name": job_stats_raw.runner_name,
             "conclusion": job_stats_raw.conclusion,
@@ -195,6 +202,7 @@ def test_get_job_info(github_client: GithubClient, job_stats_raw: JobStatsRawDat
     job_stats = github_client.get_job_info(path=github_repo, job_id=job_stats_raw.id)
     assert job_stats == JobInfo(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        queued_at=datetime(2021, 10, 1, 0, 30, 0, tzinfo=timezone.utc),
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         conclusion=JobConclusion.SUCCESS,
         status=JobStatus.COMPLETED,
@@ -223,6 +231,38 @@ def test_github_api_pagination_multiple_pages(
     )
     assert job_stats == JobInfo(
         created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        queued_at=datetime(2021, 10, 1, 0, 30, 0, tzinfo=timezone.utc),
+        started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
+        conclusion=JobConclusion.SUCCESS,
+        status=JobStatus.COMPLETED,
+        job_id=job_stats_raw.id,
+    )
+
+
+def test_get_job_info_without_queued_at(
+    github_client: GithubClient, job_stats_raw: JobStatsRawData
+):
+    """
+    arrange: A mocked Github Client with queued_at missing in the response.
+    act: Call get_job_info.
+    assert: The response is returned with queued_at set to None.
+    """
+    github_client._requester.requestJsonAndCheck.return_value = (
+        {},
+        {
+            "created_at": job_stats_raw.created_at,
+            "started_at": job_stats_raw.started_at,
+            "runner_name": job_stats_raw.runner_name,
+            "conclusion": job_stats_raw.conclusion,
+            "status": job_stats_raw.status,
+            "id": job_stats_raw.id,
+        },
+    )
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    job_stats = github_client.get_job_info(path=github_repo, job_id=job_stats_raw.id)
+    assert job_stats == JobInfo(
+        created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
+        queued_at=None,
         started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
         conclusion=JobConclusion.SUCCESS,
         status=JobStatus.COMPLETED,
