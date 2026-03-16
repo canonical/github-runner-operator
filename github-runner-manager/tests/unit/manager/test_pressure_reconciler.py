@@ -279,27 +279,6 @@ def test_zero_create_pauses_create_loop_until_reconcile():
     assert reconciler._create_paused is True
 
 
-def test_timer_reconcile_unpauses_create_loop_after_success():
-    """
-    arrange: A reconciler paused after a zero-create, then timer reconcile succeeds.
-    act: Call _handle_create_runners (zero), then _handle_timer_reconcile (succeeds).
-    assert: _create_paused is cleared after a successful timer reconcile create.
-    """
-    mgr = _FakeManager(create_success_ratio=0.0)
-    planner = _FakePlanner()
-    cfg = PressureReconcilerConfig(flavor_name="small")
-    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
-
-    reconciler._handle_create_runners(2)
-    assert reconciler._create_paused is True
-
-    mgr._create_success_ratio = 1.0
-    reconciler._handle_timer_reconcile(2)
-
-    assert mgr.created_args == [2, 2]
-    assert reconciler._create_paused is False
-
-
 def test_timer_reconcile_always_unpauses_create_loop():
     """
     arrange: A reconciler paused after zero-create, at desired count.
