@@ -56,9 +56,9 @@ class PressureReconcilerConfig:
     max_pressure: int = 0
 
 
-@dataclass
+@dataclass(frozen=True)
 class _CreateBackoffState:
-    """Mutable create-loop backoff state.
+    """Create-loop backoff state.
 
     Attributes:
         delay: Current exponential backoff delay in seconds.
