@@ -164,6 +164,7 @@ async def test_prometheus_metrics(
     await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     async def _no_runners() -> bool:
+        """Check that no runners are active."""
         action = await openstack_app_cos_agent.units[0].run_action("check-runners")
         await action.wait()
         return (

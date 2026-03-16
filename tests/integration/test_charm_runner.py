@@ -37,6 +37,7 @@ async def app_fixture(
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     async def _no_runners() -> bool:
+        """Check that no runners are active."""
         action: Action = await basic_app.units[0].run_action("check-runners")
         await action.wait()
         return (
