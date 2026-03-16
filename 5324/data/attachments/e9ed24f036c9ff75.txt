@@ -1,0 +1,125 @@
+20:01:20 WARNING unexpected facade SSHServer received from the controller
+20:01:21 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-failure-wnzo on cloud localhost
+20:01:21 WARNING unexpected facade SSHServer received from the controller
+20:01:21 WARNING unexpected facade SSHSession received from the controller
+20:01:21 WARNING unexpected facade SSHTunneler received from the controller
+20:01:21 WARNING unexpected facade SSHServer received from the controller
+20:01:21 INFO GitHub token rate limit: Rate(reset=2026-03-16 20:11:32+00:00, remaining=2819, limit=5000)
+20:01:24 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+20:01:26 INFO Deploying ch:amd64/noble/any-charm-133
+20:01:40 INFO Deploying local:jammy/github-runner-0
+20:01:41 INFO Waiting for model:
+  test-izwmln0e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-izwmln0e/0 [allocating] waiting: waiting for machine
+20:02:11 INFO Waiting for model:
+  test-izwmln0e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-izwmln0e/0 [allocating] waiting: waiting for machine
+20:02:41 INFO Waiting for model:
+  test-izwmln0e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-izwmln0e/0 [idle] active: 
+20:03:11 INFO Waiting for model:
+  test-izwmln0e/0 [allocating] waiting: waiting for machine
+20:03:42 INFO Waiting for model:
+  test-izwmln0e/0 [allocating] waiting: agent initialising
+20:04:12 INFO Waiting for model:
+  test-izwmln0e/0 [executing] maintenance: installing charm software
+20:04:42 INFO Waiting for model:
+  test-izwmln0e/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-izwmln0e/0 [idle] active: 
+20:05:12 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:05:17 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-wnzo test-izwmln0e base-virtual-machines=0
+20:05:17 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:05:33 INFO Current reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:05:33 INFO Waiting for reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:06:34 INFO Current reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:06:34 INFO Current reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e, expected reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:06:34 INFO Waiting for reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:07:35 INFO Current reconcile ID: 99d72805-8654-4299-9b84-bc73ca95564d
+20:07:35 INFO Current reconcile ID: 99d72805-8654-4299-9b84-bc73ca95564d, expected reconcile ID: 690cf37c-4e7e-4c32-8da1-47c467bdb28e
+20:07:35 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-wnzo test-izwmln0e path=canonical/github-runner-operator
+20:07:35 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-failure-wnzo test-izwmln0e base-virtual-machines=1
+20:07:35 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:08:05 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:08:08 INFO Current reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:08:08 INFO Waiting for reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:09:09 INFO Current reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:09:09 INFO Current reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20, expected reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:09:09 INFO Waiting for reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:10:10 INFO Current reconcile ID: 1b814534-ec3c-4f29-a19a-3bf44c7dc401
+20:10:10 INFO Current reconcile ID: 1b814534-ec3c-4f29-a19a-3bf44c7dc401, expected reconcile ID: 6febe82b-6a19-464d-a3cf-6bd23a4eac20
+20:10:51 INFO Wait for condition not met, sleeping 30
+20:11:21 WARNING Retrying (GithubRetry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /repos/canonical/github-runner-operator/actions/workflows/79149285/runs?branch=test-249ea7d7&created=%3E%3D2026-03-16T20%3A10%3A48%2B00%3A00
+20:11:33 INFO [TEST SETUP] Run command pkill -9 run.sh on test-izwmln0e-0-n-3481269c615c
+20:11:33 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.109', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e0:d1:34'}]])
+20:11:34 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-izwmln0e-0-n-3481269c615c.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.109 pkill -9 run.sh'
+20:11:35 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.109' (ED25519) to the list of known hosts.
+'
+20:11:37 INFO Runner test-izwmln0e-0-n-3481269c615c status: online
+20:11:37 INFO Runner still marked as online, waiting for it to be marked offline
+20:12:38 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:13:08 INFO Waiting for model:
+  test-izwmln0e/0 [idle] active: 
+20:13:11 INFO Current reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:13:11 INFO Waiting for reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:14:12 INFO Current reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:14:12 INFO Current reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92, expected reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:14:12 INFO Waiting for reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:15:13 INFO Current reconcile ID: 011169d3-d51c-4b3b-ada0-459b99d948e6
+20:15:13 INFO Current reconcile ID: 011169d3-d51c-4b3b-ada0-459b99d948e6, expected reconcile ID: 727026c1-29d2-40d7-b232-1d5ad34e1a92
+20:15:14 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773691614.9704092, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.733376264572144}
+{"timestamp": 1773691668.0791893, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.54332947731018}
+{"timestamp": 1773691797.1073568, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.925726890563965}
+{"timestamp": 1773691814.0, "event": "runner_installed", "flavor": "test-izwmln0e", "duration": 149.0}
+{"timestamp": 1773691855.0, "event": "runner_start", "flavor": "test-izwmln0e", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 41.0, "queue_duration": 2.0}
+{"timestamp": 1773691895.0, "event": "runner_stop", "flavor": "test-izwmln0e", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773691927.9872036, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.777183771133423}
+{"timestamp": 1773691973.139537, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.592441082000732}
+{"timestamp": 1773692100.4498217, "event": "reconciliation", "flavor": "test-izwmln0e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.207684516906738}
+20:15:15 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-wnzo  github-pr-6c68c-lxd  localhost/localhost  3.6.14   unsupported  20:15:15Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-izwmln0e           active      1  any-charm      latest/beta  133  no       
+test-izwmln0e                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-izwmln0e/0*  active    idle   0        10.15.66.66            
+test-izwmln0e/0*                         active    idle   1        10.15.66.34            
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.15.66.66  juju-3bb070-0  ubuntu@24.04  github-runner  Running
+1        started  10.15.66.34  juju-3bb070-1  ubuntu@22.04  github-runner  Running
+
+20:15:15 INFO Juju error logs:
+
+machine-0: 20:02:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 20:02:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 20:03:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 20:03:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-izwmln0e-0: 20:04:34 ERROR unit.test-izwmln0e/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-izwmln0e-0: 20:04:36 ERROR unit.test-izwmln0e/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-izwmln0e-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+20:15:15 INFO Forgetting model main...

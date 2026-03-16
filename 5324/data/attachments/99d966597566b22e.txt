@@ -1,0 +1,55 @@
+20:01:29 WARNING unexpected facade SSHServer received from the controller
+20:01:29 INFO Adding model github-pr-6c68c-lxd:test-charm-metrics-success-2psd on cloud localhost
+20:01:29 WARNING unexpected facade SSHServer received from the controller
+20:01:29 WARNING unexpected facade SSHSession received from the controller
+20:01:29 WARNING unexpected facade SSHTunneler received from the controller
+20:01:29 WARNING unexpected facade SSHServer received from the controller
+20:01:29 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+20:01:31 INFO Deploying ch:amd64/noble/any-charm-133
+20:01:46 INFO Deploying local:jammy/github-runner-0
+20:01:46 INFO Waiting for model:
+  test-n3uo6vsd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n3uo6vsd/0 [allocating] waiting: waiting for machine
+20:02:16 INFO Waiting for model:
+  test-n3uo6vsd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n3uo6vsd/0 [allocating] waiting: waiting for machine
+20:02:46 INFO Waiting for model:
+  test-n3uo6vsd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n3uo6vsd/0 [idle] active: 
+20:03:17 INFO Waiting for model:
+  test-n3uo6vsd/0 [allocating] waiting: waiting for machine
+20:03:47 INFO Waiting for model:
+  test-n3uo6vsd/0 [allocating] waiting: agent initialising
+20:04:17 INFO Waiting for model:
+  test-n3uo6vsd/0 [executing] maintenance: installing charm software
+20:04:48 INFO Waiting for model:
+  test-n3uo6vsd/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-n3uo6vsd/0 [idle] active:
+20:05:12 INFO Waiting for model:
+  test-n3uo6vsd/0 [idle] active: 
+20:05:42 INFO Waiting for model:
+  test-n3uo6vsd/0 [idle] active: 
+20:05:44 INFO Current reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:05:44 INFO Waiting for reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:06:45 INFO Current reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:06:45 INFO Current reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda, expected reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:06:45 INFO Waiting for reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:07:46 INFO Current reconcile ID: 549f0e3f-7fdd-4177-be97-9919e83b7476
+20:07:46 INFO Current reconcile ID: 549f0e3f-7fdd-4177-be97-9919e83b7476, expected reconcile ID: 03e7a431-155f-44c7-81e0-698e822bdfda
+20:07:50 INFO cli: juju config --model github-pr-6c68c-lxd:test-charm-metrics-success-2psd test-n3uo6vsd base-virtual-machines=0
+20:07:50 INFO Waiting for model:
+  test-n3uo6vsd/0 [idle] active: 
+20:08:21 INFO Waiting for model:
+  test-n3uo6vsd/0 [idle] active: 
+20:08:23 INFO Current reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:08:23 INFO Waiting for reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:09:24 INFO Current reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:09:24 INFO Current reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377, expected reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:09:24 INFO Waiting for reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:10:25 INFO Current reconcile ID: 5e64429a-b80d-477d-bd8a-abffc0bd5da5
+20:10:25 INFO Current reconcile ID: 5e64429a-b80d-477d-bd8a-abffc0bd5da5, expected reconcile ID: ea44e9b2-dbaa-4bb7-bb27-a85b442fc377
+20:10:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773691525.265013, "event": "reconciliation", "flavor": "test-n3uo6vsd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.38415265083313}
+{"timestamp": 1773691654.2912807, "event": "reconciliation", "flavor": "test-n3uo6vsd", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.923136472702026}
+{"timestamp": 1773691615.0, "event": "runner_installed", "flavor": "test-n3uo6vsd", "duration": 94.0}
+{"timestamp": 1773691686.533849, "event": "reconciliation", "flavor": "test-n3uo6vsd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.779392719268799}
+{"timestamp": 1773691815.4498756, "event": "reconciliation", "flavor": "test-n3uo6vsd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.865166902542114}
