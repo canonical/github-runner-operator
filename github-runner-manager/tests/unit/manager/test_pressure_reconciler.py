@@ -282,8 +282,8 @@ def test_create_loop_applies_backoff_after_zero_create(monkeypatch: pytest.Monke
     reconciler._handle_create_runners(4)
 
     assert mgr.created_args == [4]
-    assert reconciler._create_backoff_delay == 5
-    assert reconciler._create_backoff_until == 6.0
+    assert reconciler._create_backoff.delay == 5
+    assert reconciler._create_backoff.until == 6.0
 
 
 def test_create_loop_exponential_backoff_grows_on_repeated_zero_create(
@@ -309,8 +309,8 @@ def test_create_loop_exponential_backoff_grows_on_repeated_zero_create(
     reconciler._handle_create_runners(2)
 
     assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff_delay == 10
-    assert reconciler._create_backoff_until == 15.0
+    assert reconciler._create_backoff.delay == 10
+    assert reconciler._create_backoff.until == 15.0
 
 
 def test_successful_create_resets_backoff(monkeypatch: pytest.MonkeyPatch):
@@ -335,8 +335,8 @@ def test_successful_create_resets_backoff(monkeypatch: pytest.MonkeyPatch):
     reconciler._handle_create_runners(2)
 
     assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff_delay == 0
-    assert reconciler._create_backoff_until == 0.0
+    assert reconciler._create_backoff.delay == 0
+    assert reconciler._create_backoff.until == 0.0
 
 
 def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.MonkeyPatch):
@@ -361,8 +361,8 @@ def test_timer_reconcile_success_resets_create_loop_backoff(monkeypatch: pytest.
     reconciler._handle_timer_reconcile(2)
 
     assert mgr.created_args == [2, 2]
-    assert reconciler._create_backoff_delay == 0
-    assert reconciler._create_backoff_until == 0.0
+    assert reconciler._create_backoff.delay == 0
+    assert reconciler._create_backoff.until == 0.0
 
 
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):

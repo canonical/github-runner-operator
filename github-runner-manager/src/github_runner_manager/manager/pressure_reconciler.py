@@ -56,7 +56,20 @@ class PressureReconcilerConfig:
     max_pressure: int = 0
 
 
-class PressureReconciler:  # pylint: disable=too-few-public-methods
+@dataclass
+class _CreateBackoffState:
+    """Mutable create-loop backoff state.
+
+    Attributes:
+        delay: Current exponential backoff delay in seconds.
+        until: Monotonic time until direct create retries are allowed.
+    """
+
+    delay: int = 0
+    until: float = 0.0
+
+
+class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-instance-attributes
     """Continuously reconciles runner count against planner pressure.
 
     This reconciler keeps the total number of runners near the desired level
@@ -92,8 +105,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
         _runner_count: In-memory runner count used by the create loop.
-        _create_backoff_delay: Current exponential backoff delay in seconds.
-        _create_backoff_until: Monotonic time until direct create retries are allowed.
+        _create_backoff: Current exponential backoff state for direct create retries.
     """
 
     _CREATE_BACKOFF_INITIAL_SECONDS = 5
@@ -123,8 +135,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._stop = Event()
         self._last_pressure: Optional[int] = None
         self._runner_count: int = 0
-        self._create_backoff_delay = 0
-        self._create_backoff_until = 0.0
+        self._create_backoff = _CreateBackoffState()
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
@@ -188,12 +199,12 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 )
                 return
             now = time.monotonic()
-            if now < self._create_backoff_until:
+            if now < self._create_backoff.until:
                 logger.warning(
                     "Create loop: backing off %s runner creations for %.1fs"
                     " after zero-create attempt (desired=%s current=%s)",
                     to_create,
-                    self._create_backoff_until - now,
+                    self._create_backoff.until - now,
                     desired_total,
                     current_total,
                 )
@@ -205,7 +216,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                 current_total,
             )
             try:
-                created_ids = self._manager.create_runners(num=to_create, metadata=RunnerMetadata())
+                created_ids = self._manager.create_runners(
+                    num=to_create, metadata=RunnerMetadata()
+                )
             except MissingServerConfigError:
                 logger.exception(
                     "Unable to create runners due to missing server configuration"
@@ -287,14 +300,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
 
     def _reset_create_backoff(self) -> None:
         """Clear the create-loop backoff after a successful create."""
-        self._create_backoff_delay = 0
-        self._create_backoff_until = 0.0
+        self._create_backoff = _CreateBackoffState()
 
     def _update_create_backoff(self) -> None:
         """Increase the create-loop backoff after a zero-create attempt."""
-        next_delay = self._create_backoff_delay * 2 or self._CREATE_BACKOFF_INITIAL_SECONDS
-        self._create_backoff_delay = min(next_delay, self._CREATE_BACKOFF_MAX_SECONDS)
-        self._create_backoff_until = time.monotonic() + self._create_backoff_delay
+        next_delay = self._create_backoff.delay * 2 or self._CREATE_BACKOFF_INITIAL_SECONDS
+        delay = min(next_delay, self._CREATE_BACKOFF_MAX_SECONDS)
+        self._create_backoff = _CreateBackoffState(
+            delay=delay, until=time.monotonic() + delay
+        )
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.
