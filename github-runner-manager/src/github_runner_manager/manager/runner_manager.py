@@ -12,7 +12,7 @@ from multiprocessing.pool import ThreadPool as Pool
 from typing import Iterator, Sequence, Type
 
 from github_runner_manager import constants
-from github_runner_manager.errors import GithubMetricsError, RunnerCreateError, RunnerError
+from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
@@ -118,14 +118,6 @@ class RunnerInstance:
         )
 
 
-@dataclass(frozen=True)
-class CreateRunnersResult:
-    """Detailed result for runner creation attempts."""
-
-    created_ids: tuple[InstanceID, ...]
-    had_cloud_create_failure: bool = False
-
-
 class RunnerManager:
     """Manage the runners.
 
@@ -168,14 +160,6 @@ class RunnerManager:
         Returns:
             List of instance ID of the runners.
         """
-        return self.create_runners_with_outcome(
-            num=num, metadata=metadata, reactive=reactive
-        ).created_ids
-
-    def create_runners_with_outcome(
-        self, num: int, metadata: RunnerMetadata, reactive: bool = False
-    ) -> CreateRunnersResult:
-        """Create runners and report whether any cloud create call failed."""
         logger.info("Creating %s runners", num)
 
         labels = list(self._labels)
@@ -199,7 +183,7 @@ class RunnerManager:
     @staticmethod
     def _spawn_runners(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"],
-    ) -> CreateRunnersResult:
+    ) -> tuple[InstanceID, ...]:
         """Spawn runners in parallel using multiprocessing.
 
         Multiprocessing is only used if there are more than one runner to spawn. Otherwise,
@@ -213,19 +197,23 @@ class RunnerManager:
             create_runner_args_sequence: Sequence of args for invoking _create_runner method.
 
         Returns:
-            Detailed information about the runner creation attempts.
+            A tuple of instance ID's of runners spawned.
         """
         num = len(create_runner_args_sequence)
 
         if num == 1:
-            return RunnerManager._create_runner_with_outcome(create_runner_args_sequence[0])
+            try:
+                return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+            except (RunnerError, PlatformApiError):
+                logger.exception("Failed to spawn a runner.")
+                return tuple()
 
         return RunnerManager._spawn_runners_using_multiprocessing(create_runner_args_sequence, num)
 
     @staticmethod
     def _spawn_runners_using_multiprocessing(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"], num: int
-    ) -> CreateRunnersResult:
+    ) -> tuple[InstanceID, ...]:
         """Parallel spawn of runners.
 
         The length of the create_runner_args is number _create_runner invocation, and therefore the
@@ -236,43 +224,23 @@ class RunnerManager:
             num: The number of runners to spawn.
 
         Returns:
-            Detailed information about the runner creation attempts.
+            A tuple of instance ID's of runners spawned.
         """
         instance_id_list = []
-        had_cloud_create_failure = False
         with Pool(processes=min(num, 30)) as pool:
             jobs = pool.imap_unordered(
-                func=RunnerManager._create_runner_with_outcome, iterable=create_runner_args_sequence
+                func=RunnerManager._create_runner, iterable=create_runner_args_sequence
             )
             for _ in range(num):
                 try:
-                    result = next(jobs)
+                    instance_id = next(jobs)
+                except (RunnerError, PlatformApiError):
+                    logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
                 else:
-                    if result.instance_id is not None:
-                        instance_id_list.append(result.instance_id)
-                    had_cloud_create_failure = (
-                        had_cloud_create_failure or result.had_cloud_create_failure
-                    )
-        return CreateRunnersResult(
-            created_ids=tuple(instance_id_list),
-            had_cloud_create_failure=had_cloud_create_failure,
-        )
-
-    @staticmethod
-    def _create_runner_with_outcome(
-        args: "RunnerManager._CreateRunnerArgs",
-    ) -> CreateRunnersResult:
-        """Wrap a single create attempt so callers can react to cloud failures."""
-        try:
-            return CreateRunnersResult(created_ids=(RunnerManager._create_runner(args),))
-        except RunnerCreateError:
-            logger.exception("Failed to spawn a runner due to cloud create failure.")
-            return CreateRunnersResult(created_ids=tuple(), had_cloud_create_failure=True)
-        except (RunnerError, PlatformApiError):
-            logger.exception("Failed to spawn a runner.")
-            return CreateRunnersResult(created_ids=tuple())
+                    instance_id_list.append(instance_id)
+        return tuple(instance_id_list)
 
     def get_runners(self) -> tuple[RunnerInstance, ...]:
         """Get runners with health information.
