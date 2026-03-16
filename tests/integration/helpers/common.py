@@ -20,8 +20,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
-from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
+from github_runner_manager.metrics.events import get_metrics_log_path
 from juju.action import Action
 from juju.application import Application
 from juju.model import Model
@@ -45,7 +44,6 @@ DISPATCH_WAIT_TEST_WORKFLOW_FILENAME = "workflow_dispatch_wait_test.yaml"
 DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
-MONGODB_APP_NAME = "mongodb"
 # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
 # https://github.com/canonical/snapd/pull/16131
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 20 * 1024, "virt-type": "virtual-machine"}
@@ -87,50 +85,6 @@ async def run_in_unit(
     return code, stdout, stderr
 
 
-async def get_reconcile_id(unit: Unit) -> str:
-    """Get reconcile UUID of the unit.
-
-    This is to distinguish whether reconcile has happened in a unit.
-
-    Args:
-        unit: The unit.
-
-    Returns:
-        The UUID.
-    """
-    _, stdout, _ = await run_in_unit(
-        unit,
-        "cat /home/runner-manager/reconcile.id",
-        assert_on_failure=True,
-        assert_msg="Unable to get reconcile ID",
-    )
-    logger.info("Current reconcile ID: %s", stdout)
-    assert stdout is not None, "Got empty reconcile ID, this should be impossible"
-    return stdout
-
-
-async def wait_for_reconcile(app: Application) -> None:
-    """Wait until a reconcile has happened.
-
-    Uses the first unit found in the application.
-
-    Args:
-        app: The GitHub Runner Charm application.
-    """
-    # Wait the application is actively reconciling. Avoid waiting for image, etc.
-    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
-
-    unit = app.units[0]
-    base_id = await get_reconcile_id(unit)
-    for _ in range(10):
-        logger.info("Waiting for reconcile ID: %s", base_id)
-        await sleep(60)
-        current_id = await get_reconcile_id(unit)
-        logger.info("Current reconcile ID: %s, expected reconcile ID: %s", current_id, base_id)
-        if base_id != current_id:
-            return
-
-
 async def wait_for_runner_ready(app: Application) -> None:
     """Wait until a runner is ready.
 
@@ -139,8 +93,6 @@ async def wait_for_runner_ready(app: Application) -> None:
     Args:
         app: The GitHub Runner Charm application.
     """
-    await wait_for_reconcile(app)
-
     # Wait for 10 minutes for the runner to come online.
     for _ in range(20):
         action = await app.units[0].run_action("check-runners")
@@ -507,27 +459,6 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
     return stdout
 
 
-async def get_github_runner_reactive_log(unit: Unit) -> str:
-    """Get the logs of github-runner-manager reactive processes.
-
-    Args:
-        unit: The unit to get the logs from.
-
-    Returns:
-        Reactive process logs.
-    """
-    log_file_path = REACTIVE_RUNNER_LOG_DIR / "*.log"
-    _, stdout, stderr = await run_in_unit(
-        unit,
-        f"cat {log_file_path}",
-        timeout=60,
-        assert_on_failure=False,
-        assert_msg="Failed to get the GitHub runner manager reactive logs",
-    )
-
-    return stdout or stderr or "Empty reactive log"
-
-
 async def get_github_runner_metrics_log(unit: Unit) -> str:
     """Get the github-runner-manager metric logs.
 
@@ -537,7 +468,7 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
     Returns:
         Runner metrics logs.
     """
-    log_file_path = METRICS_LOG_PATH
+    log_file_path = get_metrics_log_path()
     _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",
