@@ -14,14 +14,27 @@ import getpass
 import grp
 import logging
 import os
+import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.configuration.base import NonReactiveCombination, UserInfo
-from github_runner_manager.errors import MissingServerConfigError
-from github_runner_manager.manager.runner_manager import RunnerManager, RunnerMetadata
+from github_runner_manager.errors import IssueMetricEventError, MissingServerConfigError
+from github_runner_manager.manager.runner_manager import (
+    RunnerInstance,
+    RunnerManager,
+    RunnerMetadata,
+)
+from github_runner_manager.manager.vm_manager import HealthState
+from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics.reconcile import (
+    BUSY_RUNNERS_COUNT,
+    EXPECTED_RUNNERS_COUNT,
+    IDLE_RUNNERS_COUNT,
+    RECONCILE_DURATION_SECONDS,
+)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
@@ -34,6 +47,7 @@ from github_runner_manager.planner_client import (
     PlannerConnectionError,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
 
 logger = logging.getLogger(__name__)
 
@@ -244,58 +258,114 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             pressure: Current pressure value used to compute desired total.
         """
         desired_total = self._desired_total_from_pressure(pressure)
-        with self._lock:
-            self._manager.cleanup()
-            current_total = len(self._manager.get_runners())
-            self._runner_count = current_total
-            if self._create_paused:
-                logger.info("Reconcile loop: unpausing create loop after state sync")
-            self._create_paused = False
-            if current_total < desired_total:
-                to_create = desired_total - current_total
-                logger.info(
-                    "Reconcile loop: scaling up %s runners (desired=%s current=%s)",
-                    to_create,
-                    desired_total,
-                    current_total,
-                )
-                try:
-                    created_ids = self._manager.create_runners(
-                        num=to_create, metadata=RunnerMetadata()
-                    )
-                except MissingServerConfigError:
-                    logger.exception(
-                        "Unable to create runners due to missing server configuration"
-                        " (image/flavor)."
-                    )
-                    return
-                actually_created = len(created_ids)
-                if actually_created < to_create:
-                    logger.error(
-                        "Reconcile loop: only %s/%s runners created",
-                        actually_created,
+        start_timestamp = time.time()
+        runner_list: tuple[RunnerInstance, ...] = ()
+        try:
+            with self._lock:
+                self._manager.cleanup()
+                runner_list = self._manager.get_runners()
+                current_total = len(runner_list)
+                self._runner_count = current_total
+                if self._create_paused:
+                    logger.info("Reconcile loop: unpausing create loop after state sync")
+                self._create_paused = False
+                if current_total < desired_total:
+                    to_create = desired_total - current_total
+                    logger.info(
+                        "Reconcile loop: scaling up %s runners (desired=%s current=%s)",
                         to_create,
+                        desired_total,
+                        current_total,
                     )
-                self._runner_count += actually_created
-                if actually_created == 0:
-                    self._create_paused = True
-                    logger.warning("Reconcile loop: re-pausing create loop after zero-create")
-            elif current_total > desired_total:
-                to_delete = current_total - desired_total
-                logger.info(
-                    "Reconcile loop: scaling down %s runners (desired=%s current=%s)",
-                    to_delete,
-                    desired_total,
-                    current_total,
+                    try:
+                        created_ids = self._manager.create_runners(
+                            num=to_create, metadata=RunnerMetadata()
+                        )
+                    except MissingServerConfigError:
+                        logger.exception(
+                            "Unable to create runners due to missing server configuration"
+                            " (image/flavor)."
+                        )
+                        return
+                    actually_created = len(created_ids)
+                    if actually_created < to_create:
+                        logger.error(
+                            "Reconcile loop: only %s/%s runners created",
+                            actually_created,
+                            to_create,
+                        )
+                    self._runner_count += actually_created
+                    if actually_created == 0:
+                        self._create_paused = True
+                        logger.warning("Reconcile loop: re-pausing create loop after zero-create")
+                elif current_total > desired_total:
+                    to_delete = current_total - desired_total
+                    logger.info(
+                        "Reconcile loop: scaling down %s runners (desired=%s current=%s)",
+                        to_delete,
+                        desired_total,
+                        current_total,
+                    )
+                    actually_deleted = self._manager.soft_delete_runners(num=to_delete)
+                    self._runner_count = max(current_total - actually_deleted, 0)
+                else:
+                    logger.info(
+                        "Reconcile loop: at desired count (desired=%s current=%s)",
+                        desired_total,
+                        current_total,
+                    )
+        finally:
+            self._issue_reconciliation_metric(
+                runner_list=runner_list,
+                desired_total=desired_total,
+                start_timestamp=start_timestamp,
+            )
+
+    def _issue_reconciliation_metric(
+        self,
+        runner_list: tuple[RunnerInstance, ...],
+        desired_total: int,
+        start_timestamp: float,
+    ) -> None:
+        """Issue Reconciliation metric event and update Prometheus gauges.
+
+        Args:
+            runner_list: Current runners from get_runners(), reused to avoid a
+                redundant OpenStack API call.
+            desired_total: Expected number of runners.
+            start_timestamp: When the reconciliation started.
+        """
+        end_timestamp = time.time()
+        duration = end_timestamp - start_timestamp
+        manager_name = self._manager.manager_name
+        RECONCILE_DURATION_SECONDS.labels(manager_name).observe(duration)
+
+        idle = sum(1 for r in runner_list if r.platform_state == PlatformRunnerState.IDLE)
+        offline_healthy = sum(
+            1
+            for r in runner_list
+            if r.platform_state == PlatformRunnerState.OFFLINE and r.health == HealthState.HEALTHY
+        )
+        available = idle + offline_healthy
+        active = sum(1 for r in runner_list if r.platform_state == PlatformRunnerState.BUSY)
+        BUSY_RUNNERS_COUNT.labels(manager_name).set(active)
+        IDLE_RUNNERS_COUNT.labels(manager_name).set(idle)
+        EXPECTED_RUNNERS_COUNT.labels(manager_name).set(desired_total)
+
+        try:
+            metric_events.issue_event(
+                metric_events.Reconciliation(
+                    timestamp=end_timestamp,
+                    flavor=self._config.flavor_name,
+                    crashed_runners=0,
+                    idle_runners=available,
+                    active_runners=active,
+                    expected_runners=desired_total,
+                    duration=duration,
                 )
-                actually_deleted = self._manager.soft_delete_runners(num=to_delete)
-                self._runner_count = max(current_total - actually_deleted, 0)
-            else:
-                logger.info(
-                    "Reconcile loop: at desired count (desired=%s current=%s)",
-                    desired_total,
-                    current_total,
-                )
+            )
+        except IssueMetricEventError:
+            logger.exception("Failed to issue Reconciliation metric")
 
     def _desired_total_from_pressure(self, pressure: int) -> int:
         """Compute desired runner total from planner pressure.
