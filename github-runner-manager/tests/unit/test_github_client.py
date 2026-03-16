@@ -7,10 +7,20 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
-from github import BadCredentialsException, GithubException, UnknownObjectException
+from github import (
+    BadCredentialsException,
+    GithubException,
+    RateLimitExceededException,
+    UnknownObjectException,
+)
+from prometheus_client import REGISTRY
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.github_client import (
+    GithubClient,
+    GithubRunnerNotFoundError,
+    _track_github_api_metrics,
+)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
@@ -30,6 +40,69 @@ JobStatsRawData = namedtuple(
     "JobStatsRawData",
     ["created_at", "queued_at", "started_at", "runner_name", "conclusion", "id", "status"],
 )
+
+
+class _DecoratedClientMethodTarget:
+    """Minimal target for testing GithubClient metrics decoration."""
+
+    def __init__(self):
+        """Create the minimal client-like state expected by the decorator."""
+        self._requester = MagicMock()
+        self._requester.rate_limiting = (4999, 5000)
+
+    @_track_github_api_metrics
+    def successful_call(self) -> str:
+        """Return a successful result."""
+        return "ok"
+
+    @_track_github_api_metrics
+    def successful_call_updates_rate_limit(self) -> str:
+        """Update the requester's rate limit before returning."""
+        self._requester.rate_limiting = (1234, 5000)
+        return "ok"
+
+    @_track_github_api_metrics
+    def token_error(self) -> None:
+        """Raise TokenError to verify propagation through the decorator."""
+        raise TokenError("Invalid token.")
+
+    @_track_github_api_metrics
+    def rate_limit_error(self) -> None:
+        """Raise a rate-limit-flavoured PlatformApiError."""
+        raise PlatformApiError("GitHub API rate limit exceeded.") from RateLimitExceededException(
+            403, {}, {}
+        )
+
+    @_track_github_api_metrics
+    def platform_api_error(self) -> None:
+        """Raise a generic PlatformApiError."""
+        raise PlatformApiError("unexpected github failure")
+
+    @_track_github_api_metrics
+    def job_not_found(self) -> None:
+        """Raise JobNotFoundError to verify generic error labelling."""
+        raise JobNotFoundError("missing job")
+
+    @_track_github_api_metrics
+    def runner_not_found(self) -> None:
+        """Raise GithubRunnerNotFoundError to verify generic error labelling."""
+        raise GithubRunnerNotFoundError("missing runner")
+
+    @_track_github_api_metrics
+    def delete_runner_busy(self) -> None:
+        """Raise DeleteRunnerBusyError to verify generic error labelling."""
+        raise DeleteRunnerBusyError("runner busy")
+
+    @_track_github_api_metrics
+    def unhandled_exception(self) -> None:
+        """Raise an unexpected exception to verify fallback error labelling."""
+        raise ValueError("unexpected failure")
+
+
+def _sample_value(name: str, labels: dict[str, str] | None = None) -> float:
+    """Get a sample value from the default Prometheus registry."""
+    value = REGISTRY.get_sample_value(name, labels or {})
+    return 0.0 if value is None else value
 
 
 @pytest.fixture(name="job_stats_raw")
@@ -53,6 +126,7 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     gh_client = GithubClient("token")
     gh_client._github = MagicMock()
     gh_client._requester = MagicMock()
+    gh_client._requester.rate_limiting = (4999, 5000)
 
     # Default mock for requestJsonAndCheck (used by get_job_info_by_runner_name, etc.)
     gh_client._requester.requestJsonAndCheck.return_value = (
@@ -300,6 +374,27 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
 
     with pytest.raises(JobNotFoundError):
+        github_client.get_job_info_by_runner_name(
+            path=github_repo,
+            workflow_run_id=secrets.token_hex(16),
+            runner_name=job_stats_raw.runner_name,
+        )
+
+
+def test_get_job_info_by_runner_name_translates_rate_limit_error(
+    github_client: GithubClient, job_stats_raw: JobStatsRawData
+):
+    """
+    arrange: A mocked Github Client that hits the GitHub API rate limit.
+    act: Call get_job_info_by_runner_name.
+    assert: A PlatformApiError is raised instead of TokenError.
+    """
+    github_client._requester.requestJsonAndCheck.side_effect = RateLimitExceededException(
+        403, {}, {}
+    )
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+
+    with pytest.raises(PlatformApiError, match="GitHub API rate limit exceeded."):
         github_client.get_job_info_by_runner_name(
             path=github_repo,
             workflow_run_id=secrets.token_hex(16),
@@ -628,3 +723,65 @@ def test_delete_runner_busy(github_client: GithubClient):
     )
     with pytest.raises(DeleteRunnerBusyError):
         _ = github_client.delete_runner(path, runner_id)
+
+
+def test_track_github_api_metrics_records_success_metrics():
+    """
+    arrange: a decorated client-like method.
+    act: call the decorated method.
+    assert: the decorator records call count and duration metrics.
+    """
+    client = _DecoratedClientMethodTarget()
+    labels = {"method": "successful_call"}
+    before_calls = _sample_value("github_client_calls_total", labels)
+    before_duration = _sample_value("github_client_duration_seconds_count", labels)
+
+    assert client.successful_call() == "ok"
+
+    assert _sample_value("github_client_calls_total", labels) - before_calls == pytest.approx(1)
+    assert _sample_value("github_client_duration_seconds_count", labels) - before_duration == (
+        pytest.approx(1)
+    )
+
+
+def test_track_github_api_metrics_reads_rate_limit_after_wrapped_call():
+    """
+    arrange: a decorated client-like method that mutates requester rate limits during execution.
+    act: call the decorated method.
+    assert: the rate-limit gauges reflect the post-call values.
+    """
+    client = _DecoratedClientMethodTarget()
+
+    assert client.successful_call_updates_rate_limit() == "ok"
+    assert _sample_value("github_api_rate_limit_remaining") == pytest.approx(1234)
+    assert _sample_value("github_api_rate_limit_limit") == pytest.approx(5000)
+
+
+@pytest.mark.parametrize(
+    ("method_name", "error_type", "expected_exception"),
+    [
+        ("token_error", "token_error", TokenError),
+        ("rate_limit_error", "rate_limit", PlatformApiError),
+        ("platform_api_error", "platform_api_error", PlatformApiError),
+        ("job_not_found", "job_not_found", JobNotFoundError),
+        ("runner_not_found", "runner_not_found", GithubRunnerNotFoundError),
+        ("delete_runner_busy", "delete_runner_busy", DeleteRunnerBusyError),
+        ("unhandled_exception", "unhandled_exception", ValueError),
+    ],
+)
+def test_track_github_api_metrics_records_error_metrics(
+    method_name: str, error_type: str, expected_exception: type[Exception]
+):
+    """
+    arrange: a decorated client-like method that raises a translated platform error.
+    act: call the decorated method.
+    assert: the matching error metric increases by one.
+    """
+    client = _DecoratedClientMethodTarget()
+    labels = {"method": method_name, "error_type": error_type}
+    before = _sample_value("github_client_errors_total", labels)
+
+    with pytest.raises(expected_exception):
+        getattr(client, method_name)()
+
+    assert _sample_value("github_client_errors_total", labels) - before == pytest.approx(1)

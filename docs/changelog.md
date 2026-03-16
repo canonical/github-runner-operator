@@ -2,6 +2,20 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-11
+
+- Added Prometheus metrics for GithubClient operation counts, errors, latency, and rate-limit visibility.
+- Fixed `get_job_info_by_runner_name` to surface GitHub API rate limiting as `PlatformApiError` instead of reporting it as `TokenError`.
+
+## 2026-03-10
+
+- Use in-memory runner count in pressure reconciler create loop to avoid expensive OpenStack and GitHub API calls on every pressure event.
+- Scale-down in the reconcile loop now uses soft deletion, which excludes busy runners from the candidate pool to avoid killing in-flight jobs.
+
+## 2026-03-09
+
+- Reduced OpenStack API calls when listing managed runners by requesting bare server results and skipping Neutron interface enrichment for each server.
+
 ## 2026-03-03
 
 - Replaced `ghapi` with `PyGithub` to fix stuck GitHub API calls caused by missing timeout support in `ghapi`.

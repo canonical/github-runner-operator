@@ -636,7 +636,7 @@ class OpenstackCloud:
         """
         return tuple(
             server
-            for server in cast(list[OpenstackServer], conn.list_servers())
+            for server in cast(list[OpenstackServer], conn.list_servers(bare=True))
             if InstanceID.name_has_prefix(self.prefix, server.name)
         )
 
