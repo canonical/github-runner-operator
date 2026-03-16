@@ -301,6 +301,26 @@ def test_timer_reconcile_always_unpauses_create_loop():
     assert reconciler._create_paused is False
 
 
+def test_timer_reconcile_repauses_on_zero_create():
+    """
+    arrange: A reconciler paused after zero-create, reconcile needs to scale up.
+    act: Run timer reconcile while creation still returns zero IDs.
+    assert: _create_paused is set back to True after the failed scale-up.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(2)
+    assert reconciler._create_paused is True
+
+    reconciler._handle_timer_reconcile(2)
+
+    assert mgr.created_args == [2, 2]
+    assert reconciler._create_paused is True
+
+
 def test_successful_create_does_not_pause():
     """
     arrange: A reconciler where creates succeed.

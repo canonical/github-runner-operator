@@ -216,6 +216,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             self._runner_count = current_total + actually_created
             if actually_created == 0:
                 self._create_paused = True
+                logger.warning("Create loop: pausing until next reconcile after zero-create")
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up or down.
@@ -232,6 +233,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             self._manager.cleanup()
             current_total = len(self._manager.get_runners())
             self._runner_count = current_total
+            if self._create_paused:
+                logger.info("Reconcile loop: unpausing create loop after state sync")
             self._create_paused = False
             if current_total < desired_total:
                 to_create = desired_total - current_total
@@ -259,6 +262,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                         to_create,
                     )
                 self._runner_count += actually_created
+                if actually_created == 0:
+                    self._create_paused = True
+                    logger.warning("Reconcile loop: re-pausing create loop after zero-create")
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
