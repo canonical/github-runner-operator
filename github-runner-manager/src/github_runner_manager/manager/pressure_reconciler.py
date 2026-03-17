@@ -258,11 +258,10 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             pressure: Current pressure value used to compute desired total.
         """
         desired_total = self._desired_total_from_pressure(pressure)
-        start_timestamp = time.time()
         runner_list: tuple[RunnerInstance, ...] = ()
-        try:
-            with self._lock:
-                start_timestamp = time.time()
+        with self._lock:
+            start_timestamp = time.time()
+            try:
                 self._manager.cleanup()
                 runner_list = self._manager.get_runners()
                 current_total = len(runner_list)
@@ -315,12 +314,12 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                         desired_total,
                         current_total,
                     )
-        finally:
-            self._issue_reconciliation_metric(
-                runner_list=runner_list,
-                desired_total=desired_total,
-                start_timestamp=start_timestamp,
-            )
+            finally:
+                self._issue_reconciliation_metric(
+                    runner_list=runner_list,
+                    desired_total=desired_total,
+                    start_timestamp=start_timestamp,
+                )
 
     def _issue_reconciliation_metric(
         self,
