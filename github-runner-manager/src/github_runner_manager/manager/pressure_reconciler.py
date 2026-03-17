@@ -315,6 +315,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                         current_total,
                     )
             finally:
+                # Uses the pre-scaling snapshot to avoid an expensive extra
+                # get_runners() call, at the cost of not reflecting post-scaling state.
                 self._issue_reconciliation_metric(
                     runner_list=runner_list,
                     desired_total=desired_total,
@@ -330,8 +332,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         """Issue Reconciliation metric event and update Prometheus gauges.
 
         Args:
-            runner_list: Current runners from get_runners(), reused to avoid a
-                redundant OpenStack API call.
+            runner_list: Runners to compute idle/active/available counts from.
             desired_total: Expected number of runners.
             start_timestamp: When the reconciliation started.
         """
