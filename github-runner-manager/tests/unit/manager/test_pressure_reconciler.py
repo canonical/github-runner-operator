@@ -12,7 +12,6 @@ from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     PressureReconcilerConfig,
 )
-from github_runner_manager.manager.runner_manager import IssuedMetricEventsStats
 from github_runner_manager.manager.vm_manager import HealthState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.planner_client import PlannerApiError, PlannerConnectionError
@@ -73,10 +72,9 @@ class _FakeManager:
             self._runners = self._runners[:-to_remove]
         return to_remove
 
-    def cleanup(self) -> IssuedMetricEventsStats:
-        """Increment the cleanup counter and return empty metric stats."""
+    def cleanup(self) -> None:
+        """Increment the cleanup counter."""
         self.cleanup_called += 1
-        return {}
 
 
 class _FakePlanner:
