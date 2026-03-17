@@ -23,6 +23,7 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.configuration.base import NonReactiveCombination, UserInfo
 from github_runner_manager.errors import IssueMetricEventError, MissingServerConfigError
 from github_runner_manager.manager.runner_manager import (
+    IssuedMetricEventsStats,
     RunnerInstance,
     RunnerManager,
     RunnerMetadata,
@@ -259,10 +260,11 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         """
         desired_total = self._desired_total_from_pressure(pressure)
         start_timestamp = time.time()
+        metric_stats: IssuedMetricEventsStats = {}
         runner_list: tuple[RunnerInstance, ...] = ()
         try:
             with self._lock:
-                self._manager.cleanup()
+                metric_stats = self._manager.cleanup()
                 runner_list = self._manager.get_runners()
                 current_total = len(runner_list)
                 self._runner_count = current_total
@@ -317,6 +319,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         finally:
             self._issue_reconciliation_metric(
                 runner_list=runner_list,
+                metric_stats=metric_stats,
                 desired_total=desired_total,
                 start_timestamp=start_timestamp,
             )
@@ -324,6 +327,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
     def _issue_reconciliation_metric(
         self,
         runner_list: tuple[RunnerInstance, ...],
+        metric_stats: IssuedMetricEventsStats,
         desired_total: int,
         start_timestamp: float,
     ) -> None:
@@ -332,6 +336,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         Args:
             runner_list: Current runners from get_runners(), reused to avoid a
                 redundant OpenStack API call.
+            metric_stats: Event type counts from cleanup. Scale-down stats from
+                soft_delete_runners are not included (returns only an int),
+                which is an accepted trade-off.
             desired_total: Expected number of runners.
             start_timestamp: When the reconciliation started.
         """
@@ -357,9 +364,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                 metric_events.Reconciliation(
                     timestamp=end_timestamp,
                     flavor=self._config.flavor_name,
-                    # soft_delete_runners returns only an int, not metric stats,
-                    # so crashed detection (RunnerStart - RunnerStop) is unreliable here.
-                    crashed_runners=0,
+                    crashed_runners=metric_stats.get(metric_events.RunnerStart, 0)
+                    - metric_stats.get(metric_events.RunnerStop, 0),
                     idle_runners=available,
                     active_runners=active,
                     expected_runners=desired_total,
