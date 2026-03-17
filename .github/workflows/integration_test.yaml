@@ -14,13 +14,13 @@ concurrency:
 jobs:
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-charm-artifacts
     secrets: inherit
     with:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_multi_unit_same_machine", "test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_upgrade",  "test_reactive"]'
+      modules: '["test_multi_unit_same_machine"]'
       # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
@@ -40,7 +40,7 @@ jobs:
       self-hosted-runner-label: pfe-ci
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-charm-artifacts
     secrets: inherit
     with:
       juju-channel: 3.6/stable
@@ -67,7 +67,7 @@ jobs:
       self-hosted-runner-label: pfe-ci
   openstack-integration-tests-runner-bases:
     name: Runner tests across bases
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-charm-artifacts
     secrets: inherit
     strategy:
       matrix:

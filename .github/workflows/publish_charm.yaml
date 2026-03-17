@@ -8,5 +8,5 @@ on:
 
 jobs:
   publish-to-edge:
-    uses: canonical/operator-workflows/.github/workflows/publish_charm.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/publish_charm.yaml@fix/deduplicate-charm-artifacts
     secrets: inherit

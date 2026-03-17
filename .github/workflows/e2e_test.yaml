@@ -12,7 +12,7 @@ jobs:
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   openstack-integration-end-to-end-test:
     name: end-to-end test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-charm-artifacts
     secrets: inherit
     with:
       juju-channel: 3.6/stable
