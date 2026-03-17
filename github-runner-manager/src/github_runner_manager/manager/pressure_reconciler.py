@@ -14,7 +14,6 @@ import getpass
 import grp
 import logging
 import os
-import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional
@@ -32,6 +31,7 @@ from github_runner_manager.planner_client import (
     PlannerApiError,
     PlannerClient,
     PlannerConfiguration,
+    PlannerConnectionError,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
@@ -132,14 +132,29 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                     if self._stop.is_set():
                         return
                     self._handle_create_runners(update.pressure)
+            except PlannerConnectionError as exc:
+                fallback = max(self._last_pressure or 0, self._config.min_pressure)
+                logger.warning(
+                    "Pressure stream interrupted for flavor %s (%s), falling back to %s runners.",
+                    self._config.flavor_name,
+                    exc,
+                    fallback,
+                )
+                if self._stop.is_set():
+                    return
+                self._handle_create_runners(fallback)
+                self._stop.wait(5)
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
-                    "Error in pressure stream loop, falling back to %s runners.",
+                    "Error in pressure stream loop for flavor %s, falling back to %s runners.",
+                    self._config.flavor_name,
                     fallback,
                 )
+                if self._stop.is_set():
+                    return
                 self._handle_create_runners(fallback)
-                time.sleep(5)
+                self._stop.wait(5)
 
     def start_reconcile_loop(self) -> None:
         """Periodically reconcile runners: sync state, scale up/down, and clean up."""
