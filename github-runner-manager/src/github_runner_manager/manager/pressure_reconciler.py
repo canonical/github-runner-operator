@@ -262,6 +262,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         runner_list: tuple[RunnerInstance, ...] = ()
         try:
             with self._lock:
+                start_timestamp = time.time()
                 self._manager.cleanup()
                 runner_list = self._manager.get_runners()
                 current_total = len(runner_list)
