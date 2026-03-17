@@ -357,6 +357,8 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                 metric_events.Reconciliation(
                     timestamp=end_timestamp,
                     flavor=self._config.flavor_name,
+                    # soft_delete_runners returns only an int, not metric stats,
+                    # so crashed detection (RunnerStart - RunnerStop) is unreliable here.
                     crashed_runners=0,
                     idle_runners=available,
                     active_runners=active,
