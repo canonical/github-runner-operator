@@ -9,8 +9,6 @@ from github_runner_manager.configuration.base import (
     NonReactiveCombination,
     NonReactiveConfiguration,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
 )
@@ -19,7 +17,6 @@ from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )
-from pydantic import MongoDsn
 from pydantic.networks import IPv4Address
 
 import charm_state
@@ -80,23 +77,6 @@ def test_create_application_configuration(
                     max_total_virtual_machines=2,
                 )
             ]
-        ),
-        reactive_configuration=ReactiveConfiguration(
-            queue=QueueConfig(
-                mongodb_uri=MongoDsn(
-                    "mongodb://user:password@localhost:27017",
-                    scheme="mongodb",
-                    user="user",
-                    password="password",
-                    host="localhost",
-                    host_type="int_domain",
-                    port="27017",
-                ),
-                queue_name="app_name",
-            ),
-            max_total_virtual_machines=2,
-            images=[Image(name="image_id", labels=["arm64", "noble"])],
-            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
             vm_prefix="unit_name",

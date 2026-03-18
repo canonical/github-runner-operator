@@ -7,7 +7,6 @@ from unittest.mock import MagicMock
 
 import pytest
 import yaml
-from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
@@ -51,7 +50,6 @@ from charm_state import (
     SSHDebugConnection,
     _build_planner_config_from_charm,
 )
-from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -573,81 +571,6 @@ def test_ssh_debug_connection_from_charm(use_runner_http_proxy: bool):
     assert connections[0].use_runner_http_proxy == use_runner_http_proxy
 
 
-def test_reactive_config_from_charm():
-    """
-    arrange: Mock CharmBase instance with relation data and config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: Verify that the method returns the expected object.
-    """
-    mongodb_uri = "mongodb://user:password@localhost:27017"
-    mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    mock_charm.app = app_mock
-    relation_mock.data = {
-        app_mock: {
-            "uris": mongodb_uri,
-        },
-        mock_charm.model.unit: {},
-    }
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    connection_info = charm_state.ReactiveConfig.from_database(database)
-
-    assert isinstance(connection_info, charm_state.ReactiveConfig)
-    assert connection_info.mq_uri == mongodb_uri
-
-
-def test_reactive_config_from_database_returns_none():
-    """
-    arrange: Mock CharmBase instance without relation data.
-    act: Call ReactiveConfig.from_database method.
-    assert: None is returned.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
-
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    connection_info = charm_state.ReactiveConfig.from_database(database)
-
-    assert connection_info is None
-
-
-def test_reactive_config_from_database_integration_data_missing():
-    """
-    arrange: Mock CharmBase instance with relation but without data and with config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: IntegrationDataMissingError is raised.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    relation_mock.data = {
-        app_mock: {},
-        mock_charm.model.unit: {},
-    }
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
-
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    with pytest.raises(MissingMongoDBError) as exc:
-        charm_state.ReactiveConfig.from_database(database)
-
-    assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(
-        exc.value
-    )
-
-
 @pytest.fixture
 def mock_charm_state_path():
     """Fixture to mock CHARM_STATE_PATH."""
@@ -662,7 +585,6 @@ def mock_charm_state_data():
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
         "charm_config": {"token": secrets.token_hex(16)},
-        "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
             "virtual_machines": 2,
         },
@@ -695,7 +617,6 @@ def test_charm_state_from_charm_invalid_cases(
     assert: Ensure CharmConfigInvalidError is raised with the appropriate message.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     mock_charm_config = MagicMock()
     mock_charm_config.openstack_clouds_yaml = None
@@ -707,7 +628,7 @@ def test_charm_state_from_charm_invalid_cases(
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm, mock_database)
+        CharmState.from_charm(mock_charm)
 
 
 def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
@@ -717,17 +638,15 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert: Ensure no errors are raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr("charm_state._build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
-    assert CharmState.from_charm(mock_charm, mock_database)
+    assert CharmState.from_charm(mock_charm)
 
 
 def test_planner_config_from_charm_extracts_endpoint_token():
@@ -810,16 +729,14 @@ def test_parse_virtual_machine_numbers(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
-    mock_database = MagicMock(spec=DatabaseRequires)
 
     mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
     mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
     mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
-    state = CharmState.from_charm(mock_charm, mock_database)
+    state = CharmState.from_charm(mock_charm)
 
     assert state.runner_config.base_virtual_machines == expected_base
     assert state.runner_config.max_total_virtual_machines == expected_max
@@ -868,17 +785,15 @@ def test_error_parse_virtual_machine_numbers(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
-    mock_database = MagicMock(spec=DatabaseRequires)
 
     mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
     mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
     mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        _ = CharmState.from_charm(mock_charm, mock_database)
+        _ = CharmState.from_charm(mock_charm)
     assert expected_error_message in str(exc_info.value)
 
 
@@ -919,7 +834,6 @@ def test_parse_flavor_config(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
@@ -927,8 +841,7 @@ def test_parse_flavor_config(
     mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
     mock_charm.config[LABELS_CONFIG_NAME] = labels
 
-    mock_database = MagicMock(spec=DatabaseRequires)
-    state = CharmState.from_charm(mock_charm, mock_database)
+    state = CharmState.from_charm(mock_charm)
     assert state.charm_config.labels == expected_labels
     assert state.runner_config.flavor_label_combinations == expected_flavor_label_combinations
 
@@ -967,7 +880,6 @@ def test_errror_flavor_config(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
@@ -975,9 +887,8 @@ def test_errror_flavor_config(
     mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
     mock_charm.config[LABELS_CONFIG_NAME] = labels
 
-    mock_database = MagicMock(spec=DatabaseRequires)
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        _ = CharmState.from_charm(mock_charm, mock_database)
+        _ = CharmState.from_charm(mock_charm)
     assert expected_error_message in str(exc_info.value)
 
 
@@ -1118,10 +1029,8 @@ def test_proxy_config(
     mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
     mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
-    mock_database = MagicMock(spec=DatabaseRequires)
-    mock_database.relations = []
 
-    charm_state = CharmState.from_charm(mock_charm, mock_database)
+    charm_state = CharmState.from_charm(mock_charm)
 
     assert charm_state.charm_config.use_aproxy == use_aproxy
     assert ", ".join(charm_state.charm_config.aproxy_exclude_addresses) == aproxy_exclude_addresses
@@ -1158,8 +1067,6 @@ def test_invalid_aproxy_config_in_charm_state(
     mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
     mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
-    mock_database = MagicMock(spec=DatabaseRequires)
-    mock_database.relations = []
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm, mock_database)
+        CharmState.from_charm(mock_charm)

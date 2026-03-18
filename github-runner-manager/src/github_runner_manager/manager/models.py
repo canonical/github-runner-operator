@@ -27,13 +27,11 @@ class InstanceID:
     Attributes:
         name: Name of the instance to use.
         prefix: Prefix corresponding to the application (charm application unit).
-        reactive: Identifies if the runner is reactive.
         suffix: Random suffix for the InstanceID.
     """
 
     prefix: str
     suffix: str
-    reactive: bool | None = None
 
     @property
     def name(self) -> str:
@@ -42,13 +40,7 @@ class InstanceID:
         Returns:
            Name of the instance
         """
-        if self.reactive is True:
-            runner_type = "r-"
-        elif self.reactive is False:
-            runner_type = "n-"
-        else:
-            runner_type = ""
-        return f"{self.prefix}-{runner_type}{self.suffix}"
+        return f"{self.prefix}-n-{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -69,26 +61,18 @@ class InstanceID:
         else:
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
-        # The separator from prefix and suffix indicates whether the runner is reactive.
-        # To maintain backwards compatibility, if there is no r- or n- (reactive or
-        # non-reactive), we assume non-reactive and keep the full suffix.
-        reactive = None
+        # Strip legacy r-/n- prefixes from existing VMs for backward compatibility.
         separator = suffix[:2]
-        if separator == "r-":
-            reactive = True
-            suffix = suffix[2:]
-        elif separator == "n-":
-            reactive = False
+        if separator in ("r-", "n-"):
             suffix = suffix[2:]
 
         return cls(
             prefix=prefix,
-            reactive=reactive,
             suffix=suffix,
         )
 
     @classmethod
-    def build(cls, prefix: str, reactive: bool = False) -> "InstanceID":
+    def build(cls, prefix: str) -> "InstanceID":
         r"""Generate an InstanceID for a runner.
 
         It should be valid for all the CloudProviders and GitHub.
@@ -103,7 +87,6 @@ class InstanceID:
 
         Args:
            prefix: Prefix for the InstanceID.
-           reactive: If the instance ID to generate is a reactive runner.
 
         Returns:
             Instance ID of the runner.
@@ -112,7 +95,7 @@ class InstanceID:
             InstanceIDInvalidError: If the instance name is not valid (too long).
         """
         suffix = secrets.token_hex(INSTANCE_SUFFIX_LENGTH // 2)
-        instance_id = cls(prefix=prefix, reactive=reactive, suffix=suffix)
+        instance_id = cls(prefix=prefix, suffix=suffix)
         # By default, for OpenStack with MySQL, the limit is 64 characters.
         if len(instance_id.name) > 64:
             raise InstanceIDInvalidError(

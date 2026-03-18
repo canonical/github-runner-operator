@@ -110,7 +110,6 @@ def test_setup_started(
     assert "openstack_configuration:" in config_content
     assert "manager_proxy_command: ssh -W %h:%p example.com" in config_content
     assert "non_reactive_configuration:" in config_content
-    assert "mongodb_uri: mongodb://user:password@localhost:27017" in config_content
 
     mock_systemd.service_enable.assert_called_once()
     mock_systemd.service_start.assert_not_called()

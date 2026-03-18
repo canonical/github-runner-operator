@@ -10,8 +10,6 @@ from github_runner_manager.configuration.base import (  # noqa: F401
     NonReactiveCombination,
     NonReactiveConfiguration,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
     UserInfo,

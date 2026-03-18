@@ -31,9 +31,6 @@ requires:
     interface: debug-ssh
   image:
     interface: github_runner_image_v0
-  mongodb:
-    interface: mongodb_client
-    limit: 1
   planner:
     interface: github_runner_planner_v0
 

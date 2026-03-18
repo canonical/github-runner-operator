@@ -9,7 +9,6 @@ from ipaddress import IPv4Address
 
 import pytest
 import yaml
-from pydantic import MongoDsn
 
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
@@ -20,8 +19,6 @@ from src.github_runner_manager.configuration import (
     NonReactiveCombination,
     NonReactiveConfiguration,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
 )
@@ -53,20 +50,6 @@ non_reactive_configuration:
       - arm64
       - noble
       name: image_id
-reactive_configuration:
-  flavors:
-  - labels:
-    - flavorlabel
-    name: flavor
-  images:
-  - labels:
-    - arm64
-    - noble
-    name: image_id
-  max_total_virtual_machines: 2
-  queue:
-    mongodb_uri: mongodb://user:password@localhost:27017
-    queue_name: app_name
 service_config:
   dockerhub_mirror: https://docker.example.com
   proxy_config:
@@ -146,25 +129,6 @@ def app_config_fixture() -> ApplicationConfiguration:
                     max_total_virtual_machines=2,
                 )
             ]
-        ),
-        reactive_configuration=ReactiveConfiguration(
-            queue=QueueConfig(
-                mongodb_uri=MongoDsn(
-                    "mongodb://user:password@localhost:27017",
-                    scheme="mongodb",
-                    user="user",
-                    password="password",
-                    host="localhost",
-                    host_type="int_domain",
-                    port="27017",
-                ),
-                queue_name="app_name",
-            ),
-            max_total_virtual_machines=2,
-            images=[
-                Image(name="image_id", labels=["arm64", "noble"]),
-            ],
-            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
             vm_prefix="test_unit",

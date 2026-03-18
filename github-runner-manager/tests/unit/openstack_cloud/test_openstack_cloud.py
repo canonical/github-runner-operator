@@ -334,7 +334,7 @@ def test__delete_keypair_fail(
     assert: None is returned and the failure is logged.
     """
     mock_openstack_conn.delete_keypair = MagicMock(return_value=False)
-    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+    test_key_instance_id = InstanceID(prefix="test-key-delete", suffix="fail")
 
     assert (
         openstack_cloud._delete_keypair(
@@ -358,7 +358,7 @@ def test__delete_keypair_error(
     mock_openstack_conn.delete_keypair = MagicMock(
         side_effect=[openstack.exceptions.ResourceTimeout()]
     )
-    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+    test_key_instance_id = InstanceID(prefix="test-key-delete", suffix="fail")
 
     assert (
         openstack_cloud._delete_keypair(
@@ -379,9 +379,9 @@ def test_delete_instances_partial_server_delete_failure(
     act: when delete_instances method is called.
     assert: successfully deleted instance IDs are returned and failed instances are logged.
     """
-    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
-    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
-    timeout_id = InstanceID(prefix="timeout error", reactive=False, suffix="")
+    successful_delete_id = InstanceID(prefix="success", suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", suffix="")
+    timeout_id = InstanceID(prefix="timeout error", suffix="")
     mock_cloud = FakeOpenstackCloud(
         initial_servers=[successful_delete_id, timeout_id],
         server_to_errors={timeout_id: openstack.exceptions.ResourceTimeout()},
@@ -412,8 +412,8 @@ def test_delete_instances(
     assert: deleted instance IDs are returned.
     """
     mock_openstack_conn.delete_server = MagicMock(side_effect=[True, False])
-    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
-    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
+    successful_delete_id = InstanceID(prefix="success", suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", suffix="")
 
     deleted_instance_ids = openstack_cloud.delete_instances(
         instance_ids=[successful_delete_id, already_deleted_id]

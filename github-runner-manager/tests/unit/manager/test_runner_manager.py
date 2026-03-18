@@ -225,7 +225,7 @@ def test_runner_manager_create_runners() -> None:
         labels=["label1", "label2"],
     )
 
-    (instance_id,) = runner_manager.create_runners(1, RunnerMetadata(), True)
+    (instance_id,) = runner_manager.create_runners(1, RunnerMetadata())
 
     assert instance_id
     cloud_runner_manager.create_runner.assert_called_once()

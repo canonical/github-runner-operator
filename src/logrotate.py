@@ -8,7 +8,6 @@ from pathlib import Path
 
 from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager.metrics.events import get_metrics_log_path
-from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
@@ -68,16 +67,6 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
 )
 
 
-REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
-    name="reactive-runner",
-    log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/*.log",
-    rotate=0,
-    create=False,
-    notifempty=False,
-    frequency=LogrotateFrequency.DAILY,
-    copytruncate=False,
-)
-
 GITHUB_RUNNER_MANAGER_CONFIG = LogrotateConfig(
     name="github-runner-manager",
     log_path_glob_pattern=f"{GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR}/*.log",
@@ -122,7 +111,6 @@ def _enable() -> None:
 
 def _configure() -> None:
     """Configure logrotate."""
-    _write_config(REACTIVE_LOGROTATE_CONFIG)
     _write_config(METRICS_LOGROTATE_CONFIG)
     _write_config(GITHUB_RUNNER_MANAGER_CONFIG)
 

@@ -12,8 +12,8 @@ def test_new_instance_id():
     """
     arrange: Having an Application prefix.
     act: Create a new InstanceId.
-    assert: The new instance fields are correct, that is, same prefix and the
-       name starts with the prefix and reactive is False.
+    assert: The new instance fields are correct: same prefix, name starts with prefix,
+       and contains n- prefix in the name.
     """
     prefix = "theprefix"
 
@@ -21,25 +21,18 @@ def test_new_instance_id():
 
     assert instance_id.name == str(instance_id)
     assert instance_id.prefix == prefix
-    assert not instance_id.reactive
     assert instance_id.name.startswith(prefix)
+    assert "-n-" in instance_id.name
 
 
-@pytest.mark.parametrize(
-    "reactive",
-    [
-        pytest.param(True, id="reactive job name"),
-        pytest.param(False, id="non reactive job name"),
-    ],
-)
-def test_build_instance_id_from_name(reactive):
+def test_build_instance_id_from_name():
     """
     arrange: Create a new InstanceID.
     act: With the name of the previous instance ID and the prefix, create a new one.
     assert: Both instances should be equal.
     """
     prefix = "theprefix"
-    instance_id = InstanceID.build(prefix, reactive)
+    instance_id = InstanceID.build(prefix)
 
     name = instance_id.name
     new_instance_id = InstanceID.build_from_name(prefix, name)
@@ -47,7 +40,6 @@ def test_build_instance_id_from_name(reactive):
     assert new_instance_id == instance_id
     assert new_instance_id.name == instance_id.name
     assert new_instance_id.suffix == instance_id.suffix
-    assert new_instance_id.reactive == reactive
 
 
 def test_build_instance_id_from_name_fails_with_wrong_prefix():
@@ -76,11 +68,11 @@ def test_build_instance_id_fails_when_very_long_name():
         _ = InstanceID.build(prefix)
 
 
-def test_backward_compatible_names():
+def test_backward_compatible_names_without_type_prefix():
     """
-    arrange: A prefix and a unit name without reactive information.
+    arrange: A prefix and a name without r-/n- type prefix (old format).
     act: Create the instance ID from the prefix and name.
-    assert: New name from the instance is the same as the original name. Also prefix and suffix.
+    assert: Suffix is parsed correctly. New name includes n- prefix.
     """
     prefix = "unit-0"
     name = "unit-0-96950f351751"
@@ -89,4 +81,20 @@ def test_backward_compatible_names():
 
     assert instance_id.prefix == prefix
     assert instance_id.suffix == "96950f351751"
-    assert instance_id.name == name
+    # New format always uses n- prefix
+    assert instance_id.name == "unit-0-n-96950f351751"
+
+
+def test_backward_compatible_names_with_reactive_prefix():
+    """
+    arrange: A prefix and a name with legacy r- (reactive) prefix.
+    act: Create the instance ID from the prefix and name.
+    assert: The r- prefix is stripped and suffix is parsed correctly.
+    """
+    prefix = "unit-0"
+    name = "unit-0-r-96950f351751"
+
+    instance_id = InstanceID.build_from_name(prefix, name)
+
+    assert instance_id.prefix == prefix
+    assert instance_id.suffix == "96950f351751"

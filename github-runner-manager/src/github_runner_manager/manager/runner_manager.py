@@ -38,10 +38,9 @@ logger = logging.getLogger(__name__)
 # the time waiting before each health check against the platform provider.
 RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 
-# For the reconcile loop, specially for reactive runner (as it is outside of this loop),
-# we do not want to delete runners that are offline and not busy in the platform and
-# that are not very old in the cloud, as they could be just starting. The creation time will
-# be equal to all the possible wait times in creation plus an extra amount.
+# Do not delete runners that are offline and not busy in the platform and not very old in
+# the cloud, as they could still be starting. The creation time equals all possible wait
+# times in creation plus an extra buffer.
 RUNNER_MAXIMUM_CREATION_TIME = CREATE_SERVER_TIMEOUT + sum(RUNNER_CREATION_WAITING_TIMES) + 120
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
@@ -170,15 +169,12 @@ class RunnerManager:
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
 
-    def create_runners(
-        self, num: int, metadata: RunnerMetadata, reactive: bool = False
-    ) -> tuple[InstanceID, ...]:
+    def create_runners(self, num: int, metadata: RunnerMetadata) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
             metadata: Metadata information for the runner.
-            reactive: If the runner is reactive.
 
         Returns:
             List of instance ID of the runners.
@@ -197,7 +193,6 @@ class RunnerManager:
                 # assign for example the id of the runner if it was not provided.
                 metadata=copy.copy(metadata),
                 labels=labels,
-                reactive=reactive,
             )
             for _ in range(num)
         ]
@@ -209,9 +204,7 @@ class RunnerManager:
     ) -> tuple[InstanceID, ...]:
         """Spawn runners in parallel using multiprocessing.
 
-        Multiprocessing is only used if there are more than one runner to spawn. Otherwise,
-        the runner is created in the current process, which is required for reactive,
-        where we don't assume to spawn another process inside the reactive process.
+        Multiprocessing is only used if there are more than one runner to spawn.
 
         The length of the create_runner_args is number _create_runner invocation, and therefore the
         number of runner spawned.
@@ -599,14 +592,12 @@ class RunnerManager:
             platform_provider: To manage self-hosted runner on the Platform side.
             metadata: Metadata for the runner to create.
             labels: List of labels to add to the runners.
-            reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager
         platform_provider: PlatformProvider
         metadata: RunnerMetadata
         labels: list[str]
-        reactive: bool
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceID:
@@ -623,7 +614,7 @@ class RunnerManager:
         Raises:
             RunnerError: On error creating OpenStack runner.
         """
-        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
+        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix)
         runner_context, runner_info = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Optional, TextIO
 
 import yaml
-from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, root_validator
 
 from github_runner_manager.configuration import github
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 # user would be the current user running the application.
 @dataclass
 class UserInfo:
-    """The user to run the reactive process.
+    """The user running the application.
 
     Attributes:
-        user: The user for running the reactive processes.
-        group: The user group for running the reactive processes.
+        user: The username.
+        group: The user group.
     """
 
     user: str
@@ -48,7 +48,6 @@ class ApplicationConfiguration(BaseModel):
         github_config: GitHub configuration.
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
-        reactive_configuration: Configuration for reactive mode.
         openstack_configuration: Configuration for authorization to a OpenStack host.
         planner_url: Base URL of the planner service.
         planner_token: Bearer token to authenticate against the planner service.
@@ -61,7 +60,6 @@ class ApplicationConfiguration(BaseModel):
     github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
-    reactive_configuration: "ReactiveConfiguration | None"
     openstack_configuration: OpenStackConfiguration
     planner_url: Optional[AnyHttpUrl] = None
     planner_token: Optional[str] = None
@@ -246,36 +244,6 @@ class NonReactiveCombination(BaseModel):
         return values
 
 
-class ReactiveConfiguration(BaseModel):
-    """Configuration for reactive mode.
-
-    Attributes:
-        queue: Queue to listen for reactive requests to spawn runners.
-        max_total_virtual_machines: Maximum number of instances to spawn by the application.
-           This value will be only checked in reactive mode, and will include all the instances
-           (reactive and non-reactive) spawned by the application.
-        images: List of valid images to spawn in reactive mode.
-        flavors: List of valid flavors to spawn in reactive mode.
-    """
-
-    queue: "QueueConfig"
-    max_total_virtual_machines: int
-    images: "list[Image]"
-    flavors: "list[Flavor]"
-
-
-class QueueConfig(BaseModel):
-    """The configuration for the message queue.
-
-    Attributes:
-        mongodb_uri: The URI of the MongoDB database.
-        queue_name: The name of the queue.
-    """
-
-    mongodb_uri: MongoDsn
-    queue_name: str
-
-
 class Image(BaseModel):
     """Information for an image with its associated labels.
 
@@ -305,4 +273,3 @@ ApplicationConfiguration.update_forward_refs()
 SupportServiceConfig.update_forward_refs()
 NonReactiveConfiguration.update_forward_refs()
 NonReactiveCombination.update_forward_refs()
-ReactiveConfiguration.update_forward_refs()

@@ -206,7 +206,7 @@ def test_delete_vms(runner_manager: OpenStackRunnerManager):
     act: when delete_vms method is called.
     assert: the mocked service call is made and the deleted instance IDs are returned.
     """
-    test_instance_ids = [InstanceID(prefix="test-prefix", reactive=None, suffix="test-suffix")]
+    test_instance_ids = [InstanceID(prefix="test-prefix", suffix="test-suffix")]
     mock_cloud = MagicMock()
     mock_cloud.delete_instances = MagicMock(return_value=test_instance_ids)
     runner_manager._openstack_cloud = mock_cloud

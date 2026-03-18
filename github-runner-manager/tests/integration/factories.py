@@ -157,7 +157,7 @@ def create_default_config(
         planner_url: Planner service URL. Omitted from config when not provided.
         planner_token: Planner service token. Omitted from config when not provided.
         reconcile_interval: Minutes between delete-loop reconciliation ticks.
-        base_virtual_machines: Floor for non-reactive desired runners.
+        base_virtual_machines: Floor for desired runners.
 
     Returns:
         Configuration dictionary for the application.
@@ -246,7 +246,6 @@ def create_default_config(
                 }
             ]
         },
-        "reactive_configuration": None,
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,

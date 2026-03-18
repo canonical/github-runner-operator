@@ -13,20 +13,12 @@ from typing import Final, Literal, cast
 from urllib.parse import urlsplit
 
 import yaml
-from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from ops.model import SecretNotFoundError
-from pydantic import (
-    BaseModel,
-    MongoDsn,
-    ValidationError,
-    create_model_from_typeddict,
-    validator,
-)
+from pydantic import BaseModel, ValidationError, create_model_from_typeddict, validator
 
-from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
 from utilities import get_env_var
 
@@ -67,7 +59,6 @@ RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME = "runner-manager-log-level"
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
-MONGO_DB_INTEGRATION_NAME = "mongodb"
 PLANNER_INTEGRATION_NAME = "planner"
 
 # Keys and defaults for planner relation app data bag
@@ -337,9 +328,6 @@ class CharmConfig(BaseModel):
         Returns:
             The validated reconcile_interval value.
         """
-        # The reconcile_interval should be at least 2.
-        # Due to possible race condition with the message acknowledgement with job status checking
-        # in reactive process.
         if reconcile_interval < 2:
             logger.error(
                 "The %s configuration must be greater than or equal to 1",
@@ -585,8 +573,7 @@ class OpenstackRunnerConfig(BaseModel):
 
     Attributes:
         base_virtual_machines: Number of virtual machine-based runners to spawn.
-        max_total_virtual_machines: Maximum possible machine number to spawn for the unit in
-           for reactive processes.
+        max_total_virtual_machines: Maximum possible machine number to spawn for the unit.
         flavor_label_combinations: list of FlavorLabel.
         openstack_network: Network on openstack to use for virtual machines.
         openstack_image: Openstack image to use for virtual machines.
@@ -770,49 +757,6 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
     return None
 
 
-class ReactiveConfig(BaseModel):
-    """Represents the configuration for reactive scheduling.
-
-    Attributes:
-        mq_uri: The URI of the MQ to use to spawn runners reactively.
-    """
-
-    mq_uri: MongoDsn
-
-    @classmethod
-    def from_database(cls, database: DatabaseRequires) -> "ReactiveConfig | None":
-        """Initialize the ReactiveConfig from charm config and integration data.
-
-        Args:
-            database: The database to fetch integration data from.
-
-        Returns:
-            The connection information for the reactive MQ or None if not available.
-
-        Raises:
-            MissingMongoDBError: If the information on howto access MongoDB
-                is missing in the integration data.
-        """
-        integration_existing = bool(database.relations)
-
-        if not integration_existing:
-            return None
-
-        uri_field = "uris"  # the field is called uris though it's a single uri
-        relation_data = list(database.fetch_relation_data(fields=[uri_field]).values())
-
-        # There can be only one database integrated at a time
-        # with the same interface name. See: metadata.yaml
-        data = relation_data[0]
-
-        if uri_field in data:
-            return ReactiveConfig(mq_uri=data[uri_field])
-
-        raise MissingMongoDBError(
-            f"Missing {uri_field} for {MONGO_DB_INTEGRATION_NAME} integration"
-        )
-
-
 # Charm State is a list of all the configurations and states of the charm and
 # has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
@@ -824,7 +768,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
         runner_proxy_config: Proxy-related configuration for the runner.
-        reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
         planner_config: Planner endpoint and token from relation data.
@@ -835,7 +778,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     runner_proxy_config: ProxyConfig
     charm_config: CharmConfig
     runner_config: OpenstackRunnerConfig
-    reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
     planner_config: PlannerConfig | None
 
@@ -851,8 +793,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
         state_dict["runner_proxy_config"] = json.loads(state_dict["runner_proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
-        if state.reactive_config:
-            state_dict["reactive_config"] = json.loads(state_dict["reactive_config"].json())
         state_dict["runner_config"] = json.loads(state_dict["runner_config"].json())
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
@@ -877,25 +817,16 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
                 charm_config["token"] = SENSITIVE_PLACEHOLDER  # nosec
             prev_state_for_logging["charm_config"] = charm_config
 
-            reactive_config = prev_state_for_logging.get("reactive_config")
-            if reactive_config and "mq_uri" in reactive_config:
-                reactive_config = reactive_config.copy()
-                reactive_config["mq_uri"] = "*****"
-            prev_state_for_logging["reactive_config"] = reactive_config
-
             logger.debug("Previous charm state: %s", prev_state_for_logging)
 
     # Ignore the flake8 function too complex (C901). The function does not have much logic, the
     # lint is likely triggered with the multiple try-excepts, which are needed.
     @classmethod
-    def from_charm(  # noqa: C901
-        cls, charm: CharmBase, database: DatabaseRequires
-    ) -> "CharmState":
+    def from_charm(cls, charm: CharmBase) -> "CharmState":  # noqa: C901
         """Initialize the state from charm.
 
         Args:
             charm: The charm instance.
-            database: The database instance.
 
         Raises:
             CharmConfigInvalidError: If an invalid configuration was set.
@@ -938,7 +869,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
         planner_config = _build_planner_config_from_charm(charm)
-        reactive_config = ReactiveConfig.from_database(database)
 
         state = cls(
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
@@ -946,7 +876,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             runner_proxy_config=runner_proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
-            reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
             planner_config=planner_config,
         )

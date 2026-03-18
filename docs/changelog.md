@@ -11,6 +11,9 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2026-03-18
 
 - Add landing page for how-to and reference section.
+- Removed legacy reconcile mode (`RunnerScaler`, `reconcile_service`, reactive spawning via MongoDB). The charm now always uses PressureReconciler.
+- Removed `mongodb` relation. MongoDB-based reactive runner spawning is no longer supported.
+- Removed `reactive.md` how-to documentation.
 
 ## 2026-03-17
 
