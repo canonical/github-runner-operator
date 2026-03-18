@@ -46,6 +46,10 @@ class PlannerApiError(Exception):
     """Represents an error while interacting with the planner service."""
 
 
+class PlannerConnectionError(PlannerApiError):
+    """Transient connection or stream interruption error."""
+
+
 class PlannerClient:  # pylint: disable=too-few-public-methods
     """An HTTP client for the planner service."""
 
@@ -69,7 +73,8 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
             Parsed pressure updates.
 
         Raises:
-            PlannerApiError: On HTTP or stream errors.
+            PlannerConnectionError: On transient stream disconnects or timeouts.
+            PlannerApiError: On other HTTP or stream errors.
         """
         base = str(self._config.base_url).rstrip("/") + "/"
         url = urljoin(base, f"api/v1/flavors/{name}/pressure?stream=true")
@@ -93,9 +98,14 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
                     except json.JSONDecodeError:
                         logger.warning("Skipping malformed stream line: %s", line)
                         continue
+        except (
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+        ) as exc:
+            raise PlannerConnectionError(str(exc)) from exc
         except requests.RequestException as exc:
-            logger.exception("Error while streaming pressure for flavor '%s' from planner.", name)
-            raise PlannerApiError from exc
+            raise PlannerApiError(str(exc)) from exc
 
     @staticmethod
     def _create_session() -> requests.Session:

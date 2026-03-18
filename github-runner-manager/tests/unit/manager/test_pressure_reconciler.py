@@ -12,11 +12,30 @@ from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     PressureReconcilerConfig,
 )
-from github_runner_manager.planner_client import PlannerApiError
+from github_runner_manager.manager.vm_manager import HealthState
+from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.planner_client import PlannerApiError, PlannerConnectionError
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
+
+
+class _FakeRunner:
+    """Minimal runner stub with platform_state and health for metric counting."""
+
+    def __init__(self, platform_state=None, health=None):
+        """Initialize with optional platform state and health.
+
+        Args:
+            platform_state: The platform state of the runner.
+            health: The health state of the runner.
+        """
+        self.platform_state = platform_state
+        self.health = health
 
 
 class _FakeManager:
     """Lightweight runner manager stub for testing the reconciler."""
+
+    manager_name = "test-manager"
 
     def __init__(self, runners_count: int = 0, create_success_ratio: float = 1.0):
         """Initialize with an optional number of pre-existing runners.
@@ -25,24 +44,24 @@ class _FakeManager:
             runners_count: Number of pre-existing runners.
             create_success_ratio: Fraction of requested runners that succeed (0.0-1.0).
         """
-        self._runners = [object() for _ in range(runners_count)]
+        self._runners = [_FakeRunner() for _ in range(runners_count)]
         self.created_args: list[int] = []
         self.deleted_args: list[int] = []
         self.cleanup_called = 0
         self.get_runners_calls = 0
         self._create_success_ratio = create_success_ratio
 
-    def get_runners(self) -> list[object]:
+    def get_runners(self) -> tuple:
         """Return the current list of runners."""
         self.get_runners_calls += 1
-        return list(self._runners)
+        return tuple(self._runners)
 
     def create_runners(self, num: int, metadata: object) -> tuple[str, ...]:  # noqa: ARG002
         """Record the creation request and extend the internal runner list."""
         self.created_args.append(num)
         actually_created = max(int(num * self._create_success_ratio), 0)
         if actually_created > 0:
-            self._runners.extend(object() for _ in range(actually_created))
+            self._runners.extend(_FakeRunner() for _ in range(actually_created))
         return tuple(f"instance-{i}" for i in range(actually_created))
 
     def soft_delete_runners(self, num: int) -> int:
@@ -53,7 +72,7 @@ class _FakeManager:
             self._runners = self._runners[:-to_remove]
         return to_remove
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Increment the cleanup counter."""
         self.cleanup_called += 1
 
@@ -64,66 +83,82 @@ class _FakePlanner:
     def __init__(
         self,
         stream_updates: list[int] | None = None,
-        stream_raises: bool = False,
+        stream_exception: Exception | None = None,
     ):
         """Initialize with configurable stream behavior."""
         self._stream_updates = stream_updates or []
-        self._stream_raises = stream_raises
+        self._stream_exception = stream_exception
 
     def stream_pressure(self, name: str):  # noqa: ARG002
-        """Yield pressure updates or raise PlannerApiError based on configuration.
+        """Yield pressure updates or raise the configured exception.
 
         Yields:
             Namespace objects with a pressure attribute.
         """
-        if self._stream_raises:
-            raise PlannerApiError
+        if self._stream_exception is not None:
+            raise self._stream_exception
         for p in self._stream_updates:
             yield SimpleNamespace(pressure=p)
 
 
-def test_min_pressure_used_as_fallback_when_stream_errors(monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize(
+    "planner_error",
+    [
+        pytest.param(PlannerApiError("request failed"), id="planner_api_error"),
+        pytest.param(PlannerConnectionError("connection dropped"), id="planner_connection_error"),
+    ],
+)
+def test_min_pressure_used_as_fallback_when_stream_errors(
+    monkeypatch: pytest.MonkeyPatch, planner_error: Exception
+):
     """
-    arrange: A reconciler whose planner stream raises PlannerApiError and no prior pressure.
+    arrange: A reconciler whose planner stream raises a planner error and no prior pressure.
     act: Call start_create_loop.
     assert: min_pressure is used as fallback to create runners.
     """
     mgr = _FakeManager()
-    planner = _FakePlanner(stream_raises=True)
+    planner = _FakePlanner(stream_exception=planner_error)
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
-    def _stop_after_backoff(_seconds: int):
-        """Stop the reconciler after the backoff sleep is triggered."""
+    def _stop_after_backoff(_seconds: int) -> bool:
+        """Stop the reconciler after the backoff wait is triggered."""
         reconciler.stop()
+        return True
 
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.sleep", _stop_after_backoff
-    )
+    monkeypatch.setattr(reconciler._stop, "wait", _stop_after_backoff)
     reconciler.start_create_loop()
 
     assert 2 in mgr.created_args
 
 
-def test_fallback_preserves_last_pressure_when_higher(monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize(
+    "planner_error",
+    [
+        pytest.param(PlannerApiError("request failed"), id="planner_api_error"),
+        pytest.param(PlannerConnectionError("connection dropped"), id="planner_connection_error"),
+    ],
+)
+def test_fallback_preserves_last_pressure_when_higher(
+    monkeypatch: pytest.MonkeyPatch, planner_error: Exception
+):
     """
     arrange: A reconciler with last_pressure=10 and min_pressure=2 whose stream errors.
     act: Call start_create_loop.
     assert: The higher last_pressure is used as fallback instead of min_pressure.
     """
     mgr = _FakeManager()
-    planner = _FakePlanner(stream_raises=True)
+    planner = _FakePlanner(stream_exception=planner_error)
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     reconciler._last_pressure = 10
 
-    def _stop_after_backoff(_seconds: int):
-        """Stop the reconciler after the backoff sleep is triggered."""
+    def _stop_after_backoff(_seconds: int) -> bool:
+        """Stop the reconciler after the backoff wait is triggered."""
         reconciler.stop()
+        return True
 
-    monkeypatch.setattr(
-        "github_runner_manager.manager.pressure_reconciler.time.sleep", _stop_after_backoff
-    )
+    monkeypatch.setattr(reconciler._stop, "wait", _stop_after_backoff)
     reconciler.start_create_loop()
 
     assert 10 in mgr.created_args
@@ -261,6 +296,82 @@ def test_in_memory_count_incremented_by_actual_successes():
     assert reconciler._runner_count == 3
 
 
+def test_zero_create_pauses_create_loop_until_reconcile():
+    """
+    arrange: A reconciler whose create call returns zero runners.
+    act: Call _handle_create_runners twice with the same desired pressure.
+    assert: The second call is skipped because creates are paused.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(4)
+    reconciler._handle_create_runners(4)
+
+    assert mgr.created_args == [4]
+    assert reconciler._create_paused is True
+
+
+def test_timer_reconcile_always_unpauses_create_loop():
+    """
+    arrange: A reconciler paused after zero-create, at desired count.
+    act: Run timer reconcile when current matches desired (no create needed).
+    assert: _create_paused is cleared even though no runners were created.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(2)
+    assert reconciler._create_paused is True
+
+    mgr._create_success_ratio = 1.0
+    mgr._runners = [_FakeRunner(), _FakeRunner()]
+    reconciler._handle_timer_reconcile(2)
+
+    assert mgr.created_args == [2]
+    assert reconciler._create_paused is False
+
+
+def test_timer_reconcile_repauses_on_zero_create():
+    """
+    arrange: A reconciler paused after zero-create, reconcile needs to scale up.
+    act: Run timer reconcile while creation still returns zero IDs.
+    assert: _create_paused is set back to True after the failed scale-up.
+    """
+    mgr = _FakeManager(create_success_ratio=0.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(2)
+    assert reconciler._create_paused is True
+
+    reconciler._handle_timer_reconcile(2)
+
+    assert mgr.created_args == [2, 2]
+    assert reconciler._create_paused is True
+
+
+def test_successful_create_does_not_pause():
+    """
+    arrange: A reconciler where creates succeed.
+    act: Call _handle_create_runners with successful creation.
+    assert: _create_paused remains False.
+    """
+    mgr = _FakeManager(create_success_ratio=1.0)
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    reconciler._handle_create_runners(3)
+
+    assert reconciler._create_paused is False
+
+
 def test_reconcile_loop_syncs_in_memory_count(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A reconciler with _runner_count out of sync with actual runners.
@@ -346,3 +457,35 @@ def test_timer_reconcile_scales_down_with_soft_delete():
     assert mgr.created_args == []
     assert mgr.deleted_args == [3]
     assert reconciler._runner_count == 2
+
+
+def test_timer_reconcile_emits_reconciliation_metric(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with runners in various platform states.
+    act: Call _handle_timer_reconcile with pressure 5.
+    assert: A Reconciliation metric event is issued with correct idle/active counts.
+    """
+    mgr = _FakeManager()
+    mgr._runners = [
+        _FakeRunner(platform_state=PlatformRunnerState.IDLE),
+        _FakeRunner(platform_state=PlatformRunnerState.BUSY),
+        _FakeRunner(platform_state=PlatformRunnerState.OFFLINE, health=HealthState.HEALTHY),
+    ]
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    issued_events: list = []
+    monkeypatch.setattr(metric_events, "issue_event", lambda evt: issued_events.append(evt))
+
+    reconciler._handle_timer_reconcile(5)
+
+    assert len(issued_events) == 1
+    event = issued_events[0]
+    assert isinstance(event, metric_events.Reconciliation)
+    assert event.flavor == "small"
+    assert event.expected_runners == 5
+    assert event.duration >= 0
+    assert event.idle_runners == 2  # IDLE + OFFLINE+HEALTHY
+    assert event.active_runners == 1
+    assert event.crashed_runners == 0
