@@ -14,7 +14,6 @@ import getpass
 import grp
 import logging
 import os
-import time
 from dataclasses import dataclass
 from threading import Event, Lock
 from typing import Optional
@@ -32,6 +31,7 @@ from github_runner_manager.planner_client import (
     PlannerApiError,
     PlannerClient,
     PlannerConfiguration,
+    PlannerConnectionError,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
@@ -56,7 +56,7 @@ class PressureReconcilerConfig:
     max_pressure: int = 0
 
 
-class PressureReconciler:  # pylint: disable=too-few-public-methods
+class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-instance-attributes
     """Continuously reconciles runner count against planner pressure.
 
     This reconciler keeps the total number of runners near the desired level
@@ -75,10 +75,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
     failures (e.g. VMs that fail to boot): the in-memory count stays high
     and prevents further creation attempts until the reconcile loop runs,
     queries the real OpenStack state via get_runners(), and syncs the count
-    back down. Note that API-level creation failures (where no IDs are
-    returned) do not benefit from this backoff — the create loop will retry
-    on the next pressure event, which is the desired behavior when the API
-    recovers quickly.
+    back down. API-level creation failures (where no IDs are returned) pause
+    the create loop entirely until the next reconcile loop run, which
+    re-enables creation and creates if still needed.
 
     The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
@@ -93,6 +92,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         _stop: Event used to signal streaming loops to stop gracefully.
         _last_pressure: Last pressure value seen in the create stream.
         _runner_count: In-memory runner count used by the create loop.
+        _create_paused: True when creation returned zero IDs, cleared by reconcile loop.
     """
 
     def __init__(
@@ -119,6 +119,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
         self._stop = Event()
         self._last_pressure: Optional[int] = None
         self._runner_count: int = 0
+        self._create_paused: bool = False
 
     def start_create_loop(self) -> None:
         """Continuously create runners to satisfy planner pressure."""
@@ -131,14 +132,29 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     if self._stop.is_set():
                         return
                     self._handle_create_runners(update.pressure)
+            except PlannerConnectionError as exc:
+                fallback = max(self._last_pressure or 0, self._config.min_pressure)
+                logger.warning(
+                    "Pressure stream interrupted for flavor %s (%s), falling back to %s runners.",
+                    self._config.flavor_name,
+                    exc,
+                    fallback,
+                )
+                if self._stop.is_set():
+                    return
+                self._handle_create_runners(fallback)
+                self._stop.wait(5)
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
                 logger.exception(
-                    "Error in pressure stream loop, falling back to %s runners.",
+                    "Error in pressure stream loop for flavor %s, falling back to %s runners.",
+                    self._config.flavor_name,
                     fallback,
                 )
+                if self._stop.is_set():
+                    return
                 self._handle_create_runners(fallback)
-                time.sleep(5)
+                self._stop.wait(5)
 
     def start_reconcile_loop(self) -> None:
         """Periodically reconcile runners: sync state, scale up/down, and clean up."""
@@ -181,6 +197,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     current_total,
                 )
                 return
+            if self._create_paused:
+                logger.warning(
+                    "Create loop: paused after zero-create, waiting for reconcile"
+                    " (desired=%s current=%s)",
+                    desired_total,
+                    current_total,
+                )
+                return
             logger.info(
                 "Create loop: creating %s runners (desired=%s current=%s)",
                 to_create,
@@ -205,6 +229,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                     to_create,
                 )
             self._runner_count = current_total + actually_created
+            if actually_created == 0:
+                self._create_paused = True
+                logger.warning("Create loop: pausing until next reconcile after zero-create")
 
     def _handle_timer_reconcile(self, pressure: int) -> None:
         """Clean up stale runners, sync in-memory count, then scale up or down.
@@ -221,6 +248,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
             self._manager.cleanup()
             current_total = len(self._manager.get_runners())
             self._runner_count = current_total
+            if self._create_paused:
+                logger.info("Reconcile loop: unpausing create loop after state sync")
+            self._create_paused = False
             if current_total < desired_total:
                 to_create = desired_total - current_total
                 logger.info(
@@ -247,6 +277,9 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods
                         to_create,
                     )
                 self._runner_count += actually_created
+                if actually_created == 0:
+                    self._create_paused = True
+                    logger.warning("Reconcile loop: re-pausing create loop after zero-create")
             elif current_total > desired_total:
                 to_delete = current_total - desired_total
                 logger.info(
