@@ -636,9 +636,9 @@ def _setup_runner_manager_user() -> None:
 
     # For charm upgrade, previous revision root owns the metric logs, this is changed to runner
     # manager.
-    if get_metrics_log_path().exists():
+    if (metrics_log_path := get_metrics_log_path()).exists():
         shutil.chown(
-            get_metrics_log_path(),
+            metrics_log_path,
             user=constants.RUNNER_MANAGER_USER,
             group=constants.RUNNER_MANAGER_GROUP,
         )
