@@ -269,7 +269,7 @@ def github_repository(github_config: GitHubConfig) -> Repository:
 def github_branch(
     github_repository: Repository, test_config: TestConfig
 ) -> Generator[Branch, None, None]:
-    """Create a new branch for testing, from latest commit in current branch.
+    """Create a new branch for testing, from the repository's default branch.
 
     Args:
         github_repository: GitHub repository object.
