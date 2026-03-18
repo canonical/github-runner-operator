@@ -1,0 +1,103 @@
+06:50:27 WARNING unexpected facade SSHServer received from the controller
+06:50:27 INFO Adding model github-pr-b6008-lxd:test-reactive-79la on cloud localhost
+06:50:27 WARNING unexpected facade SSHServer received from the controller
+06:50:27 WARNING unexpected facade SSHSession received from the controller
+06:50:27 WARNING unexpected facade SSHTunneler received from the controller
+06:50:28 INFO GitHub token rate limit: Rate(reset=2026-03-18 07:24:44+00:00, remaining=3975, limit=5000)
+06:50:32 INFO Deploying ch:amd64/jammy/mongodb-286
+06:50:33 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+06:50:35 INFO Deploying ch:amd64/noble/any-charm-133
+06:50:52 INFO Deploying local:jammy/github-runner-0
+06:50:52 INFO Waiting for model:
+  test-fkadmn8k/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkadmn8k/0 [allocating] waiting: waiting for machine
+06:51:22 INFO Waiting for model:
+  test-fkadmn8k/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkadmn8k/0 [allocating] waiting: waiting for machine
+06:51:53 INFO Waiting for model:
+  test-fkadmn8k/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fkadmn8k/0 [idle] active: 
+06:52:23 INFO Waiting for model:
+  test-fkadmn8k/0 [allocating] waiting: waiting for machine
+06:52:53 INFO Waiting for model:
+  test-fkadmn8k/0 [allocating] waiting: agent initialising
+06:53:23 INFO Waiting for model:
+  test-fkadmn8k/0 [executing] maintenance: installing charm software
+06:53:54 INFO Waiting for model:
+  test-fkadmn8k/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-fkadmn8k/0 [idle] active: 
+06:54:21 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:54:22 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+  mongodb/0 [executing] maintenance: Installing MongoDB...
+06:54:52 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installing MongoDB...
+06:55:22 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installing MongoDB...
+06:55:53 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+  mongodb/0 [executing] maintenance: Starting MongoDB.
+06:56:23 INFO Waiting for model:
+  test-fkadmn8k/0 [executing] active: 
+  mongodb/0 [idle] active: 
+06:56:46 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+06:57:17 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+06:57:19 INFO Current reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:57:19 INFO Waiting for reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:58:20 INFO Current reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:58:20 INFO Current reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd, expected reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:58:20 INFO Waiting for reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:59:21 INFO Current reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+06:59:21 INFO Current reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358, expected reconcile ID: ebba2b73-ce12-4fd5-b01b-e6f0e6eadcdd
+06:59:25 INFO Wait for condition not met, sleeping 10
+06:59:46 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+07:00:02 INFO Current reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:00:02 INFO Waiting for reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:01:03 INFO Current reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:01:03 INFO Current reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358, expected reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:01:03 INFO Waiting for reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:02:04 INFO Current reconcile ID: 6569eb8c-8739-4326-8e26-26b11a86ecb3
+07:02:04 INFO Current reconcile ID: 6569eb8c-8739-4326-8e26-26b11a86ecb3, expected reconcile ID: c2630b95-d637-4ac9-b847-8f957f7dc358
+07:02:04 INFO Wait for condition not met, sleeping 60
+07:03:05 INFO Wait for condition not met, sleeping 60
+07:04:05 INFO Wait for condition not met, sleeping 60
+07:05:05 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+07:05:22 INFO Current reconcile ID: aba2096f-87f5-426f-83bf-319521edbddf
+07:05:22 INFO Waiting for reconcile ID: aba2096f-87f5-426f-83bf-319521edbddf
+07:06:23 INFO Current reconcile ID: 501b77aa-53d2-4067-8dc7-cf5c368cf800
+07:06:23 INFO Current reconcile ID: 501b77aa-53d2-4067-8dc7-cf5c368cf800, expected reconcile ID: aba2096f-87f5-426f-83bf-319521edbddf
+07:06:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773817277.6653047, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.40711498260498}
+{"timestamp": 1773817407.1368706, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.391123533248901}
+{"timestamp": 1773817460.0, "event": "runner_installed", "flavor": "test-fkadmn8k", "duration": 281.0}
+{"timestamp": 1773817466.0, "event": "runner_start", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 299.0}
+{"timestamp": 1773817471.0, "event": "runner_stop", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773817542.2626328, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.071991205215454}
+
+07:06:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773817277.6653047, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.40711498260498}
+{"timestamp": 1773817407.1368706, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.391123533248901}
+{"timestamp": 1773817460.0, "event": "runner_installed", "flavor": "test-fkadmn8k", "duration": 281.0}
+{"timestamp": 1773817466.0, "event": "runner_start", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 299.0}
+{"timestamp": 1773817471.0, "event": "runner_stop", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773817542.2626328, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.071991205215454}
+
+07:06:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773817277.6653047, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.40711498260498}
+{"timestamp": 1773817407.1368706, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.391123533248901}
+{"timestamp": 1773817460.0, "event": "runner_installed", "flavor": "test-fkadmn8k", "duration": 281.0}
+{"timestamp": 1773817466.0, "event": "runner_start", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 299.0}
+{"timestamp": 1773817471.0, "event": "runner_stop", "flavor": "test-fkadmn8k", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773817542.2626328, "event": "reconciliation", "flavor": "test-fkadmn8k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.071991205215454}
+07:06:26 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+07:06:56 INFO Waiting for model:
+  test-fkadmn8k/0 [idle] active: 
+07:06:59 INFO Current reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
+07:06:59 INFO Waiting for reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
+07:08:00 INFO Current reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
+07:08:00 INFO Current reconcile ID: a25969be-3684-4b61-9557-97657afe67ae, expected reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
+07:08:00 INFO Waiting for reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
+07:09:01 INFO Current reconcile ID: 6d09765a-8573-4e4e-9919-4f92748f84a2
+07:09:01 INFO Current reconcile ID: 6d09765a-8573-4e4e-9919-4f92748f84a2, expected reconcile ID: a25969be-3684-4b61-9557-97657afe67ae
