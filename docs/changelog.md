@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-18
 
-- Add landing page for the reference section.
+- Add landing page for how-to and reference section.
 
 ## 2026-03-17
 
@@ -43,7 +43,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-02-25
 
-- Add the  `How to upgrade` documentation.
+- Add the `How to upgrade` documentation.
 
 ## 2026-02-12
 
@@ -94,7 +94,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
-GitHub runner image builder side.
+  GitHub runner image builder side.
 
 ## 2025-12-05
 
