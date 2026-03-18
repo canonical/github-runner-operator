@@ -118,6 +118,7 @@ class JobInfo(BaseModel):
 
     Attributes:
         job_id: The ID of the job.
+        queued_at: The time the job entered the queue.
         created_at: The time the job was created.
         started_at: The time the job was started.
         conclusion: The end result of a job.
@@ -125,8 +126,9 @@ class JobInfo(BaseModel):
     """
 
     job_id: int
+    queued_at: datetime
     created_at: datetime
-    started_at: datetime
+    started_at: Optional[datetime]
     conclusion: Optional[JobConclusion]
     status: JobStatus
 
