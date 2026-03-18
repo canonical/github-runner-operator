@@ -12,11 +12,30 @@ from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     PressureReconcilerConfig,
 )
+from github_runner_manager.manager.vm_manager import HealthState
+from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.planner_client import PlannerApiError, PlannerConnectionError
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
+
+
+class _FakeRunner:
+    """Minimal runner stub with platform_state and health for metric counting."""
+
+    def __init__(self, platform_state=None, health=None):
+        """Initialize with optional platform state and health.
+
+        Args:
+            platform_state: The platform state of the runner.
+            health: The health state of the runner.
+        """
+        self.platform_state = platform_state
+        self.health = health
 
 
 class _FakeManager:
     """Lightweight runner manager stub for testing the reconciler."""
+
+    manager_name = "test-manager"
 
     def __init__(self, runners_count: int = 0, create_success_ratio: float = 1.0):
         """Initialize with an optional number of pre-existing runners.
@@ -25,24 +44,24 @@ class _FakeManager:
             runners_count: Number of pre-existing runners.
             create_success_ratio: Fraction of requested runners that succeed (0.0-1.0).
         """
-        self._runners = [object() for _ in range(runners_count)]
+        self._runners = [_FakeRunner() for _ in range(runners_count)]
         self.created_args: list[int] = []
         self.deleted_args: list[int] = []
         self.cleanup_called = 0
         self.get_runners_calls = 0
         self._create_success_ratio = create_success_ratio
 
-    def get_runners(self) -> list[object]:
+    def get_runners(self) -> tuple:
         """Return the current list of runners."""
         self.get_runners_calls += 1
-        return list(self._runners)
+        return tuple(self._runners)
 
     def create_runners(self, num: int, metadata: object) -> tuple[str, ...]:  # noqa: ARG002
         """Record the creation request and extend the internal runner list."""
         self.created_args.append(num)
         actually_created = max(int(num * self._create_success_ratio), 0)
         if actually_created > 0:
-            self._runners.extend(object() for _ in range(actually_created))
+            self._runners.extend(_FakeRunner() for _ in range(actually_created))
         return tuple(f"instance-{i}" for i in range(actually_created))
 
     def soft_delete_runners(self, num: int) -> int:
@@ -53,7 +72,7 @@ class _FakeManager:
             self._runners = self._runners[:-to_remove]
         return to_remove
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Increment the cleanup counter."""
         self.cleanup_called += 1
 
@@ -310,7 +329,7 @@ def test_timer_reconcile_always_unpauses_create_loop():
     assert reconciler._create_paused is True
 
     mgr._create_success_ratio = 1.0
-    mgr._runners = [object(), object()]
+    mgr._runners = [_FakeRunner(), _FakeRunner()]
     reconciler._handle_timer_reconcile(2)
 
     assert mgr.created_args == [2]
@@ -438,3 +457,35 @@ def test_timer_reconcile_scales_down_with_soft_delete():
     assert mgr.created_args == []
     assert mgr.deleted_args == [3]
     assert reconciler._runner_count == 2
+
+
+def test_timer_reconcile_emits_reconciliation_metric(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with runners in various platform states.
+    act: Call _handle_timer_reconcile with pressure 5.
+    assert: A Reconciliation metric event is issued with correct idle/active counts.
+    """
+    mgr = _FakeManager()
+    mgr._runners = [
+        _FakeRunner(platform_state=PlatformRunnerState.IDLE),
+        _FakeRunner(platform_state=PlatformRunnerState.BUSY),
+        _FakeRunner(platform_state=PlatformRunnerState.OFFLINE, health=HealthState.HEALTHY),
+    ]
+    planner = _FakePlanner()
+    cfg = PressureReconcilerConfig(flavor_name="small")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    issued_events: list = []
+    monkeypatch.setattr(metric_events, "issue_event", lambda evt: issued_events.append(evt))
+
+    reconciler._handle_timer_reconcile(5)
+
+    assert len(issued_events) == 1
+    event = issued_events[0]
+    assert isinstance(event, metric_events.Reconciliation)
+    assert event.flavor == "small"
+    assert event.expected_runners == 5
+    assert event.duration >= 0
+    assert event.idle_runners == 2  # IDLE + OFFLINE+HEALTHY
+    assert event.active_runners == 1
+    assert event.crashed_runners == 0
