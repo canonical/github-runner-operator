@@ -126,7 +126,7 @@ class JobInfo(BaseModel):
     """
 
     job_id: int
-    queued_at: datetime
+    queued_at: Optional[datetime]
     created_at: datetime
     started_at: Optional[datetime]
     conclusion: Optional[JobConclusion]

@@ -249,7 +249,7 @@ class JobInfo:
         conclusion: The end result of a job.
     """
 
-    queued_at: datetime
+    queued_at: datetime | None
     created_at: datetime
     started_at: datetime | None
     # A str until we realise a common pattern, use a simple str
