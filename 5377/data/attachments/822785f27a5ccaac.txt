@@ -1,0 +1,107 @@
+18:46:54 WARNING unexpected facade SSHServer received from the controller
+18:46:54 INFO Adding model github-pr-c4991-lxd:test-multi-unit-same-machine-4gux on cloud localhost
+18:46:54 WARNING unexpected facade SSHServer received from the controller
+18:46:54 WARNING unexpected facade SSHSession received from the controller
+18:46:54 WARNING unexpected facade SSHTunneler received from the controller
+18:46:54 WARNING unexpected facade SecretsRevoker received from the controller
+18:46:55 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:46:57 INFO Deploying ch:amd64/noble/any-charm-133
+18:47:11 INFO Deploying local:jammy/github-runner-0
+18:47:11 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sig2d2he/0 [allocating] waiting: waiting for machine
+18:47:41 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sig2d2he/0 [allocating] waiting: waiting for machine
+18:48:11 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sig2d2he/0 [idle] active: 
+18:48:41 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+18:49:11 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+18:49:42 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+18:50:12 INFO Waiting for model:
+  test-sig2d2he/0 [allocating] waiting: waiting for machine
+18:50:42 INFO Waiting for model:
+  test-sig2d2he/0 [executing] maintenance: installing charm software
+18:51:12 INFO Waiting for model:
+  test-sig2d2he/0 [executing] maintenance: installing charm software
+18:51:42 INFO Waiting for model:
+  test-sig2d2he/0 [idle] active:
+18:51:55 INFO Waiting for model:
+  test-sig2d2he/0 [idle] active: 
+  test-sig2d2he/1 [allocating] waiting: installing agent
+18:52:25 INFO Waiting for model:
+  test-sig2d2he/0 [idle] active: 
+  test-sig2d2he/1 [executing] maintenance: installing charm software
+18:52:55 INFO Waiting for model:
+  test-sig2d2he/0 [idle] active: 
+  test-sig2d2he/1 [idle] active: 
+18:53:13 INFO File content of /var/lib/github-runner-manager/test-sig2d2he-0/http_port: 55555
+18:53:14 INFO File content of /var/lib/github-runner-manager/test-sig2d2he-1/http_port: 55556
+18:53:17 INFO File content of /var/lib/github-runner-manager/test-sig2d2he-1/http_port: 55556
+18:53:20 INFO File content of /var/lib/github-runner-manager/test-sig2d2he-1/http_port: 55556
+18:53:21 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-4gux  github-pr-c4991-lxd  localhost/localhost  3.6.19   unsupported  18:53:21Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-sig2d2he           active      1  any-charm      latest/beta  133  no       
+test-sig2d2he                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-sig2d2he/0*  active    idle   0        10.204.39.96           
+test-sig2d2he/0*                         active    idle   1        10.204.39.75           
+test-sig2d2he/1                          active    idle   1        10.204.39.75           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.204.39.96  juju-703bd4-0  ubuntu@24.04  github-runner  Running
+1        started  10.204.39.75  juju-703bd4-1  ubuntu@22.04  github-runner  Running
+
+18:53:21 INFO Juju error logs:
+
+machine-0: 18:47:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:47:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sig2d2he-0: 18:51:14 ERROR unit.test-sig2d2he/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sig2d2he-0: 18:51:16 ERROR unit.test-sig2d2he/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sig2d2he-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sig2d2he-1: 18:52:30 ERROR unit.test-sig2d2he/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sig2d2he-1: 18:52:31 ERROR unit.test-sig2d2he/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sig2d2he-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:53:21 INFO Forgetting model main...

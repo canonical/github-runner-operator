@@ -1,0 +1,92 @@
+18:47:02 WARNING unexpected facade SSHServer received from the controller
+18:47:02 INFO Adding model github-pr-c4991-lxd:test-reactive-hlol on cloud localhost
+18:47:02 WARNING unexpected facade SSHServer received from the controller
+18:47:02 WARNING unexpected facade SSHSession received from the controller
+18:47:02 WARNING unexpected facade SSHTunneler received from the controller
+18:47:02 WARNING unexpected facade SecretsRevoker received from the controller
+18:47:02 INFO GitHub token rate limit: Rate(reset=2026-03-18 19:28:03+00:00, remaining=4762, limit=5000)
+18:47:06 INFO Deploying ch:amd64/jammy/mongodb-286
+18:47:07 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:47:10 INFO Deploying ch:amd64/noble/any-charm-133
+18:47:27 INFO Deploying local:jammy/github-runner-0
+18:47:27 INFO Waiting for model:
+  test-dfqleg0w/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dfqleg0w/0 [allocating] waiting: waiting for machine
+18:47:57 INFO Waiting for model:
+  test-dfqleg0w/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dfqleg0w/0 [allocating] waiting: agent initialising
+18:48:28 INFO Waiting for model:
+  test-dfqleg0w/0 [allocating] waiting: waiting for machine
+18:48:58 INFO Waiting for model:
+  test-dfqleg0w/0 [allocating] waiting: waiting for machine
+18:49:28 INFO Waiting for model:
+  test-dfqleg0w/0 [allocating] waiting: waiting for machine
+18:49:58 INFO Waiting for model:
+  test-dfqleg0w/0 [executing] maintenance: installing charm software
+18:50:29 INFO Waiting for model:
+  test-dfqleg0w/0 [executing] maintenance: installing charm software
+18:50:59 INFO Waiting for model:
+  test-dfqleg0w/0 [executing] maintenance: Update image for runners
+18:51:16 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:51:16 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:51:46 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:51:55 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+18:52:25 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+18:52:28 INFO Current reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:52:28 INFO Waiting for reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:53:29 INFO Current reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:53:29 INFO Current reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f, expected reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:53:29 INFO Waiting for reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:54:30 INFO Current reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:54:30 INFO Current reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5, expected reconcile ID: a6fc904c-0aea-48d9-978e-c23916699c7f
+18:54:34 INFO Wait for condition not met, sleeping 10
+18:54:55 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+18:55:11 INFO Current reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:55:11 INFO Waiting for reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:56:12 INFO Current reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:56:12 INFO Current reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5, expected reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:56:12 INFO Waiting for reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:57:13 INFO Current reconcile ID: 706abe5c-72a1-4bf0-ae3a-77c4817a69ed
+18:57:13 INFO Current reconcile ID: 706abe5c-72a1-4bf0-ae3a-77c4817a69ed, expected reconcile ID: 2e38f74e-ff89-4ed8-b771-ff5536955fd5
+18:57:13 INFO Wait for condition not met, sleeping 60
+18:58:14 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+18:58:30 INFO Current reconcile ID: 706abe5c-72a1-4bf0-ae3a-77c4817a69ed
+18:58:30 INFO Waiting for reconcile ID: 706abe5c-72a1-4bf0-ae3a-77c4817a69ed
+18:59:31 INFO Current reconcile ID: 42ca433f-dea8-40d7-b6d9-6d94126425cf
+18:59:31 INFO Current reconcile ID: 42ca433f-dea8-40d7-b6d9-6d94126425cf, expected reconcile ID: 706abe5c-72a1-4bf0-ae3a-77c4817a69ed
+18:59:32 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773860186.5102282, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.622922658920288}
+{"timestamp": 1773860238.0, "event": "runner_installed", "flavor": "test-dfqleg0w", "duration": 150.0}
+{"timestamp": 1773860244.0, "event": "runner_start", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 168.0}
+{"timestamp": 1773860249.0, "event": "runner_stop", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773860322.5799084, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.01348352432251}
+
+18:59:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773860186.5102282, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.622922658920288}
+{"timestamp": 1773860238.0, "event": "runner_installed", "flavor": "test-dfqleg0w", "duration": 150.0}
+{"timestamp": 1773860244.0, "event": "runner_start", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 168.0}
+{"timestamp": 1773860249.0, "event": "runner_stop", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773860322.5799084, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.01348352432251}
+
+18:59:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773860186.5102282, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.622922658920288}
+{"timestamp": 1773860238.0, "event": "runner_installed", "flavor": "test-dfqleg0w", "duration": 150.0}
+{"timestamp": 1773860244.0, "event": "runner_start", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 168.0}
+{"timestamp": 1773860249.0, "event": "runner_stop", "flavor": "test-dfqleg0w", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1773860322.5799084, "event": "reconciliation", "flavor": "test-dfqleg0w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.01348352432251}
+18:59:34 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+19:00:04 INFO Waiting for model:
+  test-dfqleg0w/0 [idle] active: 
+19:00:07 INFO Current reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194
+19:00:07 INFO Waiting for reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194
+19:01:08 INFO Current reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194
+19:01:08 INFO Current reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194, expected reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194
+19:01:08 INFO Waiting for reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194
+19:02:09 INFO Current reconcile ID: 0299a90b-d32e-4747-872e-a9779fab141c
+19:02:09 INFO Current reconcile ID: 0299a90b-d32e-4747-872e-a9779fab141c, expected reconcile ID: f8e93560-14c8-49d8-84d5-a7bb98765194

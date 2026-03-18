@@ -1,0 +1,126 @@
+18:46:52 WARNING unexpected facade SSHServer received from the controller
+18:46:52 INFO Adding model github-pr-c4991-lxd:test-charm-metrics-failure-xz92 on cloud localhost
+18:46:53 WARNING unexpected facade SSHServer received from the controller
+18:46:53 WARNING unexpected facade SSHSession received from the controller
+18:46:53 WARNING unexpected facade SSHTunneler received from the controller
+18:46:53 WARNING unexpected facade SecretsRevoker received from the controller
+18:46:53 WARNING unexpected facade SSHServer received from the controller
+18:46:53 INFO GitHub token rate limit: Rate(reset=2026-03-18 19:28:03+00:00, remaining=4766, limit=5000)
+18:46:56 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:46:58 INFO Deploying ch:amd64/noble/any-charm-133
+18:47:12 INFO Deploying local:jammy/github-runner-0
+18:47:12 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kalvu325/0 [allocating] waiting: waiting for machine
+18:47:42 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kalvu325/0 [allocating] waiting: waiting for machine
+18:48:13 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kalvu325/0 [idle] active: 
+18:48:43 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+18:49:14 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+18:49:44 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: waiting for machine
+18:50:14 INFO Waiting for model:
+  test-kalvu325/0 [allocating] waiting: agent initialising
+18:50:45 INFO Waiting for model:
+  test-kalvu325/0 [executing] maintenance: installing charm software
+18:51:15 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:51:30 INFO cli: juju config --model github-pr-c4991-lxd:test-charm-metrics-failure-xz92 test-kalvu325 base-virtual-machines=0
+18:51:30 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:51:46 INFO Current reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:51:46 INFO Waiting for reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:52:47 INFO Current reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:52:47 INFO Current reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56, expected reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:52:47 INFO Waiting for reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:53:48 INFO Current reconcile ID: 95a77406-73ed-4757-b477-b0c3b94bcd3d
+18:53:48 INFO Current reconcile ID: 95a77406-73ed-4757-b477-b0c3b94bcd3d, expected reconcile ID: f0e30954-77c1-46af-8154-9d8715c70f56
+18:53:48 INFO cli: juju config --model github-pr-c4991-lxd:test-charm-metrics-failure-xz92 test-kalvu325 path=canonical/github-runner-operator
+18:53:48 INFO cli: juju config --model github-pr-c4991-lxd:test-charm-metrics-failure-xz92 test-kalvu325 base-virtual-machines=1
+18:53:48 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:54:18 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:54:21 INFO Current reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:54:21 INFO Waiting for reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:55:22 INFO Current reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:55:22 INFO Current reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2, expected reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:55:22 INFO Waiting for reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:56:23 INFO Current reconcile ID: 4c457e30-7019-4961-acbd-176fe92e8f51
+18:56:23 INFO Current reconcile ID: 4c457e30-7019-4961-acbd-176fe92e8f51, expected reconcile ID: 895d3ecd-3bf1-4340-9709-ed18ad79dbe2
+18:57:05 INFO Wait for condition not met, sleeping 30
+18:57:49 INFO [TEST SETUP] Run command pkill -9 run.sh on test-kalvu325-0-n-e6cbf9e973b9
+18:57:49 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.146', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:bb:4a:c4'}]])
+18:57:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kalvu325-0-n-e6cbf9e973b9.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.146 pkill -9 run.sh'
+18:57:51 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.146' (ED25519) to the list of known hosts.
+'
+18:57:55 INFO Runner test-kalvu325-0-n-e6cbf9e973b9 status: online
+18:57:55 INFO Runner still marked as online, waiting for it to be marked offline
+18:58:56 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:59:26 INFO Waiting for model:
+  test-kalvu325/0 [idle] active: 
+18:59:29 INFO Current reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+18:59:29 INFO Waiting for reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+19:00:30 INFO Current reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+19:00:30 INFO Current reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc, expected reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+19:00:30 INFO Waiting for reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+19:01:31 INFO Current reconcile ID: 0b1e9412-189e-4f99-9740-4a0d9a1b651c
+19:01:31 INFO Current reconcile ID: 0b1e9412-189e-4f99-9740-4a0d9a1b651c, expected reconcile ID: 89886885-ce3c-4718-823e-29ba715434dc
+19:01:32 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1773859987.6959844, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.264967918395996}
+{"timestamp": 1773860040.0952146, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.349532842636108}
+{"timestamp": 1773860167.609578, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.414347171783447}
+{"timestamp": 1773860295.201368, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.513843774795532}
+{"timestamp": 1773860203.0, "event": "runner_installed", "flavor": "test-kalvu325", "duration": 165.0}
+{"timestamp": 1773860228.0, "event": "runner_start", "flavor": "test-kalvu325", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 25.0, "queue_duration": 2.0}
+{"timestamp": 1773860270.0, "event": "runner_stop", "flavor": "test-kalvu325", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1773860352.5311444, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.206799030303955}
+{"timestamp": 1773860479.9502664, "event": "reconciliation", "flavor": "test-kalvu325", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.317994594573975}
+19:01:32 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-xz92  github-pr-c4991-lxd  localhost/localhost  3.6.19   unsupported  19:01:32Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-kalvu325           active      1  any-charm      latest/beta  133  no       
+test-kalvu325                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kalvu325/0*  active    idle   0        10.163.156.149         
+test-kalvu325/0*                         active    idle   1        10.163.156.78          
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.163.156.149  juju-d18a2b-0  ubuntu@24.04  github-runner  Running
+1        started  10.163.156.78   juju-d18a2b-1  ubuntu@22.04  github-runner  Running
+
+19:01:33 INFO Juju error logs:
+
+machine-0: 18:47:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:47:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:49:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:49:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kalvu325-0: 18:50:49 ERROR unit.test-kalvu325/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kalvu325-0: 18:50:50 ERROR unit.test-kalvu325/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kalvu325-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:01:33 INFO Forgetting model main...
