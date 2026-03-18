@@ -12,6 +12,10 @@ and using the GitHub Runner charm.
 Initial setup
 -------------
 
+.. vale Canonical.013-Spell-out-numbers-below-10 = NO
+.. vale Canonical.005-Industry-product-names = NO 
+.. vale Canonical.500-Repeated-words = NO
+
 The following guides provide instructions on setting up the charm for
 the first time, including configuration and integration with GitHub.
 
