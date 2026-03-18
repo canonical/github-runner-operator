@@ -1,5 +1,5 @@
 .. meta::
-   :description: How-to guides for operating the __charm_name__ charm, including basic operations, upgrades, and development. 
+   :description: How-to guides for operating the GitHub Runner charm, including basic operations, upgrades, and development. 
 
 .. _how_to_index:
 
