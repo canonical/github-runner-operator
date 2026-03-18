@@ -50,6 +50,11 @@ def job(
     except (JobNotFoundError, PlatformApiError) as exc:
         raise GithubMetricsError from exc
 
-    queue_duration = (job_info.started_at - job_info.created_at).total_seconds()
+    queued_or_created_at = job_info.queued_at or job_info.created_at
+    queue_duration = (
+        (job_info.started_at - queued_or_created_at).total_seconds()
+        if job_info.started_at
+        else None
+    )
 
     return GithubJobMetrics(queue_duration=queue_duration, conclusion=job_info.conclusion)
