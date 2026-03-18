@@ -1,7 +1,7 @@
 # How-to guides
 
 The following guides cover key processes and common tasks for managing
-and using the Github Runner charm.
+and using the GitHub Runner charm.
 
 ## Initial setup
 * [Change repository or organization]

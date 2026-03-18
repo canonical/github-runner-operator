@@ -8,7 +8,7 @@ Upon [COS](https://charmhub.io/topics/canonical-observability-stack) integration
 There are two dashboards. One for fine-granular metrics, called "GitHub Self-Hosted Runner Metrics", and one for long-term metrics,
 called "GitHub Self-Hosted Runner Metrics (Long-Term)". 
 
-The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following rows:
+The "GitHub Self-Hosted Runner Metrics" dashboard presents the following rows:
 
 - General: Displays general metrics about the charm and runners, such as:
   - Share of jobs per application: A pie chart showing the share of jobs per application.
@@ -34,7 +34,7 @@ The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays t
   - Total Jobs
   - Runners created per application: Shows the number of runners created per charm application.
   - Total unique repositories
-  - Time series chart displaying the number of jobs per day
+  - Time series chart displaying the number of jobs each day
   - Percentage of jobs with low queue time (less than 60 seconds)
 
 Both dashboards allow for filtering by charm application by specifying a regular expression on the `Application` variable.

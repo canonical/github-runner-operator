@@ -1,12 +1,12 @@
 .. meta::
-   :description: Technical reference documentation for the github runner charm, including actions, configurations, and architecture.
+    :description: Technical reference documentation for the GitHub runner charm, including actions, configurations, and architecture.
 
 .. _reference_index:
 
 Reference
 =========
 
-This section contains technical details and information about the github runner charm.
+This section contains technical details and information about the GitHub runner charm.
 
 Charm usage
 -----------

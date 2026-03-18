@@ -68,7 +68,7 @@ The charm spawns [OpenStack servers](https://docs.openstack.org/python-openstack
 
 It is common for enterprises to manage outgoing network traffic through HTTP(S) proxies. By funneling all outgoing traffic through a proxy, there is a single point to control and observe the network traffic for administrators. If the OpenStack server hosting the runners is in such an environment, the GitHub workflow would have to route all traffic through the HTTP(S) proxies. Many popular GitHub Actions were designed to be ran on the GitHub provided runners which is not in a proxied environment. Hence many GitHub Actions do not work with HTTP(S) proxies.
 
-To address this issue, the charm utilizes [aproxy](https://github.com/canonical/aproxy), a service that routes outgoing network traffic to a configured endpoint. The charm uses aproxy to transparently route outgoing traffic through the configured HTTP(S) proxy, ensuring that GitHub Actions work out of the box in a proxied environment. Aproxy can be enabled via [a charm configuration](https://charmhub.io/github-runner/configurations#experimental-use-aproxy).
+To address this issue, the charm utilizes [aproxy](https://github.com/canonical/aproxy), a service that routes outgoing network traffic to a configured endpoint. The charm uses aproxy to transparently route outgoing traffic through the configured HTTP(S) proxy, ensuring that GitHub Actions work out of the box in a proxied environment. Aproxy can be enabled through [a charm configuration](https://charmhub.io/github-runner/configurations#experimental-use-aproxy).
 
 ### Good practices
 

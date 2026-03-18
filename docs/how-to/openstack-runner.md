@@ -11,7 +11,7 @@ There are three configuration that the charm needs to be deployed with to enable
 ## Integration
 
 The image will take about 10-15 minutes to build and be fully integrated. Deploy the
-`github-runner-image-builder` charm and wait for the image to be successfully provided via the
+`github-runner-image-builder` charm and wait for the image to be successfully provided through the
 relation data.
 
 ```bash
@@ -20,7 +20,7 @@ juju integrate github-runner-image-builder github-runner
 juju status github-runner
 ```
 
-The image will take about 10-15 minutes to build and be ready via the relation.
+The image will take about 10-15 minutes to build and be ready through the relation.
 
 ### OpenStack clouds.yaml
 
