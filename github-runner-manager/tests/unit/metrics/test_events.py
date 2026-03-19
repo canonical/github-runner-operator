@@ -13,9 +13,7 @@ TEST_LOKI_PUSH_API_URL = "http://loki:3100/api/prom/push"
 @pytest.fixture(autouse=True, name="patch_metrics_path")
 def patch_metrics_path_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     """Patch the hardcoded metrics log path."""
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
-    )
+    monkeypatch.setenv("METRICS_LOG_PATH", str(tmp_path / "metrics.log"))
 
 
 def test_issue_events_logs_events(tmp_path: Path):
@@ -28,7 +26,7 @@ def test_issue_events_logs_events(tmp_path: Path):
 
     events.issue_event(event)
 
-    assert json.loads(events.METRICS_LOG_PATH.read_text()) == {
+    assert json.loads(events.get_metrics_log_path().read_text()) == {
         "event": "runner_installed",
         "timestamp": 123,
         "flavor": "small",
@@ -55,7 +53,7 @@ def test_issue_events_exclude_none_values(tmp_path: Path):
 
     events.issue_event(event)
 
-    assert json.loads(events.METRICS_LOG_PATH.read_text()) == {
+    assert json.loads(events.get_metrics_log_path().read_text()) == {
         "event": "runner_stop",
         "timestamp": 123,
         "flavor": "small",

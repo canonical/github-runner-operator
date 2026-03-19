@@ -290,6 +290,11 @@ class RunnerManager:
             The number of VMs actually deleted.
         """
         deleted_vms, extracted_metrics = self._delete_runners_core(num=num, soft=True)
+        logger.debug(
+            "soft_delete_runners: deleted_vms=%s, extracted_metrics_count=%s",
+            deleted_vms,
+            len(extracted_metrics),
+        )
         self._issue_runner_metrics(metrics=iter(extracted_metrics))
         return len(deleted_vms)
 
@@ -494,8 +499,12 @@ class RunnerManager:
             Stats on runner metrics issued.
         """
         total_stats: IssuedMetricEventsStats = {}
+        metrics_list = list(metrics)
+        logger.debug(
+            "_issue_runner_metrics: processing %s extracted metric(s)", len(metrics_list)
+        )
 
-        for extracted_metrics in metrics:
+        for extracted_metrics in metrics_list:
             job_metrics = None
 
             # We need a guard because pre-job metrics may not be available for idle runners
@@ -518,10 +527,24 @@ class RunnerManager:
                     "No pre-job metrics found for %s, will not calculate job metrics.",
                     extracted_metrics.instance_id,
                 )
+            logger.debug(
+                "_issue_runner_metrics: issuing events for %s "
+                "(installation_start=%s, installation_end=%s, pre_job=%s, post_job=%s)",
+                extracted_metrics.instance_id,
+                extracted_metrics.installation_start_timestamp,
+                extracted_metrics.installation_end_timestamp,
+                extracted_metrics.pre_job is not None,
+                extracted_metrics.post_job is not None,
+            )
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
                 flavor=self.manager_name,
+            )
+            logger.debug(
+                "_issue_runner_metrics: issued events for %s: %s",
+                extracted_metrics.instance_id,
+                {e.__name__ for e in issued_events},
             )
 
             for event_type in issued_events:
