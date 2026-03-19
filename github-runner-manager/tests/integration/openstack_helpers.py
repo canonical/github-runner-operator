@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 
 import openstack
+from github.Repository import Repository
 from openstack.compute.v2.server import Server as OpenstackServer
 
 from .factories import TestConfig
@@ -89,6 +90,28 @@ def wait_for_ssh(
 
     logger.error("SSH port %d never became available on %s", port, runner_ip)
     return False
+
+
+def wait_for_runner_online(
+    github_repository: Repository,
+    runner_name: str,
+    timeout: int = 10 * 60,
+    interval: int = 30,
+) -> None:
+    """Wait for a runner to register as online on GitHub.
+
+    The runner VM may exist in OpenStack but cloud-init and runner registration
+    take additional time. This ensures the runner is fully initialized before
+    the test proceeds.
+    """
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        for runner in github_repository.get_self_hosted_runners():
+            if runner.name == runner_name and runner.status == "online":
+                logger.info("Runner %s is online on GitHub", runner_name)
+                return
+        time.sleep(interval)
+    raise TimeoutError(f"Timeout waiting for runner {runner_name} to register online on GitHub")
 
 
 def resolve_runner_ssh_key_path(
