@@ -41,6 +41,7 @@ from .openstack_helpers import (
     resolve_runner_ssh_key_path,
     wait_for_no_runners,
     wait_for_runner,
+    wait_for_runner_online,
     wait_for_ssh,
 )
 from .planner_stub import PlannerStub, PlannerStubConfig
@@ -111,11 +112,12 @@ def test_runner_installed_metric(
     planner_app_with_metrics: tuple[RunningApplication, PlannerStub, Path],
     openstack_connection: openstack.connection.Connection,
     test_config: TestConfig,
+    github_repository: Repository,
 ) -> None:
     """
     arrange: planner-driven app is running with pressure=1.
     act:
-        1. wait for runner creation.
+        1. wait for runner creation and GitHub registration.
         2. set pressure to 0 and wait for cleanup.
         3. read metrics events.
     assert: `runner_installed` event is present with expected flavor and duration.
@@ -124,6 +126,7 @@ def test_runner_installed_metric(
 
     runner, _ = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None, "Runner did not appear within timeout"
+    wait_for_runner_online(github_repository, runner.name)
 
     stub.set_pressure(0)
     cleaned = wait_for_no_runners(openstack_connection, test_config, timeout=15 * 60)
@@ -160,6 +163,7 @@ def test_metrics_after_workflow_completion(
 
     runner, _ = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None, "Runner did not appear within timeout"
+    wait_for_runner_online(github_repository, runner.name)
 
     dispatch_time = datetime.now(timezone.utc)
     workflow = dispatch_workflow(
@@ -212,6 +216,7 @@ def test_metrics_for_abnormal_termination(
 
     runner, runner_ip = wait_for_runner(openstack_connection, test_config, timeout=10 * 60)
     assert runner is not None and runner_ip, "Runner did not appear within timeout"
+    wait_for_runner_online(github_repository, runner.name)
 
     dispatch_time = datetime.now(timezone.utc)
     workflow = dispatch_workflow(
