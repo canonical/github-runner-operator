@@ -222,7 +222,7 @@ def create_default_config(
             "proxy_config": runner_proxy,
             "runner_proxy_config": openstack_proxy,
             "use_aproxy": openstack_proxy is not None,
-            "aproxy_exclude_addresses": [],
+            "aproxy_exclude_addresses": ["10.0.0.0/8"],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
             "ssh_debug_connections": [
