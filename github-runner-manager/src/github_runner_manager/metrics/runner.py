@@ -222,9 +222,19 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
             POST_JOB_METRICS_FILE_PATH,
         ),
     )
+    logger.debug(
+        "_pull_runner_metrics: instance=%s, pulled_files={%s}",
+        pull_config.instance_id,
+        ", ".join(
+            f"{p.name}: {'present' if v is not None else 'missing'}"
+            for p, v in pulled_file_contents.items()
+        )
+        if pulled_file_contents
+        else "empty — SSH likely failed",
+    )
     parsed_metrics = _parse_metrics_contents(metrics_contents_map=pulled_file_contents)
 
-    return (
+    result = (
         PulledMetrics(
             instance=instance,
             runner_installed_timestamp=parsed_metrics.runner_installed_timestamp,
@@ -238,6 +248,12 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         )
         else None
     )
+    if result is None:
+        logger.warning(
+            "_pull_runner_metrics: returning None for %s — no metrics files found",
+            pull_config.instance_id,
+        )
+    return result
 
 
 def _pull_file_contents(
