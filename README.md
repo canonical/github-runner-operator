@@ -32,7 +32,7 @@ A usual deployment of the charm can be done with the following command (please r
 juju deploy github-runner --channel=latest/stable --config openstack-clouds-yaml="$(cat clouds.yaml)" --config openstack-flavor=<flavor> --config openstack-network=<openstack-network> --config path=<org>/<repo> --config token=<github-token>
 ```
 
-with a cloud configuration (for the OpenStack tenant used to spawn runner VM's) in `clouds.yaml`:
+with a cloud configuration (for the OpenStack tenant used to spawn runner VMs) in `clouds.yaml`:
 
 ```yaml
 clouds:
@@ -135,9 +135,9 @@ Container_Boundary(c5, "github-runner-webhook-router"){
 
 ## Integrations
 The charm supports [multiple integrations](https://charmhub.io/github-runner/integrations),
-but in order to deploy the charm using OpenStack VM's for the runners, you need it to relate it
+but in order to deploy the charm using OpenStack VMs for the runners, you need it to relate it
 with an image-builder using the [image](https://charmhub.io/github-runner/integrations#image) 
-endpoint. Via this integration, the charm detects the supported images to use for spawning the virtual machines.
+endpoint. Through this integration, the charm detects the supported images to use for spawning the virtual machines.
 
 
 ## Repository structure

@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-18
+
+- Add landing page for how-to and reference section.
+
 ## 2026-03-17
 
 - Pause pressure reconciler create loop after zero-create attempts until the next reconcile run re-syncs state and re-enables creation, reducing repeated retries during OpenStack quota and similar create failures.
@@ -40,7 +44,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-02-25
 
-- Add the  `How to upgrade` documentation.
+- Add the `How to upgrade` documentation.
 
 ## 2026-02-12
 
@@ -91,7 +95,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
-GitHub runner image builder side.
+  GitHub runner image builder side.
 
 ## 2025-12-05
 
@@ -116,7 +120,7 @@ GitHub runner image builder side.
 
 ## 2025-11-12
 
-- Removed the jobmanager platform provider and related integration tests as they are no longer used and not part of any public API.
+- Removed the job manager platform provider and related integration tests as they are no longer used and not part of any public API.
 
 ## 2025-08-27
 
@@ -148,7 +152,7 @@ GitHub runner image builder side.
 
 ## 2025-07-22
 
-- Removed support for using both jobmanager and GitHub at the same time.
+- Removed support for using both job manager and GitHub at the same time.
 
 ## 2025-07-18
 
@@ -194,7 +198,7 @@ GitHub runner image builder side.
 
 ### 2025-06-04
 
-- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval
+- Reduce the reconcile-interval configuration from 10 minutes to five minutes. This is the interval
   between reconciling the current and intended number of runners. The value should be kept low,
   unless GitHub API rate limiting is encountered.
 - Removed the reconcile-runners Juju action.
