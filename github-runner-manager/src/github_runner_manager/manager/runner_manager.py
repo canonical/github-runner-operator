@@ -331,6 +331,15 @@ class RunnerManager:
         platform_runner_ids_to_delete = list(
             platform_runner_ids_to_cleanup | platform_runner_ids_to_scaledown
         )
+        # Extract metrics BEFORE deleting runners from GitHub. Removing a runner
+        # causes the runner process to exit, which triggers VM shutdown — after
+        # that SSH is no longer available for metric extraction.
+        vm_ids_to_cleanup = list(
+            _get_vms_to_cleanup(vms=vms, runner_ids=platform_runner_ids_to_delete)
+        )
+        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
+        extracted_metrics = list(self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup))
+
         logger.info("Deleting platform runners: %s", platform_runner_ids_to_delete)
         deleted_runner_ids = self._delete_runners(runner_ids=platform_runner_ids_to_delete)
         logger.info("Deleted runners: %s", deleted_runner_ids)
@@ -346,11 +355,9 @@ class RunnerManager:
                 runner_ids=runner_ids_for_vm_cleanup,
             )
         )
-        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = list(self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup))
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
         deleted_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
-        logger.info("deleted VMs: %s", deleted_vms)
+        logger.info("Deleted VMs: %s", deleted_vms)
 
         return deleted_vms, extracted_metrics
 
@@ -382,6 +389,15 @@ class RunnerManager:
         platform_runner_ids_to_delete = list(
             platform_runner_ids_to_cleanup | platform_runner_ids_to_flush
         )
+        # Extract metrics BEFORE deleting runners from GitHub. Removing a runner
+        # causes the runner process to exit, which triggers VM shutdown — after
+        # that SSH is no longer available for metric extraction.
+        all_candidate_vm_ids = list(
+            _get_vms_to_cleanup(vms=vms, runner_ids=platform_runner_ids_to_delete)
+        )
+        logger.info("Extracting metrics from VMs: %s", all_candidate_vm_ids)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=all_candidate_vm_ids)
+
         logger.info("Deleting platform runners: %s", platform_runner_ids_to_delete)
         deleted_runner_ids = self._delete_runners(runner_ids=platform_runner_ids_to_delete)
         logger.info("Deleted runners: %s", deleted_runner_ids)
@@ -400,8 +416,6 @@ class RunnerManager:
                 ),
             )
         )
-        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
         deleted_vms = self._delete_vms(vm_ids=vm_ids_to_cleanup)
         logger.info("Deleted VMs: %s", deleted_vms)
