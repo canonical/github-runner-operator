@@ -53,60 +53,6 @@ SSH_READY_TIMEOUT_SECONDS = 3 * 60
 SSH_RETRY_INTERVAL_SECONDS = 5
 
 
-def _wait_for_workflow_status(
-    workflow_run: WorkflowRun,
-    status: str,
-    acceptable_terminal_statuses: tuple[str, ...] = (),
-    timeout: int = 15 * 60,
-    interval: int = 10,
-) -> bool:
-    """Wait for a workflow run to reach the target status."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        workflow_run.update()
-        if workflow_run.status == status or workflow_run.status in acceptable_terminal_statuses:
-            return True
-        time.sleep(interval)
-    return False
-
-
-def _kill_run_script(runner: OpenstackServer, runner_ip: str) -> None:
-    """Kill actions-runner run.sh inside a runner VM."""
-    assert wait_for_ssh(
-        runner_ip,
-        timeout=SSH_READY_TIMEOUT_SECONDS,
-        interval=SSH_RETRY_INTERVAL_SECONDS,
-        connect_timeout=SSH_CONNECT_TIMEOUT_SECONDS,
-    ), f"SSH did not become reachable on runner {runner.name}"
-    key_path = resolve_runner_ssh_key_path(runner)
-    command = [
-        "/usr/bin/ssh",
-        "-i",
-        str(key_path),
-        "-o",
-        "BatchMode=yes",
-        "-o",
-        "ConnectTimeout=10",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        f"ubuntu@{runner_ip}",
-        "pkill -9 run.sh",
-    ]
-    result = subprocess.run(
-        command,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=SSH_CONNECT_TIMEOUT_SECONDS + 5,
-    )
-    assert result.returncode == 0, (
-        f"Failed to kill run.sh (exit code {result.returncode}). "
-        f"stdout={result.stdout!r} stderr={result.stderr!r}"
-    )
-
-
 @pytest.fixture
 def metrics_planner_stub(test_config: TestConfig) -> Iterator[PlannerStub]:
     """Start a planner stub compatible with this module's flavor name."""
@@ -295,4 +241,58 @@ def test_metrics_for_abnormal_termination(
         flavor=test_config.runner_name,
         github_repository=github_repository,
         post_job_status=PostJobStatus.ABNORMAL,
+    )
+
+
+def _wait_for_workflow_status(
+    workflow_run: WorkflowRun,
+    status: str,
+    acceptable_terminal_statuses: tuple[str, ...] = (),
+    timeout: int = 15 * 60,
+    interval: int = 10,
+) -> bool:
+    """Wait for a workflow run to reach the target status."""
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        workflow_run.update()
+        if workflow_run.status == status or workflow_run.status in acceptable_terminal_statuses:
+            return True
+        time.sleep(interval)
+    return False
+
+
+def _kill_run_script(runner: OpenstackServer, runner_ip: str) -> None:
+    """Kill actions-runner run.sh inside a runner VM."""
+    assert wait_for_ssh(
+        runner_ip,
+        timeout=SSH_READY_TIMEOUT_SECONDS,
+        interval=SSH_RETRY_INTERVAL_SECONDS,
+        connect_timeout=SSH_CONNECT_TIMEOUT_SECONDS,
+    ), f"SSH did not become reachable on runner {runner.name}"
+    key_path = resolve_runner_ssh_key_path(runner)
+    command = [
+        "/usr/bin/ssh",
+        "-i",
+        str(key_path),
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=10",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        f"ubuntu@{runner_ip}",
+        "pkill -9 run.sh",
+    ]
+    result = subprocess.run(
+        command,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=SSH_CONNECT_TIMEOUT_SECONDS + 5,
+    )
+    assert result.returncode == 0, (
+        f"Failed to kill run.sh (exit code {result.returncode}). "
+        f"stdout={result.stdout!r} stderr={result.stderr!r}"
     )

@@ -20,14 +20,6 @@ TEST_WORKFLOW_NAMES = [
 ]
 
 
-def _assert_non_negative_number(metric: dict[str, Any], key: str) -> None:
-    """Assert event key exists and contains a non-negative numeric value."""
-    assert key in metric, f"Missing metric field: {key}"
-    value = metric[key]
-    assert isinstance(value, (int, float)), f"Metric field {key} is not numeric: {value!r}"
-    assert value >= 0, f"Metric field {key} is negative: {value!r}"
-
-
 def clear_metrics_log(metrics_log_path: Path) -> None:
     """Delete metrics log file to reset test state."""
     metrics_log_path.unlink(missing_ok=True)
@@ -121,3 +113,11 @@ def wait_for_runner_to_be_marked_offline(
         else:
             return
     raise TimeoutError(f"Timeout while waiting for runner {runner_name} to be marked offline")
+
+
+def _assert_non_negative_number(metric: dict[str, Any], key: str) -> None:
+    """Assert event key exists and contains a non-negative numeric value."""
+    assert key in metric, f"Missing metric field: {key}"
+    value = metric[key]
+    assert isinstance(value, (int, float)), f"Metric field {key} is not numeric: {value!r}"
+    assert value >= 0, f"Metric field {key} is negative: {value!r}"
