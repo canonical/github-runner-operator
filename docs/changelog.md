@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-20
 
-- PressureReconciler now supports no-planner mode: when no planner relation is configured, it uses `base-virtual-machines` as static pressure to maintain the configured minimum runner count.
+- The pressure reconciler is now always used, replacing the legacy reconcile mode. When no planner relation is configured, it uses `base-virtual-machines` as static pressure to maintain the configured minimum runner count.
 - HTTP server endpoints (`/runner/check`, `/runner/flush`) now use `RunnerManager` directly instead of the legacy `RunnerScaler`.
 - Set GitHub API pagination page size to 100 (up from PyGithub default of 30), reducing API calls when listing runners.
 
