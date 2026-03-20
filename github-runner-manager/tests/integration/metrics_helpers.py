@@ -20,11 +20,6 @@ TEST_WORKFLOW_NAMES = [
 ]
 
 
-def clear_metrics_log(metrics_log_path: Path) -> None:
-    """Delete metrics log file to reset test state."""
-    metrics_log_path.unlink(missing_ok=True)
-
-
 def get_metrics_events(metrics_log_path: Path) -> list[dict[str, Any]]:
     """Return metrics events from the log file."""
     if not metrics_log_path.exists():
@@ -65,35 +60,13 @@ def assert_events_after_reconciliation(
     } <= emitted, "Not all metrics events were logged"
 
     for metric in events:
-        if metric.get("event") == "runner_start":
-            assert metric.get("flavor") == flavor
-            assert metric.get("workflow") in TEST_WORKFLOW_NAMES
-            assert metric.get("repo") == github_repository.full_name
-            assert metric.get("github_event") == "workflow_dispatch"
-            _assert_non_negative_number(metric, "idle")
-            _assert_non_negative_number(metric, "queue_duration")
-
-        if metric.get("event") == "runner_stop":
-            assert metric.get("flavor") == flavor
-            assert metric.get("workflow") in TEST_WORKFLOW_NAMES
-            assert metric.get("repo") == github_repository.full_name
-            assert metric.get("github_event") == "workflow_dispatch"
-            assert metric.get("status") == post_job_status
-            if post_job_status == PostJobStatus.ABNORMAL:
-                assert metric.get("status_info", {}).get("code", 0) != 0
-                assert metric.get("job_conclusion") in [None, JobConclusion.CANCELLED]
-            else:
-                assert "status_info" not in metric
-                assert metric.get("job_conclusion") == JobConclusion.SUCCESS
-            _assert_non_negative_number(metric, "job_duration")
-
-        if metric.get("event") == "reconciliation":
-            assert metric.get("flavor") == flavor
-            _assert_non_negative_number(metric, "duration")
-            assert metric.get("crashed_runners") == 0
-            _assert_non_negative_number(metric, "idle_runners")
-            _assert_non_negative_number(metric, "active_runners")
-            _assert_non_negative_number(metric, "expected_runners")
+        event_name = metric.get("event")
+        if event_name == "runner_start":
+            _assert_runner_start(metric, flavor, github_repository)
+        elif event_name == "runner_stop":
+            _assert_runner_stop(metric, flavor, github_repository, post_job_status)
+        elif event_name == "reconciliation":
+            _assert_reconciliation(metric, flavor)
 
 
 def wait_for_runner_to_be_marked_offline(
@@ -113,6 +86,49 @@ def wait_for_runner_to_be_marked_offline(
         else:
             return
     raise TimeoutError(f"Timeout while waiting for runner {runner_name} to be marked offline")
+
+
+def _assert_runner_start(
+    metric: dict[str, Any], flavor: str, github_repository: Repository
+) -> None:
+    """Assert runner_start event fields."""
+    assert metric.get("flavor") == flavor
+    assert metric.get("workflow") in TEST_WORKFLOW_NAMES
+    assert metric.get("repo") == github_repository.full_name
+    assert metric.get("github_event") == "workflow_dispatch"
+    _assert_non_negative_number(metric, "idle")
+    _assert_non_negative_number(metric, "queue_duration")
+
+
+def _assert_runner_stop(
+    metric: dict[str, Any],
+    flavor: str,
+    github_repository: Repository,
+    post_job_status: PostJobStatus,
+) -> None:
+    """Assert runner_stop event fields."""
+    assert metric.get("flavor") == flavor
+    assert metric.get("workflow") in TEST_WORKFLOW_NAMES
+    assert metric.get("repo") == github_repository.full_name
+    assert metric.get("github_event") == "workflow_dispatch"
+    assert metric.get("status") == post_job_status
+    if post_job_status == PostJobStatus.ABNORMAL:
+        assert metric.get("status_info", {}).get("code", 0) != 0
+        assert metric.get("job_conclusion") in [None, JobConclusion.CANCELLED]
+    else:
+        assert "status_info" not in metric
+        assert metric.get("job_conclusion") == JobConclusion.SUCCESS
+    _assert_non_negative_number(metric, "job_duration")
+
+
+def _assert_reconciliation(metric: dict[str, Any], flavor: str) -> None:
+    """Assert reconciliation event fields."""
+    assert metric.get("flavor") == flavor
+    _assert_non_negative_number(metric, "duration")
+    assert metric.get("crashed_runners") == 0
+    _assert_non_negative_number(metric, "idle_runners")
+    _assert_non_negative_number(metric, "active_runners")
+    _assert_non_negative_number(metric, "expected_runners")
 
 
 def _assert_non_negative_number(metric: dict[str, Any], key: str) -> None:
