@@ -489,3 +489,112 @@ def test_timer_reconcile_emits_reconciliation_metric(monkeypatch: pytest.MonkeyP
     assert event.idle_runners == 2  # IDLE + OFFLINE+HEALTHY
     assert event.active_runners == 1
     assert event.crashed_runners == 0
+
+
+def test_create_loop_no_planner_sets_pressure_creates_runners_and_blocks(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A reconciler with no planner client, min_pressure=3, and 1 existing runner.
+    act: Call start_create_loop.
+    assert: _last_pressure is set, runners are created to reach min_pressure, then stop is awaited.
+    """
+    mgr = _FakeManager(runners_count=1)
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=3)
+    reconciler = PressureReconciler(mgr, planner_client=None, config=cfg, lock=Lock())
+
+    wait_called = {"called": False}
+
+    def _stop_immediately() -> None:
+        """Record that wait was called, then stop."""
+        wait_called["called"] = True
+        return None
+
+    monkeypatch.setattr(reconciler._stop, "wait", lambda: _stop_immediately())
+    reconciler.start_create_loop()
+
+    assert reconciler._last_pressure == 3
+    assert 2 in mgr.created_args
+    assert wait_called["called"]
+
+
+def test_reconcile_loop_no_planner_uses_min_pressure(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler with no planner, min_pressure=4, and 2 existing runners.
+    act: Run the reconcile loop once.
+    assert: Timer reconcile uses min_pressure and creates runners to reach it.
+    """
+    mgr = _FakeManager(runners_count=2)
+    cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=4, reconcile_interval=60)
+    reconciler = PressureReconciler(mgr, planner_client=None, config=cfg, lock=Lock())
+    reconciler._last_pressure = 4
+    wait_calls = {"count": 0}
+
+    def _wait(_interval: int) -> bool:
+        """Return False once to enter the loop, then True to exit."""
+        wait_calls["count"] += 1
+        return wait_calls["count"] > 1
+
+    monkeypatch.setattr(reconciler._stop, "wait", _wait)
+    reconciler.start_reconcile_loop()
+
+    assert mgr.cleanup_called == 1
+    assert mgr.created_args == [2]
+
+
+def test_build_pressure_reconciler_no_planner_config():
+    """
+    arrange: An ApplicationConfiguration with planner_url=None and planner_token=None.
+    act: Call build_pressure_reconciler.
+    assert: A PressureReconciler is returned with _planner set to None.
+    """
+    from unittest.mock import MagicMock
+
+    from github_runner_manager.manager.pressure_reconciler import build_pressure_reconciler
+
+    mock_config = MagicMock()
+    mock_config.planner_url = None
+    mock_config.planner_token = None
+    mock_config.name = "test"
+    mock_config.reconcile_interval = 5
+    combination = MagicMock()
+    combination.base_virtual_machines = 2
+    combination.max_total_virtual_machines = 10
+    mock_config.non_reactive_configuration.combinations = [combination]
+
+    reconciler = build_pressure_reconciler(mock_config, MagicMock(), Lock())
+
+    assert reconciler._planner is None
+
+
+@pytest.mark.parametrize(
+    "planner_url, planner_token",
+    [
+        pytest.param("https://planner.example.com", None, id="url_without_token"),
+        pytest.param(None, "secret-token", id="token_without_url"),
+    ],
+)
+def test_build_pressure_reconciler_partial_planner_config_raises(
+    planner_url: str | None, planner_token: str | None
+):
+    """
+    arrange: An ApplicationConfiguration with only one of planner_url/planner_token set.
+    act: Call build_pressure_reconciler.
+    assert: A ValueError is raised for partial planner configuration.
+    """
+    from unittest.mock import MagicMock
+
+    from github_runner_manager.manager.pressure_reconciler import build_pressure_reconciler
+
+    mock_config = MagicMock()
+    mock_config.planner_url = planner_url
+    mock_config.planner_token = planner_token
+    mock_config.name = "test"
+    mock_config.reconcile_interval = 5
+    combination = MagicMock()
+    combination.base_virtual_machines = 2
+    combination.max_total_virtual_machines = 10
+    mock_config.non_reactive_configuration.combinations = [combination]
+
+    with pytest.raises(ValueError, match="[Pp]artial"):
+        build_pressure_reconciler(mock_config, MagicMock(), Lock())
