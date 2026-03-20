@@ -20,7 +20,7 @@ from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    wait_for_reconcile,
+    wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -153,7 +153,6 @@ async def test_prometheus_metrics(
     )
 
     await instance_helper.ensure_charm_has_runner(openstack_app_cos_agent)
-    await wait_for_reconcile(app=openstack_app_cos_agent)
     await dispatch_workflow(
         app=openstack_app_cos_agent,
         branch=test_github_branch,
@@ -163,7 +162,19 @@ async def test_prometheus_metrics(
     )
     # Set the number of virtual machines to 0 to speedup reconciliation
     await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app=openstack_app_cos_agent)
+
+    async def _no_runners() -> bool:
+        """Check that no runners are active."""
+        action = await openstack_app_cos_agent.units[0].run_action("check-runners")
+        await action.wait()
+        return (
+            action.status == "completed"
+            and action.results["online"] == "0"
+            and action.results["offline"] == "0"
+            and action.results["unknown"] == "0"
+        )
+
+    await wait_for(_no_runners, timeout=10 * 60, check_interval=10)
 
     prometheus_ip = prometheus_app.address
     _patiently_wait_for_prometheus_metrics(

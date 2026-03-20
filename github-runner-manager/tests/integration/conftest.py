@@ -4,7 +4,6 @@
 """Fixtures for github-runner-manager integration tests."""
 
 import logging
-import subprocess
 import time
 from pathlib import Path
 from typing import Generator
@@ -15,86 +14,11 @@ from github import Github
 from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
-from openstack.compute.v2.server import Server as OpenstackServer
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 from .planner_stub import PlannerStub, PlannerStubConfig
 
 logger = logging.getLogger(__name__)
-
-
-def wait_for_runner(
-    openstack_connection: openstack.connection.Connection,
-    test_config: TestConfig,
-    timeout: int = 300,
-    interval: int = 5,
-) -> tuple[OpenstackServer, str] | tuple[None, None]:
-    """Wait for an OpenStack runner to be created and return it with its IP.
-
-    Args:
-        openstack_connection: OpenStack connection object.
-        test_config: Test configuration with VM prefix.
-        timeout: Maximum time to wait in seconds.
-        interval: Time between checks in seconds.
-
-    Returns:
-        Tuple of (runner, ip) if found, or (None, None) if not found within timeout.
-    """
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        servers = [
-            server
-            for server in openstack_connection.list_servers()
-            if server.name.startswith(test_config.vm_prefix)
-        ]
-        if servers:
-            runner = servers[0]
-            logger.info("Found runner: %s", runner.name)
-
-            ip = None
-            for network_addresses in runner.addresses.values():
-                for address in network_addresses:
-                    ip = address["addr"]
-                    break
-                if ip:
-                    break
-
-            if ip:
-                return runner, ip
-
-        time.sleep(interval)
-
-    return None, None
-
-
-def wait_for_no_runners(
-    openstack_connection: openstack.connection.Connection,
-    test_config: TestConfig,
-    timeout: int = 900,
-    interval: int = 15,
-) -> bool:
-    """Wait until no VMs with the test prefix exist on OpenStack.
-
-    Args:
-        openstack_connection: OpenStack connection object.
-        test_config: Test configuration with VM prefix.
-        timeout: Maximum time to wait in seconds.
-        interval: Time between checks in seconds.
-
-    Returns:
-        True when no matching VMs exist; False if timeout is reached first.
-    """
-    start = time.time()
-    while time.time() - start < timeout:
-        servers = [
-            s
-            for s in openstack_connection.list_servers()
-            if s.name.startswith(test_config.vm_prefix)
-        ]
-        if not servers:
-            return True
-        time.sleep(interval)
-    return False
 
 
 @pytest.fixture(scope="module")
@@ -345,7 +269,7 @@ def github_repository(github_config: GitHubConfig) -> Repository:
 def github_branch(
     github_repository: Repository, test_config: TestConfig
 ) -> Generator[Branch, None, None]:
-    """Create a new branch for testing, from latest commit in current branch.
+    """Create a new branch for testing, from the repository's default branch.
 
     Args:
         github_repository: GitHub repository object.
@@ -355,16 +279,9 @@ def github_branch(
     """
     test_branch = f"test-{test_config.test_id}"
 
-    sha_result = subprocess.run(
-        ["/usr/bin/git", "rev-parse", "HEAD"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    current_commit_sha = sha_result.stdout.strip()
-
+    default_branch = github_repository.get_branch(github_repository.default_branch)
     branch_ref = github_repository.create_git_ref(
-        ref=f"refs/heads/{test_branch}", sha=current_commit_sha
+        ref=f"refs/heads/{test_branch}", sha=default_branch.commit.sha
     )
 
     # Wait for branch to be available, GitHub is eventually consistent
@@ -376,7 +293,11 @@ def github_branch(
     while time.time() - start_time < timeout:
         try:
             branch = github_repository.get_branch(test_branch)
-            logger.info("Created test branch: %s at SHA: %s", test_branch, current_commit_sha)
+            logger.info(
+                "Created test branch: %s at SHA: %s",
+                test_branch,
+                default_branch.commit.sha,
+            )
             break
         except Exception as e:
             elapsed = time.time() - start_time

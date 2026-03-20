@@ -26,7 +26,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager import constants
-from github_runner_manager.metrics.events import METRICS_LOG_PATH
+from github_runner_manager.metrics.events import get_metrics_log_path
 from github_runner_manager.platform.platform_provider import TokenError
 from github_runner_manager.utilities import set_env_var
 from ops.charm import (
@@ -636,9 +636,9 @@ def _setup_runner_manager_user() -> None:
 
     # For charm upgrade, previous revision root owns the metric logs, this is changed to runner
     # manager.
-    if METRICS_LOG_PATH.exists():
+    if (metrics_log_path := get_metrics_log_path()).exists():
         shutil.chown(
-            METRICS_LOG_PATH,
+            metrics_log_path,
             user=constants.RUNNER_MANAGER_USER,
             group=constants.RUNNER_MANAGER_GROUP,
         )

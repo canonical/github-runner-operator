@@ -643,7 +643,7 @@ def test_metric_log_ownership_for_upgrade(
     harness.charm._manager_client = manager_client_mock
     mock_manager_service = MagicMock()
     monkeypatch.setattr("charm.manager_service", mock_manager_service)
-    monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
+    monkeypatch.setattr("charm.get_metrics_log_path", lambda: mock_metric_log_path)
     monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
 
