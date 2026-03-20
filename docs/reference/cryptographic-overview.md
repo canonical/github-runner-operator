@@ -9,9 +9,9 @@ The GitHub runner charm uses various cryptographic technologies to ensure secure
 ### TLS
 The GitHub runner communicates with GitHub to receive information about the workflows to be executed, retrieve the repositories config and send back workflow logs to the user. This communication uses [urllib3](https://urllib3.readthedocs.io/en/stable/) under the hood using TLS 1.3.
 
-In OpenStack mode, the runner creates virtual machines to run the workload in OpenStack. The GitHub runner charm interacts with the OpenStack API to create and manage virtual machines. These interactions are secured via TLS. The communication between these virtual machines and runner is done via SSH and secured by 256 byte keypairs.
+In OpenStack mode, the runner creates virtual machines to run the workload in OpenStack. The GitHub runner charm interacts with the OpenStack API to create and manage virtual machines. These interactions are secured with TLS. The communication between these virtual machines and runner is done through SSH and secured by 256 byte keypairs.
 
-[DockerHub Registry](https://charmhub.io/docker-registry) is used as a cache between the official DockerHub and GitHub runners to avoid rate limiting. Communication between GitHub runners and DockerHub cache is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
+[DockerHub Registry](https://charmhub.io/docker-registry) is used as a cache between the official DockerHub and GitHub runners to avoid rate limiting. Communication between GitHub runners and DockerHub cache is secured with TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
 
 Images that run in the OpenStack VM are built using the [Image Builder](https://github.com/canonical/github-runner-image-builder). This application needs to download the runner binary, yq and the cloud image to base the image on. All these images are downloaded with TLS.
 
@@ -27,7 +27,7 @@ Sometimes users need to access the VM instance that is running the workload, to 
 The following cryptographic technologies are used internally by our product:
 
 ### TLS
-- Communication with GitHub is done via TLS v1.3
+- Communication with GitHub is done with TLS v1.3
 - Communication with the OpenStack API uses TLS v1.3.
 
 ### Signature verification
@@ -39,7 +39,7 @@ Tmate secures SSH connections using [OpenSSL](https://www.openssl.org/).
 <!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### RSA
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
-The communication between these virtual machines and the runner is done via SSH and secured by RSA 256 byte keypairs.
+The communication between these virtual machines and the runner is done through SSH and secured by RSA 256 byte keypairs.
 
 ## Cryptographic technology exposed to users
 The following sections describe the cryptographic technologies exposed to the user:
@@ -48,7 +48,7 @@ The following sections describe the cryptographic technologies exposed to the us
 - [Tmate](https://github.com/tmate-io/tmate) uses RSA (384 byte) and ED25519 (32 byte) fingerprints for connections from users to Tmate and from the managers to Tmate. [OpenSSL](https://www.openssl.org/) is being used by Tmate to secure the connection between the user/manager to the runner.
 
 ### Docker hub cache
-[Docker Hub cache](https://github.com/canonical/docker-registry-charm) connection is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
+[Docker Hub cache](https://github.com/canonical/docker-registry-charm) connection is secured with TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
 
 <!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### aproxy

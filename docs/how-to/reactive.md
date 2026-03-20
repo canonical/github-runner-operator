@@ -55,7 +55,7 @@ juju integrate small mongodb
 
 ### Define a webhook in your organisation or repository where the self-hosted runners are registered
 
-On your repository or organisation's page on Github, you need to go to the settings and create a Webhook
+On your repository or organisation's page on GitHub, you need to go to the settings and create a Webhook
 (e.g. `https://github.com/canonical/github-runner-operator/settings/hooks`). Please make sure to select
 
 - the Webhook URL to be the URL of the webhook router
@@ -108,7 +108,7 @@ juju integrate nginx-ingress-integrator github-runner-webhook-router
 
 ### COS integration
 You will probably also need some observability.
-The GitHub Runner and MongoDB machine charm provide COS integration via the `cos-agent` endpoint, and the
-Github Runner Webhook Router charm  provides the usual endpoints (`logging`, `metrics-endpoint`, `grafana-dashboard`). Please refer to
+The GitHub Runner and MongoDB machine charm provide COS integration through the `cos-agent` endpoint, and the
+GitHub Runner Webhook Router charm provides the usual endpoints (`logging`, `metrics-endpoint`, `grafana-dashboard`). Please refer to
 [How to integrate with COS](integrate-with-cos.md) and [Canonical Observability Stack (COS) documentation](https://charmhub.io/topics/canonical-observability-stack) 
 for more information.
