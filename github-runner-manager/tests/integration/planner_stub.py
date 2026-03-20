@@ -100,11 +100,13 @@ class PlannerStub:
         """
         self._config = config or PlannerStubConfig()
         self._thread: threading.Thread | None = None
-        self._port = 0
+        self._port: int | None = None
 
     @property
     def base_url(self) -> str:
         """Return the base URL of the running stub."""
+        if self._port is None:
+            raise RuntimeError("PlannerStub has not been started yet")
         return f"http://{self._config.host}:{self._port}"
 
     @property
