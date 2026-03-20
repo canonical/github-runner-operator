@@ -1,0 +1,103 @@
+06:45:17 WARNING unexpected facade SSHServer received from the controller
+06:45:17 INFO Adding model github-pr-3e7cd-lxd:test-multi-unit-same-machine-s0km on cloud localhost
+06:45:17 WARNING unexpected facade SSHServer received from the controller
+06:45:17 WARNING unexpected facade SSHSession received from the controller
+06:45:17 WARNING unexpected facade SSHTunneler received from the controller
+06:45:17 WARNING unexpected facade SecretsRevoker received from the controller
+06:45:17 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+06:45:19 INFO Deploying ch:amd64/noble/any-charm-133
+06:45:33 INFO Deploying local:jammy/github-runner-0
+06:45:33 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vwuhyhbw/0 [allocating] waiting: waiting for machine
+06:46:03 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vwuhyhbw/0 [allocating] waiting: waiting for machine
+06:46:34 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: waiting for machine
+06:47:04 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: waiting for machine
+06:47:34 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: waiting for machine
+06:48:04 INFO Waiting for model:
+  test-vwuhyhbw/0 [allocating] waiting: agent initialising
+06:48:34 INFO Waiting for model:
+  test-vwuhyhbw/0 [executing] maintenance: installing charm software
+06:49:04 INFO Waiting for model:
+  test-vwuhyhbw/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-vwuhyhbw/0 [idle] active:
+06:49:34 INFO Waiting for model:
+  test-vwuhyhbw/0 [idle] active: 
+  test-vwuhyhbw/1 [allocating] waiting: installing agent
+06:50:05 INFO Waiting for model:
+  test-vwuhyhbw/0 [idle] active: 
+  test-vwuhyhbw/1 [executing] maintenance: installing charm software
+06:50:35 INFO Waiting for model:
+  test-vwuhyhbw/0 [idle] active: 
+  test-vwuhyhbw/1 [executing] maintenance: Update image for runners
+06:50:56 INFO File content of /var/lib/github-runner-manager/test-vwuhyhbw-0/http_port: 55555
+06:50:57 INFO File content of /var/lib/github-runner-manager/test-vwuhyhbw-1/http_port: 55556
+06:51:00 INFO File content of /var/lib/github-runner-manager/test-vwuhyhbw-1/http_port: 55556
+06:51:03 INFO File content of /var/lib/github-runner-manager/test-vwuhyhbw-1/http_port: 55556
+06:51:04 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-s0km  github-pr-3e7cd-lxd  localhost/localhost  3.6.19   unsupported  06:51:04Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-vwuhyhbw           active      1  any-charm      latest/beta  133  no       
+test-vwuhyhbw                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vwuhyhbw/0*  active    idle   0        10.237.194.46          
+test-vwuhyhbw/0*                         active    idle   1        10.237.194.238         
+test-vwuhyhbw/1                          active    idle   1        10.237.194.238         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.237.194.46   juju-66839a-0  ubuntu@24.04  github-runner  Running
+1        started  10.237.194.238  juju-66839a-1  ubuntu@22.04  github-runner  Running
+
+06:51:04 INFO Juju error logs:
+
+machine-0: 06:46:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:46:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:48:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:48:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vwuhyhbw-0: 06:48:55 ERROR unit.test-vwuhyhbw/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-vwuhyhbw-0: 06:48:57 ERROR unit.test-vwuhyhbw/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-vwuhyhbw-1: 06:50:13 ERROR unit.test-vwuhyhbw/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-vwuhyhbw-1: 06:50:14 ERROR unit.test-vwuhyhbw/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-vwuhyhbw-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:51:04 INFO Forgetting model main...

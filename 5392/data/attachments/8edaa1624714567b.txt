@@ -1,0 +1,51 @@
+06:45:33 WARNING unexpected facade SSHServer received from the controller
+06:45:33 INFO Adding model github-pr-3e7cd-lxd:test-charm-metrics-success-1xu2 on cloud localhost
+06:45:33 WARNING unexpected facade SSHServer received from the controller
+06:45:33 WARNING unexpected facade SSHSession received from the controller
+06:45:33 WARNING unexpected facade SSHTunneler received from the controller
+06:45:33 WARNING unexpected facade SecretsRevoker received from the controller
+06:45:34 WARNING unexpected facade SSHServer received from the controller
+06:45:34 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+06:45:36 INFO Deploying ch:amd64/noble/any-charm-133
+06:46:04 INFO Deploying local:jammy/github-runner-0
+06:46:04 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:46:34 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:47:04 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sxojmsa1/0 [executing] maintenance: installing charm software
+06:47:35 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:48:05 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:48:35 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:49:06 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:49:36 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: waiting for machine
+06:50:06 INFO Waiting for model:
+  test-sxojmsa1/0 [allocating] waiting: agent initialising
+06:50:36 INFO Waiting for model:
+  test-sxojmsa1/0 [executing] maintenance: installing charm software
+06:51:06 INFO Waiting for model:
+  test-sxojmsa1/0 [executing] maintenance: installing charm software
+06:51:37 INFO Waiting for model:
+  test-sxojmsa1/0 [executing] maintenance: installing charm software
+06:52:07 INFO Waiting for model:
+  test-sxojmsa1/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-sxojmsa1/0 [idle] active:
+06:52:33 INFO Waiting for model:
+  test-sxojmsa1/0 [idle] active: 
+06:53:03 INFO Waiting for model:
+  test-sxojmsa1/0 [idle] active: 
+06:53:07 INFO Current reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
+06:53:07 INFO Waiting for reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
+06:54:08 INFO Current reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
+06:54:08 INFO Current reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8, expected reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
+06:54:08 INFO Waiting for reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
+06:55:09 INFO Current reconcile ID: 480c7f13-4919-40f4-9b26-8ba1e9ce5269
+06:55:09 INFO Current reconcile ID: 480c7f13-4919-40f4-9b26-8ba1e9ce5269, expected reconcile ID: 5c88985f-0eeb-4df3-a415-9bf4f95f3cb8
