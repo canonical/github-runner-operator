@@ -8,7 +8,12 @@ from unittest.mock import MagicMock
 import pytest
 
 from github_runner_manager.manager.models import RunnerMetadata
-from github_runner_manager.manager.runner_manager import FlushMode, RunnerInstance, RunnerManager
+from github_runner_manager.manager.runner_manager import (
+    FlushMode,
+    RunnerInfo,
+    RunnerInstance,
+    RunnerManager,
+)
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import SelfHostedRunner
@@ -275,6 +280,74 @@ def test_runner_manager_get_runners(
     assert len(result) == len(expected_runner_instances)
     runner_names = {runner.name for runner in result}
     assert all(runner.name in runner_names for runner in expected_runner_instances)
+
+
+@pytest.mark.parametrize(
+    "initial_runners, initial_cloud_runners, expected_runner_info",
+    [
+        pytest.param(
+            [],
+            [],
+            RunnerInfo(online=0, busy=0, offline=0, unknown=0, runners=(), busy_runners=()),
+            id="no runners",
+        ),
+        pytest.param(
+            [idle_runner := SelfHostedRunnerFactory(busy=False, status="online")],
+            [CloudRunnerInstanceFactory.from_self_hosted_runner(self_hosted_runner=idle_runner)],
+            RunnerInfo(
+                online=1,
+                busy=0,
+                offline=0,
+                unknown=0,
+                runners=(idle_runner.identity.instance_id.name,),
+                busy_runners=(),
+            ),
+            id="one idle runner",
+        ),
+        pytest.param(
+            [busy_runner := SelfHostedRunnerFactory(busy=True, status="online")],
+            [CloudRunnerInstanceFactory.from_self_hosted_runner(self_hosted_runner=busy_runner)],
+            RunnerInfo(
+                online=1,
+                busy=1,
+                offline=0,
+                unknown=0,
+                runners=(busy_runner.identity.instance_id.name,),
+                busy_runners=(busy_runner.identity.instance_id.name,),
+            ),
+            id="one busy runner",
+        ),
+        pytest.param(
+            [offline_runner := SelfHostedRunnerFactory(busy=False, status="offline")],
+            [
+                CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=offline_runner
+                )
+            ],
+            RunnerInfo(online=0, busy=0, offline=1, unknown=0, runners=(), busy_runners=()),
+            id="one offline runner",
+        ),
+    ],
+)
+def test_get_runner_info(
+    initial_runners: list[SelfHostedRunner],
+    initial_cloud_runners: list[VM],
+    expected_runner_info: RunnerInfo,
+):
+    """
+    arrange: Given GitHub runners and Cloud runners.
+    act: Call get_runner_info on the RunnerManager.
+    assert: The returned RunnerInfo matches expected counts and names.
+    """
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    manager = RunnerManager(
+        "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
+    )
+
+    result = manager.get_runner_info()
+
+    assert result == expected_runner_info
 
 
 @pytest.mark.parametrize(
