@@ -222,6 +222,8 @@ def create_default_config(
             "proxy_config": runner_proxy,
             "runner_proxy_config": openstack_proxy,
             "use_aproxy": openstack_proxy is not None,
+            # Without this exclusion aproxy's PREROUTING rules forward SSH traffic
+            # to the squid proxy, breaking direct SSH access to spawned runners.
             "aproxy_exclude_addresses": ["10.0.0.0/8"],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
