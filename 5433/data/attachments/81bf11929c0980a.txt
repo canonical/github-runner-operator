@@ -1,0 +1,76 @@
+18:44:29 WARNING unexpected facade SSHServer received from the controller
+18:44:31 INFO Deploying ch:amd64/noble/any-charm-133
+18:44:32 INFO Waiting for model:
+  planner/0 [allocating] waiting: waiting for machine
+18:45:02 INFO Waiting for model:
+  planner/0 [allocating] waiting: waiting for machine
+18:45:28 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:45:29 INFO Waiting for model:
+  test-aj1zt7sc/0 [idle] active: 
+  planner/0 [idle] active: 
+18:45:59 INFO Waiting for model:
+  test-aj1zt7sc/0 [executing] maintenance: Setup planner
+  planner/0 [idle] active: 
+18:46:29 INFO Waiting for model:
+  test-aj1zt7sc/0 [executing] maintenance: Setup planner
+18:46:59 INFO Waiting for model:
+  test-aj1zt7sc/0 [executing] maintenance: Setup planner
+18:47:30 INFO Waiting for model:
+  test-aj1zt7sc/0 [idle] active: 
+18:47:34 INFO cli: juju show-unit --model github-pr-68f8d-lxd:test-charm-no-runner-y7c7 planner/0 --format json
+18:47:34 INFO Waiting for model:
+  test-aj1zt7sc/0 [idle] active: 
+18:48:04 INFO Waiting for model:
+  test-aj1zt7sc/0 [executing] maintenance: Cleanup planner data
+18:48:35 INFO Waiting for model:
+  test-aj1zt7sc/0 [executing] maintenance: Cleanup planner data
+18:49:05 INFO Waiting for model:
+  test-aj1zt7sc/0 [idle] active:
+18:49:24 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-y7c7  github-pr-68f8d-lxd  localhost/localhost  3.6.19   unsupported  18:49:24Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-aj1zt7sc           active      1  any-charm      latest/beta  133  no       
+planner                                        active      1  any-charm      latest/beta  133  no       
+test-aj1zt7sc                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-aj1zt7sc/0*  active    idle   0        10.14.225.35           
+planner/0*                               active    idle   2        10.14.225.8            
+test-aj1zt7sc/0*                         active    idle   1        10.14.225.99           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.14.225.35  juju-f611c3-0  ubuntu@24.04  github-runner  Running
+1        started  10.14.225.99  juju-f611c3-1  ubuntu@22.04  github-runner  Running
+2        started  10.14.225.8   juju-f611c3-2  ubuntu@24.04  github-runner  Running
+
+18:49:24 INFO Juju error logs:
+
+machine-0: 18:40:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:40:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:42:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:42:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-aj1zt7sc-0: 18:43:32 ERROR unit.test-aj1zt7sc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aj1zt7sc-0: 18:43:33 ERROR unit.test-aj1zt7sc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aj1zt7sc-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-2: 18:45:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:45:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+18:49:24 INFO Forgetting model main...

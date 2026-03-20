@@ -1,0 +1,103 @@
+18:39:35 WARNING unexpected facade SSHServer received from the controller
+18:39:35 INFO Adding model github-pr-68f8d-lxd:test-multi-unit-same-machine-s2mq on cloud localhost
+18:39:35 WARNING unexpected facade SSHServer received from the controller
+18:39:35 WARNING unexpected facade SSHSession received from the controller
+18:39:35 WARNING unexpected facade SSHTunneler received from the controller
+18:39:35 WARNING unexpected facade SecretsRevoker received from the controller
+18:39:36 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:39:38 INFO Deploying ch:amd64/noble/any-charm-133
+18:39:53 INFO Deploying local:jammy/github-runner-0
+18:39:53 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-guaeiarn/0 [allocating] waiting: waiting for machine
+18:40:23 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-guaeiarn/0 [allocating] waiting: waiting for machine
+18:40:54 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: waiting for machine
+18:41:24 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: waiting for machine
+18:41:54 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: waiting for machine
+18:42:24 INFO Waiting for model:
+  test-guaeiarn/0 [allocating] waiting: agent initialising
+18:42:54 INFO Waiting for model:
+  test-guaeiarn/0 [executing] maintenance: installing charm software
+18:43:24 INFO Waiting for model:
+  test-guaeiarn/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-guaeiarn/0 [idle] active:
+18:43:52 INFO Waiting for model:
+  test-guaeiarn/0 [idle] active: 
+  test-guaeiarn/1 [allocating] waiting: installing agent
+18:44:22 INFO Waiting for model:
+  test-guaeiarn/0 [idle] active: 
+  test-guaeiarn/1 [executing] maintenance: installing charm software
+18:44:52 INFO Waiting for model:
+  test-guaeiarn/0 [idle] active: 
+  test-guaeiarn/1 [executing] maintenance: Update image for runners
+18:45:12 INFO File content of /var/lib/github-runner-manager/test-guaeiarn-0/http_port: 55555
+18:45:13 INFO File content of /var/lib/github-runner-manager/test-guaeiarn-1/http_port: 55556
+18:45:17 INFO File content of /var/lib/github-runner-manager/test-guaeiarn-1/http_port: 55556
+18:45:20 INFO File content of /var/lib/github-runner-manager/test-guaeiarn-1/http_port: 55556
+18:45:20 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-s2mq  github-pr-68f8d-lxd  localhost/localhost  3.6.19   unsupported  18:45:20Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-guaeiarn           active      1  any-charm      latest/beta  133  no       
+test-guaeiarn                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-guaeiarn/0*  active    idle   0        10.121.143.224         
+test-guaeiarn/0*                         active    idle   1        10.121.143.111         
+test-guaeiarn/1                          active    idle   1        10.121.143.111         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.121.143.224  juju-48427a-0  ubuntu@24.04  github-runner  Running
+1        started  10.121.143.111  juju-48427a-1  ubuntu@22.04  github-runner  Running
+
+18:45:20 INFO Juju error logs:
+
+machine-0: 18:40:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:40:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:42:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:42:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-guaeiarn-0: 18:43:12 ERROR unit.test-guaeiarn/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-guaeiarn-0: 18:43:14 ERROR unit.test-guaeiarn/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-guaeiarn-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-guaeiarn-1: 18:44:29 ERROR unit.test-guaeiarn/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-guaeiarn-1: 18:44:31 ERROR unit.test-guaeiarn/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-guaeiarn-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:45:20 INFO Forgetting model main...
