@@ -19,7 +19,6 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
     get_job_logs,
     wait_for,
-    wait_for_reconcile,
     wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
@@ -36,7 +35,19 @@ async def app_fixture(
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(basic_app)
+
+    async def _no_runners() -> bool:
+        """Check that no runners are active."""
+        action: Action = await basic_app.units[0].run_action("check-runners")
+        await action.wait()
+        return (
+            action.status == "completed"
+            and action.results["online"] == "0"
+            and action.results["offline"] == "0"
+            and action.results["unknown"] == "0"
+        )
+
+    await wait_for(_no_runners, timeout=10 * 60, check_interval=10)
 
 
 @pytest.mark.openstack
