@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-03-20
+
+- Set GitHub API pagination page size to 100 (up from PyGithub default of 30), reducing API calls when listing runners.
+
 ## 2026-03-18
 
 - Add landing page for how-to and reference section.
