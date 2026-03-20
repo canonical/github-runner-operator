@@ -110,6 +110,9 @@ def main(
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
         log_level: The log level.
+
+    Raises:
+        ClickException: If no non-reactive combinations are configured.
     """
     logging.basicConfig(
         level=log_level,
@@ -121,6 +124,8 @@ def main(
     lock = Lock()
 
     combinations = config.non_reactive_configuration.combinations
+    if not combinations:
+        raise click.ClickException("No non-reactive combinations configured.")
     runner_manager = build_runner_manager(config, combinations[0])
     pressure_reconciler = build_pressure_reconciler(config, runner_manager, lock)
 

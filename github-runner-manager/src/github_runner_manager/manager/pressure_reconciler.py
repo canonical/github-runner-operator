@@ -415,17 +415,12 @@ def build_pressure_reconciler(
         lock: Shared lock to serialize operations with other reconcile loops.
 
     Raises:
-        ValueError: If no non-reactive combinations are configured or planner config is partial.
+        ValueError: If planner configuration is partial (only one of URL/token set).
 
     Returns:
         A fully constructed PressureReconciler.
     """
-    combinations = config.non_reactive_configuration.combinations
-    if not combinations:
-        raise ValueError(
-            "Cannot build PressureReconciler: no non-reactive combinations configured."
-        )
-    first = combinations[0]
+    first = config.non_reactive_configuration.combinations[0]
     planner_client: PlannerClient | None = None
     has_url = bool(config.planner_url)
     has_token = bool(config.planner_token)
