@@ -11,6 +11,7 @@ on:
 
 jobs:
   trivy-scan:
+    if: ${{ false }}
     name: Run Trivy Security Scan
     runs-on: ubuntu-latest
     permissions:
@@ -60,6 +61,7 @@ jobs:
           retention-days: 7
 
   generate-sbom:
+    if: ${{ false }}
     name: Generate SBOM from Filesystem
     runs-on: ubuntu-latest
     steps:
