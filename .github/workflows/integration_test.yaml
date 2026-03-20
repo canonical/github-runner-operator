@@ -46,8 +46,8 @@ jobs:
       pre-run-script: tests/integration/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
-      test-timeout: 60
-      modules: '["test_prometheus_metrics_original", "test_prometheus_metrics_subprocess"]'
+      test-timeout: 120
+      modules: '["test_prometheus_metrics_full_jubilant"]'
       # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
