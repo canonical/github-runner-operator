@@ -366,7 +366,7 @@ def test_list_runners(github_client: GithubClient):
     """
     arrange: A mocked Github Client that returns two runners, one for the requested prefix.
     act: Call list_runners with the prefix.
-    assert: A correct runners is returned, the one matching the prefix.
+    assert: Only the runner matching the prefix is returned with correct fields.
     """
     runners_data = [
         {
