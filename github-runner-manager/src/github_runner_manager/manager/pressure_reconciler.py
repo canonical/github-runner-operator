@@ -112,7 +112,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
     def __init__(
         self,
         manager: RunnerManager,
-        planner_client: PlannerClient,
+        planner_client: PlannerClient | None,
         config: PressureReconcilerConfig,
         lock: Lock,
     ) -> None:
@@ -122,6 +122,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             manager: Runner manager interface for creating, cleaning up,
                 and listing runners.
             planner_client: Client used to stream pressure updates.
+                None when no planner relation is configured.
             config: Reconciler configuration.
             lock: Shared lock to serialize operations with other reconcile loops.
         """
@@ -140,6 +141,14 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         with self._lock:
             self._runner_count = len(self._manager.get_runners())
         logger.info("Create loop: initial sync, _runner_count=%s", self._runner_count)
+        if self._planner is None:
+            self._last_pressure = self._config.min_pressure
+            logger.info(
+                "Create loop: no planner configured, using min_pressure=%s",
+                self._config.min_pressure,
+            )
+            self._stop.wait()
+            return
         while not self._stop.is_set():
             try:
                 for update in self._planner.stream_pressure(self._config.flavor_name):
@@ -413,12 +422,15 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
             "Cannot build PressureReconciler: no non-reactive combinations configured."
         )
     first = combinations[0]
-    manager = _build_runner_manager(config, first)
+    manager = build_runner_manager(config, first)
+    planner_client: PlannerClient | None = None
+    if config.planner_url and config.planner_token:
+        planner_client = PlannerClient(
+            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
+        )
     return PressureReconciler(
         manager=manager,
-        planner_client=PlannerClient(
-            PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
-        ),
+        planner_client=planner_client,
         config=PressureReconcilerConfig(
             flavor_name=config.name,
             reconcile_interval=config.reconcile_interval,
@@ -429,7 +441,7 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
     )
 
 
-def _build_runner_manager(
+def build_runner_manager(
     config: ApplicationConfiguration, combination: NonReactiveCombination
 ) -> RunnerManager:
     """Build a RunnerManager from application config and a flavor/image combination.

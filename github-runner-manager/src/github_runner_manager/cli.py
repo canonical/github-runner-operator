@@ -20,6 +20,7 @@ from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     build_pressure_reconciler,
+    build_runner_manager,
 )
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
@@ -128,10 +129,13 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_file.read()))
     lock = Lock()
 
+    combinations = config.non_reactive_configuration.combinations
+    runner_manager = build_runner_manager(config, combinations[0])
+
     thread_manager = ThreadManager()
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
     thread_manager.add_thread(
-        target=partial(start_http_server, config, lock, http_server_args),
+        target=partial(start_http_server, runner_manager, lock, http_server_args),
         daemon=True,
     )
 
