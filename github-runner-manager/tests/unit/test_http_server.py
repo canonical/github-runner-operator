@@ -13,7 +13,7 @@ import pytest
 from flask.testing import FlaskClient
 
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerInfo
-from src.github_runner_manager.http_server import APP_CONFIG_NAME, RUNNER_MANAGER_CONFIG_NAME, app
+from src.github_runner_manager.http_server import RUNNER_MANAGER_CONFIG_NAME, app
 
 
 @pytest.fixture(name="lock", scope="function")
@@ -32,7 +32,6 @@ def client_fixture(
 ) -> Iterator[FlaskClient]:
     app.debug = True
     app.config["TESTING"] = True
-    app.config[APP_CONFIG_NAME] = MagicMock()
     app.config[RUNNER_MANAGER_CONFIG_NAME] = mock_runner_manager
 
     monkeypatch.setattr("src.github_runner_manager.http_server._lock", lock)

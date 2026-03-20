@@ -491,11 +491,13 @@ def test_timer_reconcile_emits_reconciliation_metric(monkeypatch: pytest.MonkeyP
     assert event.crashed_runners == 0
 
 
-def test_create_loop_no_planner_sets_min_pressure_and_blocks(monkeypatch: pytest.MonkeyPatch):
+def test_create_loop_no_planner_sets_pressure_creates_runners_and_blocks(
+    monkeypatch: pytest.MonkeyPatch,
+):
     """
-    arrange: A reconciler with no planner client and min_pressure=3.
+    arrange: A reconciler with no planner client, min_pressure=3, and 1 existing runner.
     act: Call start_create_loop.
-    assert: _last_pressure is set to min_pressure, _runner_count is synced, and stop is awaited.
+    assert: _last_pressure is set, runners are created to reach min_pressure, then stop is awaited.
     """
     mgr = _FakeManager(runners_count=1)
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=3)
@@ -511,8 +513,8 @@ def test_create_loop_no_planner_sets_min_pressure_and_blocks(monkeypatch: pytest
     monkeypatch.setattr(reconciler._stop, "wait", lambda: _stop_immediately())
     reconciler.start_create_loop()
 
-    assert reconciler._runner_count == 1
     assert reconciler._last_pressure == 3
+    assert 2 in mgr.created_args
     assert wait_called["called"]
 
 
@@ -546,7 +548,7 @@ def test_build_pressure_reconciler_no_planner_config():
     act: Call build_pressure_reconciler.
     assert: A PressureReconciler is returned with _planner set to None.
     """
-    from unittest.mock import MagicMock, patch
+    from unittest.mock import MagicMock
 
     from github_runner_manager.manager.pressure_reconciler import build_pressure_reconciler
 
@@ -560,10 +562,39 @@ def test_build_pressure_reconciler_no_planner_config():
     combination.max_total_virtual_machines = 10
     mock_config.non_reactive_configuration.combinations = [combination]
 
-    with patch(
-        "github_runner_manager.manager.pressure_reconciler.build_runner_manager"
-    ) as mock_build:
-        mock_build.return_value = MagicMock()
-        reconciler = build_pressure_reconciler(mock_config, Lock())
+    reconciler = build_pressure_reconciler(mock_config, MagicMock(), Lock())
 
     assert reconciler._planner is None
+
+
+@pytest.mark.parametrize(
+    "planner_url, planner_token",
+    [
+        pytest.param("https://planner.example.com", None, id="url_without_token"),
+        pytest.param(None, "secret-token", id="token_without_url"),
+    ],
+)
+def test_build_pressure_reconciler_partial_planner_config_raises(
+    planner_url: str | None, planner_token: str | None
+):
+    """
+    arrange: An ApplicationConfiguration with only one of planner_url/planner_token set.
+    act: Call build_pressure_reconciler.
+    assert: A ValueError is raised for partial planner configuration.
+    """
+    from unittest.mock import MagicMock
+
+    from github_runner_manager.manager.pressure_reconciler import build_pressure_reconciler
+
+    mock_config = MagicMock()
+    mock_config.planner_url = planner_url
+    mock_config.planner_token = planner_token
+    mock_config.name = "test"
+    mock_config.reconcile_interval = 5
+    combination = MagicMock()
+    combination.base_virtual_machines = 2
+    combination.max_total_virtual_machines = 10
+    mock_config.non_reactive_configuration.combinations = [combination]
+
+    with pytest.raises(ValueError, match="[Pp]artial"):
+        build_pressure_reconciler(mock_config, MagicMock(), Lock())

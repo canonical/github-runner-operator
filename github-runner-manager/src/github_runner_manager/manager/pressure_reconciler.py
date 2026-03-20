@@ -147,6 +147,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
                 "Create loop: no planner configured, using min_pressure=%s",
                 self._config.min_pressure,
             )
+            self._handle_create_runners(self._config.min_pressure)
             self._stop.wait()
             return
         while not self._stop.is_set():
@@ -403,15 +404,18 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         return total
 
 
-def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> PressureReconciler:
+def build_pressure_reconciler(
+    config: ApplicationConfiguration, manager: RunnerManager, lock: Lock
+) -> PressureReconciler:
     """Construct a PressureReconciler from application configuration.
 
     Args:
         config: Application configuration.
+        manager: The runner manager to use for creating, cleaning up, and listing runners.
         lock: Shared lock to serialize operations with other reconcile loops.
 
     Raises:
-        ValueError: If no non-reactive combinations are configured.
+        ValueError: If no non-reactive combinations are configured or planner config is partial.
 
     Returns:
         A fully constructed PressureReconciler.
@@ -422,9 +426,15 @@ def build_pressure_reconciler(config: ApplicationConfiguration, lock: Lock) -> P
             "Cannot build PressureReconciler: no non-reactive combinations configured."
         )
     first = combinations[0]
-    manager = build_runner_manager(config, first)
     planner_client: PlannerClient | None = None
-    if config.planner_url and config.planner_token:
+    has_url = bool(config.planner_url)
+    has_token = bool(config.planner_token)
+    if has_url != has_token:
+        raise ValueError(
+            "Partial planner configuration: both planner_url and planner_token must be set"
+            " or both unset."
+        )
+    if has_url and has_token:
         planner_client = PlannerClient(
             PlannerConfiguration(base_url=config.planner_url, token=config.planner_token)
         )

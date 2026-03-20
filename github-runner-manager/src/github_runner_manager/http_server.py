@@ -13,7 +13,6 @@ from prometheus_client import generate_latest
 from github_runner_manager.errors import CloudError, LockError
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 
-APP_CONFIG_NAME = "app_config"
 RUNNER_MANAGER_CONFIG_NAME = "runner_manager"
 
 app = Flask(__name__)
