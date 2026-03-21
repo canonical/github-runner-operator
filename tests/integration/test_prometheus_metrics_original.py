@@ -4,9 +4,6 @@
 """Module for collecting metrics related to the reconciliation process."""
 
 import logging
-import subprocess
-import threading
-import time
 from typing import Any, Generator, cast
 
 import jubilant
@@ -29,71 +26,8 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
-# DIAGNOSTIC: 40-minute timeout so hangs produce a traceback instead of running forever.
-pytestmark = [pytest.mark.openstack, pytest.mark.timeout(2400)]
-
 MICROK8S_CONTROLLER_NAME = "microk8s"
 COS_AGENT_CHARM = "opentelemetry-collector"
-
-
-def _start_status_logger(model_name: str, interval: int = 30) -> threading.Thread:
-    """Spawn a daemon thread that polls `juju status` on a model every `interval` seconds."""
-
-    def _poll():
-        """Poll juju status in a loop."""
-        while True:
-            try:
-                result = subprocess.run(
-                    ["juju", "status", "-m", model_name, "--format", "yaml"],
-                    capture_output=True,
-                    text=True,
-                    timeout=30,
-                )
-                logger.info(
-                    "DIAGNOSTIC juju status -m %s (rc=%d):\n%s",
-                    model_name,
-                    result.returncode,
-                    result.stdout[-2000:] if len(result.stdout) > 2000 else result.stdout,
-                )
-                if result.stderr:
-                    logger.warning("DIAGNOSTIC juju status stderr: %s", result.stderr[-500:])
-            except Exception:
-                logger.exception("DIAGNOSTIC status poll failed for model %s", model_name)
-            time.sleep(interval)
-
-    t = threading.Thread(target=_poll, daemon=True)
-    t.start()
-    return t
-
-
-def _dump_debug_log(model_name: str) -> None:
-    """Capture the last 200 lines of juju debug-log for the model."""
-    try:
-        result = subprocess.run(
-            ["juju", "debug-log", "-m", model_name, "--replay", "--limit", "200"],
-            capture_output=True,
-            text=True,
-            timeout=60,
-        )
-        logger.info(
-            "DIAGNOSTIC debug-log -m %s (rc=%d):\n%s",
-            model_name,
-            result.returncode,
-            result.stdout,
-        )
-        if result.stderr:
-            logger.warning("DIAGNOSTIC debug-log stderr: %s", result.stderr[-500:])
-    except Exception:
-        logger.exception("DIAGNOSTIC debug-log dump failed for model %s", model_name)
-
-
-def _timed_deploy(juju_obj: jubilant.Juju, label: str, *args: Any, **kwargs: Any) -> None:
-    """Wrap juju.deploy() with timing info."""
-    logger.info("DIAGNOSTIC [%s] starting deploy: args=%s kwargs=%s", label, args, kwargs)
-    t0 = time.monotonic()
-    juju_obj.deploy(*args, **kwargs)
-    elapsed = time.monotonic() - t0
-    logger.info("DIAGNOSTIC [%s] deploy completed in %.1fs", label, elapsed)
 
 
 @pytest_asyncio.fixture(scope="module", name="k8s_juju")
@@ -101,15 +35,13 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
     with jubilant.temp_model(keep=keep_models, controller=MICROK8S_CONTROLLER_NAME) as juju:
-        _start_status_logger(juju.model)
         yield juju
-        _dump_debug_log(juju.model)
 
 
 @pytest.fixture(scope="module", name="prometheus_app")
 def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
-    _timed_deploy(k8s_juju, "k8s/prometheus-k8s", "prometheus-k8s", channel="1/stable")
+    k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
     # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
     # juju.consume expects only the model name.
@@ -125,7 +57,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
 @pytest.fixture(scope="module", name="grafana_app")
 def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     """Deploy prometheus charm."""
-    _timed_deploy(k8s_juju, "k8s/grafana-k8s", "grafana-k8s", channel="1/stable")
+    k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
     # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
@@ -144,7 +76,7 @@ def traefik_ingress_fixture(
     k8s_juju: jubilant.Juju, prometheus_app: AppStatus, grafana_app: AppStatus
 ):
     """Ingress for cross controller communication."""
-    _timed_deploy(k8s_juju, "k8s/traefik-k8s", "traefik-k8s", channel="latest/stable")
+    k8s_juju.deploy("traefik-k8s", channel="latest/stable")
     k8s_juju.integrate("traefik-k8s", f"{prometheus_app.charm_name}:ingress")
     k8s_juju.integrate("traefik-k8s", f"{grafana_app.charm_name}:ingress")
 
@@ -160,10 +92,7 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
 def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
-    _start_status_logger(juju.model)
-    _timed_deploy(
-        juju,
-        "openstack/cos-agent",
+    juju.deploy(
         COS_AGENT_CHARM,
         channel="2/candidate",
         base="ubuntu@22.04",
@@ -173,8 +102,7 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: A
     juju.wait(
         lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, COS_AGENT_CHARM)
     )
-    yield app_openstack_runner
-    _dump_debug_log(juju.model)
+    return app_openstack_runner
 
 
 @pytest.mark.usefixtures("traefik_ingress")
