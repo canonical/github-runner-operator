@@ -127,8 +127,8 @@ class JobInfo(BaseModel):
 
     job_id: int
     created_at: datetime
-    queued_at: datetime
-    started_at: datetime
+    queued_at: Optional[datetime]
+    started_at: Optional[datetime]
     conclusion: Optional[JobConclusion]
     status: JobStatus
 

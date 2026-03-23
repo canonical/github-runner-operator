@@ -250,7 +250,7 @@ class JobInfo:
     """
 
     created_at: datetime
-    queued_at: datetime
-    started_at: datetime
+    queued_at: datetime | None
+    started_at: datetime | None
     # A str until we realise a common pattern, use a simple str
     conclusion: str | None
