@@ -1,9 +1,16 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Module for collecting metrics related to the reconciliation process."""
+"""Prometheus metrics integration test — fully jubilant, no python-libjuju awaits.
+
+Uses jubilant for ALL juju operations (deploy, integrate, wait, config, run)
+to avoid the python-libjuju AllWatcher hang after cross-controller integrations.
+The conftest ``app_openstack_runner`` fixture still creates a libjuju Model in the
+background, but this test never awaits on any libjuju object.
+"""
 
 import logging
+import time
 from typing import Any, Generator, cast
 
 import jubilant
@@ -20,11 +27,11 @@ from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    wait_for,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
+
+pytestmark = pytest.mark.openstack
 
 MICROK8S_CONTROLLER_NAME = "microk8s"
 COS_AGENT_CHARM = "opentelemetry-collector"
@@ -39,12 +46,10 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
 
 
 @pytest.fixture(scope="module", name="prometheus_app")
-def prometheus_app_fixture(k8s_juju: jubilant.Juju):
+def prometheus_app_fixture(k8s_juju: jubilant.Juju) -> AppStatus:
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
-    # juju.consume expects only the model name.
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.prometheus-k8s",
@@ -55,13 +60,11 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
 
 
 @pytest.fixture(scope="module", name="grafana_app")
-def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
-    """Deploy prometheus charm."""
+def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus) -> AppStatus:
+    """Deploy grafana charm."""
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
-    # juju.consume expects only the model name.
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.grafana-k8s",
@@ -74,7 +77,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
 @pytest.fixture(scope="module", name="traefik_ingress")
 def traefik_ingress_fixture(
     k8s_juju: jubilant.Juju, prometheus_app: AppStatus, grafana_app: AppStatus
-):
+) -> None:
     """Ingress for cross controller communication."""
     k8s_juju.deploy("traefik-k8s", channel="latest/stable")
     k8s_juju.integrate("traefik-k8s", f"{prometheus_app.charm_name}:ingress")
@@ -82,7 +85,7 @@ def traefik_ingress_fixture(
 
 
 @pytest.fixture(scope="module", name="grafana_password")
-def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
+def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus) -> str:
     """Get Grafana dashboard password."""
     unit = next(iter(grafana_app.units.keys()))
     result = k8s_juju.run(unit, "get-admin-password")
@@ -90,19 +93,18 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
 
 
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
-def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application):
-    """Deploy cos-agent subordinate charm on OpenStack runner application."""
+def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application) -> str:
+    """Deploy cos-agent subordinate charm. Return the app name as a string."""
+    app_name = app_openstack_runner.name
     juju.deploy(
         COS_AGENT_CHARM,
         channel="2/candidate",
         base="ubuntu@22.04",
         revision=149,
     )
-    juju.integrate(app_openstack_runner.name, COS_AGENT_CHARM)
-    juju.wait(
-        lambda status: jubilant.all_agents_idle(status, app_openstack_runner.name, COS_AGENT_CHARM)
-    )
-    return app_openstack_runner
+    juju.integrate(app_name, COS_AGENT_CHARM)
+    juju.wait(lambda status: jubilant.all_agents_idle(status, app_name, COS_AGENT_CHARM))
+    return app_name
 
 
 @pytest.mark.usefixtures("traefik_ingress")
@@ -110,23 +112,19 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: A
 async def test_prometheus_metrics(
     juju: jubilant.Juju,
     k8s_juju: jubilant.Juju,
-    openstack_app_cos_agent: Application,
+    openstack_app_cos_agent: str,
     grafana_app: AppStatus,
     grafana_password: str,
     prometheus_app: AppStatus,
     test_github_branch: Branch,
     github_repository: Repository,
-    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: given a prometheus charm application.
     act: when GitHub runner is integrated.
     assert: the datasource is registered and basic metrics are available.
     """
-    prometheus_offer_name = "prometheus-k8s"
-    grafana_offer_name = "grafana-k8s"
-    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
-    # juju.consume expects only the model name.
+    app_name = openstack_app_cos_agent
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     juju.consume(
         f"{k8s_juju_model_name}.prometheus-k8s",
@@ -139,42 +137,29 @@ async def test_prometheus_metrics(
         controller=MICROK8S_CONTROLLER_NAME,
     )
 
-    juju.integrate(COS_AGENT_CHARM, prometheus_offer_name)
-    juju.integrate(COS_AGENT_CHARM, grafana_offer_name)
-    juju.wait(
-        lambda status: jubilant.all_agents_idle(
-            status, openstack_app_cos_agent.name, COS_AGENT_CHARM
-        )
-    )
+    juju.integrate(COS_AGENT_CHARM, "prometheus-k8s")
+    juju.integrate(COS_AGENT_CHARM, "grafana-k8s")
+    juju.wait(lambda status: jubilant.all_agents_idle(status, app_name, COS_AGENT_CHARM))
 
     grafana_ip = grafana_app.units["grafana-k8s/0"].address
     _patiently_wait_for_prometheus_datasource(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
 
-    await instance_helper.ensure_charm_has_runner(openstack_app_cos_agent)
+    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    _wait_for_runner_ready(juju, app_name)
+
     await dispatch_workflow(
-        app=openstack_app_cos_agent,
+        app=None,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app_name},
     )
-    # Set the number of virtual machines to 0 to speedup reconciliation
-    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
-    async def _no_runners() -> bool:
-        """Check that no runners are active."""
-        action = await openstack_app_cos_agent.units[0].run_action("check-runners")
-        await action.wait()
-        return (
-            action.status == "completed"
-            and action.results["online"] == "0"
-            and action.results["offline"] == "0"
-            and action.results["unknown"] == "0"
-        )
-
-    await wait_for(_no_runners, timeout=10 * 60, check_interval=10)
+    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    _wait_for_no_runners(juju, app_name)
 
     prometheus_ip = prometheus_app.address
     _patiently_wait_for_prometheus_metrics(
@@ -195,6 +180,35 @@ async def test_prometheus_metrics(
         "job_status_count",
         "job_event_count",
     )
+
+
+def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
+    """Poll check-runners action until at least one runner is online."""
+    unit = f"{app_name}/0"
+    for attempt in range(20):
+        result = juju.run(unit, "check-runners")
+        if result.status == "completed" and int(result.results["online"]) >= 1:
+            return
+        logger.info("Waiting for runner (attempt %d): online=%s", attempt, result.results)
+        time.sleep(30)
+    raise TimeoutError(f"Runner on {unit} never came online after 20 attempts")
+
+
+def _wait_for_no_runners(juju: jubilant.Juju, app_name: str) -> None:
+    """Poll check-runners action until all runners are gone."""
+    unit = f"{app_name}/0"
+    for attempt in range(20):
+        result = juju.run(unit, "check-runners")
+        if (
+            result.status == "completed"
+            and result.results["online"] == "0"
+            and result.results["offline"] == "0"
+            and result.results["unknown"] == "0"
+        ):
+            return
+        logger.info("Waiting for no runners (attempt %d): %s", attempt, result.results)
+        time.sleep(30)
+    raise TimeoutError(f"Runners on {unit} still present after 20 attempts")
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
