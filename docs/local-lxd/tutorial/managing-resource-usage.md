@@ -6,7 +6,7 @@ The charm can be hardware intensive, as each instance of self-hosted runner appl
 
 The minimum requirements for a single virtual machine are:
 
-- 1 [virtual machine vCPU](https://charmhub.io/github-runner/configure#vm-cpu)
+- one [virtual machine vCPU](https://charmhub.io/github-runner/configure#vm-cpu)
 - 2GiB of [virtual machine memory](https://charmhub.io/github-runner/configure#vm-memory)
 - 10GiB of [virtual machine disk](https://charmhub.io/github-runner/configure#vm-disk)
 
@@ -19,12 +19,12 @@ The Juju machine will also need the enough resources to host the virtual machine
 The recommended combined resource usage is:
 
 - vCPU: Depends on the workload
-- memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
+- memory: number of virtual machines * (memory for each virtual machine + disk for each virtual machine) + 4GiB
 - disk: 20GiB
 
 If memory is used as [runner storage](https://charmhub.io/github-runner/docs/local-lxd-how-to-configure-runner-storage):
 
-- memory: number of virtual machines * (memory per virtual machine + disk per virtual machine) + 4GiB
+- memory: number of virtual machines * (memory for each virtual machine + disk for each virtual machine) + 4GiB
 
 ## Juju machine constraints
 

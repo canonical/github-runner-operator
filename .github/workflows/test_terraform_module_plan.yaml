@@ -16,7 +16,7 @@ jobs:
       terraform: ${{ steps.filter.outputs.terraform }}
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -53,7 +53,7 @@ jobs:
             echo EOF
           } >> "$GITHUB_ENV"
       - run: juju add-model test-github-runner
-      - uses: hashicorp/setup-terraform@v3.1.2
+      - uses: hashicorp/setup-terraform@v4.0.0
       - run: terraform init
         working-directory: ${{env.WORKING_DIR}}
       - run: terraform validate
