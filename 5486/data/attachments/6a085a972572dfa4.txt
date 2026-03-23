@@ -1,0 +1,45 @@
+19:03:39 INFO Wait for condition not met, sleeping 10
+19:03:49 INFO Wait for condition not met, sleeping 10
+19:04:23 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-xw20  github-pr-d3108-lxd  localhost/localhost  3.6.19   unsupported  19:04:23Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-twk8vdpa           active      1  any-charm      latest/beta  133  no       
+test-twk8vdpa                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-twk8vdpa/0*  active    idle   0        10.249.207.185         
+test-twk8vdpa/0*                         active    idle   1        10.249.207.200         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.249.207.185  juju-c55674-0  ubuntu@24.04  github-runner  Running
+1        started  10.249.207.200  juju-c55674-1  ubuntu@24.04  github-runner  Running
+
+19:04:23 INFO Juju error logs:
+
+machine-0: 18:43:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:45:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:45:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-twk8vdpa-0: 18:46:34 ERROR unit.test-twk8vdpa/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-twk8vdpa-0: 18:46:35 ERROR unit.test-twk8vdpa/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-twk8vdpa-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:04:23 INFO Forgetting model main...

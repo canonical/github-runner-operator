@@ -1,0 +1,31 @@
+18:42:48 WARNING unexpected facade SSHServer received from the controller
+18:42:48 INFO Adding model github-pr-d3108-lxd:test-charm-runner-xw20 on cloud localhost
+18:42:49 WARNING unexpected facade SSHServer received from the controller
+18:42:49 WARNING unexpected facade SSHSession received from the controller
+18:42:49 WARNING unexpected facade SSHTunneler received from the controller
+18:42:49 WARNING unexpected facade SecretsRevoker received from the controller
+18:42:49 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:42:50 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:04 INFO Deploying local:noble/github-runner-0
+18:43:04 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twk8vdpa/0 [allocating] waiting: waiting for machine
+18:43:35 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twk8vdpa/0 [allocating] waiting: waiting for machine
+18:44:05 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twk8vdpa/0 [idle] active: 
+18:44:35 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: waiting for machine
+18:45:05 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: waiting for machine
+18:45:36 INFO Waiting for model:
+  test-twk8vdpa/0 [allocating] waiting: agent initialising
+18:46:06 INFO Waiting for model:
+  test-twk8vdpa/0 [executing] maintenance: installing charm software
+18:46:36 INFO Waiting for model:
+  test-twk8vdpa/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-twk8vdpa/0 [idle] active: 
+18:47:07 INFO Waiting for model:
+  test-twk8vdpa/0 [idle] active:

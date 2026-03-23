@@ -1,0 +1,101 @@
+18:43:38 WARNING unexpected facade SSHServer received from the controller
+18:43:38 INFO Adding model github-pr-d3108-lxd:test-multi-unit-same-machine-31wo on cloud localhost
+18:43:38 WARNING unexpected facade SSHServer received from the controller
+18:43:38 WARNING unexpected facade SSHSession received from the controller
+18:43:38 WARNING unexpected facade SSHTunneler received from the controller
+18:43:38 WARNING unexpected facade SecretsRevoker received from the controller
+18:43:39 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:43:41 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:56 INFO Deploying local:jammy/github-runner-0
+18:43:56 INFO Waiting for model:
+  test-xwpp4db6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xwpp4db6/0 [allocating] waiting: waiting for machine
+18:44:26 INFO Waiting for model:
+  test-xwpp4db6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xwpp4db6/0 [allocating] waiting: waiting for machine
+18:44:56 INFO Waiting for model:
+  test-xwpp4db6/0 [allocating] waiting: waiting for machine
+18:45:26 INFO Waiting for model:
+  test-xwpp4db6/0 [allocating] waiting: agent initialising
+18:45:56 INFO Waiting for model:
+  test-xwpp4db6/0 [executing] maintenance: installing charm software
+18:46:27 INFO Waiting for model:
+  test-xwpp4db6/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-xwpp4db6/0 [idle] active: 
+18:46:57 INFO Waiting for model:
+  test-xwpp4db6/0 [idle] active:
+18:47:01 INFO Waiting for model:
+  test-xwpp4db6/0 [idle] active: 
+  test-xwpp4db6/1 [allocating] waiting: installing agent
+18:47:31 INFO Waiting for model:
+  test-xwpp4db6/0 [idle] active: 
+  test-xwpp4db6/1 [executing] maintenance: installing charm software
+18:48:02 INFO Waiting for model:
+  test-xwpp4db6/0 [idle] active: 
+  test-xwpp4db6/1 [executing] maintenance: Update image for runners
+18:48:21 INFO File content of /var/lib/github-runner-manager/test-xwpp4db6-0/http_port: 55555
+18:48:22 INFO File content of /var/lib/github-runner-manager/test-xwpp4db6-1/http_port: 55556
+18:48:25 INFO File content of /var/lib/github-runner-manager/test-xwpp4db6-1/http_port: 55556
+18:48:28 INFO File content of /var/lib/github-runner-manager/test-xwpp4db6-1/http_port: 55556
+18:48:28 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-31wo  github-pr-d3108-lxd  localhost/localhost  3.6.19   unsupported  18:48:28Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-xwpp4db6           active      1  any-charm      latest/beta  133  no       
+test-xwpp4db6                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-xwpp4db6/0*  active    idle   0        10.87.77.228           
+test-xwpp4db6/0*                         active    idle   1        10.87.77.235           
+test-xwpp4db6/1                          active    idle   1        10.87.77.235           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.87.77.228  juju-ce5fea-0  ubuntu@24.04  github-runner  Running
+1        started  10.87.77.235  juju-ce5fea-1  ubuntu@22.04  github-runner  Running
+
+18:48:29 INFO Juju error logs:
+
+machine-0: 18:44:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:44:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:45:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:45:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-xwpp4db6-0: 18:46:22 ERROR unit.test-xwpp4db6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-xwpp4db6-0: 18:46:23 ERROR unit.test-xwpp4db6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-xwpp4db6-1: 18:47:38 ERROR unit.test-xwpp4db6/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-xwpp4db6-1: 18:47:39 ERROR unit.test-xwpp4db6/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-xwpp4db6-1/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:48:29 INFO Forgetting model main...
