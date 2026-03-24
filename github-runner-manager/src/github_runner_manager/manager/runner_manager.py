@@ -1,6 +1,8 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
+# RunnerInfo is duplicated in runner_scaler (legacy), will be removed in follow-up PR.
+# pylint: disable=duplicate-code
 """Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
 import copy
@@ -43,6 +45,27 @@ RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 RUNNER_MAXIMUM_CREATION_TIME = CREATE_SERVER_TIMEOUT + sum(RUNNER_CREATION_WAITING_TIMES) + 120
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
+
+
+@dataclass(frozen=True)
+class RunnerInfo:
+    """Aggregated information on the runners.
+
+    Attributes:
+        online: The number of runners in online state.
+        busy: The number of runners in busy state.
+        offline: The number of runners in offline state.
+        unknown: The number of runners in unknown state.
+        runners: The names of the online runners.
+        busy_runners: The names of the busy runners.
+    """
+
+    online: int
+    busy: int
+    offline: int
+    unknown: int
+    runners: tuple[str, ...]
+    busy_runners: tuple[str, ...]
 
 
 class FlushMode(Enum):
@@ -261,6 +284,42 @@ class RunnerManager:
                 platform_health_state=health_runners_map.get(vm.instance_id, None),
             )
             for vm in vms
+        )
+
+    def get_runner_info(self) -> RunnerInfo:
+        """Get aggregated information on the runners.
+
+        Returns:
+            Aggregated runner counts and names.
+        """
+        runner_list = self.get_runners()
+        online = 0
+        busy = 0
+        offline = 0
+        unknown = 0
+        online_runners: list[str] = []
+        busy_runners: list[str] = []
+        for runner in runner_list:
+            match runner.platform_state:
+                case PlatformRunnerState.BUSY:
+                    online += 1
+                    online_runners.append(runner.name)
+                    busy += 1
+                    busy_runners.append(runner.name)
+                case PlatformRunnerState.IDLE:
+                    online += 1
+                    online_runners.append(runner.name)
+                case PlatformRunnerState.OFFLINE:
+                    offline += 1
+                case _:
+                    unknown += 1
+        return RunnerInfo(
+            online=online,
+            busy=busy,
+            offline=offline,
+            unknown=unknown,
+            runners=tuple(online_runners),
+            busy_runners=tuple(busy_runners),
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
