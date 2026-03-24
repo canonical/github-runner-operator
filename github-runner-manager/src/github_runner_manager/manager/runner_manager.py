@@ -1,8 +1,6 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# RunnerInfo is duplicated in runner_scaler (legacy), will be removed in follow-up PR.
-# pylint: disable=duplicate-code
 """Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
 import copy
