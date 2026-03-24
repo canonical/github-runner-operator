@@ -6,7 +6,6 @@
 import fcntl
 import json
 import logging
-import os
 import socket
 import textwrap
 from pathlib import Path
@@ -344,7 +343,6 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         log_file: The file location to store the logs.
         log_level: The log level of the service.
     """
-    python_path = Path(os.getcwd()) / "venv"
     instance = _normalized_unit(unit_name)
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
@@ -360,7 +358,7 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {http_port} \
---python-path {str(python_path)} --log-level {log_level}
+--log-level {log_level}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5

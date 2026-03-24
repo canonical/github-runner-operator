@@ -20,8 +20,8 @@ from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.manager.pressure_reconciler import (
     PressureReconciler,
     build_pressure_reconciler,
+    build_runner_manager,
 )
-from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
 version = importlib.metadata.version("github-runner-manager")
@@ -94,19 +94,12 @@ def handle_shutdown(
     default="INFO",
     help="The log level for the application.",
 )
-@click.option(
-    "--python-path",
-    type=str,
-    required=False,
-    help="The PYTHONPATH to access the github-runner-manager library.",
-)
 # The entry point for the CLI will be tested with integration test.
-def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+def main(
     config_file: TextIO,
     host: str,
     port: int,
     debug: bool,
-    python_path: str | None,
     log_level: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
@@ -116,8 +109,10 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         host: The hostname to listen on for the HTTP server
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
-        python_path: PYTHONPATH to access the github-runner-manager library.
         log_level: The log level.
+
+    Raises:
+        ClickException: If no non-reactive combinations are configured.
     """
     logging.basicConfig(
         level=log_level,
@@ -128,30 +123,28 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_file.read()))
     lock = Lock()
 
+    combinations = config.non_reactive_configuration.combinations
+    if not combinations:
+        raise click.ClickException("No non-reactive combinations configured.")
+    runner_manager = build_runner_manager(config, combinations[0])
+    pressure_reconciler = build_pressure_reconciler(config, runner_manager, lock)
+
     thread_manager = ThreadManager()
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
     thread_manager.add_thread(
-        target=partial(start_http_server, config, lock, http_server_args),
+        target=partial(start_http_server, runner_manager, lock, http_server_args),
         daemon=True,
     )
 
-    if config.planner_url and config.planner_token:
-        pressure_reconciler = build_pressure_reconciler(config, lock)
-        shutdown = partial(
-            handle_shutdown,
-            pressure_reconciler=pressure_reconciler,
-            thread_manager=thread_manager,
-        )
-        signal.signal(signal.SIGTERM, shutdown)
-        signal.signal(signal.SIGINT, shutdown)
-        thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
-        thread_manager.add_thread(target=pressure_reconciler.start_reconcile_loop, daemon=True)
-    # Legacy mode is still supported for deployments without planner config.
-    else:
-        thread_manager.add_thread(
-            target=partial(start_reconcile_service, config, python_path, lock),
-            daemon=True,
-        )
+    shutdown = partial(
+        handle_shutdown,
+        pressure_reconciler=pressure_reconciler,
+        thread_manager=thread_manager,
+    )
+    signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGINT, shutdown)
+    thread_manager.add_thread(target=pressure_reconciler.start_create_loop, daemon=True)
+    thread_manager.add_thread(target=pressure_reconciler.start_reconcile_loop, daemon=True)
 
     thread_manager.start()
     thread_manager.raise_on_error()

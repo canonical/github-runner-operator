@@ -186,7 +186,12 @@ def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
     """Poll check-runners action until at least one runner is online."""
     unit = f"{app_name}/0"
     for attempt in range(20):
-        result = juju.run(unit, "check-runners")
+        try:
+            result = juju.run(unit, "check-runners")
+        except TimeoutError:
+            logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
+            time.sleep(30)
+            continue
         if result.status == "completed" and int(result.results["online"]) >= 1:
             return
         logger.info("Waiting for runner (attempt %d): online=%s", attempt, result.results)
@@ -198,7 +203,12 @@ def _wait_for_no_runners(juju: jubilant.Juju, app_name: str) -> None:
     """Poll check-runners action until all runners are gone."""
     unit = f"{app_name}/0"
     for attempt in range(20):
-        result = juju.run(unit, "check-runners")
+        try:
+            result = juju.run(unit, "check-runners")
+        except TimeoutError:
+            logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
+            time.sleep(30)
+            continue
         if (
             result.status == "completed"
             and result.results["online"] == "0"
