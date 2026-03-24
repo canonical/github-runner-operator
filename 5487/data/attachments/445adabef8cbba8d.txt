@@ -1,0 +1,74 @@
+07:18:33 WARNING unexpected facade SSHServer received from the controller
+07:18:33 INFO cli: juju debug-log --model github-pr-d3108-lxd:test-charm-no-runner-lmrc --limit 1000
+07:18:34 INFO OpenStack servers: []
+07:18:34 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-lmrc  github-pr-d3108-lxd  localhost/localhost  3.6.19   unsupported  07:18:34Z
+
+App                                   Version  Status   Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-bf5mjixg           waiting    0/1  any-charm      latest/beta  133  no       agent initialising
+test-bf5mjixg                                  blocked      1  github-runner                 0  no       Please provide image integration.
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-bf5mjixg/0*  waiting   allocating  0        10.178.162.253         agent initialising
+test-bf5mjixg/0*                         blocked   idle        1        10.178.162.222         Please provide image integration.
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.178.162.253  juju-ac19a3-0  ubuntu@24.04  github-runner  Running
+1        started  10.178.162.222  juju-ac19a3-1  ubuntu@22.04  github-runner  Running
+
+07:18:34 INFO Juju error logs:
+
+machine-0: 06:49:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:01 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:05 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:09 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:14 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:20 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:29 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:38 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:49:49 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:50:02 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:50:17 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:50:36 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+machine-1: 06:50:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:50:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-bf5mjixg-0: 06:50:57 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:51:26 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-test-bf5mjixg-0: 06:51:45 ERROR unit.test-bf5mjixg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-bf5mjixg-0: 06:51:47 ERROR unit.test-bf5mjixg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bf5mjixg-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-bf5mjixg-0: 06:52:00 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:52:37 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:53:24 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:54:20 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:55:30 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:56:51 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 06:58:35 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:00:32 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:02:34 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:04:44 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:06:34 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:08:45 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:10:52 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:13:04 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:15:13 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+unit-github-runner-image-builder-bf5mjixg-0: 07:17:19 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/any-charm-133" for github-runner-image-builder-bf5mjixg/0: failed to download charm "ch:amd64/any-charm-133" from API server: download request with archiveSha256 length 0 not valid
+
+07:18:34 INFO Forgetting model main...
