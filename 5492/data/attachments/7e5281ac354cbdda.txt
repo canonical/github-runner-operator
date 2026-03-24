@@ -1,0 +1,53 @@
+19:15:29 INFO Wait for condition not met, sleeping 10
+19:17:01 INFO Wait for condition not met, sleeping 10
+19:17:14 INFO Wait for condition not met, sleeping 10
+19:17:28 INFO Wait for condition not met, sleeping 10
+19:17:41 INFO Wait for condition not met, sleeping 10
+19:17:54 INFO Wait for condition not met, sleeping 10
+19:18:07 INFO Wait for condition not met, sleeping 10
+19:18:20 INFO Wait for condition not met, sleeping 10
+19:18:33 INFO Wait for condition not met, sleeping 10
+19:18:46 INFO Wait for condition not met, sleeping 10
+19:19:00 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-03ig  github-pr-1e1f8-lxd  localhost/localhost  3.6.19   unsupported  19:19:00Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-r15rtf00           active      1  any-charm      latest/beta  133  no       
+test-r15rtf00                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-r15rtf00/0*  active    idle   0        10.31.3.159            
+test-r15rtf00/0*                         active    idle   1        10.31.3.205            
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.31.3.159  juju-70850c-0  ubuntu@24.04  github-runner  Running
+1        started  10.31.3.205  juju-70850c-1  ubuntu@24.04  github-runner  Running
+
+19:19:00 INFO Juju error logs:
+
+machine-0: 18:46:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:46:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:48:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:48:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-r15rtf00-0: 18:49:17 ERROR unit.test-r15rtf00/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 375, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-r15rtf00-0: 18:49:19 ERROR unit.test-r15rtf00/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 122, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 338, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-r15rtf00-0/charm/./src/charm.py", line 570, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+19:19:00 INFO Forgetting model main...

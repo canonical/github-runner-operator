@@ -1,0 +1,27 @@
+18:45:32 WARNING unexpected facade SSHServer received from the controller
+18:45:32 INFO Adding model github-pr-1e1f8-lxd:test-charm-no-runner-omqb on cloud localhost
+18:45:32 WARNING unexpected facade SSHServer received from the controller
+18:45:32 WARNING unexpected facade SSHSession received from the controller
+18:45:32 WARNING unexpected facade SSHTunneler received from the controller
+18:45:32 WARNING unexpected facade SecretsRevoker received from the controller
+18:45:32 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:45:35 INFO Deploying ch:amd64/noble/any-charm-133
+18:45:49 INFO Deploying local:jammy/github-runner-0
+18:45:49 INFO Waiting for model:
+  test-bvz6zmqk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bvz6zmqk/0 [allocating] waiting: waiting for machine
+18:46:20 INFO Waiting for model:
+  test-bvz6zmqk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bvz6zmqk/0 [allocating] waiting: waiting for machine
+18:46:50 INFO Waiting for model:
+  test-bvz6zmqk/0 [allocating] waiting: waiting for machine
+18:47:20 INFO Waiting for model:
+  test-bvz6zmqk/0 [allocating] waiting: waiting for machine
+18:47:51 INFO Waiting for model:
+  test-bvz6zmqk/0 [executing] maintenance: installing charm software
+18:48:21 INFO Waiting for model:
+  test-bvz6zmqk/0 [executing] maintenance: installing charm software
+18:48:51 INFO Waiting for model:
+  test-bvz6zmqk/0 [executing] maintenance: Update image for runners
+18:49:07 INFO Waiting for model:
+  test-bvz6zmqk/0 [idle] active:
