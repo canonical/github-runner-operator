@@ -9,8 +9,8 @@ from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     SupportServiceConfig,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
@@ -58,7 +58,7 @@ def create_application_configuration(
         aproxy_redirect_ports=state.charm_config.aproxy_redirect_ports,
         custom_pre_job_script=state.charm_config.custom_pre_job_script,
     )
-    non_reactive_configuration = _get_non_reactive_configuration(state)
+    runner_configuration = _get_runner_configuration(state)
     openstack_configuration = create_openstack_configuration(state, unit_name)
     return ApplicationConfiguration(
         allow_external_contributor=state.charm_config.allow_external_contributor,
@@ -66,7 +66,7 @@ def create_application_configuration(
         extra_labels=extra_labels,
         github_config=github_configuration,
         service_config=service_config,
-        non_reactive_configuration=non_reactive_configuration,
+        runner_configuration=runner_configuration,
         openstack_configuration=openstack_configuration,
         planner_url=state.planner_config.endpoint if state.planner_config else None,
         planner_token=state.planner_config.token if state.planner_config else None,
@@ -74,8 +74,8 @@ def create_application_configuration(
     )
 
 
-def _get_non_reactive_configuration(state: CharmState) -> NonReactiveConfiguration:
-    """Get NonReactiveConfiguration from CharmState.
+def _get_runner_configuration(state: CharmState) -> RunnerConfiguration:
+    """Get RunnerConfiguration from CharmState.
 
     Currently only one image and one flavor is supported.
     """
@@ -98,14 +98,14 @@ def _get_non_reactive_configuration(state: CharmState) -> NonReactiveConfigurati
             ),
         )
         combinations = [
-            NonReactiveCombination(
+            RunnerCombination(
                 image=image,
                 flavor=flavor,
                 base_virtual_machines=state.runner_config.base_virtual_machines,
                 max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
             )
         ]
-    return NonReactiveConfiguration(combinations=combinations)
+    return RunnerConfiguration(combinations=combinations)
 
 
 def create_openstack_configuration(state: CharmState, unit_name: str) -> OpenStackConfiguration:

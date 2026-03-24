@@ -233,7 +233,7 @@ def create_default_config(
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },
-        "non_reactive_configuration": {
+        "runner_configuration": {
             "combinations": [
                 {
                     "image": {

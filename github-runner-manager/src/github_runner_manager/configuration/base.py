@@ -47,7 +47,7 @@ class ApplicationConfiguration(BaseModel):
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
         service_config: The configuration for supporting services.
-        non_reactive_configuration: Configuration for non-reactive mode.
+        runner_configuration: Runner flavor/image configuration.
         openstack_configuration: Configuration for authorization to a OpenStack host.
         planner_url: Base URL of the planner service.
         planner_token: Bearer token to authenticate against the planner service.
@@ -59,7 +59,7 @@ class ApplicationConfiguration(BaseModel):
     extra_labels: list[str]
     github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
-    non_reactive_configuration: "NonReactiveConfiguration"
+    runner_configuration: "RunnerConfiguration"
     openstack_configuration: OpenStackConfiguration
     planner_url: Optional[AnyHttpUrl] = None
     planner_token: Optional[str] = None
@@ -195,18 +195,18 @@ class SSHDebugConnection(BaseModel):
     local_proxy_port: int = 3129
 
 
-class NonReactiveConfiguration(BaseModel):
-    """Configuration for non-reactive mode.
+class RunnerConfiguration(BaseModel):
+    """Runner flavor/image configuration.
 
     Attributes:
-        combinations: Different combinations of flavor and image to spawn in non-reactive mode.
+        combinations: Different combinations of flavor and image to spawn.
     """
 
-    combinations: "list[NonReactiveCombination]"
+    combinations: "list[RunnerCombination]"
 
 
-class NonReactiveCombination(BaseModel):
-    """Combination of image and flavor that the application can spawn in non-reactive mode.
+class RunnerCombination(BaseModel):
+    """Combination of image and flavor that the application can spawn.
 
     Attributes:
         image: Information about the image to spawn.
@@ -271,5 +271,5 @@ class Flavor(BaseModel):
 # For pydantic to work with forward references.
 ApplicationConfiguration.update_forward_refs()
 SupportServiceConfig.update_forward_refs()
-NonReactiveConfiguration.update_forward_refs()
-NonReactiveCombination.update_forward_refs()
+RunnerConfiguration.update_forward_refs()
+RunnerCombination.update_forward_refs()

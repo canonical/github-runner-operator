@@ -560,7 +560,7 @@ def test_build_pressure_reconciler_no_planner_config():
     combination = MagicMock()
     combination.base_virtual_machines = 2
     combination.max_total_virtual_machines = 10
-    mock_config.non_reactive_configuration.combinations = [combination]
+    mock_config.runner_configuration.combinations = [combination]
 
     reconciler = build_pressure_reconciler(mock_config, MagicMock(), Lock())
 
@@ -594,7 +594,7 @@ def test_build_pressure_reconciler_partial_planner_config_raises(
     combination = MagicMock()
     combination.base_virtual_machines = 2
     combination.max_total_virtual_machines = 10
-    mock_config.non_reactive_configuration.combinations = [combination]
+    mock_config.runner_configuration.combinations = [combination]
 
     with pytest.raises(ValueError, match="[Pp]artial"):
         build_pressure_reconciler(mock_config, MagicMock(), Lock())

@@ -153,9 +153,8 @@ config:
       type: int
       default: 0
       description: >-
-        The number of non-reactive virtual machine runners spawned by the charm per each
-        combination of flavor and base. Currently, if the charm is integrated with MongoDB
-        this config option will be ignored.
+        The number of virtual machine runners spawned by the charm per each
+        combination of flavor and base.
     max-total-virtual-machines:
       type: int
       default: 0

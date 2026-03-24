@@ -16,8 +16,8 @@ from src.github_runner_manager.configuration import (
     GitHubConfiguration,
     GitHubOrg,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     ProxyConfig,
     SSHDebugConnection,
     SupportServiceConfig,
@@ -37,7 +37,7 @@ github_config:
     group: group
     org: canonical
   token: githubtoken
-non_reactive_configuration:
+runner_configuration:
   combinations:
   - base_virtual_machines: 1
     max_total_virtual_machines: 2
@@ -114,9 +114,9 @@ def app_config_fixture() -> ApplicationConfiguration:
                 )
             ],
         ),
-        non_reactive_configuration=NonReactiveConfiguration(
+        runner_configuration=RunnerConfiguration(
             combinations=[
-                NonReactiveCombination(
+                RunnerCombination(
                     image=Image(
                         name="image_id",
                         labels=["arm64", "noble"],
@@ -172,16 +172,16 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     assert loaded_app_config == app_config
 
 
-def test_non_reactive_combination_rejects_max_below_base():
+def test_runner_combination_rejects_max_below_base():
     """
-    arrange: A NonReactiveCombination where max_total_virtual_machines < base_virtual_machines.
+    arrange: A RunnerCombination where max_total_virtual_machines < base_virtual_machines.
     act: Construct the model.
     assert: A ValidationError is raised.
     """
     with pytest.raises(
         ValueError, match="max_total_virtual_machines.*must be.*base_virtual_machines"
     ):
-        NonReactiveCombination(
+        RunnerCombination(
             image=Image(name="img", labels=[]),
             flavor=Flavor(name="flv", labels=[]),
             base_virtual_machines=5,
@@ -189,13 +189,13 @@ def test_non_reactive_combination_rejects_max_below_base():
         )
 
 
-def test_non_reactive_combination_allows_zero_max():
+def test_runner_combination_allows_zero_max():
     """
-    arrange: A NonReactiveCombination where max_total_virtual_machines is 0 (no cap).
+    arrange: A RunnerCombination where max_total_virtual_machines is 0 (no cap).
     act: Construct the model.
     assert: No error is raised.
     """
-    combo = NonReactiveCombination(
+    combo = RunnerCombination(
         image=Image(name="img", labels=[]),
         flavor=Flavor(name="flv", labels=[]),
         base_virtual_machines=5,

@@ -6,8 +6,8 @@ from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     ProxyConfig,
     SSHDebugConnection,
     SupportServiceConfig,
@@ -68,9 +68,9 @@ def test_create_application_configuration(
                 )
             ],
         ),
-        non_reactive_configuration=NonReactiveConfiguration(
+        runner_configuration=RunnerConfiguration(
             combinations=[
-                NonReactiveCombination(
+                RunnerCombination(
                     image=Image(name="image_id", labels=["arm64", "noble"]),
                     flavor=Flavor(name="flavor", labels=["flavorlabel"]),
                     base_virtual_machines=1,
