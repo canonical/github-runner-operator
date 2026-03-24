@@ -22,7 +22,7 @@ def test_new_instance_id():
     assert instance_id.name == str(instance_id)
     assert instance_id.prefix == prefix
     assert instance_id.name.startswith(prefix)
-    assert "-n-" in instance_id.name
+    assert "-n-" not in instance_id.name
 
 
 def test_build_instance_id_from_name():
@@ -81,15 +81,14 @@ def test_backward_compatible_names_without_type_prefix():
 
     assert instance_id.prefix == prefix
     assert instance_id.suffix == "96950f351751"
-    # New format always uses n- prefix
-    assert instance_id.name == "unit-0-n-96950f351751"
+    assert instance_id.name == "unit-0-96950f351751"
 
 
 def test_backward_compatible_names_with_reactive_prefix():
     """
     arrange: A prefix and a name with legacy r- (reactive) prefix.
     act: Create the instance ID from the prefix and name.
-    assert: The r- prefix is stripped and suffix is parsed correctly.
+    assert: The r- prefix is preserved in .name so the VM can be looked up.
     """
     prefix = "unit-0"
     name = "unit-0-r-96950f351751"
@@ -98,3 +97,20 @@ def test_backward_compatible_names_with_reactive_prefix():
 
     assert instance_id.prefix == prefix
     assert instance_id.suffix == "96950f351751"
+    assert instance_id.name == name
+
+
+def test_backward_compatible_names_with_non_reactive_prefix():
+    """
+    arrange: A prefix and a name with legacy n- (non-reactive) prefix.
+    act: Create the instance ID from the prefix and name.
+    assert: The n- prefix is preserved in .name so the VM can be looked up.
+    """
+    prefix = "unit-0"
+    name = "unit-0-n-96950f351751"
+
+    instance_id = InstanceID.build_from_name(prefix, name)
+
+    assert instance_id.prefix == prefix
+    assert instance_id.suffix == "96950f351751"
+    assert instance_id.name == name

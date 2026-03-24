@@ -32,6 +32,8 @@ class InstanceID:
 
     prefix: str
     suffix: str
+    # Legacy infix (e.g. "n-" or "r-") preserved so existing VMs can be looked up by name.
+    _legacy_infix: str = field(default="", compare=False, repr=False)
 
     @property
     def name(self) -> str:
@@ -40,7 +42,7 @@ class InstanceID:
         Returns:
            Name of the instance
         """
-        return f"{self.prefix}-n-{self.suffix}"
+        return f"{self.prefix}-{self._legacy_infix}{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -61,14 +63,17 @@ class InstanceID:
         else:
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
-        # Strip legacy r-/n- prefixes from existing VMs for backward compatibility.
+        # Preserve legacy r-/n- infix so .name reconstructs the original server name.
+        legacy_infix = ""
         separator = suffix[:2]
         if separator in ("r-", "n-"):
+            legacy_infix = separator
             suffix = suffix[2:]
 
         return cls(
             prefix=prefix,
             suffix=suffix,
+            _legacy_infix=legacy_infix,
         )
 
     @classmethod
