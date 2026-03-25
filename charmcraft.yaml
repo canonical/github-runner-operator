@@ -154,7 +154,7 @@ config:
       default: 0
       description: >-
         The number of virtual machine runners spawned by the charm per each
-        combination of flavor and base.
+        combination of flavor and image.
     max-total-virtual-machines:
       type: int
       default: 0

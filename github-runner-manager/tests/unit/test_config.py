@@ -16,9 +16,9 @@ from src.github_runner_manager.configuration import (
     GitHubConfiguration,
     GitHubOrg,
     Image,
+    ProxyConfig,
     RunnerCombination,
     RunnerConfiguration,
-    ProxyConfig,
     SSHDebugConnection,
     SupportServiceConfig,
 )

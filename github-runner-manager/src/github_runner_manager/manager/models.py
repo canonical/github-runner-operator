@@ -33,7 +33,7 @@ class InstanceID:
     prefix: str
     suffix: str
     # Legacy infix (e.g. "n-" or "r-") preserved so existing VMs can be looked up by name.
-    _legacy_infix: str = field(default="", compare=False, repr=False)
+    _legacy_infix: str = field(default="", repr=False)
 
     @property
     def name(self) -> str:
