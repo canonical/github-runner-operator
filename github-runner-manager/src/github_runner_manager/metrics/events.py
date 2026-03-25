@@ -139,7 +139,7 @@ class Reconciliation(Event):
     crashed_runners: int
     idle_runners: int
     active_runners: int
-    expected_runners: int | None
+    expected_runners: int
     duration: NonNegativeFloat
 
 
