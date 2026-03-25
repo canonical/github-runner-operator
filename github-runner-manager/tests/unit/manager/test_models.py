@@ -13,7 +13,7 @@ def test_new_instance_id():
     arrange: Having an Application prefix.
     act: Create a new InstanceId.
     assert: The new instance fields are correct: same prefix, name starts with prefix,
-       and contains n- prefix in the name.
+       and no legacy infix is present.
     """
     prefix = "theprefix"
 
@@ -72,7 +72,7 @@ def test_backward_compatible_names_without_type_prefix():
     """
     arrange: A prefix and a name without r-/n- type prefix (old format).
     act: Create the instance ID from the prefix and name.
-    assert: Suffix is parsed correctly. New name includes n- prefix.
+    assert: Suffix is parsed correctly and the original name is preserved.
     """
     prefix = "unit-0"
     name = "unit-0-96950f351751"
