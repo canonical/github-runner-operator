@@ -159,9 +159,8 @@ config:
       type: int
       default: 0
       description: >-
-        If the github-runner charm is integrated with MongoDB, the reactive mode will not spawn
-        new virtual machines if there are max-total-virtual-machines of more virtual machines
-        managed by the charm.
+        Maximum number of virtual machines managed by the charm. The charm will not spawn
+        new runners beyond this limit. Set to 0 (default) for no cap.
     flavor-label-combinations:
       type: string
       default: ""
