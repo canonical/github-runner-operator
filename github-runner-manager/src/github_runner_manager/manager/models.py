@@ -63,7 +63,9 @@ class InstanceID:
         else:
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
-        # Preserve legacy r-/n- infix so .name reconstructs the original server name.
+        # Backward compatibility: older VMs were created with an r- (reactive) or n-
+        # (non-reactive) infix. We preserve it so .name reconstructs the original server
+        # name, which is needed for OpenStack lookups and deletions.
         legacy_infix = ""
         separator = suffix[:2]
         if separator in ("r-", "n-"):
