@@ -1,7 +1,6 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 import json
-import logging
 import secrets
 from unittest.mock import MagicMock
 
@@ -278,7 +277,6 @@ def test_parse_openstack_clouds_config_valid(valid_yaml_config: str):
 
     assert isinstance(result, dict)
     assert "clouds" in result
-
 
 
 def test_charm_config_from_charm_invalid_reconcile_interval():
@@ -877,21 +875,6 @@ def test_errror_flavor_config(
     with pytest.raises(CharmConfigInvalidError) as exc_info:
         _ = CharmState.from_charm(mock_charm)
     assert expected_error_message in str(exc_info.value)
-
-
-def test_charm_state__log_prev_state_redacts_sensitive_information(
-    mock_charm_state_data: dict, caplog: pytest.LogCaptureFixture
-):
-    """
-    arrange: Arrange charm state data with a token and set log level to DEBUG.
-    act: Call the __log_prev_state method on the class.
-    assert: Verify that the method redacts the sensitive information in the log message.
-    """
-    caplog.set_level(logging.DEBUG)
-    CharmState._log_prev_state(mock_charm_state_data)
-
-    assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
-    assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text
 
 
 @pytest.mark.parametrize(

@@ -6,9 +6,9 @@ from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
     Image,
+    ProxyConfig,
     RunnerCombination,
     RunnerConfiguration,
-    ProxyConfig,
     SSHDebugConnection,
     SupportServiceConfig,
 )
