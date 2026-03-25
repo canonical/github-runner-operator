@@ -5,7 +5,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2026-03-25
 
 - Removed `mongodb` relation. MongoDB-based reactive runner spawning is no longer supported. **If you have an active MongoDB relation, remove it with `juju remove-relation` before upgrading.**
-- Removed `reactive.md` how-to documentation.
+- Updated documentation to clarify that reactive MongoDB-based runner spawning is no longer supported.
 
 ## 2026-03-20
 
