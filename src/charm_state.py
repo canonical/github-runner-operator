@@ -459,6 +459,10 @@ class CharmConfig(BaseModel):
             raise CharmConfigInvalidError(
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be int"
             ) from err
+        if reconcile_interval < 1:
+            raise CharmConfigInvalidError(
+                f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be greater than or equal to 1"
+            )
 
         dockerhub_mirror = cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME, "")) or None
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)

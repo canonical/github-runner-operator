@@ -295,6 +295,19 @@ def test_charm_config_from_charm_invalid_reconcile_interval():
     assert str(exc_info.value) == "The reconcile-interval config must be int"
 
 
+def test_charm_config_from_charm_reconcile_interval_too_low():
+    """
+    arrange: Create a mock CharmBase instance with a reconcile interval below 1.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[RECONCILE_INTERVAL_CONFIG_NAME] = "0"
+
+    with pytest.raises(CharmConfigInvalidError, match="greater than or equal to 1"):
+        CharmConfig.from_charm(mock_charm)
+
+
 def test_charm_config_from_charm_invalid_labels():
     """
     arrange: Create a mock CharmBase instance with an invalid reconcile interval.

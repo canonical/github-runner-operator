@@ -63,7 +63,7 @@ class ApplicationConfiguration(BaseModel):
     openstack_configuration: OpenStackConfiguration
     planner_url: Optional[AnyHttpUrl] = None
     planner_token: Optional[str] = None
-    reconcile_interval: int
+    reconcile_interval: int = Field(ge=1)
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":
