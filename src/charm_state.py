@@ -314,32 +314,6 @@ class CharmConfig(BaseModel):
 
         return openstack_clouds_yaml
 
-    @validator("reconcile_interval")
-    @classmethod
-    def check_reconcile_interval(cls, reconcile_interval: int) -> int:
-        """Validate the general charm configuration.
-
-        Args:
-            reconcile_interval: The value of reconcile_interval passed to class instantiation.
-
-        Raises:
-            ValueError: if an invalid reconcile_interval value of less than 2 has been passed.
-
-        Returns:
-            The validated reconcile_interval value.
-        """
-        if reconcile_interval < 2:
-            logger.error(
-                "The %s configuration must be greater than or equal to 1",
-                RECONCILE_INTERVAL_CONFIG_NAME,
-            )
-            raise ValueError(
-                f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal"
-                " to 1"
-            )
-
-        return reconcile_interval
-
     @staticmethod
     def _parse_list(input_: str | list[str] | None) -> list[str]:
         """Split a comma-separated list of strings into a list of strings.
