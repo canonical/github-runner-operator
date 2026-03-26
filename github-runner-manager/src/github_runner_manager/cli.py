@@ -112,7 +112,7 @@ def main(
         log_level: The log level.
 
     Raises:
-        ClickException: If no non-reactive combinations are configured.
+        ClickException: If no runner combinations are configured.
     """
     logging.basicConfig(
         level=log_level,
@@ -123,9 +123,9 @@ def main(
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_file.read()))
     lock = Lock()
 
-    combinations = config.non_reactive_configuration.combinations
+    combinations = config.runner_configuration.combinations
     if not combinations:
-        raise click.ClickException("No non-reactive combinations configured.")
+        raise click.ClickException("No runner combinations configured.")
     runner_manager = build_runner_manager(config, combinations[0])
     pressure_reconciler = build_pressure_reconciler(config, runner_manager, lock)
 

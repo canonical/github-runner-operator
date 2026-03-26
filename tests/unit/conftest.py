@@ -176,9 +176,6 @@ def complete_charm_state_fixture():
                 tags=["arm64", "noble"],
             ),
         ),
-        reactive_config=charm_state.ReactiveConfig(
-            mq_uri="mongodb://user:password@localhost:27017",
-        ),
         ssh_debug_connections=[
             charm_state.SSHDebugConnection(
                 host="10.10.10.10",

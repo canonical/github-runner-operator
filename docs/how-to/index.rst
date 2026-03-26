@@ -40,7 +40,6 @@ basic operations you can complete with the charm.
     Debug with SSH <debug-with-ssh>
     Integrate with COS <integrate-with-cos>
     Spawn OpenStack runner <openstack-runner>
-    Set up reactive spawning <reactive>
 
 Update and refresh
 ------------------
