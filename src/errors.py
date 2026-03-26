@@ -18,10 +18,6 @@ class ConfigurationError(Exception):
     """Error for juju configuration."""
 
 
-class MissingMongoDBError(Exception):
-    """Error for missing integration data."""
-
-
 class SubprocessError(Exception):
     """Error for Subprocess calls.
 

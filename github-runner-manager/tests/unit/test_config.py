@@ -9,7 +9,6 @@ from ipaddress import IPv4Address
 
 import pytest
 import yaml
-from pydantic import MongoDsn
 
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
@@ -17,11 +16,9 @@ from src.github_runner_manager.configuration import (
     GitHubConfiguration,
     GitHubOrg,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
 )
@@ -40,7 +37,7 @@ github_config:
     group: group
     org: canonical
   token: githubtoken
-non_reactive_configuration:
+runner_configuration:
   combinations:
   - base_virtual_machines: 1
     max_total_virtual_machines: 2
@@ -53,20 +50,6 @@ non_reactive_configuration:
       - arm64
       - noble
       name: image_id
-reactive_configuration:
-  flavors:
-  - labels:
-    - flavorlabel
-    name: flavor
-  images:
-  - labels:
-    - arm64
-    - noble
-    name: image_id
-  max_total_virtual_machines: 2
-  queue:
-    mongodb_uri: mongodb://user:password@localhost:27017
-    queue_name: app_name
 service_config:
   dockerhub_mirror: https://docker.example.com
   proxy_config:
@@ -131,9 +114,9 @@ def app_config_fixture() -> ApplicationConfiguration:
                 )
             ],
         ),
-        non_reactive_configuration=NonReactiveConfiguration(
+        runner_configuration=RunnerConfiguration(
             combinations=[
-                NonReactiveCombination(
+                RunnerCombination(
                     image=Image(
                         name="image_id",
                         labels=["arm64", "noble"],
@@ -146,25 +129,6 @@ def app_config_fixture() -> ApplicationConfiguration:
                     max_total_virtual_machines=2,
                 )
             ]
-        ),
-        reactive_configuration=ReactiveConfiguration(
-            queue=QueueConfig(
-                mongodb_uri=MongoDsn(
-                    "mongodb://user:password@localhost:27017",
-                    scheme="mongodb",
-                    user="user",
-                    password="password",
-                    host="localhost",
-                    host_type="int_domain",
-                    port="27017",
-                ),
-                queue_name="app_name",
-            ),
-            max_total_virtual_machines=2,
-            images=[
-                Image(name="image_id", labels=["arm64", "noble"]),
-            ],
-            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
             vm_prefix="test_unit",
@@ -208,16 +172,16 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     assert loaded_app_config == app_config
 
 
-def test_non_reactive_combination_rejects_max_below_base():
+def test_runner_combination_rejects_max_below_base():
     """
-    arrange: A NonReactiveCombination where max_total_virtual_machines < base_virtual_machines.
+    arrange: A RunnerCombination where max_total_virtual_machines < base_virtual_machines.
     act: Construct the model.
     assert: A ValidationError is raised.
     """
     with pytest.raises(
         ValueError, match="max_total_virtual_machines.*must be.*base_virtual_machines"
     ):
-        NonReactiveCombination(
+        RunnerCombination(
             image=Image(name="img", labels=[]),
             flavor=Flavor(name="flv", labels=[]),
             base_virtual_machines=5,
@@ -225,13 +189,13 @@ def test_non_reactive_combination_rejects_max_below_base():
         )
 
 
-def test_non_reactive_combination_allows_zero_max():
+def test_runner_combination_allows_zero_max():
     """
-    arrange: A NonReactiveCombination where max_total_virtual_machines is 0 (no cap).
+    arrange: A RunnerCombination where max_total_virtual_machines is 0 (no cap).
     act: Construct the model.
     assert: No error is raised.
     """
-    combo = NonReactiveCombination(
+    combo = RunnerCombination(
         image=Image(name="img", labels=[]),
         flavor=Flavor(name="flv", labels=[]),
         base_virtual_machines=5,

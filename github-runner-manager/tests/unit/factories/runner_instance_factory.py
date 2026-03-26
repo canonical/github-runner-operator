@@ -32,7 +32,6 @@ class InstanceIDFactory(factory.Factory):
         model = InstanceID
 
     prefix = factory.Faker("word")
-    reactive = factory.Iterator([True, False, None])
     suffix = factory.LazyAttribute(lambda _: secrets.token_hex(6))
 
 

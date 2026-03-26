@@ -72,16 +72,12 @@ def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     get_ssh_connection_side_effects = []
     # Setup for instance not exists
     test_instances.append(
-        (
-            not_exists_instance := InstanceID(
-                prefix="instance-not-exists", reactive=False, suffix="1"
-            )
-        )
+        (not_exists_instance := InstanceID(prefix="instance-not-exists", suffix="1"))
     )
     get_instance_side_effects.append(None)
     # Setup for instance fail ssh connection
     test_instances.append(
-        (fail_ssh_conn_instance := InstanceID(prefix="fail-ssh-conn", reactive=False, suffix="2"))
+        (fail_ssh_conn_instance := InstanceID(prefix="fail-ssh-conn", suffix="2"))
     )
     fail_ssh_conn_instance_mock = MagicMock()
     fail_ssh_conn_instance_mock.instance_id = fail_ssh_conn_instance
@@ -89,11 +85,7 @@ def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     get_ssh_connection_side_effects.append(SSHError())
     # Setup for instance fail pull file
     test_instances.append(
-        (
-            fail_pull_file_instance := InstanceID(
-                prefix="fail-pull-file", reactive=False, suffix="3"
-            )
-        )
+        (fail_pull_file_instance := InstanceID(prefix="fail-pull-file", suffix="3"))
     )
     fail_pull_file_instance_mock = MagicMock()
     fail_pull_file_instance_mock.instance_id = fail_pull_file_instance
