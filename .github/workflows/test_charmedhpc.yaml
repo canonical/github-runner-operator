@@ -11,4 +11,11 @@ jobs:
 
       - name: Test SBOM Service Connectivity
         run: |
-          curl -I -v https://sbom-request.canonical.com
+          for i in {1..5}; do
+          echo "Attempt $i..."
+          # Get the proxy address from the aproxy snap and use it for the curl request
+          curl -x http://$(sudo snap get aproxy proxy) \
+              -Iv --max-time 10 \
+              https://sbom-request.canonical.com
+          sleep 1
+        done
