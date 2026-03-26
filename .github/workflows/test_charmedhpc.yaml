@@ -1,5 +1,6 @@
 name: test charmedhpc runner
 on: [push]
+
 jobs:
   ssdlc-scan:
     name: Run SBOM Scan
@@ -11,10 +12,11 @@ jobs:
 
       - name: Test SBOM Service Connectivity
         run: |
-            for i in {1..5}; do
+          for i in {1..5}; do
             echo "Attempt $i..."
             # Get the proxy address from the aproxy snap and use it for the curl request
-            curl -x http://$(sudo snap get aproxy proxy) \
+            PROXY_URL=$(sudo snap get aproxy proxy)
+            curl -x "http://$PROXY_URL" \
                 -Iv --max-time 10 \
                 https://sbom-request.canonical.com
             sleep 1
