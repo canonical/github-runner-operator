@@ -1,0 +1,37 @@
+06:51:54 WARNING unexpected facade SSHServer received from the controller
+06:51:54 INFO Adding model github-pr-cab77-lxd:test-charm-runner-9dd1 on cloud localhost
+06:51:55 WARNING unexpected facade SSHServer received from the controller
+06:51:55 WARNING unexpected facade SSHSession received from the controller
+06:51:55 WARNING unexpected facade SSHTunneler received from the controller
+06:51:55 WARNING unexpected facade SecretsRevoker received from the controller
+06:51:55 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+06:51:56 INFO Deploying ch:amd64/noble/any-charm-133
+06:52:11 INFO Deploying local:noble/github-runner-0
+06:52:11 INFO Waiting for model:
+  test-ncbzwwak/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ncbzwwak/0 [allocating] waiting: waiting for machine
+06:52:41 INFO Waiting for model:
+  test-ncbzwwak/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ncbzwwak/0 [idle] active: 
+06:53:11 INFO Waiting for model:
+  test-ncbzwwak/0 [allocating] waiting: waiting for machine
+06:53:41 INFO Waiting for model:
+  test-ncbzwwak/0 [allocating] waiting: waiting for machine
+06:54:11 INFO Waiting for model:
+  test-ncbzwwak/0 [allocating] waiting: agent initialising
+06:54:42 INFO Waiting for model:
+  test-ncbzwwak/0 [executing] maintenance: installing charm software
+06:55:12 INFO Waiting for model:
+  test-ncbzwwak/0 [executing] maintenance: installing charm software
+06:55:42 INFO Waiting for model:
+  test-ncbzwwak/0 [idle] active:
+07:01:55 INFO Wait for condition not met, sleeping 10
+07:02:07 INFO Wait for condition not met, sleeping 10
+07:02:20 INFO Wait for condition not met, sleeping 10
+07:02:33 INFO Wait for condition not met, sleeping 10
+07:02:46 INFO Wait for condition not met, sleeping 10
+07:02:58 INFO Wait for condition not met, sleeping 10
+07:03:10 INFO Wait for condition not met, sleeping 10
+07:03:22 INFO Wait for condition not met, sleeping 10
+07:03:35 INFO Wait for condition not met, sleeping 10
+07:03:48 INFO Wait for condition not met, sleeping 10
