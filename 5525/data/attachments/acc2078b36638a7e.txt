@@ -1,0 +1,100 @@
+18:35:15 WARNING unexpected facade SSHServer received from the controller
+18:35:15 INFO Adding model github-pr-cab77-lxd:test-multi-unit-same-machine-t3fd on cloud localhost
+18:35:15 WARNING unexpected facade SSHServer received from the controller
+18:35:15 WARNING unexpected facade SSHSession received from the controller
+18:35:15 WARNING unexpected facade SSHTunneler received from the controller
+18:35:15 WARNING unexpected facade SecretsRevoker received from the controller
+18:35:16 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:35:17 INFO Deploying ch:amd64/noble/any-charm-133
+18:35:32 INFO Deploying local:jammy/github-runner-0
+18:35:32 INFO Waiting for model:
+  test-aegvum7x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-aegvum7x/0 [allocating] waiting: waiting for machine
+18:36:02 INFO Waiting for model:
+  test-aegvum7x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-aegvum7x/0 [allocating] waiting: waiting for machine
+18:36:32 INFO Waiting for model:
+  test-aegvum7x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-aegvum7x/0 [allocating] waiting: agent initialising
+18:37:03 INFO Waiting for model:
+  test-aegvum7x/0 [allocating] waiting: waiting for machine
+18:37:33 INFO Waiting for model:
+  test-aegvum7x/0 [executing] maintenance: installing charm software
+18:38:03 INFO Waiting for model:
+  test-aegvum7x/0 [executing] maintenance: installing charm software
+18:38:33 INFO Waiting for model:
+  test-aegvum7x/0 [idle] active:
+18:38:42 INFO Waiting for model:
+  test-aegvum7x/0 [idle] active: 
+  test-aegvum7x/1 [allocating] waiting: installing agent
+18:39:12 INFO Waiting for model:
+  test-aegvum7x/0 [idle] active: 
+  test-aegvum7x/1 [executing] maintenance: installing charm software
+18:39:43 INFO Waiting for model:
+  test-aegvum7x/0 [idle] active: 
+  test-aegvum7x/1 [idle] active: 
+18:39:55 INFO File content of /var/lib/github-runner-manager/test-aegvum7x-0/http_port: 55555
+18:39:56 INFO File content of /var/lib/github-runner-manager/test-aegvum7x-1/http_port: 55556
+18:39:59 INFO File content of /var/lib/github-runner-manager/test-aegvum7x-1/http_port: 55556
+18:41:01 INFO File content of /var/lib/github-runner-manager/test-aegvum7x-1/http_port: 55556
+18:41:02 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-t3fd  github-pr-cab77-lxd  localhost/localhost  3.6.20   unsupported  18:41:02Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-aegvum7x           active      1  any-charm      latest/beta  133  no       
+test-aegvum7x                                  active      2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-aegvum7x/0*  active    idle   0        10.179.145.141         
+test-aegvum7x/0*                         active    idle   1        10.179.145.217         
+test-aegvum7x/1                          active    idle   1        10.179.145.217         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.179.145.141  juju-bca7ab-0  ubuntu@24.04  github-runner  Running
+1        started  10.179.145.217  juju-bca7ab-1  ubuntu@22.04  github-runner  Running
+
+18:41:02 INFO Juju error logs:
+
+machine-0: 18:36:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:37:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:37:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-aegvum7x-0: 18:38:07 ERROR unit.test-aegvum7x/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 357, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aegvum7x-0: 18:38:08 ERROR unit.test-aegvum7x/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aegvum7x-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aegvum7x-1: 18:39:17 ERROR unit.test-aegvum7x/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 357, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aegvum7x-1: 18:39:18 ERROR unit.test-aegvum7x/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aegvum7x-1/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:41:02 INFO Forgetting model main...
