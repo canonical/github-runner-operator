@@ -283,12 +283,13 @@ def cleanup(unit_name: str) -> None:
     """
     _stop(unit_name)
     instance_service = _instance_service_name(unit_name)
+    normalized = _normalized_unit(unit_name)
+    service_file = (
+        SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{normalized}.service"
+    )
     try:
-        systemd.service_disable(instance_service)
-        normalized = _normalized_unit(unit_name)
-        service_file = (
-            SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{normalized}.service"
-        )
+        if service_file.exists():
+            systemd.service_disable(instance_service)
         service_file.unlink(missing_ok=True)
         systemd.daemon_reload()
     except (SystemdError, OSError) as err:
@@ -422,4 +423,7 @@ def _remove_unit_data(unit_name: str) -> None:
     except OSError as exc:
         raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from exc
     log_file = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / f"{normalized}.log"
-    log_file.unlink(missing_ok=True)
+    try:
+        log_file.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from exc
