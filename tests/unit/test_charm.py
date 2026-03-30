@@ -324,7 +324,7 @@ def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pyte
     harness.charm._on_stop(mock_event)
 
     manager_client_mock.flush_runner.assert_called_once_with(busy=True)
-    mock_manager_service.stop.assert_called_once()
+    mock_manager_service.cleanup.assert_called_once()
 
 
 @pytest.mark.parametrize(

@@ -6,6 +6,7 @@
 import fcntl
 import json
 import logging
+import shutil
 import socket
 import textwrap
 from pathlib import Path
@@ -267,6 +268,34 @@ def stop(unit_name: str) -> None:
     _stop(unit_name)
 
 
+def cleanup(unit_name: str) -> None:
+    """Stop, disable, and remove all artifacts for a unit's service.
+
+    Used during unit removal to ensure no stale systemd service or data remains
+    on the machine.
+
+    Args:
+        unit_name: The Juju unit name.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to clean up the service.
+    """
+    _stop(unit_name)
+    instance_service = _instance_service_name(unit_name)
+    try:
+        systemd.service_disable(instance_service)
+        normalized = _normalized_unit(unit_name)
+        service_file = (
+            SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{normalized}.service"
+        )
+        service_file.unlink(missing_ok=True)
+        systemd.daemon_reload()
+    except SystemdError as err:
+        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
+
+    _remove_unit_data(unit_name)
+
+
 def _stop(unit_name: str) -> None:
     """Stop the GitHub runner manager service.
 
@@ -375,3 +404,12 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     )
     service_path.parent.mkdir(parents=True, exist_ok=True)
     service_path.write_text(service_file_content, "utf-8")
+
+
+def _remove_unit_data(unit_name: str) -> None:
+    """Remove the per-unit data directory and log file."""
+    normalized = _normalized_unit(unit_name)
+    unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / normalized
+    shutil.rmtree(unit_dir, ignore_errors=True)
+    log_file = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / f"{normalized}.log"
+    log_file.unlink(missing_ok=True)

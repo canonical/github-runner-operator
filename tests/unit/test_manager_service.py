@@ -190,6 +190,69 @@ def test_stop_with_stopped_service(mock_systemd: MagicMock):
     mock_systemd.service_stop.assert_not_called()
 
 
+def test_cleanup_removes_service_and_data(mock_systemd: MagicMock, patched_paths: PatchedPaths):
+    """
+    arrange: A running service with service file, data dir, and log file on disk.
+    act: Run cleanup.
+    assert: Service is stopped, disabled, service file removed, daemon reloaded,
+        data dir and log file removed.
+    """
+    unit_name = "test-unit/0"
+    normalized = "test-unit-0"
+    instance_service = f"github-runner-manager@{normalized}"
+    mock_systemd.service_running.return_value = True
+
+    service_file = patched_paths.systemd_service_path / f"{instance_service}.service"
+    service_file.parent.mkdir(parents=True, exist_ok=True)
+    service_file.write_text("mock service", encoding="utf-8")
+
+    unit_dir = patched_paths.service_dir / normalized
+    unit_dir.mkdir(parents=True, exist_ok=True)
+    (unit_dir / "config.yaml").write_text("mock config", encoding="utf-8")
+    (unit_dir / "http_port").write_text("55555", encoding="utf-8")
+
+    log_file = patched_paths.service_log_dir / f"{normalized}.log"
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    log_file.write_text("mock log", encoding="utf-8")
+
+    manager_service.cleanup(unit_name)
+
+    mock_systemd.service_stop.assert_called_once_with(instance_service)
+    mock_systemd.service_disable.assert_called_once_with(instance_service)
+    mock_systemd.daemon_reload.assert_called_once()
+    assert not service_file.exists()
+    assert not unit_dir.exists()
+    assert not log_file.exists()
+
+
+def test_cleanup_idempotent_missing_files(mock_systemd: MagicMock, patched_paths: PatchedPaths):
+    """
+    arrange: Service is not running and no files exist on disk.
+    act: Run cleanup.
+    assert: No errors raised; disable and daemon_reload still called.
+    """
+    mock_systemd.service_running.return_value = False
+
+    manager_service.cleanup(unit_name="test-unit/0")
+
+    mock_systemd.service_stop.assert_not_called()
+    mock_systemd.service_disable.assert_called_once()
+    mock_systemd.daemon_reload.assert_called_once()
+
+
+def test_cleanup_systemd_error(mock_systemd: MagicMock):
+    """
+    arrange: systemd.service_disable raises SystemdError.
+    act: Run cleanup.
+    assert: RunnerManagerApplicationStopError is raised.
+    """
+    mock_systemd.service_running.return_value = False
+    mock_systemd.service_disable.side_effect = SystemdError("Mock error")
+
+    with pytest.raises(manager_service.RunnerManagerApplicationStopError):
+        manager_service.cleanup(unit_name="test-unit/0")
+
+
 # 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
 # The mocks fixture (see conftest.py) normally patches this function to return 55555.
 @pytest.mark.nomocks

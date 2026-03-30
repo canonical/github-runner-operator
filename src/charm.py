@@ -448,7 +448,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
         self._manager_client.flush_runner(busy=True)
-        manager_service.stop(self.unit.name)
+        manager_service.cleanup(self.unit.name)
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
