@@ -5,8 +5,9 @@ on:
     branches:
       - main
       - track/*
+      - test/multi-publish
 
 jobs:
   publish-to-edge:
-    uses: canonical/operator-workflows/.github/workflows/publish_charm.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/publish_charm.yaml@fix/deduplicate-artefacts
     secrets: inherit
