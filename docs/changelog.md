@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-03-30
 
-- Fixed stale systemd service files left behind when a unit is removed from a co-located machine. The service is now disabled, the service file removed, and per-unit data cleaned up on stop.
+- Fixed stale `systemd` service files left behind when a unit is removed from a co-located machine. The service is now disabled, the service file removed, and the unit data cleaned up on stop.
 
 ## 2026-03-25
 
