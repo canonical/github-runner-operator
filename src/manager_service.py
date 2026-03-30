@@ -285,8 +285,10 @@ def cleanup(unit_name: str) -> None:
     instance_service = _instance_service_name(unit_name)
     service_file = SYSTEMD_SERVICE_PATH / f"{instance_service}.service"
     try:
-        if service_file.exists():
-            systemd.service_disable(instance_service)
+        systemd.service_disable(instance_service)
+    except SystemdError:
+        logger.warning("Failed to disable %s, unit may already be absent", instance_service)
+    try:
         service_file.unlink(missing_ok=True)
         systemd.daemon_reload()
     except (SystemdError, OSError) as err:

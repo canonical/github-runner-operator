@@ -229,28 +229,26 @@ def test_cleanup_idempotent_missing_files(mock_systemd: MagicMock, patched_paths
     """
     arrange: Service is not running and no files exist on disk.
     act: Run cleanup.
-    assert: No errors raised; disable is skipped, daemon_reload still called.
+    assert: No errors raised; disable is attempted, daemon_reload still called.
     """
     mock_systemd.service_running.return_value = False
+    mock_systemd.service_disable.side_effect = SystemdError("unit not found")
 
     manager_service.cleanup(unit_name="test-unit/0")
 
     mock_systemd.service_stop.assert_not_called()
-    mock_systemd.service_disable.assert_not_called()
+    mock_systemd.service_disable.assert_called_once()
     mock_systemd.daemon_reload.assert_called_once()
 
 
-def test_cleanup_systemd_error(mock_systemd: MagicMock, patched_paths: PatchedPaths):
+def test_cleanup_daemon_reload_error(mock_systemd: MagicMock):
     """
-    arrange: Service file exists and systemd.service_disable raises SystemdError.
+    arrange: systemd.daemon_reload raises SystemdError.
     act: Run cleanup.
     assert: RunnerManagerApplicationStopError is raised.
     """
     mock_systemd.service_running.return_value = False
-    mock_systemd.service_disable.side_effect = SystemdError("Mock error")
-    service_file = patched_paths.systemd_service_path / "github-runner-manager@test-unit-0.service"
-    service_file.parent.mkdir(parents=True, exist_ok=True)
-    service_file.write_text("mock service", encoding="utf-8")
+    mock_systemd.daemon_reload.side_effect = SystemdError("Mock error")
 
     with pytest.raises(manager_service.RunnerManagerApplicationStopError):
         manager_service.cleanup(unit_name="test-unit/0")
