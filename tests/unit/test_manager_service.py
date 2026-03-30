@@ -253,6 +253,21 @@ def test_cleanup_systemd_error(mock_systemd: MagicMock):
         manager_service.cleanup(unit_name="test-unit/0")
 
 
+def test_cleanup_rmtree_permission_error(
+    mock_systemd: MagicMock, patched_paths: PatchedPaths, monkeypatch
+):
+    """
+    arrange: shutil.rmtree raises PermissionError.
+    act: Run cleanup.
+    assert: RunnerManagerApplicationStopError is raised.
+    """
+    mock_systemd.service_running.return_value = False
+    monkeypatch.setattr("shutil.rmtree", MagicMock(side_effect=PermissionError("denied")))
+
+    with pytest.raises(manager_service.RunnerManagerApplicationStopError):
+        manager_service.cleanup(unit_name="test-unit/0")
+
+
 # 2026-01-19 Skip the mocks fixture to test the actual ensure_http_port_for_unit implementation.
 # The mocks fixture (see conftest.py) normally patches this function to return 55555.
 @pytest.mark.nomocks

@@ -290,7 +290,7 @@ def cleanup(unit_name: str) -> None:
         )
         service_file.unlink(missing_ok=True)
         systemd.daemon_reload()
-    except SystemdError as err:
+    except (SystemdError, OSError) as err:
         raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
 
     _remove_unit_data(unit_name)
@@ -407,9 +407,18 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
 
 
 def _remove_unit_data(unit_name: str) -> None:
-    """Remove the per-unit data directory and log file."""
+    """Remove the per-unit data directory and log file.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to remove unit data.
+    """
     normalized = _normalized_unit(unit_name)
     unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / normalized
-    shutil.rmtree(unit_dir, ignore_errors=True)
+    try:
+        shutil.rmtree(unit_dir)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from exc
     log_file = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / f"{normalized}.log"
     log_file.unlink(missing_ok=True)
