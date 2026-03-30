@@ -40,6 +40,7 @@ GITHUB_RUNNER_MANAGER_SERVICE_DIR = Path("/var/lib/github-runner-manager")
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
 _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager application"
+_SERVICE_CLEANUP_ERROR_MESSAGE = "Unable to clean up the github-runner-manager service"
 
 logger = logging.getLogger(__name__)
 
@@ -291,7 +292,7 @@ def cleanup(unit_name: str) -> None:
         service_file.unlink(missing_ok=True)
         systemd.daemon_reload()
     except (SystemdError, OSError) as err:
-        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from err
 
     _remove_unit_data(unit_name)
 
@@ -419,6 +420,6 @@ def _remove_unit_data(unit_name: str) -> None:
     except FileNotFoundError:
         pass
     except OSError as exc:
-        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from exc
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from exc
     log_file = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / f"{normalized}.log"
     log_file.unlink(missing_ok=True)
