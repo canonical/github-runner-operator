@@ -283,10 +283,7 @@ def cleanup(unit_name: str) -> None:
     """
     _stop(unit_name)
     instance_service = _instance_service_name(unit_name)
-    normalized = _normalized_unit(unit_name)
-    service_file = (
-        SYSTEMD_SERVICE_PATH / f"{GITHUB_RUNNER_MANAGER_SERVICE_NAME}@{normalized}.service"
-    )
+    service_file = SYSTEMD_SERVICE_PATH / f"{instance_service}.service"
     try:
         if service_file.exists():
             systemd.service_disable(instance_service)

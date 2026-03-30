@@ -307,11 +307,11 @@ def test__on_config_changed_no_flush(monkeypatch: pytest.MonkeyPatch, config_opt
     harness.charm._manager_client.flush_runner.assert_not_called()
 
 
-def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_stop_busy_flush_and_cleanup_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and runner scaler mock.
     act: Trigger stop event.
-    assert: Runner scaler mock flushes the runners using busy mode.
+    assert: Runners are flushed in busy mode and service cleanup is called.
     """
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
