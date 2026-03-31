@@ -26,7 +26,6 @@ from github import Github, GithubException
 from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.github_client import GithubClient
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
@@ -464,11 +463,6 @@ async def model(ops_test: OpsTest, proxy_config: ProxyConfig) -> Model:
         }
     )
     return ops_test.model
-
-
-@pytest.fixture(scope="module")
-def runner_manager_github_client(github_config: GitHubConfig) -> GithubClient:
-    return GithubClient(token=github_config.token)
 
 
 @pytest_asyncio.fixture(scope="module")
