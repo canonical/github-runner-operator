@@ -4,7 +4,7 @@ import random
 import secrets
 from collections import namedtuple
 from datetime import datetime, timezone
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import pytest
 from github import (
@@ -15,7 +15,12 @@ from github import (
 )
 from prometheus_client import REGISTRY
 
-from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
+    GitHubOrg,
+    GitHubRepo,
+    GitHubTokenAuth,
+)
 from github_runner_manager.github_client import (
     GithubClient,
     GithubRunnerNotFoundError,
@@ -122,7 +127,7 @@ def job_stats_fixture() -> JobStatsRawData:
 @pytest.fixture(name="github_client")
 def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     """Create a GithubClient object with a mocked PyGithub object."""
-    gh_client = GithubClient("token")
+    gh_client = GithubClient(GitHubTokenAuth(token="token"))
     gh_client._github = MagicMock()
     gh_client._requester = MagicMock()
     gh_client._requester.rate_limiting = (4999, 5000)
@@ -145,6 +150,61 @@ def github_client_fixture(job_stats_raw: JobStatsRawData) -> GithubClient:
     )
 
     return gh_client
+
+
+@pytest.mark.parametrize(
+    "auth_config, expected_calls, expected_github_auth",
+    [
+        pytest.param(
+            GitHubTokenAuth(token="test-token"),
+            [call.Token("test-token")],
+            "token-auth",
+            id="token-auth",
+        ),
+        pytest.param(
+            GitHubAppAuth(
+                app_client_id="Iv23liExample",
+                installation_id=456,
+                private_key="-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
+            ),
+            [
+                call.AppAuth(
+                    "Iv23liExample",
+                    "-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
+                ),
+                call.AppInstallationAuth("app-auth", 456),
+            ],
+            "installation-auth",
+            id="app-auth",
+        ),
+    ],
+)
+def test_github_client_initializes_pygithub_auth(
+    monkeypatch: pytest.MonkeyPatch,
+    auth_config,
+    expected_calls,
+    expected_github_auth: str,
+):
+    """
+    arrange: A GitHub auth configuration and mocked PyGithub auth constructors.
+    act: Construct GithubClient.
+    assert: The matching PyGithub auth class is used.
+    """
+    auth_mock = MagicMock()
+    auth_mock.Token.return_value = "token-auth"
+    auth_mock.AppAuth.return_value = "app-auth"
+    auth_mock.AppInstallationAuth.return_value = "installation-auth"
+    github_ctor = MagicMock()
+    github_ctor.return_value.requester = MagicMock()
+    monkeypatch.setattr("github_runner_manager.github_client.github.Auth", auth_mock)
+    monkeypatch.setattr("github_runner_manager.github_client.Github", github_ctor)
+
+    client = GithubClient(auth_config)
+
+    assert client._github is github_ctor.return_value
+    assert client._requester is github_ctor.return_value.requester
+    assert auth_mock.mock_calls == expected_calls
+    assert github_ctor.call_args.kwargs["auth"] == expected_github_auth
 
 
 def _mock_multiple_pages_for_job_response(

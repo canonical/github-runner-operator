@@ -22,6 +22,7 @@ jobs:
           - test_debug_ssh
           - test_metrics
           - test_planner_runner
+          - test_github_app_auth
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.2
@@ -50,6 +51,10 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+          # GITHUB_APP_CLIENT_ID, GITHUB_APP_INSTALLATION_ID, GITHUB_APP_PRIVATE_KEY
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_11 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_11 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_12 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_12 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_13 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_13 }}
         run: |
           tox -e integration -- -v --tb=native -s \
             tests/integration/${{ matrix.test-module }}.py \

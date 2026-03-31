@@ -7,7 +7,7 @@ import functools
 import logging
 from datetime import datetime
 from time import perf_counter
-from typing import Callable, ParamSpec, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 
 import github
 from github import (
@@ -19,7 +19,14 @@ from github import (
 )
 from typing_extensions import assert_never
 
-from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
+from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
+    GitHubAuth,
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+    GitHubTokenAuth,
+)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.metrics.github_api import (
     GITHUB_API_RATE_LIMIT_LIMIT,
@@ -177,19 +184,28 @@ def _classify_github_metric_error(exc: Exception) -> str:
 class GithubClient:
     """GitHub API client."""
 
-    def __init__(self, token: str):
-        """Instantiate the GiHub API client.
+    def __init__(self, auth: GitHubAuth):
+        """Instantiate the GitHub API client.
 
         Args:
-            token: GitHub personal token for API requests.
+            auth: GitHub authentication configuration for API requests.
         """
-        self._token = token
         self._github = Github(
-            auth=github.Auth.Token(self._token), per_page=PAGE_SIZE, timeout=TIMEOUT_IN_SECS
+            auth=self._build_auth(auth), per_page=PAGE_SIZE, timeout=TIMEOUT_IN_SECS
         )
         # PyGithub lacks methods for some endpoints (repo-level JIT config, get job by ID,
         # runner groups). Use the requester for raw REST calls that inherit auth and timeout.
         self._requester = self._github.requester
+
+    @staticmethod
+    def _build_auth(auth: GitHubAuth) -> Any:
+        """Build a PyGithub auth object from the configuration."""
+        if isinstance(auth, GitHubTokenAuth):
+            return github.Auth.Token(auth.token)
+        if isinstance(auth, GitHubAppAuth):
+            app_auth = github.Auth.AppAuth(auth.app_client_id, auth.private_key)
+            return github.Auth.AppInstallationAuth(app_auth, auth.installation_id)
+        assert_never(auth)
 
     @staticmethod
     def _build_runner(
