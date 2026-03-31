@@ -137,3 +137,21 @@ def pytest_addoption(parser):
         help="Directory to store debug logs.",
         default=os.getenv("DEBUG_LOG_DIR", "/tmp/github-runner-manager-test-logs"),
     )
+    parser.addoption(
+        "--github-app-client-id",
+        action="store",
+        help="GitHub App Client ID for App authentication integration tests.",
+        default=os.getenv("GITHUB_APP_CLIENT_ID"),
+    )
+    parser.addoption(
+        "--github-app-installation-id",
+        action="store",
+        help="GitHub App installation ID for App authentication integration tests.",
+        default=os.getenv("GITHUB_APP_INSTALLATION_ID"),
+    )
+    parser.addoption(
+        "--github-app-private-key",
+        action="store",
+        help="GitHub App PEM-encoded private key for App authentication integration tests.",
+        default=os.getenv("GITHUB_APP_PRIVATE_KEY"),
+    )

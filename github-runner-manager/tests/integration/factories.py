@@ -214,7 +214,7 @@ def create_default_config(
         "allow_external_contributor": allow_external_contributor,
         "extra_labels": test_config.labels,
         "github_config": {
-            "token": github_config.token,
+            "auth": {"token": github_config.token},
             "path": path_config,
         },
         "service_config": {
