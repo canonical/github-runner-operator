@@ -15,8 +15,11 @@ from github_runner_manager.configuration.base import (  # noqa: F401
     UserInfo,
 )
 from github_runner_manager.configuration.github import (  # noqa: F401
+    GitHubAppAuth,
+    GitHubAuth,
     GitHubConfiguration,
     GitHubOrg,
     GitHubPath,
     GitHubRepo,
+    GitHubTokenAuth,
 )

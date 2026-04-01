@@ -80,7 +80,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         return cls(
             prefix=prefix,
             path=github_configuration.path,
-            github_client=GithubClient(github_configuration.token),
+            github_client=GithubClient(github_configuration.auth),
         )
 
     def get_runner_health(

@@ -13,8 +13,10 @@ import yaml
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
+    GitHubAppAuth,
     GitHubConfiguration,
     GitHubOrg,
+    GitHubTokenAuth,
     Image,
     ProxyConfig,
     RunnerCombination,
@@ -33,10 +35,11 @@ extra_labels:
 - label1
 - label2
 github_config:
+  auth:
+    token: githubtoken
   path:
     group: group
     org: canonical
-  token: githubtoken
 runner_configuration:
   combinations:
   - base_virtual_machines: 1
@@ -90,7 +93,8 @@ def app_config_fixture() -> ApplicationConfiguration:
         name="app_name",
         extra_labels=["label1", "label2"],
         github_config=GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            auth=GitHubTokenAuth(token="githubtoken"),
+            path=GitHubOrg(org="canonical", group="group"),
         ),
         service_config=SupportServiceConfig(
             proxy_config=ProxyConfig(
@@ -147,6 +151,31 @@ def app_config_fixture() -> ApplicationConfiguration:
         planner_url="http://planner.example.com",
         reconcile_interval=10,
     )
+
+
+@pytest.mark.parametrize(
+    "auth",
+    [
+        pytest.param(GitHubTokenAuth(token="githubtoken"), id="token-auth"),
+        pytest.param(
+            GitHubAppAuth(
+                app_client_id="Iv23liExample",
+                installation_id=456,
+                private_key="-----BEGIN PRIVATE KEY-----\nabc\n-----END PRIVATE KEY-----",
+            ),
+            id="app-auth",
+        ),
+    ],
+)
+def test_github_auth_models_validate(auth):
+    """
+    arrange: A GitHub auth model.
+    act: Build GitHubConfiguration.
+    assert: The auth model is preserved.
+    """
+    config = GitHubConfiguration(auth=auth, path=GitHubOrg(org="canonical", group="group"))
+
+    assert config.auth == auth
 
 
 def test_configuration_roundtrip(app_config: ApplicationConfiguration):

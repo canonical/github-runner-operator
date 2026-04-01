@@ -3,10 +3,13 @@
 
 """Test for the platform factory module."""
 
-from unittest.mock import MagicMock
-
 import pytest
 
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubTokenAuth,
+)
 from github_runner_manager.platform.factory import platform_factory
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 
@@ -32,7 +35,12 @@ def test_platform_factory_invalid_configurations(github_config, expected_error):
     "github_config, expected_platform",
     [
         pytest.param(
-            MagicMock(token="fake-token"), GitHubRunnerPlatform, id="GitHub configuration"
+            GitHubConfiguration(
+                auth=GitHubTokenAuth(token="fake-token"),
+                path=GitHubOrg(org="canonical", group="default"),
+            ),
+            GitHubRunnerPlatform,
+            id="GitHub configuration",
         ),
     ],
 )

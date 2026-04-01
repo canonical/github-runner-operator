@@ -12,7 +12,11 @@ from github_runner_manager.configuration.base import (
     SSHDebugConnection,
     SupportServiceConfig,
 )
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubOrg
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubTokenAuth,
+)
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -40,7 +44,8 @@ def test_create_application_configuration(
         name="app_name",
         extra_labels=["label1", "label2"],
         github_config=GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            auth=GitHubTokenAuth(token="githubtoken"),
+            path=GitHubOrg(org="canonical", group="group"),
         ),
         service_config=SupportServiceConfig(
             manager_proxy_command="ssh -W %h:%p example.com",
