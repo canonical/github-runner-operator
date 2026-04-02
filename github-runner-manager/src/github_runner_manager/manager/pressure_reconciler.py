@@ -20,7 +20,7 @@ from threading import Event, Lock
 from typing import Optional
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.configuration.base import NonReactiveCombination, UserInfo
+from github_runner_manager.configuration.base import RunnerCombination, UserInfo
 from github_runner_manager.errors import IssueMetricEventError, MissingServerConfigError
 from github_runner_manager.manager.runner_manager import (
     RunnerInstance,
@@ -420,7 +420,7 @@ def build_pressure_reconciler(
     Returns:
         A fully constructed PressureReconciler.
     """
-    first = config.non_reactive_configuration.combinations[0]
+    first = config.runner_configuration.combinations[0]
     planner_client: PlannerClient | None = None
     has_url = bool(config.planner_url)
     has_token = bool(config.planner_token)
@@ -447,7 +447,7 @@ def build_pressure_reconciler(
 
 
 def build_runner_manager(
-    config: ApplicationConfiguration, combination: NonReactiveCombination
+    config: ApplicationConfiguration, combination: RunnerCombination
 ) -> RunnerManager:
     """Build a RunnerManager from application config and a flavor/image combination.
 

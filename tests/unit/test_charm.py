@@ -16,7 +16,7 @@ import pytest
 import yaml
 from github_runner_manager import constants
 from github_runner_manager.platform.platform_provider import TokenError
-from ops.model import BlockedStatus, StatusBase, WaitingStatus
+from ops.model import BlockedStatus, StatusBase
 from ops.testing import Harness
 
 from charm import (
@@ -30,7 +30,6 @@ from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
-    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -52,7 +51,6 @@ from errors import (
     ImageIntegrationMissingError,
     ImageNotFoundError,
     LogrotateSetupError,
-    MissingMongoDBError,
     RunnerError,
     SubprocessError,
 )
@@ -309,11 +307,11 @@ def test__on_config_changed_no_flush(monkeypatch: pytest.MonkeyPatch, config_opt
     harness.charm._manager_client.flush_runner.assert_not_called()
 
 
-def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_stop_busy_flush_and_cleanup_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and runner scaler mock.
     act: Trigger stop event.
-    assert: Runner scaler mock flushes the runners using busy mode.
+    assert: Runners are flushed in busy mode and service cleanup is called.
     """
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
@@ -326,7 +324,7 @@ def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pyte
     harness.charm._on_stop(mock_event)
 
     manager_client_mock.flush_runner.assert_called_once_with(busy=True)
-    mock_manager_service.stop.assert_called_once()
+    mock_manager_service.cleanup.assert_called_once()
 
 
 @pytest.mark.parametrize(
@@ -361,22 +359,6 @@ def test_on_install_failure(
     with pytest.raises(SubprocessError) as exc:
         getattr(harness.charm.on, hook).emit()
     assert "mock stderr" in str(exc.value)
-
-
-def test_charm_goes_into_waiting_state_on_missing_integration_data(
-    monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._setup_state to raise an MissingIntegrationDataError.
-    act: Fire config changed event.
-    assert: Charm is in blocked state.
-    """
-    setup_state_mock = MagicMock(side_effect=MissingMongoDBError("mock error"))
-    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
-    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
-    harness.charm.on.config_changed.emit()
-    assert isinstance(harness.charm.unit.status, WaitingStatus)
-    assert "mock error" in harness.charm.unit.status.message
 
 
 def test_check_runners_action_with_errors():
@@ -683,34 +665,6 @@ def test_attempting_disable_legacy_service_for_upgrade(
         [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
         any_order=True,
     )
-
-
-@pytest.mark.parametrize(
-    "hook",
-    [
-        pytest.param("database_created", id="Database Created"),
-        pytest.param("endpoints_changed", id="Endpoints Changed"),
-        pytest.param("mongodb_relation_broken", id="MongoDB Relation Departed"),
-    ],
-)
-def test_database_integration_events_setup_service(
-    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._setup_service.
-    act: Fire mongodb relation events.
-    assert: _setup_service has been called.
-    """
-    setup_service_mock = MagicMock()
-    relation_mock = MagicMock()
-    relation_mock.name = "mongodb"
-    relation_mock.id = 0
-    monkeypatch.setattr("charm.GithubRunnerCharm._setup_service", setup_service_mock)
-    if hook.startswith(MONGO_DB_INTEGRATION_NAME):
-        getattr(harness.charm.on, hook).emit(relation=relation_mock)
-    else:
-        getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
-    setup_service_mock.assert_called_once()
 
 
 def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch):

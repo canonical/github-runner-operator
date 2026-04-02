@@ -7,18 +7,19 @@ from github_runner_manager.configuration.base import (  # noqa: F401
     ApplicationConfiguration,
     Flavor,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
     UserInfo,
 )
 from github_runner_manager.configuration.github import (  # noqa: F401
+    GitHubAppAuth,
+    GitHubAuth,
     GitHubConfiguration,
     GitHubOrg,
     GitHubPath,
     GitHubRepo,
+    GitHubTokenAuth,
 )
