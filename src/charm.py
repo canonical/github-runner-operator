@@ -34,6 +34,7 @@ from ops.charm import (
     ConfigChangedEvent,
     EventBase,
     InstallEvent,
+    SecretChangedEvent,
     StartEvent,
     StopEvent,
     UpdateStatusEvent,
@@ -47,6 +48,9 @@ import manager_service
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -201,6 +205,15 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
+            github_app_client_id=self.config[
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME
+            ],  # for detecting changes
+            github_app_installation_id=self.config[
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
+            ],  # for detecting changes
+            github_app_private_key_secret_id=self.config[
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
+            ],  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             allow_external_contributor=self.config[
                 ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
@@ -233,6 +246,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[PLANNER_INTEGRATION_NAME].relation_broken, self._on_planner_relation_broken
         )
+        self.framework.observe(self.on.secret_changed, self._on_secret_changed)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
@@ -339,6 +353,25 @@ class GithubRunnerCharm(CharmBase):
         if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_runners = True
+        if self.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] != self._stored.github_app_client_id:
+            self._stored.github_app_client_id = self.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME]
+            flush_runners = True
+        if (
+            self.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME]
+            != self._stored.github_app_installation_id
+        ):
+            self._stored.github_app_installation_id = self.config[
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
+            ]
+            flush_runners = True
+        if (
+            self.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME]
+            != self._stored.github_app_private_key_secret_id
+        ):
+            self._stored.github_app_private_key_secret_id = self.config[
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
+            ]
+            flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
             flush_runners = True
@@ -362,6 +395,14 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_secret_changed(self, _: SecretChangedEvent) -> None:
+        """Handle secret content rotation (e.g. GitHub App private key)."""
+        logger.info("Secret changed, reconciling")
+        state = self._setup_state()
+        self._reconcile(state)
+        self._manager_client.flush_runner()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:

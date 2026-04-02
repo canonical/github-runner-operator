@@ -17,6 +17,10 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      # TODO: revert to latest/stable once charmcraft 4.2.0 regression is fixed.
+      # charmcraft 4.2.0 (latest/stable since 2026-04-01) rejects the short-form
+      # platform syntax in charmcraft.yaml. Pin to latest/beta (4.0.1) as a workaround.
+      charmcraft-channel: latest/beta
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
@@ -43,6 +47,8 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      # TODO: revert to latest/stable once charmcraft 4.2.0 regression is fixed.
+      charmcraft-channel: latest/beta
       juju-channel: 3.6/stable
       pre-run-script: tests/integration/setup-integration-tests.sh
       provider: lxd
@@ -73,6 +79,8 @@ jobs:
       matrix:
         base: ["22.04", "24.04"]
     with:
+      # TODO: revert to latest/stable once charmcraft 4.2.0 regression is fixed.
+      charmcraft-channel: latest/beta
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6

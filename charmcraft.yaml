@@ -10,9 +10,9 @@ description: |
   A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) managing
   [self-hosted runners for GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
   Each unit of this charm will start a configurable number of virtual machines to host
-  self-hosted runners. Each runner performs only one job, after which it unregisters from GitHub to 
-  ensure that each job runs in a clean environment. The charm will periodically check the number of 
-  runners and spawn or destroy them as necessary to maintain the configured number of runners. Both 
+  self-hosted runners. Each runner performs only one job, after which it unregisters from GitHub to
+  ensure that each job runs in a clean environment. The charm will periodically check the number of
+  runners and spawn or destroy them as necessary to maintain the configured number of runners. Both
   the reconciliation interval and the number of runners to maintain are configurable.
 
 links:
@@ -77,8 +77,8 @@ config:
         This is useful when the charm is deployed in a network that requires a proxy to access the
         internet.
         Note that you should carefully choose values for the 'aproxy-exclude-addresses' and
-        'aproxy-redirect-ports' so that the network traffic from the runner to the HTTP proxy is not 
-        captured by aproxy. The simplest way to achieve this is to add the IP address of the HTTP proxy 
+        'aproxy-redirect-ports' so that the network traffic from the runner to the HTTP proxy is not
+        captured by aproxy. The simplest way to achieve this is to add the IP address of the HTTP proxy
         to 'aproxy-exclude-addresses' or exclude the HTTP proxy port from 'aproxy-redirect-ports'.
     aproxy-exclude-addresses:
       type: string
@@ -102,8 +102,8 @@ config:
       default: ""
       description: >-
         Additional comma separated labels to attach to self-hosted runners. By default, the labels
-        "self-hosted", architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. 
-        "jammy") are set. Any labels provided via this configuration will be appended to the default 
+        "self-hosted", architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e.
+        "jammy") are set. Any labels provided via this configuration will be appended to the default
         values.
     path:
       type: string
@@ -141,6 +141,24 @@ config:
         'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
         For fine grained token scopes, see
         https://charmhub.io/github-runner/docs/how-to-change-token.
+    github-app-client-id:
+      type: string
+      default: ""
+      description: >-
+        GitHub App Client ID used instead of `token` for GitHub API authentication.
+        This is the Client ID shown on the GitHub App settings page (e.g. "Iv23liXXXXXX").
+        The legacy numeric App ID is also accepted.
+    github-app-installation-id:
+      type: int
+      default: 0
+      description: >-
+        GitHub App installation ID used instead of `token` for GitHub API authentication.
+    github-app-private-key-secret-id:
+      type: string
+      default: ""
+      description: >-
+        Juju secret ID containing the PEM-encoded GitHub App private key under the `private-key`
+        field. Use this together with `github-app-client-id` and `github-app-installation-id`.
     virtual-machines:
       type: int
       default: 0
@@ -179,8 +197,8 @@ config:
     pre-job-script:
       type: string
       description: >-
-        Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM. 
-        This can e.g. be useful for specific infrastructure related configurations 
+        Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM.
+        This can e.g. be useful for specific infrastructure related configurations
         (e.g. usage of certain proxies or custom routes).
         Note that the user executing the script is the ubuntu user (which has sudo rights).
         Example script:
