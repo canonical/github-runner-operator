@@ -1,0 +1,44 @@
+18:42:54 WARNING unexpected facade SSHServer received from the controller
+18:42:54 INFO Adding model github-pr-1c08b-lxd:test-charm-runner-sv1t on cloud localhost
+18:42:55 WARNING unexpected facade SSHServer received from the controller
+18:42:55 WARNING unexpected facade SSHSession received from the controller
+18:42:55 WARNING unexpected facade SSHTunneler received from the controller
+18:42:55 WARNING unexpected facade SecretsRevoker received from the controller
+18:42:55 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:42:57 INFO Deploying ch:amd64/noble/any-charm-133
+18:43:22 INFO Deploying local:jammy/github-runner-0
+18:43:22 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:43:52 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:44:22 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:44:55 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:45:25 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:45:55 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: waiting for machine
+18:46:26 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: agent initialising
+18:46:56 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: agent initialising
+18:47:30 INFO Waiting for model:
+  test-s53lyzlb/0 [allocating] waiting: agent initialising
+18:48:00 INFO Waiting for model:
+  test-s53lyzlb/0 [executing] maintenance: installing charm software
+18:48:31 INFO Waiting for model:
+  test-s53lyzlb/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-s53lyzlb/0 [idle] active:
+18:54:20 INFO Wait for condition not met, sleeping 10
+18:54:33 INFO Wait for condition not met, sleeping 10
+18:54:46 INFO Wait for condition not met, sleeping 10
+18:54:59 INFO Wait for condition not met, sleeping 10
+18:55:12 INFO Wait for condition not met, sleeping 10
+18:55:25 INFO Wait for condition not met, sleeping 10
+18:55:38 INFO Wait for condition not met, sleeping 10
+18:55:51 INFO Wait for condition not met, sleeping 10
+18:56:04 INFO Wait for condition not met, sleeping 10
+18:56:17 INFO Wait for condition not met, sleeping 10

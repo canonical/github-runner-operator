@@ -1,0 +1,127 @@
+18:43:35 WARNING unexpected facade SSHServer received from the controller
+18:43:35 INFO Adding model github-pr-1c08b-lxd:test-charm-runner-8l3a on cloud localhost
+18:43:36 WARNING unexpected facade SSHServer received from the controller
+18:43:36 WARNING unexpected facade SSHSession received from the controller
+18:43:36 WARNING unexpected facade SSHTunneler received from the controller
+18:43:36 WARNING unexpected facade SecretsRevoker received from the controller
+18:43:36 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:43:38 INFO Deploying ch:amd64/noble/any-charm-133
+18:44:07 INFO Deploying local:noble/github-runner-0
+18:44:07 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twbprgqc/0 [allocating] waiting: waiting for machine
+18:44:37 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twbprgqc/0 [allocating] waiting: waiting for machine
+18:45:21 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-twbprgqc/0 [idle] active: 
+18:45:51 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+18:46:21 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+18:46:52 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+18:47:36 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+18:48:07 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: waiting for machine
+18:48:37 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: agent initialising
+18:49:36 INFO Waiting for model:
+  test-twbprgqc/0 [allocating] waiting: agent initialising
+18:50:06 INFO Waiting for model:
+  test-twbprgqc/0 [executing] maintenance: installing charm software
+18:50:36 INFO Waiting for model:
+  test-twbprgqc/0 [executing] maintenance: installing charm software
+18:50:46 WARNING Receiver: Connection closed, reconnecting
+18:50:46 ERROR Task tmp raised an exception: watcher was stopped
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/_jasyncio.py", line 36, in _task_result_exp_handler
+    task.result()
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/facade.py", line 482, in wrapper
+    reply = await f(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/_client3.py", line 126, in Next
+    reply = await self.rpc(msg)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/overrides.py", line 116, in rpc
+    result = await self.connection.rpc(msg, encoder=TypeEncoder)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 597, in rpc
+    raise errors.JujuAPIError(result)
+juju.errors.JujuAPIError: watcher was stopped
+18:50:46 WARNING Watcher: watcher stopped, restarting
+18:50:46 WARNING RPC: Connection closed, reconnecting
+18:50:46 ERROR Task exception was never retrieved
+future: <Task finished name='Task-3254' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Thu, 02 Apr 2026 18:50:46 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+18:50:46 ERROR Task exception was never retrieved
+future: <Task finished name='Task-3258' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Thu, 02 Apr 2026 18:50:46 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+18:50:46 ERROR RPC: Automatic reconnect failed
+18:50:46 WARNING RPC: Connection closed, reconnecting
+18:50:46 ERROR RPC: Automatic reconnect failed

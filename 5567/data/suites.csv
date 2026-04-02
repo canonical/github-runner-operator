@@ -1,0 +1,59 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: Have one deployed unit, find its machine, and add a second unit to the same machine.
+    act: Verify per-unit systemd instance services, distinct/persisted ports, and metrics.
+    assert: Both instance services are active; ports are distinct and persisted; metrics respond.
+    ","0","test_multi_unit_same_machine_co_location","tests.integration","2026-04-02","broken","2026-04-02","","test_multi_unit_same_machine","",""
+"
+    arrange: A working application with one runner.
+    act: Run check_runner action.
+    assert: Action returns result with one runner.
+    ","248865","test_check_runner","tests.integration","2026-04-02","passed","2026-04-02","","test_charm_runner","",""
+"
+    arrange: A working application with two runners.
+    act:
+        1. Run Check_runner action. Record the runner names for later.
+        2. Flush runners.
+        3. Dispatch a workflow to make runner busy and call flush_runner action.
+
+    assert:
+        1. Two runner exists.
+        2. Runners are recreated.
+        3. The runner is not flushed since by default it flushes idle.
+
+    Test are combined to reduce number of runner spawned.
+    ","78601","test_flush_runner_and_resource_config","tests.integration","2026-04-02","broken","2026-04-02","","test_charm_runner","",""
+"
+    arrange: A working application with no runners and a mock planner, and the secret granted.
+    act:
+        1. Integrate the application with the mock planner.
+        2. Remove the integration.
+    assert:
+        1. The charm writes its flavor data to the planner relation app data bag.
+        2. The charm returns to active status after the relation is removed.
+    ","0","test_planner_integration","tests.integration","2026-04-02","broken","2026-04-02","","test_charm_no_runner","",""
+"
+    arrange: given a prometheus charm application.
+    act: when GitHub runner is integrated.
+    assert: the datasource is registered and basic metrics are available.
+    ","0","test_prometheus_metrics","tests.integration","2026-04-02","broken","2026-04-02","","test_prometheus_metrics","",""
+"
+    arrange: A working application with one runner with a custom pre-job script enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed and pre-job script has been executed.
+    ","0","test_custom_pre_job_script","tests.integration","2026-04-02","skipped","2026-04-02","","test_charm_runner","",""
+"
+    arrange: given latest edge version of the charm.
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","462102","test_charm_upgrade","tests.integration","2026-04-02","passed","2026-04-02","","test_charm_upgrade","",""
+"
+    arrange: A working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    ","0","test_check_runners_no_runners","tests.integration","2026-04-02","broken","2026-04-02","","test_charm_no_runner","",""
+"
+    arrange: A working application with one runner in a forked repository.
+    act: Change the path configuration to the main repository and reconcile runners.
+    assert: No runners connected to the forked repository and one runner in the main repository.
+    ","255240","test_path_config_change","tests.integration","2026-04-02","broken","2026-04-02","","test_charm_fork_path_change","",""
