@@ -1,0 +1,45 @@
+07:11:59 INFO OpenStack servers: []
+07:11:59 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-upaw  github-pr-1c08b-lxd  localhost/localhost  3.6.20   unsupported  07:11:59Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-vgo4mvi0           active      1  any-charm      latest/beta  133  no       
+test-vgo4mvi0                                  error       1  github-runner                 0  no       hook failed: "install"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vgo4mvi0/0*  active    idle   0        10.61.134.45           
+test-vgo4mvi0/0*                         error     idle   1        10.61.134.251          hook failed: "install"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.61.134.45   juju-0473d7-0  ubuntu@24.04  github-runner  Running
+1        started  10.61.134.251  juju-0473d7-1  ubuntu@24.04  github-runner  Running
+
+07:11:59 INFO Juju error logs:
+
+machine-0: 07:05:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:05:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:09:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:09:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:10:55 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.61.134.251:37774: use of closed network connection
+machine-1: 07:10:55 ERROR juju.worker.dependency "migration-minion" manifold worker returned unexpected error: watcher has been stopped (stopped)
+machine-1: 07:10:55 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-1: 07:10:55 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:10:55 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.61.134.45:51382: use of closed network connection
+machine-0: 07:10:55 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 07:10:55 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 07:10:58 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:10:58 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-1: 07:11:01 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:11:02 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-1: 07:11:05 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:11:07 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-1: 07:11:10 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:11:12 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-1: 07:11:16 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:11:19 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-1: 07:11:23 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-1" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+machine-0: 07:11:26 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [16ea89] "machine-0" cannot open api: unable to connect to API: dial tcp 10.61.134.80:17070: connect: connection refused
+
+07:11:59 INFO Forgetting model main...
