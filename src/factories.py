@@ -13,7 +13,7 @@ from github_runner_manager.configuration import (
     RunnerConfiguration,
     SupportServiceConfig,
 )
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubTokenAuth
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -40,7 +40,7 @@ def create_application_configuration(
     extra_labels = list(state.charm_config.labels)
     github_configuration = (
         GitHubConfiguration(
-            auth=GitHubTokenAuth(token=state.charm_config.token),
+            auth=state.charm_config.auth,
             path=state.charm_config.path,
         )
         if state.charm_config.path

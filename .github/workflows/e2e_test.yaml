@@ -19,8 +19,9 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_e2e"]'
-      # INTEGRATION_TOKEN, OS_PASSWORD are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
+      # INTEGRATION_TOKEN, OS_PASSWORD, GITHUB_APP_INSTALLATION_ID (base slot),
+      # GITHUB_APP_PRIVATE_KEY (slot 11) are passed through
+      # INTEGRATION_TEST_SECRET_ENV_VALUE_<N> mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \
@@ -32,7 +33,8 @@ jobs:
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
+        --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}" \
+        --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
 
