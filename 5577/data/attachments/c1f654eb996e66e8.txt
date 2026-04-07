@@ -1,0 +1,2071 @@
+18:53:21 WARNING RPC: Connection closed, reconnecting
+18:53:21 ERROR RPC: Automatic reconnect failed
+18:53:22 INFO OpenStack servers: [openstack.compute.v2.server.Server(id=2e798e69-d005-4998-b64c-34548a3de8b5, name=test-cv3oq0ul-0-0a49757c6aae, status=ACTIVE, tenant_id=5094adb2b2594752ba2421a5dd2905cf, user_id=1f7600bcec3d44c093c20673d7647848, metadata={'platform_name': 'github', 'runner_id': '494401', 'prefix': 'test-cv3oq0ul-0'}, hostId=a580605e5ca97202c18fe726dae4be702654687c595b28613217a030, image={'id': 'bbff14d0-0db4-4eee-b368-8b83483508e5', 'links': [{'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/images/bbff14d0-0db4-4eee-b368-8b83483508e5'}]}, flavor={'vcpus': 2, 'ram': 4096, 'disk': 50, 'ephemeral': 0, 'swap': 0, 'original_name': 'shared.xsmall', 'extra_specs': {'aggregate_instance_extra_specs:commit': 'amd64', 'hw:cpu_policy': 'shared', 'hw:mem_page_size': 'large', 'hw:pci_numa_affinity_policy': 'preferred'}}, created=2026-04-06T18:49:21Z, updated=2026-04-06T18:49:42Z, addresses={'net_stg-ps7-github-runner-test-amd64': [{'version': 4, 'addr': '10.151.122.84', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:52:90:c7'}]}, accessIPv4=, accessIPv6=, links=[{'rel': 'self', 'href': 'https://nova.ps7.canonical.com:8774/v2.1/servers/2e798e69-d005-4998-b64c-34548a3de8b5'}, {'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/servers/2e798e69-d005-4998-b64c-34548a3de8b5'}], OS-DCF:diskConfig=MANUAL, progress=0, OS-EXT-AZ:availability_zone=AZ3, pinned_availability_zone=None, config_drive=True, key_name=test-cv3oq0ul-0-0a49757c6aae, OS-SRV-USG:launched_at=2026-04-06T18:49:42.000000, OS-SRV-USG:terminated_at=None, OS-EXT-SRV-ATTR:host=ps7-ra5-n2.ps7.canonical.com, OS-EXT-SRV-ATTR:instance_name=instance-005c6781, OS-EXT-SRV-ATTR:hypervisor_hostname=ps7-ra5-n2.ps7.canonical.com, OS-EXT-SRV-ATTR:reservation_id=r-ojz7q31t, OS-EXT-SRV-ATTR:launch_index=0, OS-EXT-SRV-ATTR:hostname=test-cv3oq0ul-0-0a49757c6aae, OS-EXT-SRV-ATTR:kernel_id=, OS-EXT-SRV-ATTR:ramdisk_id=, OS-EXT-SRV-ATTR:root_device_name=/dev/vda, OS-EXT-SRV-ATTR:user_data=IyEvYmluL3NoCgpzZXQgLWUKCmhvc3RuYW1lY3RsIHNldC1ob3N0bmFtZSBnaXRodWItcnVubmVyCgojIFdyaXRlIC5lbnYgY29udGVudHMKc3UgLSB1YnVudHUgLWMgJ2NkIH4vYWN0aW9ucy1ydW5uZXIgJiYgZWNobyAiUEFUSD0vaG9tZS91YnVudHUvLmxvY2FsL2JpbjovdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW46L3NuYXAvYmluCgpET0NLRVJIVUJfTUlSUk9SPWh0dHBzOi8vZ2l0aHViLXJ1bm5lci1kb2NrZXJodWItY2FjaGUuY2Fub25pY2FsLmNvbTo1MDAwCkNPTlRBSU5FUl9SRUdJU1RSWV9VUkw9aHR0cHM6Ly9naXRodWItcnVubmVyLWRvY2tlcmh1Yi1jYWNoZS5jYW5vbmljYWwuY29tOjUwMDAKCkxBTkc9Qy5VVEYtOApBQ1RJT05TX1JVTk5FUl9IT09LX0pPQl9TVEFSVEVEPS9ob21lL3VidW50dS9hY3Rpb25zLXJ1bm5lci9wcmUtam9iLnNoCiIgPiAuZW52JwoKc25hcCByZWZyZXNoIC0taG9sZD00OGgKc25hcCB3YXRjaCAtLWxhc3Q9YXV0by1yZWZyZXNoPwoKCnNuYXAgaW5zdGFsbCBhcHJveHkgLS1lZGdlCnNuYXAgc2V0IGFwcm94eSBwcm94eT1lZ3Jlc3MucHM3LmludGVybmFsOjMxMjggbGlzdGVuPTo1NDk2OQpjYXQgPDwgRU9GID4gL2V0Yy9uZnRhYmxlcy5jb25mCmRlZmluZSBkZWZhdWx0LWlwdjQgPSAkKGlwIHJvdXRlIGdldCAkKGlwIHJvdXRlIHNob3cgMC4wLjAuMC8wIHwgZ3JlcCAtb1AgJ3ZpYSBcS1xTKycpIHwgZ3JlcCAtb1AgJ3NyYyBcS1xTKycpCnRhYmxlIGlwIGFwcm94eQpmbHVzaCB0YWJsZSBpcCBhcHJveHkKdGFibGUgaXAgYXByb3h5IHsKICAgICAgc2V0IGV4Y2x1ZGUgewogICAgICAgICAgdHlwZSBpcHY0X2FkZHI7CiAgICAgICAgICBmbGFncyBpbnRlcnZhbDsgYXV0by1tZXJnZTsKICAgICAgICAgIGVsZW1lbnRzID0geyAxMjcuMC4wLjAvOCwgMTAuMC4wLjAvOCwgMTcyLjE2LjAuMC8xMiwgMTkyLjE2OC4wLjAvMTYgfQogICAgICB9CiAgICAgIGNoYWluIHByZXJvdXRpbmcgewogICAgICAgICAgICAgIHR5cGUgbmF0IGhvb2sgcHJlcm91dGluZyBwcmlvcml0eSBkc3RuYXQ7IHBvbGljeSBhY2NlcHQ7CiAgICAgICAgICAgICAgaXAgZGFkZHIgIT0gQGV4Y2x1ZGUgdGNwIGRwb3J0IHsgMS0zMTI3LCAzMTI5LTY1NTM1IH0gY291bnRlciBkbmF0IHRvIFwkZGVmYXVsdC1pcHY0OjU0OTY5CiAgICAgIH0KICAgICAgY2hhaW4gb3V0cHV0IHsKICAgICAgICAgICAgICB0eXBlIG5hdCBob29rIG91dHB1dCBwcmlvcml0eSAtMTAwOyBwb2xpY3kgYWNjZXB0OwogICAgICAgICAgICAgIGlwIGRhZGRyICE9IEBleGNsdWRlIHRjcCBkcG9ydCB7IDEtMzEyNywgMzEyOS02NTUzNSB9IGNvdW50ZXIgZG5hdCB0byBcJGRlZmF1bHQtaXB2NDo1NDk2OQogICAgICB9Cn0KRU9GCnN5c3RlbWN0bCBlbmFibGUgbmZ0YWJsZXMuc2VydmljZQpuZnQgLWYgL2V0Yy9uZnRhYmxlcy5jb25mCgoKIyBBZGRpbmcgcmV0cnkgdG8gYXB0LWdldCBkdWUgdG8gb2NjYXNpb25hbCBhcHQgbWlycm9yIHN5bmMgaXNzdWVzLgojIFJldHJ5IGJ1aWx0aW4gaW4gYXB0LWdldCBkb2VzIG5vdCByZXRyeSA0MDQsIHdoaWNoIG1pcnJvciBzeW5jIGlzc3VlcyBjYW4gY2F1c2UuCiMgVGhlcmVmb3JlLCBhIGJhc2ggZm9yIGxvb3AgaXMgdXNlZCBmb3IgcmV0cnlpbmcuCmZvciBpIGluIHswLi42fTsgZG8KICBpZiBhcHQtZ2V0IHVwZGF0ZTsgdGhlbgogICAgYnJlYWsKICBlbHNlCiAgICBlY2hvICJhcHQtZ2V0IHVwZGF0ZSBmYWlsZWQsIHJldHJ5aW5nIGluIDEwIHNlY29uZHMuLi4iCiAgICBzbGVlcCAxMAogIGZpCmRvbmUKCgoKYWRkdXNlciB1YnVudHUgbHhkCmFkZHVzZXIgdWJ1bnR1IGFkbQoKCmVjaG8gIntcInJlZ2lzdHJ5LW1pcnJvcnNcIjogW1wiaHR0cHM6Ly9naXRodWItcnVubmVyLWRvY2tlcmh1Yi1jYWNoZS5jYW5vbmljYWwuY29tOjUwMDBcIl19IiA+IC9ldGMvZG9ja2VyL2RhZW1vbi5qc29uCnN5c3RlbWN0bCBkYWVtb24tcmVsb2FkCnN5c3RlbWN0bCByZXN0YXJ0IGRvY2tlcgoKCiMgUHJlcGFyZSBtZXRyaWNzCnN1IC0gdWJ1bnR1IC1jICdta2RpciAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UiJwoKIyBJbnNlcnQgcHJlLWpvYiBzY3JpcHQsIHdlIHVzZSBhIHNwZWNpYWwgZW5kIG1hcmtlciBhbmQgbm90IEVPRiBvciBFT1QgdG8gYXZvaWQgdGhhdCB0aGUgc2FtZSBpcyByZXVzZWQgaW5zaWRlIHRoZSBzY3JpcHQKY2F0IDw8ICczNWM2ODFkNy1lMGIxLTQzYWEtYWZkYy1mZjdkMWM0ODEwY2EnIHwgc3UgLSB1YnVudHUgLWMgJ3RlZSAvaG9tZS91YnVudHUvYWN0aW9ucy1ydW5uZXIvcHJlLWpvYi5zaCcKIyEvdXNyL2Jpbi9lbnYgYmFzaAoKdGltZXN0YW1wPSQoZGF0ZSArJXMpCgojIERpc2FibGUgZXhpdC1vbi1lcnJvciwgZHVlIHRoZSBuZWVkIGZvciBlcnJvciBoYW5kbGluZy4Kc2V0ICtlCgoKanEgLW4gXAogIC0tYXJnIHdvcmtmbG93ICIkR0lUSFVCX1dPUktGTE9XIiBcCiAgLS1hcmcgcmVwb3NpdG9yeSAiJEdJVEhVQl9SRVBPU0lUT1JZIiBcCiAgLS1hcmcgZXZlbnQgIiRHSVRIVUJfRVZFTlRfTkFNRSIgXAogIC0tYXJnanNvbiB0aW1lc3RhbXAgIiR0aW1lc3RhbXAiIFwKICAtLWFyZyB3b3JrZmxvd19ydW5faWQgIiRHSVRIVUJfUlVOX0lEIiBcCiAgJ3sKICAgICJ3b3JrZmxvdyI6ICR3b3JrZmxvdywKICAgICJyZXBvc2l0b3J5IjogJHJlcG9zaXRvcnksCiAgICAiZXZlbnQiOiAkZXZlbnQsCiAgICAidGltZXN0YW1wIjogJHRpbWVzdGFtcCwKICAgICJ3b3JrZmxvd19ydW5faWQiOiAkd29ya2Zsb3dfcnVuX2lkCiAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcHJlLWpvYi1tZXRyaWNzLmpzb24iIHx8IHRydWUKCgoKCmlmIFtbIC1uICIkRE9DS0VSSFVCX01JUlJPUiIgXV07IHRoZW4KICBsb2dnZXIgLXMgIkEgcHJpdmF0ZSBkb2NrZXIgcmVnaXN0cnkgaXMgc2V0dXAgYXMgYSBkb2NrZXJodWIgbWlycm9yIGZvciB0aGlzIHNlbGYtaG9zdGVkIHJ1bm5lci4iCiAgbG9nZ2VyIC1zICJUaGUgZG9ja2VyIGRhZW1vbiBvbiB0aGlzIHNlbGYtaG9zdGVkIHJ1bm5lciBpcyBjb25maWd1cmVkIHRvIHVzZSB0aGUgZG9ja2VyaHViIG1pcnJvci4iCiAgbG9nZ2VyIC1zICJUaGUgVVJMIHRvIHRoZSBwcml2YXRlIGRvY2tlciByZWdpc3RyeSBpcyBpbiB0aGUgRE9DS0VSSFVCX01JUlJPUiBlbnZpcm9ubWVudCB2YXJpYWJsZS4iCiAgbG9nZ2VyIC1zICJGb3IgbWljcm9rOHMsIHNlZSBpbnN0cnVjdGlvbnMgaGVyZTogaHR0cHM6Ly9taWNyb2s4cy5pby9kb2NzL2RvY2tlcmh1Yi1saW1pdHMiCmZpCgoKMzVjNjgxZDctZTBiMS00M2FhLWFmZGMtZmY3ZDFjNDgxMGNhCgoKd3JpdGVfcG9zdF9tZXRyaWNzKCl7CiAgICAjIEV4cGVjdHMgdGhlIGV4aXQgY29kZSBvZiB0aGUgcnVuLnNoIHNjcmlwdCBhcyB0aGUgZmlyc3QgYXJndW1lbnQuCgogICAgIyBPbmx5IHdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIGlmIHRoZSBmaWxlIGRvZXMgbm90IGFscmVhZHkgZXhpc3QgLSB3aGljaCBtYXkgaW5kaWNhdGUKICAgICMgdGhhdCB0aGUgam9iIGhhcyBmYWlsZWQgaW5zaWRlIHByZS1qb2IuCgogICAgaWYgWyAtZiAvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9wb3N0LWpvYi1tZXRyaWNzLmpzb24gXTsgdGhlbgogICAgICAgIHJldHVybgogICAgZmkKCiAgICB0aW1lc3RhbXA9JChkYXRlICslcykKCiAgICAjIFdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIHVzaW5nIHN0YXR1cyBhYm5vcm1hbCBhbmQgZXhpdCBjb2RlIGlmIGV4aXQgY29kZSBpcyBub24temVybwogICAgaWYgWyAiJDEiICE9ICIwIiBdOyB0aGVuCiAgICAgICAgc3VkbyAtZyB1YnVudHUgLXUgdWJ1bnR1IGpxIC1uIFwKICAgICAgICAgIC0tYXJnanNvbiB0aW1lc3RhbXAgIiR0aW1lc3RhbXAiIFwKICAgICAgICAgIC0tYXJnIHN0YXR1cyAiYWJub3JtYWwiIFwKICAgICAgICAgIC0tYXJnanNvbiBleGl0X2NvZGUgIiQxIiBcCiAgICAgICAgICAnewogICAgICAgICAgICAidGltZXN0YW1wIjogJHRpbWVzdGFtcCwKICAgICAgICAgICAgInN0YXR1cyI6ICRzdGF0dXMsCiAgICAgICAgICAgICJzdGF0dXNfaW5mbyI6IHtjb2RlOiAkZXhpdF9jb2RlfQogICAgICAgICAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcG9zdC1qb2ItbWV0cmljcy5qc29uIgogICAgICAgIHJldHVybgogICAgZWxzZQogICAgICAgICMgSWYgZXhpdCBjb2RlIGlzIHplcm8sIHdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIHVzaW5nIHN0YXR1cyBub3JtYWwKICAgICAgICBzdWRvIC1nIHVidW50dSAtdSB1YnVudHUganEgLW4gXAogICAgICAgICAgLS1hcmdqc29uIHRpbWVzdGFtcCAiJHRpbWVzdGFtcCIgXAogICAgICAgICAgJ3sKICAgICAgICAgICAgInRpbWVzdGFtcCI6ICR0aW1lc3RhbXAsCiAgICAgICAgICAgICJzdGF0dXMiOiAibm9ybWFsIgogICAgICAgICAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcG9zdC1qb2ItbWV0cmljcy5qc29uIgogICAgZmkKfQoKZGF0ZSArJXMgPiAgL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcnVubmVyLWluc3RhbGxlZC50aW1lc3RhbXAKCiMgUnVuIHJ1bm5lcgojIFdlIHdhbnQgdG8gY2FwdHVyZSB0aGUgZXhpdCBjb2RlIG9mIHRoZSBydW4gc2NyaXB0IGFuZCB3cml0ZSB0aGUgcG9zdC1qb2IgbWV0cmljcy4KIyBJZiB0aGUgYWdlbnQgcHJvdmlkZWQgZG9lcyBub3Qgc3RvcCwgdGhlIG1ldHJpY3Mgd2lsbCBub3QgYmUgd3JpdHRlbiB0byB0aGUgZmlsZSBhbmQKIyBzaG91bGQgYmUgdGFrZW4gZnJvbSB0aGUgcGxhdGZvcm0gcHJvdmlkZXIuCgooc2V0ICtlOyBzdSAtIHVidW50dSAtYyAiY2Qgfi9hY3Rpb25zLXJ1bm5lciAmJiAvaG9tZS91YnVudHUvYWN0aW9ucy1ydW5uZXIvcnVuLnNoIC0taml0Y29uZmlnIGV5SXVjblZ1Ym1WeUlqb2laWGxLUWxveVZuVmtSV3hyU1dwdmFVNUVhekJPUkVGNFNXbDNhVkZYWkd4aWJsSlBXVmN4YkVscWIybGtSMVo2WkVNeGFtUnFUblpqVkVJeFlrTXdkMHhVUW1oT1JHc3pUbFJrYWs1dFJtaGFVMGx6U1d0U2NHTXlSbWxpUjFaV1kwZFNhR1JIVldsUGFVcFZZMjVXYkVscGQybFNXRUp2V2xjeGJHTnRSbk5KYW05cFZraEtNVnBUU1hOSmJFSjJZako0U2xwRFNUWkpha1ZwVEVOS1VXSXlPWE5VYlVaMFdsTkpObUp1Vm5OaVEzZHBWVEpXZVdSdFZubFdXRXB6U1dwdmFXRklVakJqU0UwMlRIazVkMkZZUW14aVIyeDFXbGhPYm1GSVZtbGFXRlo2VFdwUmRWbFhUakJoVnpsMVkzazFibUZZVW05a1Ywb3hZekpXZVZreU9YVmtSMVoxWkVNMWFtSXlNSFpOVjNONFlqSlNjR05zVm05bFJtOHdVakk1YVdOSE5WaFZiVnBLWTBkMFEwMXNVblJqUjJoNlRsaFpOV1JWV2toaU0yeFZWRVJOZVZveVpEUlViSEI0V2xkRmRrbHBkMmxXTWpsNVlUQmFkbUpIVW14amFVazJTV3c1TTJJelNuSkphWGRwVWpKc01GTklWbWxXV0VwelNXcHZhV0ZJVWpCalNFMDJUSGs1Ym1GWVVtOWtWMGwxV1RJNWRFd3lUbWhpYlRsMVlWZE9hR0pET1c1aFdGSnZaRmRKZEdOdVZuVmliVlo1VEZjNWQxcFlTbWhrUnpsNVNXbDNhVlV5Vm5sa2JWWjVWbGhLYzFacVNXbFBhVXB2WkVoU2QyTjZiM1pNTWtwNVlqSjBiR05wTldoWk0xSndZakkxZWt4dFpIQmtSMmd4V1c1V2VscFlTbXBpTWpVd1dsYzFNRXh0VG5aaVV6aHBURU5LVm1NeVZsZE5hMXB6WWpOamFVOXBTakJqYmxac1NXNHdQU0lzSWk1amNtVmtaVzUwYVdGc2N5STZJbVY1U2xSWk1taHNZbGRWYVU5cFNsQlJXRll3WVVOSmMwbHJVbWhrUjBWcFQyNXphVkV5ZUhCYVZ6VXdVMWRSYVU5cFNYbFphbEV6V1dwRk5WbFRNREZhYWxKcVRGUlJkMWxYVFhSUFZHUnRUbWt3TWs5VVJUQmFWRVY1V21wUk1GbFhUV2xNUTBwQ1pGaFNiMkl6U25CbGJVWXdZVmM1ZFZaWVNuTkphbTlwWVVoU01HTklUVFpNZVRsM1lWaENiR0pIYkhWYVdFNXVZVWhXYVZwWVZucE5hbEYxV1ZkT01HRlhPWFZqZVRWdVlWaFNiMlJYU2pGak1sWjVXVEk1ZFdSSFZuVmtRelZxWWpJd2RrMVhjM2hpTWxKd1kyeFdiMlZHYnpCU01qbHBZMGMxV0ZWdFdrcGpSM1JEVFd4U2RHTkhhSHBPV0ZrMVpGVmFTR0l6YkZWVVJFMTVXakprTkZSc2NIaGFWMFYyV0RKR2QyRllUWFppTWtZeFpFZG5lVXd6VW5aaE1sWjFTVzR4T1NJc0lpNWpjbVZrWlc1MGFXRnNjMTl5YzJGd1lYSmhiWE1pT2lKbGVVcHJTV3B2YVZsNU9WUlpNamxKWkVod1VXSkhZM0pWZW1SQ1YyNUtXRlJxWjNkU1ZYUjFVMGRzTmsxdVJsWmFia2w2VFZWT00wOVlVazlhYlhoSlpGZGtlRlZxVWtKVVZHdzBXbXhyY2xWc1RqVk9SRko2WVRCb2VFNXJVbE5XU0doTVRUTlNlbU5WYkhaalZrcDBZakE0TVZGcmJEVlVTSEJDVTJsMGVHRXpUWGRPVkdoV1UydG9XVk5GWkZCalYyTnlXV3hrVTJKWFRrcFRWRnA2Wkd0S1dHSnRhREZhUkVWNFlXcFdRMUZXUlhwV1JGb3pZMFJrVFZWNmJGRmFlbVIwV20xc2RsZHJWbTVSYTJSWlN6QnplVlZ1VmxoYWFsRjRZa2hDVEUxV1VteGFRemxyVTFaR1MxTnFWblZNTW1oSVlWaG9lbFpYV2t0amJUUTFTekl3ZUZSR2FGcFZNRVpIVWtoU1NWSlZiRzVPTUZwMFZtazRNVlZVVlRWVVZUUjNWSHBCZGxVeWFFWlVWVGx5VkVjeFFtRXhVakJSYm14RFQwWmpNbHBGT0hwTU0xWlVUVlV4YVZZd1VsbGxSVTVZVlVaWk1WVXhaRXhXUmxwcFkxUlNORlZVU2toTmVrNXJUVzF3YUZsVlNsWlRhelI0VlZWYVJVNTZiRzFaYm5BMFpGVlNTMkZGY0hWT01EaDRUREl4VFdGR1JrTlhhM1JOWTJ0cmVXUkdSakpUUjNSeFRtNW9TMUl3TUhKWFdGWkRWMnRrUTJReGNFZFRhbEl6VmtoT2MxTkRPVmRpVjJoelRURmFVbEJVTUdsTVEwcHJZME5KTmtsc1NqVmlSbEoxVDBWMFRGcFhiSFJWYWs0eVkxVmtTbVJ1WTNsWFJXeHdVVmRvVTFwc1JsRk9NbEkyWWxacmQxSlhiM0pPUjJ4MldsZEdibGt4VGpaaU1tZzFaR3N4UWs1R1pGRmFNRVpHVVc1U2FXUkVSbTlrVlZaTlRYazVUMVZGVVRSVE1GcFlURE5DU1ZSVE9YQmxWVm96VFVoWk5VMUhaRmxpTTFrMFdqRkNjVTVIT1d4WmJWWnFUVzAxZEZWSVpGWlRNRFZwWkVaV1dsWlRkRE5WUmtVeFZHczFRbG95Y0RCWFZXdzFZa2hPYTAxSFNuZGFNRlo1VGpCR2RFMVZVa3RWU0VsM1UwVlNkVlZZUWpSWGJYUldZa1V4VEZFd09YUlJWM0JQVld4c2ExWlVNR2xNUTBwclkxTkpOa2xzUVRCWlZHeHRUbGN4ZWxkR1RteFhiR2hKWkVoYWVWZFZOVEZpVlZJeVdWaFNTRmxyVWtaVGJVbzJUVVp3UjFwcVZuaE9TR3cyWkRCMGExcHRaRWxTYlhSS1ZsVktWRTFzV20xYU1sWllVMms1U1dSSFpGaFRTSEJQVlZkS2FsUkhlRWRWTVdSWFZUQTFhVnBFYUVaU1dGSlVUMVp3VVU1RWFIcGFSRVpOVjBab1VGb3lUa2xrTW13elpWVkdkbUpzWXpGaVNFSnlZVWQ0VlZGVmJFUmFhMnQ1Vlc1YWFWTnJhRkppUkVwT1dUQndObUpJVG14VE1GSlVWR3QwU0ZaSGRITlhha0pMVVRCYVNWRlViRVZXYTNSdVlVaHdiVk5GWkRGVGJWcHNXbXQwTVZaVU1HbE1RMHBzWlVoQ2RtSnRWblZrUTBrMlNXdEdVbEZWU1dsTVEwcHdZbTVhYkdOdVRteFZVMGsyU1c1SmQxWllVakpqUkdSVFRXMDFlbEZVVGtaa1dFWjBWbFZrUjFrd2MzZFZiVkV3VDBWdk5XTnNWalJPVld0NldUQTVWVTFHYkhaV1IyTTBWVWhuY2xGdWJ6VlNNblJFVVZWd2RWWkhSazVqVnpWd1ZFVlNXbFpWUlRSa1ZFRjRUV3hDY0dFeFFtdFphazVZWVZoT2RWSnJjRFZYYmtwdVdWZGplbU14VG1oaFZFcG9Ua1UxZDJKdWFFMU5WMHBIWkVVME1HUllielJhYmxKeVRVVnZNMDlGYkhkWFdFSlZXa2MxUldFd09ISk5SbG93WkRKV2ExbHJjR0ZsVlZJeFZVUnNOVkpGTlhsVFJtaDRXa2Q0TVUxVVZsbGlTR2MwVTIweGVWUnNVbFpWUlhjelRrUXdhVXhEU25SaU1sSXhZa2hXZWtscWIybGtNVTVFWWpCd1ZHSkRPVFppTWtaeFVrVXhOVTFZWkc1T2VteDRXVmMxV2xac1NYSmFWVnAyWTBWc2MySnJiR2hUUld4elRrUkNhMHd5T1ZWUk1IaG9ZMGRvYzFaVk9ETkxNR2R5WWpOR1dHVnFVbFpoVld4M1drUm9SbEpFVWxsTlNHUmFWVVJvV1ZWcVpERmplbXMwWkc1amVWcHFTbEZrZWs1dFZGVTFRbVZJUlhkWFNGRnlUVVpLVG1KcVpIUlViVFYzVjBaU1ZGWlZaSGRVYmxaVFVrUk9UMVl5YUV4YVZtdHlaVzVDTkZKWWJGUk5NbXd4WWpOdmVHVkhWVEprUlhCdFUwVTViVmt4Umt4UFZFcFRXbXRXYlU5VmNIaFNlbFpoUzNwR2FsWnJkRzlYYld4U1UwYzBlbU5UT1ZsV1JuQjNXVEo0U1dJeVJrSk5iVlpOVlZSS2NWSXphR2hVYTBsMlYwVm9SVXN4YkdGTU1IQkxWRlZhYzFSRmJ6SmFiazEyVDBaTmVsWnRUWHBNZWs1elRWZG9jR0pFYkVsT1NGSkZWbXBPTTFOclVqSlJiVEZaWTFaV2JtSkhORE5OUkU1S1ZFaGtSMk5ZVW05aWVscFBWbGRhV0U5VlNtcGtWVEZSVDBSa1JGRXdkR3haYTBweVZGWlNSMVF5YkZOYWJVb3lUbGRhU0ZscWFHcFpiR1F4Vm14c1ZXUXdaSGhTVlhneVlsUkdibUZ0YXpKVFYyeHBWMnhWZWxacWFHRlJNMXBYUzNrNWIyRllTblJqVXpsMVpVZEtibFpXVGxKUVZEQnBURU5LZDBscWIybE1lbWhXVlRKb1VsUjZSakJoYkZVMVZGWmFhMVZYYUhOTldFSlFWbTB4ZWxOSVpFWmFSWFF5WlVWS2JXTXlNVWxTUlVwWFQxVmtSRlJyTURWaU1FWkVZVWh3TTJOSVJsSmFla3A0WVVock1HSXlWak5aYVRoMlkyMWFVV042Um1sT1ZVVXdXVEowUjFONlJYcE9NVlpRWVRKU1dGWXdXWGRPYTFsNlkxUlNOR05YVmsxV2FscEZUbnBzYkZacVJqWmlSMmQ2WTFWUk0xVllUbTFhYldNMVVqQm5NVkZVUVhwWk1WSnpUbFYwTTJSSFdURmxWRkY2Vlc1R2NWUnFXa1pVTTFFd1RsUktWbE16V2s5V2VrMDFWbFJuZDFadGNIZGxiRkpZV2pBMWExSXhhRTVRVTBselNXNUZhVTlwU2pOV1ZFSjBUMFpXWVU0elduQlpWR1JFV2tNNGVGSlVVa2hXYTBwcFYwaEJkbGRFYkhGVVZsVjVXbGhuZVdKcmFGcFNTRXB1WVVWU05WTkhaR3hhVnpWRFlsaHdZVnBWWTNaU1JUa3lVbTVTVEZaSFJrWk5WMlJLVFZWNE5HRlZaRTlYUkVKeVkzcEdlbE5JUmpKVVYzaEhZVlJTVDFNd1NqRk5lbFUxV1cwNVJXUXhUa05XU0d4WFQwZFNTR1F5U25GVFJ6aDJaV3RWTWxFd1VteFNSMFl5U3pCb1RXTlhPVzFoZWxwdVRrWktWRlpWZEZaT1IzYzBZMnhHY0ZwWFNsSlVNV2hSVW5wYWRXRnNUWEpaYlRseVlXMVJkMVZxVG5GalJrSXlUa2hWZWxKck1EbEpiakE5SW4wPSI7IHdyaXRlX3Bvc3RfbWV0cmljcyAkPykKCnN1IC0gdWJ1bnR1IC1jICJ0b3VjaCAvaG9tZS91YnVudHUvcnVuLWNvbXBsZXRlZCI=, OS-EXT-STS:task_state=None, OS-EXT-STS:vm_state=active, OS-EXT-STS:power_state=1, os-extended-volumes:volumes_attached=[], locked=False, locked_reason=None, description=None, tags=[], trusted_image_certificates=None, security_groups=[{'name': 'github-runner-v1'}], location=Munch({'cloud': 'testcloud', 'region_name': 'prodstack7', 'zone': 'AZ3', 'project': Munch({'id': '5094adb2b2594752ba2421a5dd2905cf', 'name': 'stg-ps7-github-runner-test-amd64_project', 'domain_id': None, 'domain_name': 'Default'})}), public_v4=, public_v6=, private_v4=10.151.122.84, interface_ip=), openstack.compute.v2.server.Server(id=81439e03-d1cf-4f32-a28c-8948c44a34d0, name=test-cv3oq0ul-0-0369bc3aa10f, status=ACTIVE, tenant_id=5094adb2b2594752ba2421a5dd2905cf, user_id=1f7600bcec3d44c093c20673d7647848, metadata={'platform_name': 'github', 'runner_id': '494402', 'prefix': 'test-cv3oq0ul-0'}, hostId=a580605e5ca97202c18fe726dae4be702654687c595b28613217a030, image={'id': 'bbff14d0-0db4-4eee-b368-8b83483508e5', 'links': [{'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/images/bbff14d0-0db4-4eee-b368-8b83483508e5'}]}, flavor={'vcpus': 2, 'ram': 4096, 'disk': 50, 'ephemeral': 0, 'swap': 0, 'original_name': 'shared.xsmall', 'extra_specs': {'aggregate_instance_extra_specs:commit': 'amd64', 'hw:cpu_policy': 'shared', 'hw:mem_page_size': 'large', 'hw:pci_numa_affinity_policy': 'preferred'}}, created=2026-04-06T18:49:21Z, updated=2026-04-06T18:49:44Z, addresses={'net_stg-ps7-github-runner-test-amd64': [{'version': 4, 'addr': '10.151.122.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7f:aa:63'}]}, accessIPv4=, accessIPv6=, links=[{'rel': 'self', 'href': 'https://nova.ps7.canonical.com:8774/v2.1/servers/81439e03-d1cf-4f32-a28c-8948c44a34d0'}, {'rel': 'bookmark', 'href': 'https://nova.ps7.canonical.com:8774/servers/81439e03-d1cf-4f32-a28c-8948c44a34d0'}], OS-DCF:diskConfig=MANUAL, progress=0, OS-EXT-AZ:availability_zone=AZ3, pinned_availability_zone=None, config_drive=True, key_name=test-cv3oq0ul-0-0369bc3aa10f, OS-SRV-USG:launched_at=2026-04-06T18:49:43.000000, OS-SRV-USG:terminated_at=None, OS-EXT-SRV-ATTR:host=ps7-ra5-n2.ps7.canonical.com, OS-EXT-SRV-ATTR:instance_name=instance-005c6782, OS-EXT-SRV-ATTR:hypervisor_hostname=ps7-ra5-n2.ps7.canonical.com, OS-EXT-SRV-ATTR:reservation_id=r-2pn4b30z, OS-EXT-SRV-ATTR:launch_index=0, OS-EXT-SRV-ATTR:hostname=test-cv3oq0ul-0-0369bc3aa10f, OS-EXT-SRV-ATTR:kernel_id=, OS-EXT-SRV-ATTR:ramdisk_id=, OS-EXT-SRV-ATTR:root_device_name=/dev/vda, OS-EXT-SRV-ATTR:user_data=IyEvYmluL3NoCgpzZXQgLWUKCmhvc3RuYW1lY3RsIHNldC1ob3N0bmFtZSBnaXRodWItcnVubmVyCgojIFdyaXRlIC5lbnYgY29udGVudHMKc3UgLSB1YnVudHUgLWMgJ2NkIH4vYWN0aW9ucy1ydW5uZXIgJiYgZWNobyAiUEFUSD0vaG9tZS91YnVudHUvLmxvY2FsL2JpbjovdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW46L3NuYXAvYmluCgpET0NLRVJIVUJfTUlSUk9SPWh0dHBzOi8vZ2l0aHViLXJ1bm5lci1kb2NrZXJodWItY2FjaGUuY2Fub25pY2FsLmNvbTo1MDAwCkNPTlRBSU5FUl9SRUdJU1RSWV9VUkw9aHR0cHM6Ly9naXRodWItcnVubmVyLWRvY2tlcmh1Yi1jYWNoZS5jYW5vbmljYWwuY29tOjUwMDAKCkxBTkc9Qy5VVEYtOApBQ1RJT05TX1JVTk5FUl9IT09LX0pPQl9TVEFSVEVEPS9ob21lL3VidW50dS9hY3Rpb25zLXJ1bm5lci9wcmUtam9iLnNoCiIgPiAuZW52JwoKc25hcCByZWZyZXNoIC0taG9sZD00OGgKc25hcCB3YXRjaCAtLWxhc3Q9YXV0by1yZWZyZXNoPwoKCnNuYXAgaW5zdGFsbCBhcHJveHkgLS1lZGdlCnNuYXAgc2V0IGFwcm94eSBwcm94eT1lZ3Jlc3MucHM3LmludGVybmFsOjMxMjggbGlzdGVuPTo1NDk2OQpjYXQgPDwgRU9GID4gL2V0Yy9uZnRhYmxlcy5jb25mCmRlZmluZSBkZWZhdWx0LWlwdjQgPSAkKGlwIHJvdXRlIGdldCAkKGlwIHJvdXRlIHNob3cgMC4wLjAuMC8wIHwgZ3JlcCAtb1AgJ3ZpYSBcS1xTKycpIHwgZ3JlcCAtb1AgJ3NyYyBcS1xTKycpCnRhYmxlIGlwIGFwcm94eQpmbHVzaCB0YWJsZSBpcCBhcHJveHkKdGFibGUgaXAgYXByb3h5IHsKICAgICAgc2V0IGV4Y2x1ZGUgewogICAgICAgICAgdHlwZSBpcHY0X2FkZHI7CiAgICAgICAgICBmbGFncyBpbnRlcnZhbDsgYXV0by1tZXJnZTsKICAgICAgICAgIGVsZW1lbnRzID0geyAxMjcuMC4wLjAvOCwgMTAuMC4wLjAvOCwgMTcyLjE2LjAuMC8xMiwgMTkyLjE2OC4wLjAvMTYgfQogICAgICB9CiAgICAgIGNoYWluIHByZXJvdXRpbmcgewogICAgICAgICAgICAgIHR5cGUgbmF0IGhvb2sgcHJlcm91dGluZyBwcmlvcml0eSBkc3RuYXQ7IHBvbGljeSBhY2NlcHQ7CiAgICAgICAgICAgICAgaXAgZGFkZHIgIT0gQGV4Y2x1ZGUgdGNwIGRwb3J0IHsgMS0zMTI3LCAzMTI5LTY1NTM1IH0gY291bnRlciBkbmF0IHRvIFwkZGVmYXVsdC1pcHY0OjU0OTY5CiAgICAgIH0KICAgICAgY2hhaW4gb3V0cHV0IHsKICAgICAgICAgICAgICB0eXBlIG5hdCBob29rIG91dHB1dCBwcmlvcml0eSAtMTAwOyBwb2xpY3kgYWNjZXB0OwogICAgICAgICAgICAgIGlwIGRhZGRyICE9IEBleGNsdWRlIHRjcCBkcG9ydCB7IDEtMzEyNywgMzEyOS02NTUzNSB9IGNvdW50ZXIgZG5hdCB0byBcJGRlZmF1bHQtaXB2NDo1NDk2OQogICAgICB9Cn0KRU9GCnN5c3RlbWN0bCBlbmFibGUgbmZ0YWJsZXMuc2VydmljZQpuZnQgLWYgL2V0Yy9uZnRhYmxlcy5jb25mCgoKIyBBZGRpbmcgcmV0cnkgdG8gYXB0LWdldCBkdWUgdG8gb2NjYXNpb25hbCBhcHQgbWlycm9yIHN5bmMgaXNzdWVzLgojIFJldHJ5IGJ1aWx0aW4gaW4gYXB0LWdldCBkb2VzIG5vdCByZXRyeSA0MDQsIHdoaWNoIG1pcnJvciBzeW5jIGlzc3VlcyBjYW4gY2F1c2UuCiMgVGhlcmVmb3JlLCBhIGJhc2ggZm9yIGxvb3AgaXMgdXNlZCBmb3IgcmV0cnlpbmcuCmZvciBpIGluIHswLi42fTsgZG8KICBpZiBhcHQtZ2V0IHVwZGF0ZTsgdGhlbgogICAgYnJlYWsKICBlbHNlCiAgICBlY2hvICJhcHQtZ2V0IHVwZGF0ZSBmYWlsZWQsIHJldHJ5aW5nIGluIDEwIHNlY29uZHMuLi4iCiAgICBzbGVlcCAxMAogIGZpCmRvbmUKCgoKYWRkdXNlciB1YnVudHUgbHhkCmFkZHVzZXIgdWJ1bnR1IGFkbQoKCmVjaG8gIntcInJlZ2lzdHJ5LW1pcnJvcnNcIjogW1wiaHR0cHM6Ly9naXRodWItcnVubmVyLWRvY2tlcmh1Yi1jYWNoZS5jYW5vbmljYWwuY29tOjUwMDBcIl19IiA+IC9ldGMvZG9ja2VyL2RhZW1vbi5qc29uCnN5c3RlbWN0bCBkYWVtb24tcmVsb2FkCnN5c3RlbWN0bCByZXN0YXJ0IGRvY2tlcgoKCiMgUHJlcGFyZSBtZXRyaWNzCnN1IC0gdWJ1bnR1IC1jICdta2RpciAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UiJwoKIyBJbnNlcnQgcHJlLWpvYiBzY3JpcHQsIHdlIHVzZSBhIHNwZWNpYWwgZW5kIG1hcmtlciBhbmQgbm90IEVPRiBvciBFT1QgdG8gYXZvaWQgdGhhdCB0aGUgc2FtZSBpcyByZXVzZWQgaW5zaWRlIHRoZSBzY3JpcHQKY2F0IDw8ICczNWM2ODFkNy1lMGIxLTQzYWEtYWZkYy1mZjdkMWM0ODEwY2EnIHwgc3UgLSB1YnVudHUgLWMgJ3RlZSAvaG9tZS91YnVudHUvYWN0aW9ucy1ydW5uZXIvcHJlLWpvYi5zaCcKIyEvdXNyL2Jpbi9lbnYgYmFzaAoKdGltZXN0YW1wPSQoZGF0ZSArJXMpCgojIERpc2FibGUgZXhpdC1vbi1lcnJvciwgZHVlIHRoZSBuZWVkIGZvciBlcnJvciBoYW5kbGluZy4Kc2V0ICtlCgoKanEgLW4gXAogIC0tYXJnIHdvcmtmbG93ICIkR0lUSFVCX1dPUktGTE9XIiBcCiAgLS1hcmcgcmVwb3NpdG9yeSAiJEdJVEhVQl9SRVBPU0lUT1JZIiBcCiAgLS1hcmcgZXZlbnQgIiRHSVRIVUJfRVZFTlRfTkFNRSIgXAogIC0tYXJnanNvbiB0aW1lc3RhbXAgIiR0aW1lc3RhbXAiIFwKICAtLWFyZyB3b3JrZmxvd19ydW5faWQgIiRHSVRIVUJfUlVOX0lEIiBcCiAgJ3sKICAgICJ3b3JrZmxvdyI6ICR3b3JrZmxvdywKICAgICJyZXBvc2l0b3J5IjogJHJlcG9zaXRvcnksCiAgICAiZXZlbnQiOiAkZXZlbnQsCiAgICAidGltZXN0YW1wIjogJHRpbWVzdGFtcCwKICAgICJ3b3JrZmxvd19ydW5faWQiOiAkd29ya2Zsb3dfcnVuX2lkCiAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcHJlLWpvYi1tZXRyaWNzLmpzb24iIHx8IHRydWUKCgoKCmlmIFtbIC1uICIkRE9DS0VSSFVCX01JUlJPUiIgXV07IHRoZW4KICBsb2dnZXIgLXMgIkEgcHJpdmF0ZSBkb2NrZXIgcmVnaXN0cnkgaXMgc2V0dXAgYXMgYSBkb2NrZXJodWIgbWlycm9yIGZvciB0aGlzIHNlbGYtaG9zdGVkIHJ1bm5lci4iCiAgbG9nZ2VyIC1zICJUaGUgZG9ja2VyIGRhZW1vbiBvbiB0aGlzIHNlbGYtaG9zdGVkIHJ1bm5lciBpcyBjb25maWd1cmVkIHRvIHVzZSB0aGUgZG9ja2VyaHViIG1pcnJvci4iCiAgbG9nZ2VyIC1zICJUaGUgVVJMIHRvIHRoZSBwcml2YXRlIGRvY2tlciByZWdpc3RyeSBpcyBpbiB0aGUgRE9DS0VSSFVCX01JUlJPUiBlbnZpcm9ubWVudCB2YXJpYWJsZS4iCiAgbG9nZ2VyIC1zICJGb3IgbWljcm9rOHMsIHNlZSBpbnN0cnVjdGlvbnMgaGVyZTogaHR0cHM6Ly9taWNyb2s4cy5pby9kb2NzL2RvY2tlcmh1Yi1saW1pdHMiCmZpCgoKMzVjNjgxZDctZTBiMS00M2FhLWFmZGMtZmY3ZDFjNDgxMGNhCgoKd3JpdGVfcG9zdF9tZXRyaWNzKCl7CiAgICAjIEV4cGVjdHMgdGhlIGV4aXQgY29kZSBvZiB0aGUgcnVuLnNoIHNjcmlwdCBhcyB0aGUgZmlyc3QgYXJndW1lbnQuCgogICAgIyBPbmx5IHdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIGlmIHRoZSBmaWxlIGRvZXMgbm90IGFscmVhZHkgZXhpc3QgLSB3aGljaCBtYXkgaW5kaWNhdGUKICAgICMgdGhhdCB0aGUgam9iIGhhcyBmYWlsZWQgaW5zaWRlIHByZS1qb2IuCgogICAgaWYgWyAtZiAvaG9tZS91YnVudHUvbWV0cmljcy1leGNoYW5nZS9wb3N0LWpvYi1tZXRyaWNzLmpzb24gXTsgdGhlbgogICAgICAgIHJldHVybgogICAgZmkKCiAgICB0aW1lc3RhbXA9JChkYXRlICslcykKCiAgICAjIFdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIHVzaW5nIHN0YXR1cyBhYm5vcm1hbCBhbmQgZXhpdCBjb2RlIGlmIGV4aXQgY29kZSBpcyBub24temVybwogICAgaWYgWyAiJDEiICE9ICIwIiBdOyB0aGVuCiAgICAgICAgc3VkbyAtZyB1YnVudHUgLXUgdWJ1bnR1IGpxIC1uIFwKICAgICAgICAgIC0tYXJnanNvbiB0aW1lc3RhbXAgIiR0aW1lc3RhbXAiIFwKICAgICAgICAgIC0tYXJnIHN0YXR1cyAiYWJub3JtYWwiIFwKICAgICAgICAgIC0tYXJnanNvbiBleGl0X2NvZGUgIiQxIiBcCiAgICAgICAgICAnewogICAgICAgICAgICAidGltZXN0YW1wIjogJHRpbWVzdGFtcCwKICAgICAgICAgICAgInN0YXR1cyI6ICRzdGF0dXMsCiAgICAgICAgICAgICJzdGF0dXNfaW5mbyI6IHtjb2RlOiAkZXhpdF9jb2RlfQogICAgICAgICAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcG9zdC1qb2ItbWV0cmljcy5qc29uIgogICAgICAgIHJldHVybgogICAgZWxzZQogICAgICAgICMgSWYgZXhpdCBjb2RlIGlzIHplcm8sIHdyaXRlIHRoZSBwb3N0LWpvYiBtZXRyaWNzIHVzaW5nIHN0YXR1cyBub3JtYWwKICAgICAgICBzdWRvIC1nIHVidW50dSAtdSB1YnVudHUganEgLW4gXAogICAgICAgICAgLS1hcmdqc29uIHRpbWVzdGFtcCAiJHRpbWVzdGFtcCIgXAogICAgICAgICAgJ3sKICAgICAgICAgICAgInRpbWVzdGFtcCI6ICR0aW1lc3RhbXAsCiAgICAgICAgICAgICJzdGF0dXMiOiAibm9ybWFsIgogICAgICAgICAgfScgPiAiL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcG9zdC1qb2ItbWV0cmljcy5qc29uIgogICAgZmkKfQoKZGF0ZSArJXMgPiAgL2hvbWUvdWJ1bnR1L21ldHJpY3MtZXhjaGFuZ2UvcnVubmVyLWluc3RhbGxlZC50aW1lc3RhbXAKCiMgUnVuIHJ1bm5lcgojIFdlIHdhbnQgdG8gY2FwdHVyZSB0aGUgZXhpdCBjb2RlIG9mIHRoZSBydW4gc2NyaXB0IGFuZCB3cml0ZSB0aGUgcG9zdC1qb2IgbWV0cmljcy4KIyBJZiB0aGUgYWdlbnQgcHJvdmlkZWQgZG9lcyBub3Qgc3RvcCwgdGhlIG1ldHJpY3Mgd2lsbCBub3QgYmUgd3JpdHRlbiB0byB0aGUgZmlsZSBhbmQKIyBzaG91bGQgYmUgdGFrZW4gZnJvbSB0aGUgcGxhdGZvcm0gcHJvdmlkZXIuCgooc2V0ICtlOyBzdSAtIHVidW50dSAtYyAiY2Qgfi9hY3Rpb25zLXJ1bm5lciAmJiAvaG9tZS91YnVudHUvYWN0aW9ucy1ydW5uZXIvcnVuLnNoIC0taml0Y29uZmlnIGV5SXVjblZ1Ym1WeUlqb2laWGxLUWxveVZuVmtSV3hyU1dwdmFVNUVhekJPUkVGNVNXbDNhVkZYWkd4aWJsSlBXVmN4YkVscWIybGtSMVo2WkVNeGFtUnFUblpqVkVJeFlrTXdkMHhVUVhwT2FteHBXWHBPYUZsVVJYZGFhVWx6U1d0U2NHTXlSbWxpUjFaV1kwZFNhR1JIVldsUGFVcFZZMjVXYkVscGQybFNXRUp2V2xjeGJHTnRSbk5KYW05cFZraEtNVnBUU1hOSmJFSjJZako0U2xwRFNUWkpha1ZwVEVOS1VXSXlPWE5VYlVaMFdsTkpObUp1Vm5OaVEzZHBWVEpXZVdSdFZubFdXRXB6U1dwdmFXRklVakJqU0UwMlRIazVkMkZZUW14aVIyeDFXbGhPYm1GSVZtbGFXRlo2VFdwUmRWbFhUakJoVnpsMVkzazFibUZZVW05a1Ywb3hZekpXZVZreU9YVmtSMVoxWkVNMWFtSXlNSFpOVjNONFlqSlNjR05zVm05bFJtOHdVakk1YVdOSE5WaFZiVnBLWTBkMFEwMXNVblJqUjJoNlRsaFpOV1JWV2toaU0yeFZWRVJOZVZveVpEUlViSEI0V2xkRmRrbHBkMmxXTWpsNVlUQmFkbUpIVW14amFVazJTV3c1TTJJelNuSkphWGRwVWpKc01GTklWbWxXV0VwelNXcHZhV0ZJVWpCalNFMDJUSGs1Ym1GWVVtOWtWMGwxV1RJNWRFd3lUbWhpYlRsMVlWZE9hR0pET1c1aFdGSnZaRmRKZEdOdVZuVmliVlo1VEZjNWQxcFlTbWhrUnpsNVNXbDNhVlV5Vm5sa2JWWjVWbGhLYzFacVNXbFBhVXB2WkVoU2QyTjZiM1pNTWtwNVlqSjBiR05wTldoWk0xSndZakkxZWt4dFpIQmtSMmd4V1c1V2VscFlTbXBpTWpVd1dsYzFNRXh0VG5aaVV6aHBURU5LVm1NeVZsZE5hMXB6WWpOamFVOXBTakJqYmxac1NXNHdQU0lzSWk1amNtVmtaVzUwYVdGc2N5STZJbVY1U2xSWk1taHNZbGRWYVU5cFNsQlJXRll3WVVOSmMwbHJVbWhrUjBWcFQyNXphVkV5ZUhCYVZ6VXdVMWRSYVU5cFNYZE9iVnBxVFVSSk5WcFRNV2hQUkdNMFRGUlJNMXB0UlhSUFJHTjRXa014YWs1cVVtdE5ha0V4V1dwbk5VMVVhMmxNUTBwQ1pGaFNiMkl6U25CbGJVWXdZVmM1ZFZaWVNuTkphbTlwWVVoU01HTklUVFpNZVRsM1lWaENiR0pIYkhWYVdFNXVZVWhXYVZwWVZucE5hbEYxV1ZkT01HRlhPWFZqZVRWdVlWaFNiMlJYU2pGak1sWjVXVEk1ZFdSSFZuVmtRelZxWWpJd2RrMVhjM2hpTWxKd1kyeFdiMlZHYnpCU01qbHBZMGMxV0ZWdFdrcGpSM1JEVFd4U2RHTkhhSHBPV0ZrMVpGVmFTR0l6YkZWVVJFMTVXakprTkZSc2NIaGFWMFYyV0RKR2QyRllUWFppTWtZeFpFZG5lVXd6VW5aaE1sWjFTVzR4T1NJc0lpNWpjbVZrWlc1MGFXRnNjMTl5YzJGd1lYSmhiWE1pT2lKbGVVcHJTV3B2YVdJd2REWldhMUphWTBaV05tVllTbFpUU0ZwTlZVZGtkMUZVUVhwalIyUjJWbXhLWVZkRVNqVldNMFV3VG0wMU5GSlRPV0ZoTTI4MFdqSm9hRlZJUmxKUmFsWnRXa1puZG1NelRreGllbFo2V1cxUk1GVXlSbTVrVm1SR1UxWktkbE14U25oYVYyaGhUMFpzVFUxdVpIWk1NakY0VTFkR01XVnNaRkZsUXpscFVWVm9OV1JWTlVKaU1HOXlWVEJPYUZSWGJETlZiVFV5WTFVeFNXSlhhRkZOUjFVd1REQkdjR1JXVGxkWk1IaHVWVmRHVUZScVNtbFRSa0l3VkVkNE0wOUZhSFZpZWtJeVdXcFpjbFF3TVVaa2VrWnRUVEJvVjFSR2JFWmlla0paV1ZSR2RsUXpTbFJhYmtaT1lrUldiR1ZyUmxsalZUVjZXVlpDUzJSV2JHcFJWWFJwU3pOQk1WVnNVbnBsVm1kNlZFUmFkRTFYT1ZWTU1GSlVUbWs1V1dOdFpHbFpXR3gzVjJzNU1GVlZTWGRqTURrMlpGUlNiV050VWtSUk0yaDVUVEZLV0ZRelZtbGtXRlV5VmpKME5VNHpaRWRXYTBaeVpHNU5ORmR1YkZWVVNGSTJZV3RvVUdWV1dYSlhSWFF5VTJ0R2NFc3hhRWxQVmtaTFV6SjBNMVpzVVRObGF6a3pWbGhTTmsxSVZsbFhiR1JOVG14V2EySklaRFpoU0d3MllsVmtNbUp1VGxwYVV6bHlUak5XVDFkSGFIQlZSWGN5VGpOYU1sZHJTalpUTUhneVRsVk9VbEJVTUdsTVEwcHJZME5KTmtsdVpHMWhhMVkwVjFoS2ExTnJiREpaVXpsSldXMDVjR1F6U1RKYVJFNXVWbXMxZDAxcWJETk9NbXhZVWpOb2JtUXhSVEJOYlZKaFYycHNVMDFxU2s1bGEzTTBZMVYwWVZkWWIzaE9lWE4yVkcweFRHUnRiRkJSVmtaSlQxZEtiVTFYWkV4VmVrWlRUVVJrYVZwck5ESk5ha1pzVDFoak1GTkhTbkpMTW5CUldsZE5NVkZ1VlRCWFJVMHhUbXRvTlZWVlVuQmFNazVQVjJrNU5GTlVhRTlrV0d4UVZHMWFjVm96U1haWFZFSTJVVlZXZUZSVVFYWmxWRnAwV1ZaYWFsSkhTWHBpYkdSVFRUSTFiVnBITlZGYVNHdzFWMFpaZG1GNWRFcGpiRXB2V20xa1FsWlVNR2xNUTBwclkxTkpOa2xzWkc1aGJUbE5VMnMxVVdGR1RucFpWMUV4WWtSS2JHSkdhSFZqYldSWFVXMXdlRTFZWkd4a2FsWnFUV3QwV0ZwRldtRmthWFF5VVZkS1lXSnFWbmRoUkZKRVVXNXdlbUpYU2pOYU1scFZVVEZHV1ZsWGFFMU9TR3hZVFd0YVYyRXlTbFJVYm1odllqQTVXRk41T1cxU2FtdDVZekJuZVZkSFdrOWlSazVZVTFoc1JFNTZVbmxrZW1kM1ZWYzFXbFpHV1haUFJsSjBXa2RXZDFKWE1YWlBWMmhOWVd4ck1VNVZOREJSVjJoTVVucE9VbFJJWjNKVE1ERlBUa1Y0WVdReGEzZFNNMnhYVGpCYWVGSXlSWGhrVkU0MFRVaENhbUpYY0d4aE1HUXpUbGRHYmxKVU1HbE1RMHBzWlVoQ2RtSnRWblZrUTBrMlNXdEdVbEZWU1dsTVEwcHdZbTVhYkdOdVRteFZVMGsyU1d0d2RGWklUbFJXUmxaNllsZEtOazFZVlhKWFZWa3dVVEpTVVU1VlpGRlZWekZaWlVVMVJXSXdTbXBrYkdoNVl6STVNRlpyZEVSTk1rNVVWVEZTTkdGR2JEUk1NbVI2Vmxod2RGSnNSbk5oUkVZMVRETmtUMk51UmxSVmEyeE1ZakZCTUdKdFZuVlNhbFpIVkRKNGNVNHdVa05XUlRsNFZteGtTV014VWtwUFJHUjVXbGhrUmxKNlNtRmtTSEJzV1Zad1VHVllaRzVqVm5CdFVWZDRNRlJyZUZSTE1WSlNWVmhLTVdSVlZubFRibEp1WWpOd05sSlZOVVJsYm1jMVZEQXhVVk5GT1RGT2ExWnZXak53YjAxck9WRkxNMEl5VVd0a01GTnRkRzFWYW1STlQwUXdhVXhEU25SaU1sSXhZa2hXZWtscWIybGtWR3h1VjFaU2NsRXdNVWxWUjJRelVrVjNNMVI2UW5oa1NGWm9VMFJLY0Zac1pGSmlWRnB5VXpKNGIxZFZZM2RPTTBaTVZVWk5lVXd5YUZwUFZXUnBWMVV4Y2t4NlpFcGFWRUpoWkVWVk5VMUVRbWhqVnpGRFlYcEdhRXd4V1ROVlJ6RXlWa2hrY21GWVRtbGlNbXcwVlVWb2IxWXdaRk5qV0hBMVVXMW9UMDlZVW5GVWJWRTFaR3hPZEdKWVdrZFhWVnBMWkdwV2JGZEZValJOV0ZKT1dWWlJNbFpJWkRSVVIyaHdUMVpHZEdFd1ZsWmxSVGxwUzNwV01sWkVSWHBXTTFKdVRtcFNUV1ZGYXpCaE1sWjBWMVZPY1dFeVNuaFRSRVl3VWtWemVtUkhhRWxUVjNSWlVURlJOVmRXV1hKYU0xcFlZMGhPZGxWcVFtbGtTRVkwVjJ0U1lWcDZaSEZOTW1keVdrUmtkR1JJUWpSa2VrNW9VbXBrY1ZGc1pFZFRhMVkyVFd0b1ZWTlhaRmhqYldSNVdrVlJjbFpXYUZKWlZXTXlaV3huTVUxWVFYbGtWbFpzV201c2RGTkZTa2xSTUc5NlpGZHNNbEpVWkU1T2EzQlJZVWRzVEdSVlpGRlJlbWgyWkVWb05GVlhVbWhoZWxsNVRsYzFiRkZ0WkU1VFZGcHFZWHBXZGxOVlRrZFRWbEo0WVVNNGNsVjZRbTVQVldoWlpESlNhVlpZUWtSalJuQlRWVWMxVkdKcmNFUmhNRlpYVlRKb2RtRllUbGRXTURsSVVrZFdiRTR4UmxKUVZEQnBURU5LZDBscWIybE9hbWhHVW0weGRtRkdiRkpPTW5kNlkxUktUMUo2Wkdwa1YyZ3dVMnRHTlZveVp6QlJiazUxVld4U1RGSlliRTVTYWtKWVkyNVJNRTVHWjNsVFZteHlWRVZHUzFKcmVIbFZXRko1Vlcxc2JrMXRVbEJqYWtKTVkyNUJlR0V5VGxwalZtaEhXVmRPVTJSVlJteGlXR1I0U3pJMVZWSlZjekZpYkVvMlZrWktkbFJxVGt0WFJGSk1VV3RLTTFFd1VrbGpiR3d3WVRCdmVsSXlSbmhpYkdod1kyMXNNbFZWYUZCalIxWkNUVzVOY21WWFdrUk1NMXBTVmtoR2QxVjZiSGRsUkVwRFpGY3hObFl3T1hsT1ZsRTFZVVZaTTJOc2FHOU5SRko1V2pKb01sVkVTazVRVTBselNXNUZhVTlwU2pWTU1qVk1VakprVDFwRlpHNVNia0ozWkcxMFRWb3djM2RVUm1oTldrZEpNMWx0TlVWVVZXc3hXbGhzYUZkdVRrcGlibkJLVTJ0V00xWnFUazVhUjJSUlVWUldWMk13WkVSWFIzaFdZVEZ3WVdKck5VbGpla3BGWW1sMFVscEdXbkJOYkdSMFRrYzFVVlJGZUhkU1IxRjZZbXM1U21GV1JUUlZNVUpTVFRKS2MyVldaM2RYU0hCdllWVnJlazFYVG1wV2VUaDVVVzVDTm1ORmNIaFBSekZaVkZock1FNHdjRWxXTVVsNlZrVkdhRTR3ZEV4VGFteFdVa2RLZFdNd05IZGFNRVl6VGpOT1MxTlZTak5TVkVaWVYyMWFhMUZ0VWs5aU1IQTFaV3hXYzFvelRUbEpiakE5SW4wPSI7IHdyaXRlX3Bvc3RfbWV0cmljcyAkPykKCnN1IC0gdWJ1bnR1IC1jICJ0b3VjaCAvaG9tZS91YnVudHUvcnVuLWNvbXBsZXRlZCI=, OS-EXT-STS:task_state=None, OS-EXT-STS:vm_state=active, OS-EXT-STS:power_state=1, os-extended-volumes:volumes_attached=[], locked=False, locked_reason=None, description=None, tags=[], trusted_image_certificates=None, security_groups=[{'name': 'github-runner-v1'}], location=Munch({'cloud': 'testcloud', 'region_name': 'prodstack7', 'zone': 'AZ3', 'project': Munch({'id': '5094adb2b2594752ba2421a5dd2905cf', 'name': 'stg-ps7-github-runner-test-amd64_project', 'domain_id': None, 'domain_name': 'Default'})}), public_v4=, public_v6=, private_v4=10.151.122.95, interface_ip=)]
+18:53:23 INFO Server test-cv3oq0ul-0-0a49757c6aae console log:
+[    0.000000] Linux version 6.17.0-19-generic (buildd@lcy02-amd64-019) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #19~24.04.2-Ubuntu SMP PREEMPT_DYNAMIC Fri Mar  6 23:08:46 UTC 2 (Ubuntu 6.17.0-19.19~24.04.2-generic 6.17.13)
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.17.0-19-generic root=UUID=3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro console=tty1 console=ttyS0
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdcfff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bffdd000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000013fffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: OpenStack Foundation OpenStack Nova, BIOS 1.16.3-debian-1.16.3-2~backport22.04.202412060920~ubuntu22.04.1 04/01/2014
+[    0.000000] DMI: Memory slots populated: 1/1
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] last_pfn = 0xbffdd max_arch_pfn = 0x400000000
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: using sched offset of 2994740146 cycles
+[    0.000002] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000005] tsc: Detected 2396.400 MHz processor
+[    0.000903] last_pfn = 0x140000 max_arch_pfn = 0x400000000
+[    0.000949] MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+[    0.000952] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.001015] last_pfn = 0xbffdd max_arch_pfn = 0x400000000
+[    0.003259] found SMP MP-table at [mem 0x000f53c0-0x000f53cf]
+[    0.003273] Using GB pages for direct mapping
+[    0.003401] RAMDISK: [mem 0x2e883000-0x33438fff]
+[    0.003792] ACPI: Early table checksum verification disabled
+[    0.003796] ACPI: RSDP 0x00000000000F5140 000014 (v00 BOCHS )
+[    0.003799] ACPI: RSDT 0x00000000BFFE2334 000034 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003804] ACPI: FACP 0x00000000BFFE2150 000074 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003808] ACPI: DSDT 0x00000000BFFE0040 002110 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003810] ACPI: FACS 0x00000000BFFE0000 000040
+[    0.003812] ACPI: APIC 0x00000000BFFE21C4 000080 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003814] ACPI: SRAT 0x00000000BFFE2244 0000C8 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003816] ACPI: WAET 0x00000000BFFE230C 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003817] ACPI: Reserving FACP table memory at [mem 0xbffe2150-0xbffe21c3]
+[    0.003819] ACPI: Reserving DSDT table memory at [mem 0xbffe0040-0xbffe214f]
+[    0.003819] ACPI: Reserving FACS table memory at [mem 0xbffe0000-0xbffe003f]
+[    0.003820] ACPI: Reserving APIC table memory at [mem 0xbffe21c4-0xbffe2243]
+[    0.003820] ACPI: Reserving SRAT table memory at [mem 0xbffe2244-0xbffe230b]
+[    0.003821] ACPI: Reserving WAET table memory at [mem 0xbffe230c-0xbffe2333]
+[    0.003898] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x0009ffff]
+[    0.003900] ACPI: SRAT: Node 0 PXM 0 [mem 0x00100000-0xbfffffff]
+[    0.003902] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x13fffffff]
+[    0.003904] NUMA: Node 0 [mem 0x00001000-0x0009ffff] + [mem 0x00100000-0xbfffffff] -> [mem 0x00001000-0xbfffffff]
+[    0.003906] NUMA: Node 0 [mem 0x00001000-0xbfffffff] + [mem 0x100000000-0x13fffffff] -> [mem 0x00001000-0x13fffffff]
+[    0.003914] NODE_DATA(0) allocated [mem 0x13ffd32c0-0x13fffdfff]
+[    0.004062] Zone ranges:
+[    0.004062]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.004064]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.004065]   Normal   [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004066]   Device   empty
+[    0.004066] Movable zone start for each node
+[    0.004068] Early memory node ranges
+[    0.004068]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.004069]   node   0: [mem 0x0000000000100000-0x00000000bffdcfff]
+[    0.004070]   node   0: [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004071] Initmem setup node 0 [mem 0x0000000000001000-0x000000013fffffff]
+[    0.004075] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.004088] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.006894] On node 0, zone Normal: 35 pages in unavailable ranges
+[    0.007786] ACPI: PM-Timer IO Port: 0x608
+[    0.007799] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.007829] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.007831] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.007833] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.007834] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.007835] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.007835] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.007838] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.007842] CPU topo: Max. logical packages:   2
+[    0.007843] CPU topo: Max. logical dies:       2
+[    0.007843] CPU topo: Max. dies per package:   1
+[    0.007847] CPU topo: Max. threads per core:   1
+[    0.007847] CPU topo: Num. cores per package:     1
+[    0.007848] CPU topo: Num. threads per package:   1
+[    0.007848] CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
+[    0.007863] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.007877] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.007879] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+[    0.007880] PM: hibernation: Registered nosave memory: [mem 0xbffdd000-0xffffffff]
+[    0.007881] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+[    0.007882] Booting paravirtualized kernel on KVM
+[    0.007883] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.007889] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:1
+[    0.007978] percpu: Embedded 84 pages/cpu s221184 r8192 d114688 u1048576
+[    0.008009] kvm-guest: PV spinlocks disabled, no host support
+[    0.008010] Kernel command line: BOOT_IMAGE=/vmlinuz-6.17.0-19-generic root=UUID=3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro console=tty1 console=ttyS0
+[    0.008058] random: crng init done
+[    0.008058] printk: log buffer data + meta data: 262144 + 917504 = 1179648 bytes
+[    0.008192] Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.008261] Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.008288] software IO TLB: area num 2.
+[    0.012894] Fallback order for Node 0: 0 
+[    0.012900] Built 1 zonelists, mobility grouping on.  Total pages: 1048443
+[    0.012902] Policy zone: Normal
+[    0.012914] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.019176] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.031842] ftrace: allocating 61402 entries in 240 pages
+[    0.031844] ftrace: allocated 240 pages with 4 groups
+[    0.032767] Dynamic Preempt: voluntary
+[    0.032802] rcu: Preemptible hierarchical RCU implementation.
+[    0.032803] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=2.
+[    0.032804] 	Trampoline variant of Tasks RCU enabled.
+[    0.032804] 	Rude variant of Tasks RCU enabled.
+[    0.032805] 	Tracing variant of Tasks RCU enabled.
+[    0.032805] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.032806] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.032812] RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.032814] RCU Tasks Rude: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.032815] RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.035555] NR_IRQS: 524544, nr_irqs: 440, preallocated irqs: 16
+[    0.035775] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.055109] Console: colour VGA+ 80x25
+[    0.055113] printk: legacy console [tty1] enabled
+[    0.107329] printk: legacy console [ttyS0] enabled
+[    0.324487] ACPI: Core revision 20250404
+[    0.326022] APIC: Switch to symmetric I/O mode setup
+[    0.327973] x2apic enabled
+[    0.329350] APIC: Switched APIC routing to: physical x2apic
+[    0.332505] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.334527] tsc: Marking TSC unstable due to TSCs unsynchronized
+[    0.336538] Calibrating delay loop (skipped) preset value.. 4792.80 BogoMIPS (lpj=2396400)
+[    0.339653] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.342625] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.344536] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    0.346943] mitigations: Enabled attack vectors: user_kernel, user_user, guest_host, guest_guest, SMT mitigations: auto
+[    0.349538] Speculative Store Bypass: Vulnerable
+[    0.351537] Spectre V2 : Mitigation: Retpolines
+[    0.353536] RETBleed: Mitigation: untrained return thunk
+[    0.354900] Speculative Return Stack Overflow: Mitigation: SMT disabled
+[    0.356536] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.359537] Spectre V2 : Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT
+[    0.361536] Spectre V2 : Enabling Speculation Barrier for firmware calls
+[    0.364926] active return thunk: retbleed_return_thunk
+[    0.366538] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.369553] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.371537] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.374956] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.376537] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.378536] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+[    0.406435] Freeing SMP alternatives memory: 52K
+[    0.407897] pid_max: default: 32768 minimum: 301
+[    0.409582] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,ima,evm
+[    0.411551] landlock: Up and running.
+[    0.413536] Yama: becoming mindful.
+[    0.414897] AppArmor: AppArmor initialized
+[    0.416578] Mount-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.419537] Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.530256] smpboot: CPU0: AMD EPYC-Rome Processor (family: 0x17, model: 0x31, stepping: 0x0)
+[    0.531634] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
+[    0.533540] ... version:                0
+[    0.534869] ... bit width:              48
+[    0.536536] ... generic registers:      6
+[    0.537878] ... value mask:             0000ffffffffffff
+[    0.538904] ... max period:             00007fffffffffff
+[    0.540536] ... fixed-purpose events:   0
+[    0.541878] ... event mask:             000000000000003f
+[    0.542988] signal: max sigframe size: 1776
+[    0.544578] rcu: Hierarchical SRCU implementation.
+[    0.545969] rcu: 	Max phase no-delay instances is 400.
+[    0.547586] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.551851] smp: Bringing up secondary CPUs ...
+[    0.553603] smpboot: x86: Booting SMP configuration:
+[    0.554911] .... node  #0, CPUs:      #1
+[    0.555601] smp: Brought up 1 node, 2 CPUs
+[    0.557880] smpboot: Total of 2 processors activated (9585.60 BogoMIPS)
+[    0.559178] Memory: 3916500K/4193772K available (22213K kernel code, 4650K rwdata, 16292K rodata, 5268K init, 4212K bss, 270324K reserved, 0K cma-reserved)
+[    0.560628] devtmpfs: initialized
+[    0.561907] x86/mm: Memory block size: 128MB
+[    0.563233] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.564543] posixtimers hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.566044] futex hash table entries: 512 (32768 bytes on 1 NUMA nodes, total 32 KiB, linear).
+[    0.567601] pinctrl core: initialized pinctrl subsystem
+[    0.569682] PM: RTC time: 18:49:41, date: 2026-04-06
+[    0.571749] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.573627] DMA: preallocated 512 KiB GFP_KERNEL pool for atomic allocations
+[    0.574982] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.576558] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.578546] audit: initializing netlink subsys (disabled)
+[    0.580549] audit: type=2000 audit(1775501382.262:1): state=initialized audit_enabled=0 res=1
+[    0.580644] thermal_sys: Registered thermal governor 'fair_share'
+[    0.582080] thermal_sys: Registered thermal governor 'bang_bang'
+[    0.582949] thermal_sys: Registered thermal governor 'step_wise'
+[    0.584537] thermal_sys: Registered thermal governor 'user_space'
+[    0.586536] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.588570] cpuidle: using governor ladder
+[    0.590878] cpuidle: using governor menu
+[    0.593609] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.595747] PCI: Using configuration type 1 for base access
+[    0.596925] PCI: Using configuration type 1 for extended access
+[    0.598014] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.613657] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.616087] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.618538] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.621066] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.625119] ACPI: Added _OSI(Module Device)
+[    0.626538] ACPI: Added _OSI(Processor Device)
+[    0.628537] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.631858] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.636587] ACPI: Interpreter enabled
+[    0.637897] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.639538] ACPI: Using IOAPIC for interrupt routing
+[    0.641638] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.645120] PCI: Using E820 reservations for host bridge windows
+[    0.647607] ACPI: Enabled 2 GPEs in block 00 to 0F
+[    0.651136] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.652953] acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    0.656729] acpiphp: Slot [3] registered
+[    0.657904] acpiphp: Slot [4] registered
+[    0.659564] acpiphp: Slot [5] registered
+[    0.660914] acpiphp: Slot [6] registered
+[    0.662903] acpiphp: Slot [7] registered
+[    0.663927] acpiphp: Slot [8] registered
+[    0.664903] acpiphp: Slot [9] registered
+[    0.666911] acpiphp: Slot [10] registered
+[    0.667895] acpiphp: Slot [11] registered
+[    0.669562] acpiphp: Slot [12] registered
+[    0.670909] acpiphp: Slot [13] registered
+[    0.673368] acpiphp: Slot [14] registered
+[    0.674910] acpiphp: Slot [15] registered
+[    0.675895] acpiphp: Slot [16] registered
+[    0.677919] acpiphp: Slot [17] registered
+[    0.678908] acpiphp: Slot [18] registered
+[    0.680563] acpiphp: Slot [19] registered
+[    0.681906] acpiphp: Slot [20] registered
+[    0.683564] acpiphp: Slot [21] registered
+[    0.684894] acpiphp: Slot [22] registered
+[    0.686908] acpiphp: Slot [23] registered
+[    0.687907] acpiphp: Slot [24] registered
+[    0.689562] acpiphp: Slot [25] registered
+[    0.690895] acpiphp: Slot [26] registered
+[    0.692562] acpiphp: Slot [27] registered
+[    0.693904] acpiphp: Slot [28] registered
+[    0.695562] acpiphp: Slot [29] registered
+[    0.696901] acpiphp: Slot [30] registered
+[    0.698562] acpiphp: Slot [31] registered
+[    0.699909] PCI host bridge to bus 0000:00
+[    0.701544] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.703950] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.706537] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.709058] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.711537] pci_bus 0000:00: root bus resource [mem 0xc000000000-0xc07fffffff window]
+[    0.714539] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.716922] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+[    0.721451] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100 conventional PCI endpoint
+[    0.725860] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180 conventional PCI endpoint
+[    0.730621] pci 0000:00:01.1: BAR 4 [io  0xc180-0xc18f]
+[    0.732612] pci 0000:00:01.1: BAR 0 [io  0x01f0-0x01f7]: legacy IDE quirk
+[    0.735538] pci 0000:00:01.1: BAR 1 [io  0x03f6]: legacy IDE quirk
+[    0.737538] pci 0000:00:01.1: BAR 2 [io  0x0170-0x0177]: legacy IDE quirk
+[    0.739965] pci 0000:00:01.1: BAR 3 [io  0x0376]: legacy IDE quirk
+[    0.742685] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
+[    0.746226] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.748556] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.752016] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000 conventional PCI endpoint
+[    0.760556] pci 0000:00:02.0: BAR 0 [mem 0xf4000000-0xf7ffffff]
+[    0.763556] pci 0000:00:02.0: BAR 1 [mem 0xf8000000-0xfbffffff]
+[    0.766039] pci 0000:00:02.0: BAR 2 [mem 0xfc090000-0xfc091fff]
+[    0.768556] pci 0000:00:02.0: BAR 3 [io  0xc140-0xc15f]
+[    0.771033] pci 0000:00:02.0: ROM [mem 0xfc080000-0xfc08ffff pref]
+[    0.773044] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.776618] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000 conventional PCI endpoint
+[    0.781315] pci 0000:00:03.0: BAR 0 [io  0xc080-0xc0bf]
+[    0.782931] pci 0000:00:03.0: BAR 1 [mem 0xfc092000-0xfc092fff]
+[    0.784993] pci 0000:00:03.0: BAR 4 [mem 0xc000000000-0xc000003fff 64bit pref]
+[    0.787554] pci 0000:00:03.0: ROM [mem 0xfc000000-0xfc07ffff pref]
+[    0.792105] pci 0000:00:04.0: [1af4:1003] type 00 class 0x078000 conventional PCI endpoint
+[    0.796553] pci 0000:00:04.0: BAR 0 [io  0xc0c0-0xc0ff]
+[    0.798940] pci 0000:00:04.0: BAR 1 [mem 0xfc093000-0xfc093fff]
+[    0.801009] pci 0000:00:04.0: BAR 4 [mem 0xc000004000-0xc000007fff 64bit pref]
+[    0.805537] pci 0000:00:05.0: [1af4:1001] type 00 class 0x010000 conventional PCI endpoint
+[    0.810255] pci 0000:00:05.0: BAR 0 [io  0xc000-0xc07f]
+[    0.811932] pci 0000:00:05.0: BAR 1 [mem 0xfc094000-0xfc094fff]
+[    0.813998] pci 0000:00:05.0: BAR 4 [mem 0xc000008000-0xc00000bfff 64bit pref]
+[    0.818734] pci 0000:00:06.0: [1af4:1002] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.823472] pci 0000:00:06.0: BAR 0 [io  0xc100-0xc13f]
+[    0.824922] pci 0000:00:06.0: BAR 1 [mem 0xfc095000-0xfc095fff]
+[    0.826991] pci 0000:00:06.0: BAR 4 [mem 0xc00000c000-0xc00000ffff 64bit pref]
+[    0.831957] pci 0000:00:07.0: [1af4:1005] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.836183] pci 0000:00:07.0: BAR 0 [io  0xc160-0xc17f]
+[    0.837937] pci 0000:00:07.0: BAR 1 [mem 0xfc096000-0xfc096fff]
+[    0.839989] pci 0000:00:07.0: BAR 4 [mem 0xc000010000-0xc000013fff 64bit pref]
+[    0.853463] ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+[    0.855707] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    0.857715] ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+[    0.860097] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    0.862026] ACPI: PCI: Interrupt link LNKS configured for IRQ 9
+[    0.864613] iommu: Default domain type: Translated
+[    0.865891] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.868561] SCSI subsystem initialized
+[    0.869920] ACPI: bus type USB registered
+[    0.870888] usbcore: registered new interface driver usbfs
+[    0.872918] usbcore: registered new interface driver hub
+[    0.881548] usbcore: registered new device driver usb
+[    0.883323] pps_core: LinuxPPS API ver. 1 registered
+[    0.884911] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.888131] PTP clock support registered
+[    0.889589] EDAC MC: Ver: 3.0.0
+[    0.891589] NetLabel: Initializing
+[    0.892537] NetLabel:  domain hash size = 128
+[    0.893888] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.895939] NetLabel:  unlabeled traffic allowed by default
+[    0.897976] mctp: management component transport protocol core
+[    0.899960] NET: Registered PF_MCTP protocol family
+[    0.901919] PCI: Using ACPI for IRQ routing
+[    0.903910] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.904534] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.904534] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.910539] vgaarb: loaded
+[    0.911899] clocksource: Switched to clocksource kvm-clock
+[    0.914176] VFS: Disk quotas dquot_6.6.0
+[    0.915647] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.918152] AppArmor: AppArmor Filesystem Enabled
+[    0.919863] pnp: PnP ACPI init
+[    0.921399] pnp: PnP ACPI: found 5 devices
+[    0.928221] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.931264] NET: Registered PF_INET protocol family
+[    0.933052] IP idents hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.945945] tcp_listen_portaddr_hash hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[    0.948840] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.951515] TCP established hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.954264] TCP bind hash table entries: 32768 (order: 8, 1048576 bytes, linear)
+[    0.956833] TCP: Hash tables configured (established 32768 bind 32768)
+[    0.959086] MPTCP token hash table entries: 4096 (order: 5, 98304 bytes, linear)
+[    0.961621] UDP hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.963909] UDP-Lite hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.966445] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.968389] NET: Registered PF_XDP protocol family
+[    0.970080] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.972184] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.974749] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.977049] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+[    0.979343] pci_bus 0000:00: resource 8 [mem 0xc000000000-0xc07fffffff window]
+[    0.981864] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.983862] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.986038] PCI: CLS 0 bytes, default 64
+[    0.987613] Trying to unpack rootfs image as initramfs...
+[    0.989142] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.991687] software IO TLB: mapped [mem 0x00000000bbfdd000-0x00000000bffdd000] (64MB)
+[    1.011929] Initialise system trusted keyrings
+[    1.013533] Key type blacklist registered
+[    1.015059] workingset: timestamp_bits=36 max_order=20 bucket_order=0
+[    1.017908] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    1.020036] fuse: init (API version 7.44)
+[    1.021734] integrity: Platform Keyring initialized
+[    1.023438] integrity: Machine keyring initialized
+[    1.032607] Key type asymmetric registered
+[    1.034337] Asymmetric key parser 'x509' registered
+[    1.036085] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 242)
+[    1.038653] io scheduler mq-deadline registered
+[    1.040873] ledtrig-cpu: registered to indicate activity on CPUs
+[    1.043050] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    1.045668] ACPI: button: Power Button [PWRF]
+[    1.048445] ACPI: \_SB_.LNKC: Enabled at IRQ 11
+[    1.054249] ACPI: \_SB_.LNKD: Enabled at IRQ 10
+[    1.058095] ACPI: \_SB_.LNKA: Enabled at IRQ 10
+[    1.061945] ACPI: \_SB_.LNKB: Enabled at IRQ 11
+[    1.065662] Freeing initrd memory: 77528K
+[    1.070294] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    1.098272] 00:00: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    1.120566] Linux agpgart interface v0.103
+[    1.123042] loop: module loaded
+[    1.124540] virtio_blk virtio2: 2/0/0 default/read/poll queues
+[    1.127808] virtio_blk virtio2: [vda] 104857600 512-byte logical blocks (53.7 GB/50.0 GiB)
+[    1.131976]  vda: vda1 vda14 vda15 vda16
+[    1.134858] scsi host0: ata_piix
+[    1.136277] scsi host1: ata_piix
+[    1.137615] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc180 irq 14 lpm-pol 0
+[    1.140256] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc188 irq 15 lpm-pol 0
+[    1.142937] ACPI: bus type drm_connector registered
+[    1.144830] tun: Universal TUN/TAP device driver, 1.6
+[    1.149580] PPP generic driver version 2.4.2
+[    1.151253] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.155596] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.157333] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.159269] mousedev: PS/2 mouse device common for all mice
+[    1.161493] rtc_cmos 00:04: RTC can wake from S4
+[    1.163885] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+[    1.164218] rtc_cmos 00:04: registered as rtc0
+[    1.168619] rtc_cmos 00:04: setting system clock to 2026-04-06T18:49:42 UTC (1775501382)
+[    1.171517] rtc_cmos 00:04: alarms up to one day, y3k, 242 bytes nvram
+[    1.173769] i2c_dev: i2c /dev entries driver
+[    1.175338] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    1.179308] device-mapper: uevent: version 1.0.3
+[    1.181023] device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
+[    1.184530] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+[    1.187161] drop_monitor: Initializing network drop monitor service
+[    1.189406] NET: Registered PF_INET6 protocol family
+[    1.191412] Segment Routing with IPv6
+[    1.192796] In-situ OAM (IOAM) with IPv6
+[    1.194240] NET: Registered PF_PACKET protocol family
+[    1.196081] Key type dns_resolver registered
+[    1.197902] IPI shorthand broadcast: enabled
+[    1.200508] sched_clock: Marking stable (906008057, 293752734)->(1227838195, -28077404)
+[    1.203376] registered taskstats version 1
+[    1.205138] Loading compiled-in X.509 certificates
+[    1.207268] Loaded X.509 cert 'Build time autogenerated kernel key: 2e73221b12d87a671685daaff6c47a18f3185632'
+[    1.211042] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing 2025 Kmod: d541cef61dc7e793b7eb7e899970a2eef0b5dc8c'
+[    1.215488] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing: 14df34d1a87cf37625abec039ef2bf521249b969'
+[    1.219080] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing: 88f752e560a1e0737e31163a466ad7b70a850c19'
+[    1.222450] blacklist: Loading compiled-in revocation X.509 certificates
+[    1.224713] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing: 61482aa2830d0ab2ad5af10b7250da9033ddcef0'
+[    1.228015] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2017): 242ade75ac4a15e50d50c84b0d45ff3eae707a03'
+[    1.231544] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (ESM 2018): 365188c1d374d6b07c3c8f240f8ef722433d6a8b'
+[    1.235120] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2019): c0746fd6c5da3ae827864651ad66ae47fe24b3e8'
+[    1.238582] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v1): a8d54bbb3825cfb94fa13c9f8a594a195c107b8d'
+[    1.242147] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v2): 4cf046892d6fd3c9a5b03f98d845f90851dc6a8c'
+[    1.246269] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v3): 100437bb6de6e469b581e61cd66bce3ef4ed53af'
+[    1.249826] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (Ubuntu Core 2019): c1d57b8f6b743f23ee41f4f7ee292f06eecadfb9'
+[    1.255916] Demotion targets for Node 0: null
+[    1.257676] Key type .fscrypt registered
+[    1.259148] Key type fscrypt-provisioning registered
+[    1.260983] Key type big_key registered
+[    1.298317] ata1: found unknown device (class 0)
+[    1.300844] ata1.00: ATAPI: QEMU DVD-ROM, 2.5+, max UDMA/100
+[    1.305022] scsi 0:0:0:0: CD-ROM            QEMU     QEMU DVD-ROM     2.5+ PQ: 0 ANSI: 5
+[    1.317056] sr 0:0:0:0: [sr0] scsi3-mmc drive: 4x/4x cd/rw xa/form2 tray
+[    1.319326] cdrom: Uniform CD-ROM driver Revision: 3.20
+[    1.331351] sr 0:0:0:0: Attached scsi generic sg0 type 5
+[    1.339617] Key type encrypted registered
+[    1.341119] AppArmor: AppArmor sha256 policy hashing enabled
+[    1.343098] ima: No TPM chip found, activating TPM-bypass!
+[    1.345055] Loading compiled-in module X.509 certificates
+[    1.347294] Loaded X.509 cert 'Build time autogenerated kernel key: 2e73221b12d87a671685daaff6c47a18f3185632'
+[    1.350574] ima: Allocated hash algorithm: sha256
+[    1.352266] ima: No architecture policies found
+[    1.353927] evm: Initialising EVM extended attributes:
+[    1.355723] evm: security.selinux
+[    1.356984] evm: security.SMACK64
+[    1.358240] evm: security.SMACK64EXEC
+[    1.359622] evm: security.SMACK64TRANSMUTE
+[    1.361104] evm: security.SMACK64MMAP
+[    1.363003] evm: security.apparmor
+[    1.364289] evm: security.ima
+[    1.371474] evm: security.capability
+[    1.372827] evm: HMAC attrs: 0x1
+[    1.374466] PM:   Magic number: 6:136:847
+[    1.378546] RAS: Correctable Errors collector initialized.
+[    1.384856] clk: Disabling unused clocks
+[    1.386297] PM: genpd: Disabling unused power domains
+[    1.390246] Freeing unused decrypted memory: 2028K
+[    1.391999] Freeing unused kernel image (initmem) memory: 5268K
+[    1.394138] Write protecting the kernel read-only data: 38912k
+[    1.395874] Freeing unused kernel image (text/rodata gap) memory: 312K
+[    1.397647] Freeing unused kernel image (rodata/data gap) memory: 92K
+[    1.427719] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    1.429428] Run /init as init process
+Loading, please wait...
+Starting systemd-udevd version 255.4-1ubuntu8.12
+[    1.496729] virtio_net virtio0 ens3: renamed from eth0
+[    1.508434] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+[    1.517275] FDC 0 is a S82078B
+[    1.546078] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+Begin: Loading essential drivers ... [    2.711774] raid6: avx2x4   gen() 31461 MB/s
+[    2.729763] raid6: avx2x2   gen() 38104 MB/s
+[    2.747762] raid6: avx2x1   gen() 41973 MB/s
+[    2.749004] raid6: using algorithm avx2x1 gen() 41973 MB/s
+[    2.766763] raid6: .... xor() 31171 MB/s, rmw enabled
+[    2.768152] raid6: using avx2x2 recovery algorithm
+[    2.770498] xor: automatically using best checksumming function   avx       
+[    2.773067] async_tx: api initialized (async)
+done.
+Begin: Running /scripts/init-premount ... done.
+Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+Begin: Running /scripts/local-premount ... [    2.871497] Btrfs loaded, zoned=yes, fsverity=yes
+Scanning for Btrfs filesystems
+done.
+Begin: Will now check root file system ... fsck from util-linux 2.39.3
+[/usr/sbin/fsck.ext4 (1) -- /dev/vda1] fsck.ext4 -a -C0 /dev/vda1 
+cloudimg-rootfs: clean, 190462/6422528 files, 2065372/12844795 blocks
+done.
+[    2.925214] EXT4-fs (vda1): mounted filesystem 3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro with ordered data mode. Quota mode: none.
+done.
+Begin: Running /scripts/local-bottom ... done.
+Begin: Running /scripts/init-bottom ... done.
+[    3.049094] systemd[1]: Inserted module 'autofs4'
+[    3.064245] systemd[1]: systemd 255.4-1ubuntu8.12 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    3.072079] systemd[1]: Detected virtualization kvm.
+[    3.074078] systemd[1]: Detected architecture x86-64.
+
+Welcome to [1mUbuntu 24.04.4 LTS[0m!
+
+[    3.078101] systemd[1]: Hostname set to <github-runner>.
+[    3.248920] systemd[1]: Queued start job for default target graphical.target.
+[    3.261004] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-modprobe.slice[0m - Slice /system/modprobe.
+[    3.265958] systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-serial\x2dget���slice[0m - Slice /system/serial-getty.
+[    3.270997] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-systemd\x2dfs���slice[0m - Slice /system/systemd-fsck.
+[    3.275744] systemd[1]: Created slice user.slice - User and Session Slice.
+[[0;32m  OK  [0m] Created slice [0;1;39muser.slice[0m - User and Session Slice.
+[    3.279424] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-wall.���[0md Requests to Wall Directory Watch.
+[    3.285146] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[[0;32m  OK  [0m] Set up automount [0;1;39mproc-sys-fs-binfm���[0mormats File System Automount Point.
+[    3.290562] systemd[1]: Expecting device dev-disk-by\x2dlabel-BOOT.device - /dev/disk/by-label/BOOT...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/BOOT...
+[    3.294978] systemd[1]: Expecting device dev-disk-by\x2dlabel-UEFI.device - /dev/disk/by-label/UEFI...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/UEFI...
+[    3.299401] systemd[1]: Expecting device dev-ttyS0.device - /dev/ttyS0...
+         Expecting device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0...
+[    3.302823] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mintegritysetup.targ���[0m Local Integrity Protected Volumes.
+[    3.307407] systemd[1]: Reached target slices.target - Slice Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mslices.target[0m - Slice Units.
+[    3.310803] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts-pre.target[0m - Mounting snaps.
+[    3.315117] systemd[1]: Reached target swap.target - Swaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mswap.target[0m - Swaps.
+[    3.318198] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mveritysetup.target[0m - Local Verity Protected Volumes.
+[    3.322632] systemd[1]: Listening on dm-event.socket - Device-mapper event daemon FIFOs.
+[[0;32m  OK  [0m] Listening on [0;1;39mdm-event.socket[0m - Device-mapper event daemon FIFOs.
+[    3.327037] systemd[1]: Listening on lvm2-lvmpolld.socket - LVM2 poll daemon socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mlvm2-lvmpolld.socket[0m - LVM2 poll daemon socket.
+[    3.331236] systemd[1]: Listening on multipathd.socket - multipathd control socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mmultipathd.socket[0m - multipathd control socket.
+[    3.335397] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msyslog.socket[0m - Syslog Socket.
+[    3.338881] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-fsckd.socket[0m ���fsck to fsckd communication Socket.
+[    3.344137] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-initctl.socke���[0m- initctl Compatibility Named Pipe.
+[    3.348779] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald-dev-���socket[0m - Journal Socket (/dev/log).
+[    3.353446] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald.socket[0m - Journal Socket.
+[    3.357396] systemd[1]: Listening on systemd-networkd.socket - Network Service Netlink Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-networkd.socket[0m - Network Service Netlink Socket.
+[    3.361874] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.365673] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-control.socket[0m - udev Control Socket.
+[    3.370152] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-kernel.socket[0m - udev Kernel Socket.
+[    3.384956] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+         Mounting [0;1;39mdev-hugepages.mount[0m - Huge Pages File System...
+[    3.389822] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+         Mounting [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System...
+[    3.394524] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+         Mounting [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System...
+[    3.399032] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+         Mounting [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System...
+[    3.405017] systemd[1]: Starting systemd-journald.service - Journal Service...
+         Starting [0;1;39msystemd-journald.service[0m - Journal Service...
+[    3.411879] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+         Starting [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout...
+[    3.417918] systemd-journald[304]: Collecting audit messages is disabled.
+[    3.420165] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+         Starting [0;1;39mkmod-static-nodes.service[0m���eate List of Static Device Nodes...
+[    3.426372] systemd[1]: Starting lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+         Starting [0;1;39mlvm2-monitor.service[0m - Mo���ing dmeventd or progress polling...
+[    3.438921] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+         Starting [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs...
+[    3.445501] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+         Starting [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod...
+[    3.451860] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+         Starting [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm...
+[    3.462869] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+         Starting [0;1;39mmodprobe@efi_pstore.servi���[0m - Load Kernel Module efi_pstore...
+[    3.471587] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+         Starting [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse...
+[    3.476618] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+         Starting [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop...
+[    3.480563] systemd[1]: netplan-ovs-cleanup.service - OpenVSwitch configuration for cleanup was skipped because of an unmet condition check (ConditionFileIsExecutable=/usr/bin/ovs-vsctl).
+[    3.484773] systemd[1]: systemd-fsck-root.service - File System Check on Root Device was skipped because of an unmet condition check (ConditionPathExists=!/run/initramfs/fsck-root).
+[    3.493879] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+         Starting [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules...
+[    3.498266] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.502734] systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+         Starting [0;1;39msystemd-remount-fs.servic���[0munt Root and Kernel File Systems...
+[    3.507400] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.511869] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+[    3.515778] EXT4-fs (vda1): re-mounted 3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 r/w.
+         Starting [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices...
+[    3.525009] systemd[1]: Started systemd-journald.service - Journal Service.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-journald.service[0m - Journal Service.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-hugepages.mount[0m - Huge Pages File System.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System.
+[[0;32m  OK  [0m] Finished [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout.
+[[0;32m  OK  [0m] Finished [0;1;39mkmod-static-nodes.service[0m���Create List of Static Device Nodes.
+[[0;32m  OK  [0m] Finished [0;1;39mlvm2-monitor.service[0m - Mo���using dmeventd or progress polling.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@efi_pstore.service[0m - Load Kernel Module efi_pstore.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-remount-fs.servic���[0mmount Root and Kernel File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices.
+         Mounting [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System...
+         Mounting [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System...
+         Starting [0;1;39mmultipathd.service[0m - Devi���pper Multipath Device Controller...
+         Starting [0;1;39msystemd-journal-flush.ser���[0msh Journal to Persistent Storage...
+         Starting [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed...
+[    3.596930] systemd-journald[304]: Received client request to flush runtime journal.
+         Starting [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables...
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0m Device Nodes in /dev gracefully...
+[[0;32m  OK  [0m] Mounted [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-random-seed.service[0m - Load/Sav[    3.616519] systemd-journald[304]: /var/log/journal/344dd9206c4747d0a28d2398f1770cd0/system.journal: Journal file uses a different sequence number ID, rotating.
+e OS Random Seed.
+[    3.620589] systemd-journald[304]: Rotating system journal.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mic Device Nodes in /dev gracefully.
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0meate Static Device Nodes in /dev...
+[[0;32m  OK  [0m] Started [0;1;39mmultipathd.service[0m - Devic���Mapper Multipath Device Controller.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mCreate Static Device Nodes in /dev.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs-pre.target[0m���Preparation for Local File Systems.
+         Mounting [0;1;39msnap-aproxy-78.mount[0m - Mount unit for aproxy, revision 78...
+         Mounting [0;1;39msnap-core22-2339.mount[0m - ���t unit for core22, revision 2339...
+         Mounting [0;1;39msnap-core24-1499.mount[0m - ���t unit for core24, revision 1499...
+         Mounting [0;1;39msnap-opentelemetry\x2dcol���[0mtelemetry-collector, revision 32...
+         Mounting [0;1;39msnap-snapd-25935.mount[0m - ���t unit for snapd, revision 25935...
+         Starting [0;1;39msystemd-udevd.service[0m - R���ager for Device Events and Files...
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-aproxy-78.mount[0m - Mount unit for aproxy, revision 78.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-core22-2339.mount[0m - Mount unit for core22, revision 2339.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-core24-1499.mount[0m - Mount unit for core24, revision 1499.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-journal-flush.ser���[0mlush Journal to Persistent Storage.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-opentelemetry\x2dcoll���[0mentelemetry-collector, revision 32.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-snapd-25935.mount[0m - Mount unit for snapd, revision 25935.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts.target[0m - Mounted snaps.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-udevd.service[0m - Ru���anager for Device Events and Files.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-conso���[0mequests to Console Directory Watch.
+[[0;32m  OK  [0m] Reached target [0;1;39mcryptsetup.target[0m - Local Encrypted Volumes.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���T.device[0m - /dev/disk/by-label/BOOT.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���I.device[0m - /dev/disk/by-label/UEFI.
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/BOOT...
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/UEFI...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-fsckd.service[0m - Fi���stem Check Daemon to report status.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/BOOT.
+         Mounting [0;1;39mboot.mount[0m - /boot...
+Checking in progress on 1 disk (0.0% complete)[[0;32m  OK  [0m] Mounted [0;1;39mboot.mount[0m - /boot.
+Checking in progress on 0 disks (100.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/UEFI.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-rfkill.socket[0m���ll Switch Status /dev/rfkill Watch.
+         Mounting [0;1;39mboot-efi.mount[0m - /boot/efi...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot-efi.mount[0m - /boot/efi.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs.target[0m - Local File Systems.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-sysext.socket[0m���tension Image Management (Varlink).
+         Starting [0;1;39mapparmor.service[0m - Load AppArmor profiles...
+         Starting [0;1;39mconsole-setup.service[0m - Set console font and keymap...
+         Starting [0;1;39mfinalrd.service[0m - Create ���time dir for shutdown pivot root...
+         Starting [0;1;39mplymouth-read-write.servi���[0mymouth To Write Out Runtime Data...
+         Starting [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats...
+         Starting [0;1;39msystemd-tmpfiles-setup.se���[0me Volatile Files and Directories...
+         Starting [0;1;39mufw.service[0m - Uncomplicated firewall...
+[[0;32m  OK  [0m] Finished [0;1;39mconsole-setup.service[0m - Set console font and keymap.
+[[0;32m  OK  [0m] Finished [0;1;39mfinalrd.service[0m - Create ���untime dir for shutdown pivot root.
+[[0;32m  OK  [0m] Finished [0;1;39mufw.service[0m - Uncomplicated firewall.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-read-write.servi���[0mPlymouth To Write Out Runtime Data.
+         Mounting [0;1;39mproc-sys-fs-binfmt_misc.m���[0mcutable File Formats File System...
+[[0;32m  OK  [0m] Mounted [0;1;39mproc-sys-fs-binfmt_misc.mo���[0mxecutable File Formats File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup.se���[0mate Volatile Files and Directories.
+         Starting [0;1;39msystemd-resolved.service[0m - Network Name Resolution...
+         Starting [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization...
+         Starting [0;1;39msystemd-update-utmp.servi���[0mord System Boot/Shutdown in UTMP...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-utmp.servi���[0mecord System Boot/Shutdown in UTMP.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization.
+[[0;32m  OK  [0m] Reached target [0;1;39mtime-set.target[0m - System Time Set.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-resolved.service[0m - Network Name Resolution.
+[[0;32m  OK  [0m] Reached target [0;1;39mnss-lookup.target[0m - Host and Network Name Lookups.
+[[0;32m  OK  [0m] Finished [0;1;39mapparmor.service[0m - Load AppArmor profiles.
+         Starting [0;1;39msnapd.apparmor.service[0m - ���iles managed internally by snapd...
+         Starting [0;1;39mcloud-init-local.service[0m ���-init: Local Stage (pre-network)...
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.apparmor.service[0m - ���ofiles managed internally by snapd.
+[    5.130217] cloud-init[642]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'init-local' at Mon, 06 Apr 2026 18:49:46 +0000. Up 5.12 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init-local.service[0m ���ud-init: Local Stage (pre-network).
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-pre.target[0m - Preparation for Network.
+         Starting [0;1;39msystemd-networkd.service[0m - Network Configuration...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-networkd.service[0m - Network Configuration.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork.target[0m - Network.
+         Starting [0;1;39msystemd-networkd-wait-onl���[0mait for Network to be Configured...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-networkd-wait-onl���[0m Wait for Network to be Configured.
+         Starting [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage...
+[    7.491844] cloud-init[717]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'init' at Mon, 06 Apr 2026 18:49:49 +0000. Up 7.48 seconds.
+[    7.499203] cloud-init[717]: ci-info: +++++++++++++++++++++++++++++++++++++++Net device info+++++++++++++++++++++++++++++++++++++++
+[    7.501942] cloud-init[717]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.504679] cloud-init[717]: ci-info: | Device |  Up  |           Address            |      Mask     | Scope  |     Hw-Address    |
+[    7.507372] cloud-init[717]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.510076] cloud-init[717]: ci-info: |  ens3  | True |        10.151.122.84         | 255.255.255.0 | global | fa:16:3e:52:90:c7 |
+[    7.512794] cloud-init[717]: ci-info: |  ens3  | True | fe80::f816:3eff:fe52:90c7/64 |       .       |  link  | fa:16:3e:52:90:c7 |
+[    7.515471] cloud-init[717]: ci-info: |   lo   | True |          127.0.0.1           |   255.0.0.0   |  host  |         .         |
+[    7.518170] cloud-init[717]: ci-info: |   lo   | True |           ::1/128            |       .       |  host  |         .         |
+[    7.520870] cloud-init[717]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.523565] cloud-init[717]: ci-info: ++++++++++++++++++++++++++++++++Route IPv4 info+++++++++++++++++++++++++++++++++
+[    7.526000] cloud-init[717]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.528481] cloud-init[717]: ci-info: | Route |   Destination   |   Gateway    |     Genmask     | Interface | Flags |
+[    7.530936] cloud-init[717]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.533373] cloud-init[717]: ci-info: |   0   |     0.0.0.0     | 10.151.122.1 |     0.0.0.0     |    ens3   |   UG  |
+[    7.535813] cloud-init[717]: ci-info: |   1   |   10.151.11.5   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.538289] cloud-init[717]: ci-info: |   2   |   10.151.11.6   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.540735] cloud-init[717]: ci-info: |   3   |   10.151.11.7   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.543175] cloud-init[717]: ci-info: |   4   |  10.151.77.124  | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.545604] cloud-init[717]: ci-info: |   5   |   10.151.122.0  |   0.0.0.0    |  255.255.255.0  |    ens3   |   U   |
+[    7.548070] cloud-init[717]: ci-info: |   6   |   10.151.122.1  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.550510] cloud-init[717]: ci-info: |   7   |   10.151.122.2  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.552984] cloud-init[717]: ci-info: |   8   | 169.254.169.254 | 10.151.122.2 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.555419] cloud-init[717]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.557858] cloud-init[717]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+[    7.559767] cloud-init[717]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.561686] cloud-init[717]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+[    7.563594] cloud-init[717]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.565501] cloud-init[717]: ci-info: |   0   |  fe80::/64  |    ::   |    ens3   |   U   |
+[    7.567414] cloud-init[717]: ci-info: |   2   |    local    |    ::   |    ens3   |   U   |
+[    7.569331] cloud-init[717]: ci-info: |   3   |  multicast  |    ::   |    ens3   |   U   |
+[    7.571257] cloud-init[717]: ci-info: +-------+-------------+---------+-----------+-------+
+[    8.401253] cloud-init[717]: Generating public/private rsa key pair.
+[    8.404238] cloud-init[717]: Your identification has been saved in /etc/ssh/ssh_host_rsa_key
+[    8.406228] cloud-init[717]: Your public key has been saved in /etc/ssh/ssh_host_rsa_key.pub
+[    8.408187] cloud-init[717]: The key fingerprint is:
+[    8.409372] cloud-init[717]: SHA256:x9RJkqtzA6Fe1Tr+H6cSn6A8UoIwDq2eKT/jX6szuZE root@test-cv3oq0ul-0-0a49757c6aae
+[    8.411738] cloud-init[717]: The key's randomart image is:
+[    8.413039] cloud-init[717]: +---[RSA 3072]----+
+[    8.414178] cloud-init[717]: |          .o.    |
+[    8.415292] cloud-init[717]: |        . o+..   |
+[    8.416407] cloud-init[717]: |   .   . o.oo    |
+[    8.417518] cloud-init[717]: |  . + . oo+      |
+[    8.418656] cloud-init[717]: |   + + oS+o.     |
+[    8.419771] cloud-init[717]: |  . ..o +.= o    |
+[    8.420882] cloud-init[717]: | . oE..  * + +...|
+[    8.421994] cloud-init[717]: |. * +o .. + o o+ |
+[    8.423134] cloud-init[717]: | +o++=.  . . oo  |
+[    8.424261] cloud-init[717]: +----[SHA256]-----+
+[    8.425381] cloud-init[717]: Generating public/private ecdsa key pair.
+[    8.426919] cloud-init[717]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+[    8.428909] cloud-init[717]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+[    8.430909] cloud-init[717]: The key fingerprint is:
+[    8.432095] cloud-init[717]: SHA256:Nf+jsI3x0bwBYBIkblg5UoiwUo1gohK5EVIDo7UmqgQ root@test-cv3oq0ul-0-0a49757c6aae
+[    8.434490] cloud-init[717]: The key's randomart image is:
+[    8.435839] cloud-init[717]: +---[ECDSA 256]---+
+[    8.436987] cloud-init[717]: |XO=+ o+oo        |
+[    8.438122] cloud-init[717]: |O*oo++o. .       |
+[    8.439232] cloud-init[717]: |Eoo ..o.. =      |
+[    8.440345] cloud-init[717]: |*o   .   + +     |
+[    8.441453] cloud-init[717]: |..      S   o    |
+[    8.442582] cloud-init[717]: |o            =   |
+[    8.443693] cloud-init[717]: |.         o . *  |
+[    8.444813] cloud-init[717]: |           B o + |
+[    8.445933] cloud-init[717]: |          o + .  |
+[    8.447053] cloud-init[717]: +----[SHA256]-----+
+[    8.448171] cloud-init[717]: Generating public/private ed25519 key pair.
+[    8.449734] cloud-init[717]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+[    8.451762] cloud-init[717]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+[    8.453779] cloud-init[717]: The key fingerprint is:
+[    8.454961] cloud-init[717]: SHA256:eFmk1jOmO+BB+5+U+Icu53xVQaSrOzHhkhidw+QjDjc root@test-cv3oq0ul-0-0a49757c6aae
+[    8.457311] cloud-init[717]: The key's randomart image is:
+[    8.458606] cloud-init[717]: +--[ED25519 256]--+
+[    8.459718] cloud-init[717]: |          .   oo |
+[    8.460822] cloud-init[717]: |         =    .. |
+[    8.461934] cloud-init[717]: |      . B B  .  .|
+[    8.463059] cloud-init[717]: |     o E % +  . .|
+[    8.464174] cloud-init[717]: |      O S = .. . |
+[    8.465290] cloud-init[717]: |     . B = =. .  |
+[    8.466399] cloud-init[717]: |      . = +oo.   |
+[    8.467541] cloud-init[717]: |        .*oo+    |
+[    8.468648] cloud-init[717]: |         =B+.    |
+[    8.469760] cloud-init[717]: +----[SHA256]-----+
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage.
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-config.target[0m - Cloud-config availability.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-online.target[0m - Network is Online.
+[[0;32m  OK  [0m] Reached target [0;1;39msysinit.target[0m - System Initialization.
+[[0;32m  OK  [0m] Started [0;1;39mdpkg-db-backup.timer[0m - Daily dpkg database backup timer.
+[[0;32m  OK  [0m] Started [0;1;39me2scrub_all.timer[0m - Period���Metadata Check for All Filesystems.
+[[0;32m  OK  [0m] Started [0;1;39mfstrim.timer[0m - Discard unused filesystem blocks once a week.
+[[0;32m  OK  [0m] Started [0;1;39mfwupd-refresh.timer[0m - Refresh fwupd metadata regularly.
+[[0;32m  OK  [0m] Started [0;1;39mlogrotate.timer[0m - Daily rotation of log files.
+[[0;32m  OK  [0m] Started [0;1;39mman-db.timer[0m - Daily man-db regeneration.
+[[0;32m  OK  [0m] Started [0;1;39mmotd-news.timer[0m - Message of the Day.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-collect.timer[0m - Ru���y accounting tool every 10 minutes.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-summary.timer[0m - Ge��� of yesterday's process accounting.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-tmpfiles-clean.tim���[0my Cleanup of Temporary Directories.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-download.t���[0mhat failed at package install time.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-motd.timer[0m��� a new version of Ubuntu available.
+[[0;32m  OK  [0m] Reached target [0;1;39mpaths.target[0m - Path Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mtimers.target[0m - Timer Units.
+[[0;32m  OK  [0m] Listening on [0;1;39mcloud-init-hotplugd.s���t[0m - cloud-init hotplug hook socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mdbus.socket[0m - D-Bus System Message Bus Socket.
+         Starting [0;1;39mdocker.socket[0m - Docker Socket for the API...
+[[0;32m  OK  [0m] Listening on [0;1;39miscsid.socket[0m - Open-iSCSI iscsid Socket.
+         Starting [0;1;39mlxd-installer.socket[0m - He���er to install lxd snap on demand...
+         Starting [0;1;39msnapd.socket[0m - Socket activation for snappy daemon...
+[[0;32m  OK  [0m] Listening on [0;1;39mssh.socket[0m - OpenBSD Secure Shell server socket.
+[[0;32m  OK  [0m] Listening on [0;1;39muuidd.socket[0m - UUID daemon activation socket.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs-pre.targe���[0mreparation for Remote File Systems.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs.target[0m - Remote File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39mblk-availability.service[0m - Availability of block devices.
+[[0;32m  OK  [0m] Listening on [0;1;39mdocker.socket[0m - Docker Socket for the API.
+[[0;32m  OK  [0m] Listening on [0;1;39mlxd-installer.socket[0m ���lper to install lxd snap on demand.
+[[0;32m  OK  [0m] Listening on [0;1;39msnapd.socket[0m - Socket activation for snappy daemon.
+[[0;32m  OK  [0m] Reached target [0;1;39msockets.target[0m - Socket Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mbasic.target[0m - Basic System.
+         Starting [0;1;39mapport.service[0m - automatic crash report generation...
+         Starting [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage...
+[[0;32m  OK  [0m] Started [0;1;39mcron.service[0m - Regular background program processing daemon.
+         Starting [0;1;39mdbus.service[0m - D-Bus System Message Bus...
+[[0;32m  OK  [0m] Started [0;1;39mdmesg.service[0m - Save initial kernel messages after boot.
+         Starting [0;1;39mdpkg-db-backup.service[0m - ���ily dpkg database backup service...
+         Starting [0;1;39me2scrub_reap.service[0m - Re���ne ext4 Metadata Check Snapshots...
+         Starting [0;1;39mgrub-common.service[0m - Record successful boot for GRUB...
+         Starting [0;1;39mpolkit.service[0m - Authorization Manager...
+         Starting [0;1;39mpollinate.service[0m - Polli���e pseudo random number generator...
+         Starting [0;1;39mrsyslog.service[0m - System Logging Service...
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty-pre.target[0m - Preparation for Logins.
+         Starting [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded...
+         Starting [0;1;39msnapd.service[0m - Snap Daemon...
+         Starting [0;1;39msysstat.service[0m - Resets System Activity Logs...
+         Starting [0;1;39msystemd-logind.service[0m - User Login Management...
+         Starting [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions...
+         Starting [0;1;39mudisks2.service[0m - Disk Manager...
+         Starting [0;1;39mlogrotate.service[0m - Rotate log files...
+[[0;32m  OK  [0m] Started [0;1;39mdbus.service[0m - D-Bus System Message Bus.
+         Starting [0;1;39mcontainerd.service[0m - containerd container runtime...
+         Starting [0;1;39me2scrub_all.service[0m - Onl���tadata Check for All Filesystems...
+[[0;32m  OK  [0m] Finished [0;1;39me2scrub_reap.service[0m - Re���line ext4 Metadata Check Snapshots.
+[[0;32m  OK  [0m] Finished [0;1;39msysstat.service[0m - Resets System Activity Logs.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions.
+         Starting [0;1;39mplymouth-quit-wait.servic���[0md until boot process finishes up...
+         Starting [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen...
+[[0;32m  OK  [0m] Finished [0;1;39me2scrub_all.service[0m - Onl���Metadata Check for All Filesystems.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit-wait.servic���[0mold until boot process finishes up.
+[[0;32m  OK  [0m] Started [0;1;39mserial-getty@ttyS0.service[0m - Serial Getty on ttyS0.
+         Starting [0;1;39msetvtrgb.service[0m - Set console scheme...
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen.
+[[0;32m  OK  [0m] Finished [0;1;39msetvtrgb.service[0m - Set console scheme.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-getty.slice[0m - Slice /system/getty.
+[[0;32m  OK  [0m] Started [0;1;39mgetty@tty1.service[0m - Getty on tty1.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty.target[0m - Login Prompts.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-common.service[0m - Record successful boot for GRUB.
+         Starting [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection...
+[[0;32m  OK  [0m] Finished [0;1;39mlogrotate.service[0m - Rotate log files.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection.
+[[0;32m  OK  [0m] Finished [0;1;39mdpkg-db-backup.service[0m - Daily dpkg database backup service.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-logind.service[0m - User Login Management.
+[[0;32m  OK  [0m] Started [0;1;39mpolkit.service[0m - Authorization Manager.
+         Starting [0;1;39mModemManager.service[0m - Modem Manager...
+[[0;32m  OK  [0m] Started [0;1;39mudisks2.service[0m - Disk Manager.
+[[0;32m  OK  [0m] Started [0;1;39mcontainerd.service[0m - containerd container runtime.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Started [0;1;39mModemManager.service[0m - Modem Manager.
+[[0;32m  OK  [0m] Started [0;1;39mrsyslog.service[0m - System Logging Service.
+[    9.178469] cloud-init[1032]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'modules:config' at Mon, 06 Apr 2026 18:49:50 +0000. Up 9.11 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
+[[0;32m  OK  [0m] Started [0;1;39msnapd.service[0m - Snap Daemon.
+         Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage.
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+
+Ubuntu 24.04.4 LTS test-cv3oq0ul-0-0a49757c6aae ttyS0
+
+test-cv3oq0ul-0-0a49757c6aae login: [   19.203187] cloud-init[1338]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'modules:final' at Mon, 06 Apr 2026 18:50:00 +0000. Up 19.18 seconds.
+                                                            Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+[   49.698393] cloud-init[1338]: Auto-refresh of all snaps held until 2026-04-08T18:50:01Z
+[   49.788243] cloud-init[1338]: snap "aproxy" is already installed, see 'snap help refresh'
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.hook.configure���-055d-4af4-963c-02d6b289a566.scope[0m.
+         Stopping [0;1;39msnap.aproxy.aproxy.servic���[0mr snap application aproxy.aproxy...
+[[0;32m  OK  [0m] Stopped [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[  130.214864] cloud-init[1338]: Created symlink /etc/systemd/system/sysinit.target.wants/nftables.service ��� /usr/lib/systemd/system/nftables.service.
+         Starting [0;1;39mapt-news.service[0m - Update APT News...
+         Starting [0;1;39mesm-cache.service[0m - Update the local ESM caches...
+[[0;32m  OK  [0m] Finished [0;1;39mapt-news.service[0m - Update APT News.
+[[0;32m  OK  [0m] Finished [0;1;39mesm-cache.service[0m - Update the local ESM caches.
+[  160.494605] cloud-init[1338]: Get:1 http://az3.clouds.archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+[  160.496090] cloud-init[1338]: Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+[  160.703294] cloud-init[1338]: Get:3 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1576 kB]
+[  161.243567] cloud-init[1338]: Get:4 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [252 kB]
+[  190.582816] cloud-init[1338]: Get:5 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+[  190.825870] cloud-init[1338]: Get:6 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+[  191.114685] cloud-init[1338]: Get:7 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 Packages [1401 kB]
+[  191.306706] cloud-init[1338]: Get:8 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+[  191.559873] cloud-init[1338]: Get:9 http://security.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [10.7 kB]
+[  191.565117] cloud-init[1338]: Get:10 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1167 kB]
+[  191.580371] cloud-init[1338]: Get:11 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [225 kB]
+[  191.583514] cloud-init[1338]: Get:12 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+[  191.640019] cloud-init[1338]: Get:13 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main Translation-en [513 kB]
+[  191.838494] cloud-init[1338]: Get:14 http://security.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [22.8 kB]
+[  191.842191] cloud-init[1338]: Get:15 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2757 kB]
+[  191.856611] cloud-init[1338]: Get:16 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [642 kB]
+[  191.864078] cloud-init[1338]: Get:17 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+[  191.869132] cloud-init[1338]: Get:18 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [6980 B]
+[  191.874065] cloud-init[1338]: Get:19 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+[  191.927270] cloud-init[1338]: Get:20 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 Components [464 kB]
+[  191.966099] cloud-init[1338]: Get:21 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 c-n-f Metadata [30.5 kB]
+[  192.072777] cloud-init[1338]: Get:22 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
+[  193.367816] cloud-init[1338]: Get:23 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe Translation-en [5982 kB]
+[  193.549411] cloud-init[1338]: Get:24 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 Components [3871 kB]
+[  193.731412] cloud-init[1338]: Get:25 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 c-n-f Metadata [301 kB]
+[  194.021163] cloud-init[1338]: Get:26 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [93.9 kB]
+[  194.059105] cloud-init[1338]: Get:27 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted Translation-en [18.7 kB]
+[  194.347692] cloud-init[1338]: Get:28 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted amd64 c-n-f Metadata [416 B]
+[  194.386269] cloud-init[1338]: Get:29 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [269 kB]
+[  194.674599] cloud-init[1338]: Get:30 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse Translation-en [118 kB]
+[  194.963758] cloud-init[1338]: Get:31 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 Components [35.0 kB]
+[  195.069913] cloud-init[1338]: Get:32 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 c-n-f Metadata [8328 B]
+[  195.177996] cloud-init[1338]: Get:33 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1875 kB]
+[  195.672640] cloud-init[1338]: Get:34 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [342 kB]
+[  195.784598] cloud-init[1338]: Get:35 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [177 kB]
+[  195.896304] cloud-init[1338]: Get:36 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [16.9 kB]
+[  195.934448] cloud-init[1338]: Get:37 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1663 kB]
+[  196.562305] cloud-init[1338]: Get:38 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [322 kB]
+[  196.671565] cloud-init[1338]: Get:39 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [386 kB]
+[  196.710858] cloud-init[1338]: Get:40 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.2 kB]
+[  196.998077] cloud-init[1338]: Get:41 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2894 kB]
+[  197.377430] cloud-init[1338]: Get:42 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [671 kB]
+[  197.756867] cloud-init[1338]: Get:43 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+[  197.867514] cloud-init[1338]: Get:44 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [556 B]
+[  198.179056] cloud-init[1338]: Get:45 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [32.1 kB]
+[  198.216362] cloud-init[1338]: Get:46 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [7520 B]
+[  198.254540] cloud-init[1338]: Get:47 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+[  198.292218] cloud-init[1338]: Get:48 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [500 B]
+[  198.329798] cloud-init[1338]: Get:49 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+[  198.442272] cloud-init[1338]: Get:50 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main Translation-en [9208 B]
+[  198.555201] cloud-init[1338]: Get:51 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7380 B]
+[  198.593878] cloud-init[1338]: Get:52 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+[  198.631371] cloud-init[1338]: Get:53 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [30.7 kB]
+[  198.669571] cloud-init[1338]: Get:54 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.2 kB]
+[  198.782147] cloud-init[1338]: Get:55 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [13.1 kB]
+[  199.069757] cloud-init[1338]: Get:56 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1480 B]
+[  199.358478] cloud-init[1338]: Get:57 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+[  199.646152] cloud-init[1338]: Get:58 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 c-n-f Metadata [116 B]
+[  199.684612] cloud-init[1338]: Get:59 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [780 B]
+[  199.722533] cloud-init[1338]: Get:60 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [372 B]
+[  199.759733] cloud-init[1338]: Get:61 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+[  199.874203] cloud-init[1338]: Get:62 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 c-n-f Metadata [116 B]
+         Starting [0;1;39mpackagekit.service[0m - PackageKit Daemon...
+[[0;32m  OK  [0m] Started [0;1;39mpackagekit.service[0m - PackageKit Daemon.
+[  205.219244] cloud-init[1338]: Fetched 44.1 MB in 1min 9s (635 kB/s)
+[  205.857388] cloud-init[1338]: Reading package lists...
+[  205.894322] cloud-init[1338]: info: The user `ubuntu' is already a member of `lxd'.
+[  205.922987] cloud-init[1338]: info: The user `ubuntu' is already a member of `adm'.
+         Stopping [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Stopped [0;1;39mdocker.service[0m - Docker Application Container Engine.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+[[0;32m  OK  [0m] Created slice [0;1;39muser-1000.slice[0m - User Slice of UID 1000.
+         Starting [0;1;39muser-runtime-dir@1000.ser���[0mRuntime Directory /run/user/1000...
+[[0;32m  OK  [0m] Finished [0;1;39muser-runtime-dir@1000.ser���[0mr Runtime Directory /run/user/1000.
+         Starting [0;1;39muser@1000.service[0m - User Manager for UID 1000...
+[[0;32m  OK  [0m] Started [0;1;39muser@1000.service[0m - User Manager for UID 1000.
+[[0;32m  OK  [0m] Started [0;1;39msession-c2.scope[0m - Session c2 of User ubuntu.
+[[0;32m  OK  [0m] Started [0;1;39msession-c3.scope[0m - Session c3 of User ubuntu.
+[  206.818564] cloud-init[1338]: #!/usr/bin/env bash
+[  206.819905] cloud-init[1338]: timestamp=$(date +%s)
+[  206.822199] cloud-init[1338]: # Disable exit-on-error, due the need for error handling.
+[  206.825668] cloud-init[1338]: set +e
+[  206.826718] cloud-init[1338]: jq -n \
+[  206.827845] cloud-init[1338]:   --arg workflow "$GITHUB_WORKFLOW" \
+[  206.830510] cloud-init[1338]:   --arg repository "$GITHUB_REPOSITORY" \
+[  206.832148] cloud-init[1338]:   --arg event "$GITHUB_EVENT_NAME" \
+[[0;32m  OK  [0m] Started [0;1;39msession-c4.scope[0m - Session c4 of User ubuntu.
+[  206.835779] cloud-init[1338]:   --argjson timestamp "$timestamp" \
+[  206.837506] cloud-init[1338]:   --arg workflow_run_id "$GITHUB_RUN_ID" \
+[  206.839479] cloud-init[1338]:   '{
+[  206.840427] cloud-init[1338]:     "workflow": $workflow,
+[  206.841767] cloud-init[1338]:     "repository": $repository,
+[  206.843947] cloud-init[1338]:     "event": $event,
+[  206.845463] cloud-init[1338]:     "timestamp": $timestamp,
+[  206.846847] cloud-init[1338]:     "workflow_run_id": $workflow_run_id
+[  206.848523] cloud-init[1338]:   }' > "/home/ubuntu/metrics-exchange/pre-job-metrics.json" || true
+[  206.850910] cloud-init[1338]: if [[ -n "$DOCKERHUB_MIRROR" ]]; then
+[  206.852612] cloud-init[1338]:   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
+[  206.855499] cloud-init[1338]:   logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
+[  206.858542] cloud-init[1338]:   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
+[  206.861687] cloud-init[1338]:   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
+[  206.864710] cloud-init[1338]: fi
+[  208.973347] cloud-init[1338]: ��� Connected to GitHub
+[  209.788034] cloud-init[1338]: Current runner version: '2.331.0'
+[  209.789693] cloud-init[1338]: 2026-04-06 18:53:12Z: Listening for Jobs
+
+18:53:23 INFO Server test-cv3oq0ul-0-0369bc3aa10f console log:
+[    0.000000] Linux version 6.17.0-19-generic (buildd@lcy02-amd64-019) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #19~24.04.2-Ubuntu SMP PREEMPT_DYNAMIC Fri Mar  6 23:08:46 UTC 2 (Ubuntu 6.17.0-19.19~24.04.2-generic 6.17.13)
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.17.0-19-generic root=UUID=3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro console=tty1 console=ttyS0
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000bffdcfff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bffdd000-0x00000000bfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000013fffffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: OpenStack Foundation OpenStack Nova, BIOS 1.16.3-debian-1.16.3-2~backport22.04.202412060920~ubuntu22.04.1 04/01/2014
+[    0.000000] DMI: Memory slots populated: 1/1
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] last_pfn = 0xbffdd max_arch_pfn = 0x400000000
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: using sched offset of 3020361606 cycles
+[    0.000002] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000005] tsc: Detected 2396.400 MHz processor
+[    0.000905] last_pfn = 0x140000 max_arch_pfn = 0x400000000
+[    0.000950] MTRR map: 4 entries (3 fixed + 1 variable; max 19), built from 8 variable MTRRs
+[    0.000953] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.001016] last_pfn = 0xbffdd max_arch_pfn = 0x400000000
+[    0.003257] found SMP MP-table at [mem 0x000f53c0-0x000f53cf]
+[    0.003271] Using GB pages for direct mapping
+[    0.003460] RAMDISK: [mem 0x2e883000-0x33438fff]
+[    0.003860] ACPI: Early table checksum verification disabled
+[    0.003863] ACPI: RSDP 0x00000000000F5140 000014 (v00 BOCHS )
+[    0.003866] ACPI: RSDT 0x00000000BFFE2334 000034 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003871] ACPI: FACP 0x00000000BFFE2150 000074 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003875] ACPI: DSDT 0x00000000BFFE0040 002110 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003877] ACPI: FACS 0x00000000BFFE0000 000040
+[    0.003879] ACPI: APIC 0x00000000BFFE21C4 000080 (v03 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003881] ACPI: SRAT 0x00000000BFFE2244 0000C8 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003883] ACPI: WAET 0x00000000BFFE230C 000028 (v01 BOCHS  BXPC     00000001 BXPC 00000001)
+[    0.003884] ACPI: Reserving FACP table memory at [mem 0xbffe2150-0xbffe21c3]
+[    0.003885] ACPI: Reserving DSDT table memory at [mem 0xbffe0040-0xbffe214f]
+[    0.003886] ACPI: Reserving FACS table memory at [mem 0xbffe0000-0xbffe003f]
+[    0.003886] ACPI: Reserving APIC table memory at [mem 0xbffe21c4-0xbffe2243]
+[    0.003887] ACPI: Reserving SRAT table memory at [mem 0xbffe2244-0xbffe230b]
+[    0.003888] ACPI: Reserving WAET table memory at [mem 0xbffe230c-0xbffe2333]
+[    0.003960] ACPI: SRAT: Node 0 PXM 0 [mem 0x00000000-0x0009ffff]
+[    0.003962] ACPI: SRAT: Node 0 PXM 0 [mem 0x00100000-0xbfffffff]
+[    0.003964] ACPI: SRAT: Node 0 PXM 0 [mem 0x100000000-0x13fffffff]
+[    0.003966] NUMA: Node 0 [mem 0x00001000-0x0009ffff] + [mem 0x00100000-0xbfffffff] -> [mem 0x00001000-0xbfffffff]
+[    0.003968] NUMA: Node 0 [mem 0x00001000-0xbfffffff] + [mem 0x100000000-0x13fffffff] -> [mem 0x00001000-0x13fffffff]
+[    0.003976] NODE_DATA(0) allocated [mem 0x13ffd32c0-0x13fffdfff]
+[    0.004124] Zone ranges:
+[    0.004124]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.004126]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.004127]   Normal   [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004128]   Device   empty
+[    0.004128] Movable zone start for each node
+[    0.004130] Early memory node ranges
+[    0.004130]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.004131]   node   0: [mem 0x0000000000100000-0x00000000bffdcfff]
+[    0.004132]   node   0: [mem 0x0000000100000000-0x000000013fffffff]
+[    0.004133] Initmem setup node 0 [mem 0x0000000000001000-0x000000013fffffff]
+[    0.004137] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.004150] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.006909] On node 0, zone Normal: 35 pages in unavailable ranges
+[    0.007815] ACPI: PM-Timer IO Port: 0x608
+[    0.007831] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.007863] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.007865] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.007867] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.007868] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.007869] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.007870] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.007872] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.007877] CPU topo: Max. logical packages:   2
+[    0.007878] CPU topo: Max. logical dies:       2
+[    0.007878] CPU topo: Max. dies per package:   1
+[    0.007881] CPU topo: Max. threads per core:   1
+[    0.007882] CPU topo: Num. cores per package:     1
+[    0.007882] CPU topo: Num. threads per package:   1
+[    0.007883] CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
+[    0.007904] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.007920] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.007922] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+[    0.007923] PM: hibernation: Registered nosave memory: [mem 0xbffdd000-0xffffffff]
+[    0.007924] [mem 0xc0000000-0xfeffbfff] available for PCI devices
+[    0.007926] Booting paravirtualized kernel on KVM
+[    0.007927] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.007934] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:1
+[    0.008029] percpu: Embedded 84 pages/cpu s221184 r8192 d114688 u1048576
+[    0.008061] kvm-guest: PV spinlocks disabled, no host support
+[    0.008062] Kernel command line: BOOT_IMAGE=/vmlinuz-6.17.0-19-generic root=UUID=3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro console=tty1 console=ttyS0
+[    0.008113] random: crng init done
+[    0.008114] printk: log buffer data + meta data: 262144 + 917504 = 1179648 bytes
+[    0.008272] Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[    0.008353] Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.008381] software IO TLB: area num 2.
+[    0.013110] Fallback order for Node 0: 0 
+[    0.013116] Built 1 zonelists, mobility grouping on.  Total pages: 1048443
+[    0.013117] Policy zone: Normal
+[    0.013127] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.019284] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.032148] ftrace: allocating 61402 entries in 240 pages
+[    0.032150] ftrace: allocated 240 pages with 4 groups
+[    0.033153] Dynamic Preempt: voluntary
+[    0.033195] rcu: Preemptible hierarchical RCU implementation.
+[    0.033195] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=2.
+[    0.033196] 	Trampoline variant of Tasks RCU enabled.
+[    0.033197] 	Rude variant of Tasks RCU enabled.
+[    0.033197] 	Tracing variant of Tasks RCU enabled.
+[    0.033198] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.033199] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.033206] RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.033208] RCU Tasks Rude: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.033209] RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=2.
+[    0.036000] NR_IRQS: 524544, nr_irqs: 440, preallocated irqs: 16
+[    0.036221] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.055394] Console: colour VGA+ 80x25
+[    0.055398] printk: legacy console [tty1] enabled
+[    0.107343] printk: legacy console [ttyS0] enabled
+[    0.323702] ACPI: Core revision 20250404
+[    0.325214] APIC: Switch to symmetric I/O mode setup
+[    0.327165] x2apic enabled
+[    0.328559] APIC: Switched APIC routing to: physical x2apic
+[    0.331713] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    0.333725] tsc: Marking TSC unstable due to TSCs unsynchronized
+[    0.335760] Calibrating delay loop (skipped) preset value.. 4792.80 BogoMIPS (lpj=2396400)
+[    0.338892] x86/cpu: User Mode Instruction Prevention (UMIP) activated
+[    0.341254] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    0.343142] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    0.346150] mitigations: Enabled attack vectors: user_kernel, user_user, guest_host, guest_guest, SMT mitigations: auto
+[    0.349760] Speculative Store Bypass: Vulnerable
+[    0.351759] Spectre V2 : Mitigation: Retpolines
+[    0.353116] RETBleed: Mitigation: untrained return thunk
+[    0.355130] Speculative Return Stack Overflow: Mitigation: SMT disabled
+[    0.356758] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    0.359759] Spectre V2 : Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT
+[    0.362758] Spectre V2 : Enabling Speculation Barrier for firmware calls
+[    0.364758] active return thunk: retbleed_return_thunk
+[    0.366760] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    0.369310] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.370759] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.374178] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.376757] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.379171] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+[    0.406574] Freeing SMP alternatives memory: 52K
+[    0.408129] pid_max: default: 32768 minimum: 301
+[    0.409803] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,ima,evm
+[    0.412307] landlock: Up and running.
+[    0.413758] Yama: becoming mindful.
+[    0.415128] AppArmor: AppArmor initialized
+[    0.416793] Mount-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.424757] Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.530345] smpboot: CPU0: AMD EPYC-Rome Processor (family: 0x17, model: 0x31, stepping: 0x0)
+[    0.531833] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
+[    0.533762] ... version:                0
+[    0.535090] ... bit width:              48
+[    0.536758] ... generic registers:      6
+[    0.538100] ... value mask:             0000ffffffffffff
+[    0.539127] ... max period:             00007fffffffffff
+[    0.540758] ... fixed-purpose events:   0
+[    0.542103] ... event mask:             000000000000003f
+[    0.543202] signal: max sigframe size: 1776
+[    0.544801] rcu: Hierarchical SRCU implementation.
+[    0.546119] rcu: 	Max phase no-delay instances is 400.
+[    0.547172] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.551427] smp: Bringing up secondary CPUs ...
+[    0.552868] smpboot: x86: Booting SMP configuration:
+[    0.554758] .... node  #0, CPUs:      #1
+[    0.554926] smp: Brought up 1 node, 2 CPUs
+[    0.558113] smpboot: Total of 2 processors activated (9585.60 BogoMIPS)
+[    0.559986] Memory: 3916484K/4193772K available (22213K kernel code, 4650K rwdata, 16292K rodata, 5268K init, 4212K bss, 270324K reserved, 0K cma-reserved)
+[    0.561550] devtmpfs: initialized
+[    0.562806] x86/mm: Memory block size: 128MB
+[    0.564914] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.566765] posixtimers hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    0.568771] futex hash table entries: 512 (32768 bytes on 1 NUMA nodes, total 32 KiB, linear).
+[    0.570833] pinctrl core: initialized pinctrl subsystem
+[    0.572964] PM: RTC time: 18:49:43, date: 2026-04-06
+[    0.574472] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.575267] DMA: preallocated 512 KiB GFP_KERNEL pool for atomic allocations
+[    0.576778] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.578315] DMA: preallocated 512 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.579297] audit: initializing netlink subsys (disabled)
+[    0.580182] audit: type=2000 audit(1775501383.656:1): state=initialized audit_enabled=0 res=1
+[    0.580182] thermal_sys: Registered thermal governor 'fair_share'
+[    0.581291] thermal_sys: Registered thermal governor 'bang_bang'
+[    0.582159] thermal_sys: Registered thermal governor 'step_wise'
+[    0.583157] thermal_sys: Registered thermal governor 'user_space'
+[    0.584156] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.585166] cpuidle: using governor ladder
+[    0.587100] cpuidle: using governor menu
+[    0.589306] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    0.590790] PCI: Using configuration type 1 for base access
+[    0.592157] PCI: Using configuration type 1 for extended access
+[    0.593829] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.612890] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.616199] HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.617759] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.620758] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.623220] ACPI: Added _OSI(Module Device)
+[    0.625099] ACPI: Added _OSI(Processor Device)
+[    0.626105] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.628846] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.632857] ACPI: Interpreter enabled
+[    0.634771] ACPI: PM: (supports S0 S3 S4 S5)
+[    0.636100] ACPI: Using IOAPIC for interrupt routing
+[    0.637206] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    0.640325] PCI: Using E820 reservations for host bridge windows
+[    0.643242] ACPI: Enabled 2 GPEs in block 00 to 0F
+[    0.646682] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.648763] acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    0.652077] acpiphp: Slot [3] registered
+[    0.654122] acpiphp: Slot [4] registered
+[    0.655120] acpiphp: Slot [5] registered
+[    0.657130] acpiphp: Slot [6] registered
+[    0.658791] acpiphp: Slot [7] registered
+[    0.660118] acpiphp: Slot [8] registered
+[    0.660784] acpiphp: Slot [9] registered
+[    0.663124] acpiphp: Slot [10] registered
+[    0.663787] acpiphp: Slot [11] registered
+[    0.666116] acpiphp: Slot [12] registered
+[    0.666784] acpiphp: Slot [13] registered
+[    0.668126] acpiphp: Slot [14] registered
+[    0.669783] acpiphp: Slot [15] registered
+[    0.671117] acpiphp: Slot [16] registered
+[    0.672791] acpiphp: Slot [17] registered
+[    0.674799] acpiphp: Slot [18] registered
+[    0.676118] acpiphp: Slot [19] registered
+[    0.677769] acpiphp: Slot [20] registered
+[    0.679127] acpiphp: Slot [21] registered
+[    0.681117] acpiphp: Slot [22] registered
+[    0.682118] acpiphp: Slot [23] registered
+[    0.683784] acpiphp: Slot [24] registered
+[    0.685130] acpiphp: Slot [25] registered
+[    0.686787] acpiphp: Slot [26] registered
+[    0.688116] acpiphp: Slot [27] registered
+[    0.689769] acpiphp: Slot [28] registered
+[    0.691118] acpiphp: Slot [29] registered
+[    0.693118] acpiphp: Slot [30] registered
+[    0.694127] acpiphp: Slot [31] registered
+[    0.696125] PCI host bridge to bus 0000:00
+[    0.697099] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.699170] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.702171] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    0.704759] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    0.707272] pci_bus 0000:00: root bus resource [mem 0xc000000000-0xc07fffffff window]
+[    0.709759] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.712086] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+[    0.715964] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100 conventional PCI endpoint
+[    0.719708] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180 conventional PCI endpoint
+[    0.723759] pci 0000:00:01.1: BAR 4 [io  0xc180-0xc18f]
+[    0.726209] pci 0000:00:01.1: BAR 0 [io  0x01f0-0x01f7]: legacy IDE quirk
+[    0.727759] pci 0000:00:01.1: BAR 1 [io  0x03f6]: legacy IDE quirk
+[    0.730759] pci 0000:00:01.1: BAR 2 [io  0x0170-0x0177]: legacy IDE quirk
+[    0.732171] pci 0000:00:01.1: BAR 3 [io  0x0376]: legacy IDE quirk
+[    0.735044] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
+[    0.738848] pci 0000:00:01.3: quirk: [io  0x0600-0x063f] claimed by PIIX4 ACPI
+[    0.741267] pci 0000:00:01.3: quirk: [io  0x0700-0x070f] claimed by PIIX4 SMB
+[    0.744144] pci 0000:00:02.0: [1b36:0100] type 00 class 0x030000 conventional PCI endpoint
+[    0.750782] pci 0000:00:02.0: BAR 0 [mem 0xf4000000-0xf7ffffff]
+[    0.752774] pci 0000:00:02.0: BAR 1 [mem 0xf8000000-0xfbffffff]
+[    0.755162] pci 0000:00:02.0: BAR 2 [mem 0xfc090000-0xfc091fff]
+[    0.757170] pci 0000:00:02.0: BAR 3 [io  0xc140-0xc15f]
+[    0.759804] pci 0000:00:02.0: ROM [mem 0xfc080000-0xfc08ffff pref]
+[    0.761244] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    0.765173] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000 conventional PCI endpoint
+[    0.769734] pci 0000:00:03.0: BAR 0 [io  0xc080-0xc0bf]
+[    0.772140] pci 0000:00:03.0: BAR 1 [mem 0xfc092000-0xfc092fff]
+[    0.774211] pci 0000:00:03.0: BAR 4 [mem 0xc000000000-0xc000003fff 64bit pref]
+[    0.776271] pci 0000:00:03.0: ROM [mem 0xfc000000-0xfc07ffff pref]
+[    0.780455] pci 0000:00:04.0: [1af4:1003] type 00 class 0x078000 conventional PCI endpoint
+[    0.784775] pci 0000:00:04.0: BAR 0 [io  0xc0c0-0xc0ff]
+[    0.787153] pci 0000:00:04.0: BAR 1 [mem 0xfc093000-0xfc093fff]
+[    0.788773] pci 0000:00:04.0: BAR 4 [mem 0xc000004000-0xc000007fff 64bit pref]
+[    0.793635] pci 0000:00:05.0: [1af4:1001] type 00 class 0x010000 conventional PCI endpoint
+[    0.798775] pci 0000:00:05.0: BAR 0 [io  0xc000-0xc07f]
+[    0.801143] pci 0000:00:05.0: BAR 1 [mem 0xfc094000-0xfc094fff]
+[    0.803207] pci 0000:00:05.0: BAR 4 [mem 0xc000008000-0xc00000bfff 64bit pref]
+[    0.807261] pci 0000:00:06.0: [1af4:1002] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.811544] pci 0000:00:06.0: BAR 0 [io  0xc100-0xc13f]
+[    0.813142] pci 0000:00:06.0: BAR 1 [mem 0xfc095000-0xfc095fff]
+[    0.816217] pci 0000:00:06.0: BAR 4 [mem 0xc00000c000-0xc00000ffff 64bit pref]
+[    0.820042] pci 0000:00:07.0: [1af4:1005] type 00 class 0x00ff00 conventional PCI endpoint
+[    0.824786] pci 0000:00:07.0: BAR 0 [io  0xc160-0xc17f]
+[    0.826774] pci 0000:00:07.0: BAR 1 [mem 0xfc096000-0xfc096fff]
+[    0.828818] pci 0000:00:07.0: BAR 4 [mem 0xc000010000-0xc000013fff 64bit pref]
+[    0.842050] ACPI: PCI: Interrupt link LNKA configured for IRQ 10
+[    0.844935] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    0.846322] ACPI: PCI: Interrupt link LNKC configured for IRQ 11
+[    0.849304] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    0.850838] ACPI: PCI: Interrupt link LNKS configured for IRQ 9
+[    0.853780] iommu: Default domain type: Translated
+[    0.855115] iommu: DMA domain TLB invalidation policy: lazy mode
+[    0.857889] SCSI subsystem initialized
+[    0.859792] ACPI: bus type USB registered
+[    0.861108] usbcore: registered new interface driver usbfs
+[    0.863141] usbcore: registered new interface driver hub
+[    0.870770] usbcore: registered new device driver usb
+[    0.872782] pps_core: LinuxPPS API ver. 1 registered
+[    0.873758] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.876763] PTP clock support registered
+[    0.879144] EDAC MC: Ver: 3.0.0
+[    0.880930] NetLabel: Initializing
+[    0.882077] NetLabel:  domain hash size = 128
+[    0.883454] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.886168] NetLabel:  unlabeled traffic allowed by default
+[    0.888193] mctp: management component transport protocol core
+[    0.890144] NET: Registered PF_MCTP protocol family
+[    0.891757] PCI: Using ACPI for IRQ routing
+[    0.893160] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.893756] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.893756] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.900763] vgaarb: loaded
+[    0.901832] clocksource: Switched to clocksource kvm-clock
+[    0.903875] VFS: Disk quotas dquot_6.6.0
+[    0.905353] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.907857] AppArmor: AppArmor Filesystem Enabled
+[    0.909570] pnp: PnP ACPI init
+[    0.911032] pnp: PnP ACPI: found 5 devices
+[    0.918175] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    0.921193] NET: Registered PF_INET protocol family
+[    0.922945] IP idents hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.935793] tcp_listen_portaddr_hash hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[    0.938714] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.941375] TCP established hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.944652] TCP bind hash table entries: 32768 (order: 8, 1048576 bytes, linear)
+[    0.947211] TCP: Hash tables configured (established 32768 bind 32768)
+[    0.949473] MPTCP token hash table entries: 4096 (order: 5, 98304 bytes, linear)
+[    0.952014] UDP hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.954326] UDP-Lite hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.956856] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.958824] NET: Registered PF_XDP protocol family
+[    0.960517] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    0.962635] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    0.964748] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    0.967048] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+[    0.969355] pci_bus 0000:00: resource 8 [mem 0xc000000000-0xc07fffffff window]
+[    0.971877] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    0.974372] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    0.976562] PCI: CLS 0 bytes, default 64
+[    0.978078] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    0.979947] Trying to unpack rootfs image as initramfs...
+[    0.980250] software IO TLB: mapped [mem 0x00000000bbfdd000-0x00000000bffdd000] (64MB)
+[    1.002264] Initialise system trusted keyrings
+[    1.004624] Key type blacklist registered
+[    1.006576] workingset: timestamp_bits=36 max_order=20 bucket_order=0
+[    1.008950] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    1.011075] fuse: init (API version 7.44)
+[    1.012685] integrity: Platform Keyring initialized
+[    1.014427] integrity: Machine keyring initialized
+[    1.023606] Key type asymmetric registered
+[    1.025090] Asymmetric key parser 'x509' registered
+[    1.026845] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 242)
+[    1.029580] io scheduler mq-deadline registered
+[    1.031750] ledtrig-cpu: registered to indicate activity on CPUs
+[    1.034523] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    1.037252] ACPI: button: Power Button [PWRF]
+[    1.040197] ACPI: \_SB_.LNKC: Enabled at IRQ 11
+[    1.044194] ACPI: \_SB_.LNKD: Enabled at IRQ 10
+[    1.048058] ACPI: \_SB_.LNKA: Enabled at IRQ 10
+[    1.051855] ACPI: \_SB_.LNKB: Enabled at IRQ 11
+[    1.055825] Freeing initrd memory: 77528K
+[    1.059865] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    1.089346] 00:00: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    1.111937] Linux agpgart interface v0.103
+[    1.114304] loop: module loaded
+[    1.115893] virtio_blk virtio2: 2/0/0 default/read/poll queues
+[    1.119194] virtio_blk virtio2: [vda] 104857600 512-byte logical blocks (53.7 GB/50.0 GiB)
+[    1.123824]  vda: vda1 vda14 vda15 vda16
+[    1.126482] scsi host0: ata_piix
+[    1.127848] scsi host1: ata_piix
+[    1.129117] ata1: PATA max MWDMA2 cmd 0x1f0 ctl 0x3f6 bmdma 0xc180 irq 14 lpm-pol 0
+[    1.131780] ata2: PATA max MWDMA2 cmd 0x170 ctl 0x376 bmdma 0xc188 irq 15 lpm-pol 0
+[    1.134445] ACPI: bus type drm_connector registered
+[    1.136414] tun: Universal TUN/TAP device driver, 1.6
+[    1.141274] PPP generic driver version 2.4.2
+[    1.142956] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.146818] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.148591] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.150456] mousedev: PS/2 mouse device common for all mice
+[    1.152885] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input1
+[    1.156372] rtc_cmos 00:04: RTC can wake from S4
+[    1.158773] rtc_cmos 00:04: registered as rtc0
+[    1.160641] rtc_cmos 00:04: setting system clock to 2026-04-06T18:49:43 UTC (1775501383)
+[    1.163487] rtc_cmos 00:04: alarms up to one day, y3k, 242 bytes nvram
+[    1.165743] i2c_dev: i2c /dev entries driver
+[    1.167296] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    1.171323] device-mapper: uevent: version 1.0.3
+[    1.173020] device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
+[    1.176054] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
+[    1.178679] drop_monitor: Initializing network drop monitor service
+[    1.180908] NET: Registered PF_INET6 protocol family
+[    1.182949] Segment Routing with IPv6
+[    1.184869] In-situ OAM (IOAM) with IPv6
+[    1.186340] NET: Registered PF_PACKET protocol family
+[    1.188254] Key type dns_resolver registered
+[    1.190128] IPI shorthand broadcast: enabled
+[    1.192754] sched_clock: Marking stable (900006113, 292528608)->(1223761062, -31226341)
+[    1.195666] registered taskstats version 1
+[    1.197429] Loading compiled-in X.509 certificates
+[    1.199707] Loaded X.509 cert 'Build time autogenerated kernel key: 2e73221b12d87a671685daaff6c47a18f3185632'
+[    1.203452] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing 2025 Kmod: d541cef61dc7e793b7eb7e899970a2eef0b5dc8c'
+[    1.207344] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing: 14df34d1a87cf37625abec039ef2bf521249b969'
+[    1.210937] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing: 88f752e560a1e0737e31163a466ad7b70a850c19'
+[    1.214874] blacklist: Loading compiled-in revocation X.509 certificates
+[    1.217156] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing: 61482aa2830d0ab2ad5af10b7250da9033ddcef0'
+[    1.220443] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2017): 242ade75ac4a15e50d50c84b0d45ff3eae707a03'
+[    1.223977] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (ESM 2018): 365188c1d374d6b07c3c8f240f8ef722433d6a8b'
+[    1.227589] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2019): c0746fd6c5da3ae827864651ad66ae47fe24b3e8'
+[    1.231062] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v1): a8d54bbb3825cfb94fa13c9f8a594a195c107b8d'
+[    1.234637] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v2): 4cf046892d6fd3c9a5b03f98d845f90851dc6a8c'
+[    1.238182] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v3): 100437bb6de6e469b581e61cd66bce3ef4ed53af'
+[    1.241743] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (Ubuntu Core 2019): c1d57b8f6b743f23ee41f4f7ee292f06eecadfb9'
+[    1.248345] Demotion targets for Node 0: null
+[    1.250079] Key type .fscrypt registered
+[    1.251544] Key type fscrypt-provisioning registered
+[    1.253354] Key type big_key registered
+[    1.290126] ata1: found unknown device (class 0)
+[    1.292665] ata1.00: ATAPI: QEMU DVD-ROM, 2.5+, max UDMA/100
+[    1.296383] scsi 0:0:0:0: CD-ROM            QEMU     QEMU DVD-ROM     2.5+ PQ: 0 ANSI: 5
+[    1.309821] sr 0:0:0:0: [sr0] scsi3-mmc drive: 4x/4x cd/rw xa/form2 tray
+[    1.312105] cdrom: Uniform CD-ROM driver Revision: 3.20
+[    1.324116] sr 0:0:0:0: Attached scsi generic sg0 type 5
+[    1.331221] Key type encrypted registered
+[    1.332749] AppArmor: AppArmor sha256 policy hashing enabled
+[    1.335242] ima: No TPM chip found, activating TPM-bypass!
+[    1.337198] Loading compiled-in module X.509 certificates
+[    1.339435] Loaded X.509 cert 'Build time autogenerated kernel key: 2e73221b12d87a671685daaff6c47a18f3185632'
+[    1.342739] ima: Allocated hash algorithm: sha256
+[    1.344431] ima: No architecture policies found
+[    1.346083] evm: Initialising EVM extended attributes:
+[    1.347897] evm: security.selinux
+[    1.349149] evm: security.SMACK64
+[    1.350419] evm: security.SMACK64EXEC
+[    1.351791] evm: security.SMACK64TRANSMUTE
+[    1.353266] evm: security.SMACK64MMAP
+[    1.354644] evm: security.apparmor
+[    1.355929] evm: security.ima
+[    1.363084] evm: security.capability
+[    1.364958] evm: HMAC attrs: 0x1
+[    1.366441] PM:   Magic number: 6:136:847
+[    1.369841] RAS: Correctable Errors collector initialized.
+[    1.376081] clk: Disabling unused clocks
+[    1.377554] PM: genpd: Disabling unused power domains
+[    1.381569] Freeing unused decrypted memory: 2028K
+[    1.383284] Freeing unused kernel image (initmem) memory: 5268K
+[    1.384897] Write protecting the kernel read-only data: 38912k
+[    1.386668] Freeing unused kernel image (text/rodata gap) memory: 312K
+[    1.388446] Freeing unused kernel image (rodata/data gap) memory: 92K
+[    1.418491] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    1.420210] Run /init as init process
+Loading, please wait...
+Starting systemd-udevd version 255.4-1ubuntu8.12
+[    1.486386] virtio_net virtio0 ens3: renamed from eth0
+[    1.497719] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input4
+[    1.501106] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input3
+[    1.507908] FDC 0 is a S82078B
+Begin: Loading essential drivers ... [    2.674539] raid6: avx2x4   gen() 46958 MB/s
+[    2.692544] raid6: avx2x2   gen() 48427 MB/s
+[    2.710538] raid6: avx2x1   gen() 40901 MB/s
+[    2.711801] raid6: using algorithm avx2x2 gen() 48427 MB/s
+[    2.729540] raid6: .... xor() 35603 MB/s, rmw enabled
+[    2.730942] raid6: using avx2x2 recovery algorithm
+[    2.733223] xor: automatically using best checksumming function   avx       
+[    2.735934] async_tx: api initialized (async)
+done.
+Begin: Running /scripts/init-premount ... done.
+Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+Begin: Running /scripts/local-premount ... [    2.843757] Btrfs loaded, zoned=yes, fsverity=yes
+Scanning for Btrfs filesystems
+done.
+Begin: Will now check root file system ... fsck from util-linux 2.39.3
+[/usr/sbin/fsck.ext4 (1) -- /dev/vda1] fsck.ext4 -a -C0 /dev/vda1 
+cloudimg-rootfs: clean, 190462/6422528 files, 2065372/12844795 blocks
+done.
+[    2.895617] EXT4-fs (vda1): mounted filesystem 3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 ro with ordered data mode. Quota mode: none.
+done.
+Begin: Running /scripts/local-bottom ... done.
+Begin: Running /scripts/init-bottom ... done.
+[    3.018660] systemd[1]: Inserted module 'autofs4'
+[    3.033526] systemd[1]: systemd 255.4-1ubuntu8.12 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    3.041309] systemd[1]: Detected virtualization kvm.
+[    3.042700] systemd[1]: Detected architecture x86-64.
+
+Welcome to [1mUbuntu 24.04.4 LTS[0m!
+
+[    3.047634] systemd[1]: Hostname set to <github-runner>.
+[    3.212744] systemd[1]: Queued start job for default target graphical.target.
+[    3.223649] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-modprobe.slice[0m - Slice /system/modprobe.
+[    3.228377] systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-serial\x2dget���slice[0m - Slice /system/serial-getty.
+[    3.233194] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-systemd\x2dfs���slice[0m - Slice /system/systemd-fsck.
+[    3.238004] systemd[1]: Created slice user.slice - User and Session Slice.
+[[0;32m  OK  [0m] Created slice [0;1;39muser.slice[0m - User and Session Slice.
+[    3.241712] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-wall.���[0md Requests to Wall Directory Watch.
+[    3.246773] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[[0;32m  OK  [0m] Set up automount [0;1;39mproc-sys-fs-binfm���[0mormats File System Automount Point.
+[    3.252179] systemd[1]: Expecting device dev-disk-by\x2dlabel-BOOT.device - /dev/disk/by-label/BOOT...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/BOOT...
+[    3.257222] systemd[1]: Expecting device dev-disk-by\x2dlabel-UEFI.device - /dev/disk/by-label/UEFI...
+         Expecting device [0;1;39mdev-disk-by\x2dla���device[0m - /dev/disk/by-label/UEFI...
+[    3.261678] systemd[1]: Expecting device dev-ttyS0.device - /dev/ttyS0...
+         Expecting device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0...
+[    3.265093] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mintegritysetup.targ���[0m Local Integrity Protected Volumes.
+[    3.269709] systemd[1]: Reached target slices.target - Slice Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mslices.target[0m - Slice Units.
+[    3.273035] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts-pre.target[0m - Mounting snaps.
+[    3.276974] systemd[1]: Reached target swap.target - Swaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mswap.target[0m - Swaps.
+[    3.280022] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mveritysetup.target[0m - Local Verity Protected Volumes.
+[    3.285012] systemd[1]: Listening on dm-event.socket - Device-mapper event daemon FIFOs.
+[[0;32m  OK  [0m] Listening on [0;1;39mdm-event.socket[0m - Device-mapper event daemon FIFOs.
+[    3.289369] systemd[1]: Listening on lvm2-lvmpolld.socket - LVM2 poll daemon socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mlvm2-lvmpolld.socket[0m - LVM2 poll daemon socket.
+[    3.293523] systemd[1]: Listening on multipathd.socket - multipathd control socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mmultipathd.socket[0m - multipathd control socket.
+[    3.297735] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msyslog.socket[0m - Syslog Socket.
+[    3.301191] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-fsckd.socket[0m ���fsck to fsckd communication Socket.
+[    3.305748] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-initctl.socke���[0m- initctl Compatibility Named Pipe.
+[    3.310333] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald-dev-���socket[0m - Journal Socket (/dev/log).
+[    3.315496] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald.socket[0m - Journal Socket.
+[    3.319462] systemd[1]: Listening on systemd-networkd.socket - Network Service Netlink Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-networkd.socket[0m - Network Service Netlink Socket.
+[    3.323933] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.327665] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-control.socket[0m - udev Control Socket.
+[    3.331995] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-kernel.socket[0m - udev Kernel Socket.
+[    3.341633] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+         Mounting [0;1;39mdev-hugepages.mount[0m - Huge Pages File System...
+[    3.346281] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+         Mounting [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System...
+[    3.350832] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+         Mounting [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System...
+[    3.355304] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+         Mounting [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System...
+[    3.360447] systemd[1]: Starting systemd-journald.service - Journal Service...
+         Starting [0;1;39msystemd-journald.service[0m - Journal Service...
+[    3.366629] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+         Starting [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout...
+[    3.371589] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+[    3.372721] systemd-journald[304]: Collecting audit messages is disabled.
+         Starting [0;1;39mkmod-static-nodes.service[0m���eate List of Static Device Nodes...
+[    3.381437] systemd[1]: Starting lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+         Starting [0;1;39mlvm2-monitor.service[0m - Mo���ing dmeventd or progress polling...
+[    3.395925] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+         Starting [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs...
+[    3.400966] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+         Starting [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod...
+[    3.408252] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+         Starting [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm...
+[    3.417006] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+         Starting [0;1;39mmodprobe@efi_pstore.servi���[0m - Load Kernel Module efi_pstore...
+[    3.423368] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+         Starting [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse...
+[    3.429575] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+         Starting [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop...
+[    3.433978] systemd[1]: netplan-ovs-cleanup.service - OpenVSwitch configuration for cleanup was skipped because of an unmet condition check (ConditionFileIsExecutable=/usr/bin/ovs-vsctl).
+[    3.438165] systemd[1]: systemd-fsck-root.service - File System Check on Root Device was skipped because of an unmet condition check (ConditionPathExists=!/run/initramfs/fsck-root).
+[    3.448665] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+         Starting [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules...
+[    3.453023] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.457445] systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+         Starting [0;1;39msystemd-remount-fs.servic���[0munt Root and Kernel File Systems...
+[    3.462148] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    3.466945] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+         Starting [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices...
+[    3.474087] systemd[1]: Started systemd-journald.service - Journal Service.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-journald.service[0m - Journal Service.
+[    3.478370] EXT4-fs (vda1): re-mounted 3f0a11d4-9521-46d7-bc7d-9ba98277c3e2 r/w.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-hugepages.mount[0m - Huge Pages File System.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System.
+[[0;32m  OK  [0m] Finished [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout.
+[[0;32m  OK  [0m] Finished [0;1;39mkmod-static-nodes.service[0m���Create List of Static Device Nodes.
+[[0;32m  OK  [0m] Finished [0;1;39mlvm2-monitor.service[0m - Mo���using dmeventd or progress polling.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@efi_pstore.service[0m - Load Kernel Module efi_pstore.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-remount-fs.servic���[0mmount Root and Kernel File Systems.
+         Mounting [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System...
+         Mounting [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System...
+         Starting [0;1;39mmultipathd.service[0m - Devi���pper Multipath Device Controller...
+         Starting [0;1;39msystemd-journal-flush.ser���[0msh Journal to Persistent Storage...
+         Starting [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed...
+         Starting [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables...
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0m Device Nodes in /dev gracefully...
+[[0;32m  OK  [0m] Mounted [0;[    3.556862] systemd-journald[304]: Received client request to flush runtime journal.
+1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed.
+[    3.572940] systemd-journald[304]: /var/log/journal/344dd9206c4747d0a28d2398f1770cd0/system.journal: Journal file uses a different sequence number ID, rotating.
+[    3.577275] systemd-journald[304]: Rotating system journal.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables.
+[[0;32m  OK  [0m] Started [0;1;39mmultipathd.service[0m - Devic���Mapper Multipath Device Controller.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mic Device Nodes in /dev gracefully.
+         Starting [0;1;39msystemd-tmpfiles-setup-de���[0meate Static Device Nodes in /dev...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de���[0mCreate Static Device Nodes in /dev.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs-pre.target[0m���Preparation for Local File Systems.
+         Mounting [0;1;39msnap-aproxy-78.mount[0m - Mount unit for aproxy, revision 78...
+         Mounting [0;1;39msnap-core22-2339.mount[0m - ���t unit for core22, revision 2339...
+         Mounting [0;1;39msnap-core24-1499.mount[0m - ���t unit for core24, revision 1499...
+         Mounting [0;1;39msnap-opentelemetry\x2dcol���[0mtelemetry-collector, revision 32...
+         Mounting [0;1;39msnap-snapd-25935.mount[0m - ���t unit for snapd, revision 25935...
+         Starting [0;1;39msystemd-udevd.service[0m - R���ager for Device Events and Files...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-journal-flush.ser���[0mlush Journal to Persistent Storage.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-aproxy-78.mount[0m - Mount unit for aproxy, revision 78.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-core22-2339.mount[0m - Mount unit for core22, revision 2339.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-core24-1499.mount[0m - Mount unit for core24, revision 1499.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-snapd-25935.mount[0m - Mount unit for snapd, revision 25935.
+[[0;32m  OK  [0m] Mounted [0;1;39msnap-opentelemetry\x2dcoll���[0mentelemetry-collector, revision 32.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts.target[0m - Mounted snaps.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-udevd.service[0m - Ru���anager for Device Events and Files.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-conso���[0mequests to Console Directory Watch.
+[[0;32m  OK  [0m] Reached target [0;1;39mcryptsetup.target[0m - Local Encrypted Volumes.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���I.device[0m - /dev/disk/by-label/UEFI.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-���T.device[0m - /dev/disk/by-label/BOOT.
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/BOOT...
+         Starting [0;1;39msystemd-fsck@dev-disk-by\���[0mCheck on /dev/disk/by-label/UEFI...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/BOOT.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-fsckd.service[0m - Fi���stem Check Daemon to report status.
+Checking in progress on 1 disk (0.0% complete)[[0;32m  OK  [0m] Listening on [0;1;39msystemd-rfkill.socket[0m���ll Switch Status /dev/rfkill Watch.
+Checking in progress on 0 disks (100.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\���[0mm Check on /dev/disk/by-label/UEFI.
+         Mounting [0;1;39mboot.mount[0m - /boot...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot.mount[0m - /boot.
+         Mounting [0;1;39mboot-efi.mount[0m - /boot/efi...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot-efi.mount[0m - /boot/efi.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs.target[0m - Local File Systems.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-sysext.socket[0m���tension Image Management (Varlink).
+         Starting [0;1;39mapparmor.service[0m - Load AppArmor profiles...
+         Starting [0;1;39mconsole-setup.service[0m - Set console font and keymap...
+         Starting [0;1;39mfinalrd.service[0m - Create ���time dir for shutdown pivot root...
+         Starting [0;1;39mplymouth-read-write.servi���[0mymouth To Write Out Runtime Data...
+         Starting [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats...
+         Starting [0;1;39msystemd-tmpfiles-setup.se���[0me Volatile Files and Directories...
+         Starting [0;1;39mufw.service[0m - Uncomplicated firewall...
+[[0;32m  OK  [0m] Finished [0;1;39mconsole-setup.service[0m - Set console font and keymap.
+[[0;32m  OK  [0m] Finished [0;1;39mfinalrd.service[0m - Create ���untime dir for shutdown pivot root.
+         Mounting [0;1;39mproc-sys-fs-binfmt_misc.m���[0mcutable File Formats File System...
+[[0;32m  OK  [0m] Finished [0;1;39mufw.service[0m - Uncomplicated firewall.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-read-write.servi���[0mPlymouth To Write Out Runtime Data.
+[[0;32m  OK  [0m] Mounted [0;1;39mproc-sys-fs-binfmt_misc.mo���[0mxecutable File Formats File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup.se���[0mate Volatile Files and Directories.
+         Starting [0;1;39msystemd-resolved.service[0m - Network Name Resolution...
+         Starting [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization...
+         Starting [0;1;39msystemd-update-utmp.servi���[0mord System Boot/Shutdown in UTMP...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-utmp.servi���[0mecord System Boot/Shutdown in UTMP.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization.
+[[0;32m  OK  [0m] Reached target [0;1;39mtime-set.target[0m - System Time Set.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-resolved.service[0m - Network Name Resolution.
+[[0;32m  OK  [0m] Reached target [0;1;39mnss-lookup.target[0m - Host and Network Name Lookups.
+[[0;32m  OK  [0m] Finished [0;1;39mapparmor.service[0m - Load AppArmor profiles.
+         Starting [0;1;39msnapd.apparmor.service[0m - ���iles managed internally by snapd...
+         Starting [0;1;39mcloud-init-local.service[0m ���-init: Local Stage (pre-network)...
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.apparmor.service[0m - ���ofiles managed internally by snapd.
+[    5.080687] cloud-init[638]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'init-local' at Mon, 06 Apr 2026 18:49:47 +0000. Up 5.07 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init-local.service[0m ���ud-init: Local Stage (pre-network).
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-pre.target[0m - Preparation for Network.
+         Starting [0;1;39msystemd-networkd.service[0m - Network Configuration...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-networkd.service[0m - Network Configuration.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork.target[0m - Network.
+         Starting [0;1;39msystemd-networkd-wait-onl���[0mait for Network to be Configured...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-networkd-wait-onl���[0m Wait for Network to be Configured.
+         Starting [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage...
+[    7.299796] cloud-init[712]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'init' at Mon, 06 Apr 2026 18:49:49 +0000. Up 7.28 seconds.
+[    7.307294] cloud-init[712]: ci-info: +++++++++++++++++++++++++++++++++++++++Net device info+++++++++++++++++++++++++++++++++++++++
+[    7.310091] cloud-init[712]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.312793] cloud-init[712]: ci-info: | Device |  Up  |           Address            |      Mask     | Scope  |     Hw-Address    |
+[    7.315527] cloud-init[712]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.318227] cloud-init[712]: ci-info: |  ens3  | True |        10.151.122.95         | 255.255.255.0 | global | fa:16:3e:7f:aa:63 |
+[    7.320950] cloud-init[712]: ci-info: |  ens3  | True | fe80::f816:3eff:fe7f:aa63/64 |       .       |  link  | fa:16:3e:7f:aa:63 |
+[    7.323657] cloud-init[712]: ci-info: |   lo   | True |          127.0.0.1           |   255.0.0.0   |  host  |         .         |
+[    7.326364] cloud-init[712]: ci-info: |   lo   | True |           ::1/128            |       .       |  host  |         .         |
+[    7.329127] cloud-init[712]: ci-info: +--------+------+------------------------------+---------------+--------+-------------------+
+[    7.331867] cloud-init[712]: ci-info: ++++++++++++++++++++++++++++++++Route IPv4 info+++++++++++++++++++++++++++++++++
+[    7.334333] cloud-init[712]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.336824] cloud-init[712]: ci-info: | Route |   Destination   |   Gateway    |     Genmask     | Interface | Flags |
+[    7.339289] cloud-init[712]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.341775] cloud-init[712]: ci-info: |   0   |     0.0.0.0     | 10.151.122.1 |     0.0.0.0     |    ens3   |   UG  |
+[    7.344254] cloud-init[712]: ci-info: |   1   |   10.151.11.5   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.346752] cloud-init[712]: ci-info: |   2   |   10.151.11.6   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.349228] cloud-init[712]: ci-info: |   3   |   10.151.11.7   | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.351738] cloud-init[712]: ci-info: |   4   |  10.151.77.124  | 10.151.122.1 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.354220] cloud-init[712]: ci-info: |   5   |   10.151.122.0  |   0.0.0.0    |  255.255.255.0  |    ens3   |   U   |
+[    7.356702] cloud-init[712]: ci-info: |   6   |   10.151.122.1  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.359196] cloud-init[712]: ci-info: |   7   |   10.151.122.2  |   0.0.0.0    | 255.255.255.255 |    ens3   |   UH  |
+[    7.361720] cloud-init[712]: ci-info: |   8   | 169.254.169.254 | 10.151.122.2 | 255.255.255.255 |    ens3   |  UGH  |
+[    7.364164] cloud-init[712]: ci-info: +-------+-----------------+--------------+-----------------+-----------+-------+
+[    7.366610] cloud-init[712]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+[    7.368530] cloud-init[712]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.370463] cloud-init[712]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+[    7.372387] cloud-init[712]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.374318] cloud-init[712]: ci-info: |   0   |  fe80::/64  |    ::   |    ens3   |   U   |
+[    7.376248] cloud-init[712]: ci-info: |   2   |    local    |    ::   |    ens3   |   U   |
+[    7.378175] cloud-init[712]: ci-info: |   3   |  multicast  |    ::   |    ens3   |   U   |
+[    7.380113] cloud-init[712]: ci-info: +-------+-------------+---------+-----------+-------+
+[    7.988964] cloud-init[712]: Generating public/private rsa key pair.
+[    7.990548] cloud-init[712]: Your identification has been saved in /etc/ssh/ssh_host_rsa_key
+[    7.992564] cloud-init[712]: Your public key has been saved in /etc/ssh/ssh_host_rsa_key.pub
+[    7.994582] cloud-init[712]: The key fingerprint is:
+[    7.995811] cloud-init[712]: SHA256:k6sAY8AlnW/+06sVDV8OSbHL5lQyxlhAVh1DZLVr1g8 root@test-cv3oq0ul-0-0369bc3aa10f
+[    7.998282] cloud-init[712]: The key's randomart image is:
+[    7.999570] cloud-init[712]: +---[RSA 3072]----+
+[    8.000693] cloud-init[712]: | ....   .+o==*o. |
+[    8.001815] cloud-init[712]: |. oo    . = +.. .|
+[    8.002921] cloud-init[712]: |..  .    o O o . |
+[    8.004041] cloud-init[712]: | .   o   .* O   o|
+[    8.005155] cloud-init[712]: |  + o   S. B .E+.|
+[    8.006271] cloud-init[712]: | . o .   o=   o..|
+[    8.007391] cloud-init[712]: |    . . o. .    .|
+[    8.008502] cloud-init[712]: |     . +..       |
+[    8.009608] cloud-init[712]: |      ..o..      |
+[    8.010765] cloud-init[712]: +----[SHA256]-----+
+[    8.011904] cloud-init[712]: Generating public/private ecdsa key pair.
+[    8.013431] cloud-init[712]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+[    8.015442] cloud-init[712]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+[    8.017427] cloud-init[712]: The key fingerprint is:
+[    8.018600] cloud-init[712]: SHA256:KpMmRb1pgLSEXdnTt3v5KJdRWvkibq4z3KBNrbuSUgA root@test-cv3oq0ul-0-0369bc3aa10f
+[    8.020944] cloud-init[712]: The key's randomart image is:
+[    8.022224] cloud-init[712]: +---[ECDSA 256]---+
+[    8.023327] cloud-init[712]: | oo..o .         |
+[    8.024433] cloud-init[712]: |.o.oE.o . .      |
+[    8.025544] cloud-init[712]: |  o o... . .   . |
+[    8.026696] cloud-init[712]: |   . ..o  .   +  |
+[    8.027904] cloud-init[712]: |    . +.S  o = . |
+[    8.029033] cloud-init[712]: |   . o .. + B . .|
+[    8.030148] cloud-init[712]: |  . = .. * * * . |
+[    8.031256] cloud-init[712]: |   o o. + B B .  |
+[    8.032362] cloud-init[712]: |       . .+@.    |
+[    8.033474] cloud-init[712]: +----[SHA256]-----+
+[    8.034577] cloud-init[712]: Generating public/private ed25519 key pair.
+[    8.036139] cloud-init[712]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+[    8.038162] cloud-init[712]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+[    8.040221] cloud-init[712]: The key fingerprint is:
+[    8.041453] cloud-init[712]: SHA256:XJKNniQRnW7zteSA/BnGhwF2+x8i9pBl6VfBj74b0OY root@test-cv3oq0ul-0-0369bc3aa10f
+[    8.043833] cloud-init[712]: The key's randomart image is:
+[    8.045155] cloud-init[712]: +--[ED25519 256]--+
+[    8.046267] cloud-init[712]: |      oooo.   .. |
+[    8.047404] cloud-init[712]: |       oo=.. . ..|
+[    8.048512] cloud-init[712]: |      .o=o+o+  .o|
+[    8.049626] cloud-init[712]: |       =*+**+....|
+[    8.050749] cloud-init[712]: |       .S==O=o=  |
+[    8.051863] cloud-init[712]: |         .++oB.. |
+[    8.052972] cloud-init[712]: |            . E. |
+[    8.054115] cloud-init[712]: |              .. |
+[    8.055234] cloud-init[712]: |              .. |
+[    8.056344] cloud-init[712]: +----[SHA256]-----+
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage.
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-config.target[0m - Cloud-config availability.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-online.target[0m - Network is Online.
+[[0;32m  OK  [0m] Reached target [0;1;39msysinit.target[0m - System Initialization.
+[[0;32m  OK  [0m] Started [0;1;39mdpkg-db-backup.timer[0m - Daily dpkg database backup timer.
+[[0;32m  OK  [0m] Started [0;1;39me2scrub_all.timer[0m - Period���Metadata Check for All Filesystems.
+[[0;32m  OK  [0m] Started [0;1;39mfstrim.timer[0m - Discard unused filesystem blocks once a week.
+[[0;32m  OK  [0m] Started [0;1;39mfwupd-refresh.timer[0m - Refresh fwupd metadata regularly.
+[[0;32m  OK  [0m] Started [0;1;39mlogrotate.timer[0m - Daily rotation of log files.
+[[0;32m  OK  [0m] Started [0;1;39mman-db.timer[0m - Daily man-db regeneration.
+[[0;32m  OK  [0m] Started [0;1;39mmotd-news.timer[0m - Message of the Day.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-collect.timer[0m - Ru���y accounting tool every 10 minutes.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-summary.timer[0m - Ge��� of yesterday's process accounting.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-tmpfiles-clean.tim���[0my Cleanup of Temporary Directories.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-download.t���[0mhat failed at package install time.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-motd.timer[0m��� a new version of Ubuntu available.
+[[0;32m  OK  [0m] Reached target [0;1;39mpaths.target[0m - Path Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mtimers.target[0m - Timer Units.
+[[0;32m  OK  [0m] Listening on [0;1;39mcloud-init-hotplugd.s���t[0m - cloud-init hotplug hook socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mdbus.socket[0m - D-Bus System Message Bus Socket.
+         Starting [0;1;39mdocker.socket[0m - Docker Socket for the API...
+[[0;32m  OK  [0m] Listening on [0;1;39miscsid.socket[0m - Open-iSCSI iscsid Socket.
+         Starting [0;1;39mlxd-installer.socket[0m - He���er to install lxd snap on demand...
+         Starting [0;1;39msnapd.socket[0m - Socket activation for snappy daemon...
+[[0;32m  OK  [0m] Listening on [0;1;39mssh.socket[0m - OpenBSD Secure Shell server socket.
+[[0;32m  OK  [0m] Listening on [0;1;39muuidd.socket[0m - UUID daemon activation socket.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs-pre.targe���[0mreparation for Remote File Systems.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs.target[0m - Remote File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39mblk-availability.service[0m - Availability of block devices.
+[[0;32m  OK  [0m] Listening on [0;1;39mdocker.socket[0m - Docker Socket for the API.
+[[0;32m  OK  [0m] Listening on [0;1;39mlxd-installer.socket[0m ���lper to install lxd snap on demand.
+[[0;32m  OK  [0m] Listening on [0;1;39msnapd.socket[0m - Socket activation for snappy daemon.
+[[0;32m  OK  [0m] Reached target [0;1;39msockets.target[0m - Socket Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mbasic.target[0m - Basic System.
+         Starting [0;1;39mapport.service[0m - automatic crash report generation...
+         Starting [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage...
+[[0;32m  OK  [0m] Started [0;1;39mcron.service[0m - Regular background program processing daemon.
+         Starting [0;1;39mdbus.service[0m - D-Bus System Message Bus...
+[[0;32m  OK  [0m] Started [0;1;39mdmesg.service[0m - Save initial kernel messages after boot.
+         Starting [0;1;39mdpkg-db-backup.service[0m - ���ily dpkg database backup service...
+         Starting [0;1;39me2scrub_reap.service[0m - Re���ne ext4 Metadata Check Snapshots...
+         Starting [0;1;39mgrub-common.service[0m - Record successful boot for GRUB...
+         Starting [0;1;39mpolkit.service[0m - Authorization Manager...
+         Starting [0;1;39mpollinate.service[0m - Polli���e pseudo random number generator...
+         Starting [0;1;39mrsyslog.service[0m - System Logging Service...
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty-pre.target[0m - Preparation for Logins.
+         Starting [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded...
+         Starting [0;1;39msnapd.service[0m - Snap Daemon...
+         Starting [0;1;39msysstat.service[0m - Resets System Activity Logs...
+         Starting [0;1;39msystemd-logind.service[0m - User Login Management...
+         Starting [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions...
+         Starting [0;1;39mudisks2.service[0m - Disk Manager...
+         Starting [0;1;39mlogrotate.service[0m - Rotate log files...
+[[0;32m  OK  [0m] Finished [0;1;39msysstat.service[0m - Resets System Activity Logs.
+[[0;32m  OK  [0m] Finished [0;1;39me2scrub_reap.service[0m - Re���line ext4 Metadata Check Snapshots.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions.
+[[0;32m  OK  [0m] Started [0;1;39mdbus.service[0m - D-Bus System Message Bus.
+         Starting [0;1;39mcontainerd.service[0m - containerd container runtime...
+         Starting [0;1;39mplymouth-quit-wait.servic���[0md until boot process finishes up...
+         Starting [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen...
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit-wait.servic���[0mold until boot process finishes up.
+[[0;32m  OK  [0m] Started [0;1;39mserial-getty@ttyS0.service[0m - Serial Getty on ttyS0.
+         Starting [0;1;39msetvtrgb.service[0m - Set console scheme...
+[[0;32m  OK  [0m] Finished [0;1;39msetvtrgb.service[0m - Set console scheme.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-getty.slice[0m - Slice /system/getty.
+[[0;32m  OK  [0m] Started [0;1;39mgetty@tty1.service[0m - Getty on tty1.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty.target[0m - Login Prompts.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-logind.service[0m - User Login Management.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-common.service[0m - Record successful boot for GRUB.
+         Starting [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection...
+[[0;32m  OK  [0m] Started [0;1;39mpolkit.service[0m - Authorization Manager.
+         Starting [0;1;39mModemManager.service[0m - Modem Manager...
+[[0;32m  OK  [0m] Finished [0;1;39mlogrotate.service[0m - Rotate log files.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection.
+[[0;32m  OK  [0m] Finished [0;1;39mdpkg-db-backup.service[0m - Daily dpkg database backup service.
+[[0;32m  OK  [0m] Started [0;1;39mModemManager.service[0m - Modem Manager.
+[[0;32m  OK  [0m] Started [0;1;39mudisks2.service[0m - Disk Manager.
+[[0;32m  OK  [0m] Started [0;1;39mcontainerd.service[0m - containerd container runtime.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Started [0;1;39mrsyslog.service[0m - System Logging Service.
+[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
+[[0;32m  OK  [0m] Started [0;1;39msnapd.service[0m - Snap Daemon.
+[    8.848412] cloud-init[1070]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'modules:config' at Mon, 06 Apr 2026 18:49:51 +0000. Up 8.82 seconds.
+         Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded.
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage.
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+
+Ubuntu 24.04.4 LTS test-cv3oq0ul-0-0369bc3aa10f ttyS0
+
+test-cv3oq0ul-0-0369bc3aa10f login: [   18.775798] cloud-init[1336]: Cloud-init v. 25.3-0ubuntu1~24.04.1 running 'modules:final' at Mon, 06 Apr 2026 18:50:01 +0000. Up 18.75 seconds.
+                                                            Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+[   49.296686] cloud-init[1336]: Auto-refresh of all snaps held until 2026-04-08T18:50:01Z
+[   49.375030] cloud-init[1336]: snap "aproxy" is already installed, see 'snap help refresh'
+         Starting [0;1;39mfwupd-refresh.service[0m - R���h fwupd metadata and update motd...
+         Starting [0;1;39mfwupd.service[0m - Firmware update daemon...
+         Starting [0;1;39mupower.service[0m - Daemon for power management...
+[[0;32m  OK  [0m] Started [0;1;39mupower.service[0m - Daemon for power management.
+[[0;32m  OK  [0m] Started [0;1;39mfwupd.service[0m - Firmware update daemon.
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.hook.configure���-1d6f-4a1b-8a32-baca16e464c7.scope[0m.
+         Stopping [0;1;39msnap.aproxy.aproxy.servic���[0mr snap application aproxy.aproxy...
+[[0;32m  OK  [0m] Stopped [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[[0;32m  OK  [0m] Started [0;1;39msnap.aproxy.aproxy.service[0m���for snap application aproxy.aproxy.
+[  129.798069] cloud-init[1336]: Created symlink /etc/systemd/system/sysinit.target.wants/nftables.service ��� /usr/lib/systemd/system/nftables.service.
+         Starting [0;1;39mapt-news.service[0m - Update APT News...
+         Starting [0;1;39mesm-cache.service[0m - Update the local ESM caches...
+[  130.104941] cloud-init[1336]: Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+[  130.190672] cloud-init[1336]: Get:2 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1576 kB]
+[  130.287426] cloud-init[1336]: Get:3 http://az3.clouds.archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+[[0;32m  OK  [0m] Finished [0;1;39mapt-news.service[0m - Update APT News.
+[  130.400066] cloud-init[1336]: Get:4 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+[  130.473668] cloud-init[1336]: Get:5 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [252 kB]
+[  130.762828] cloud-init[1336]: Get:6 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+[  130.798367] cloud-init[1336]: Get:7 http://security.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [10.7 kB]
+[  130.832789] cloud-init[1336]: Get:8 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1167 kB]
+[  130.885077] cloud-init[1336]: Get:9 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [225 kB]
+[  131.138386] cloud-init[1336]: Get:10 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+[[0;32m  OK  [0m] Finished [0;1;39mesm-cache.service[0m - Update the local ESM caches.
+[  131.392179] cloud-init[1336]: Get:11 http://security.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [22.8 kB]
+[  131.429460] cloud-init[1336]: Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2757 kB]
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mfwupd-refresh.serv���[0mesh fwupd metadata and update motd.
+See 'systemctl status fwupd-refresh.service' for details.
+[  190.462355] cloud-init[1336]: Ign:13 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+[  190.751924] cloud-init[1336]: Get:14 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 Packages [1401 kB]
+[  191.034314] cloud-init[1336]: Get:15 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main Translation-en [513 kB]
+[  191.323437] cloud-init[1336]: Get:16 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 Components [464 kB]
+[  191.391077] cloud-init[1336]: Get:17 http://az3.clouds.archive.ubuntu.com/ubuntu noble/main amd64 c-n-f Metadata [30.5 kB]
+[  191.503829] cloud-init[1336]: Get:18 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
+[  191.523741] cloud-init[1336]: Ign:19 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en
+[  191.528589] cloud-init[1336]: Get:20 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+[  191.533732] cloud-init[1336]: Get:21 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [6980 B]
+[  191.538520] cloud-init[1336]: Get:22 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+[  192.528154] cloud-init[1336]: Get:19 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [642 kB]
+[  195.725906] cloud-init[1336]: Get:23 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe Translation-en [5982 kB]
+[  195.970645] cloud-init[1336]: Get:24 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 Components [3871 kB]
+[  197.353914] cloud-init[1336]: Get:25 http://az3.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 c-n-f Metadata [301 kB]
+[  197.464340] cloud-init[1336]: Get:26 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [93.9 kB]
+[  197.503206] cloud-init[1336]: Get:27 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted Translation-en [18.7 kB]
+[  197.790033] cloud-init[1336]: Get:28 http://az3.clouds.archive.ubuntu.com/ubuntu noble/restricted amd64 c-n-f Metadata [416 B]
+[  197.828969] cloud-init[1336]: Get:29 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [269 kB]
+[  197.937737] cloud-init[1336]: Get:30 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse Translation-en [118 kB]
+[  197.975095] cloud-init[1336]: Get:31 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 Components [35.0 kB]
+[  198.081920] cloud-init[1336]: Get:32 http://az3.clouds.archive.ubuntu.com/ubuntu noble/multiverse amd64 c-n-f Metadata [8328 B]
+[  198.189142] cloud-init[1336]: Get:33 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1875 kB]
+[  198.692043] cloud-init[1336]: Get:34 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [342 kB]
+[  198.804698] cloud-init[1336]: Get:35 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [177 kB]
+[  198.843982] cloud-init[1336]: Get:36 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [16.9 kB]
+[  199.131511] cloud-init[1336]: Get:37 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1663 kB]
+[  199.461042] cloud-init[1336]: Get:38 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [322 kB]
+[  199.498627] cloud-init[1336]: Get:39 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [386 kB]
+[  199.786266] cloud-init[1336]: Get:40 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.2 kB]
+[  200.077401] cloud-init[1336]: Get:41 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2894 kB]
+[  200.436019] cloud-init[1336]: Get:42 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [671 kB]
+[  200.507325] cloud-init[1336]: Get:43 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+[  200.620155] cloud-init[1336]: Get:44 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [556 B]
+[  200.907718] cloud-init[1336]: Get:45 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [32.1 kB]
+[  201.020340] cloud-init[1336]: Get:46 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [7520 B]
+[  201.057788] cloud-init[1336]: Get:47 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+[  201.345544] cloud-init[1336]: Get:48 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [500 B]
+[  201.383619] cloud-init[1336]: Get:13 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+[  201.526212] cloud-init[1336]: Get:49 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+[  201.564551] cloud-init[1336]: Get:50 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main Translation-en [9208 B]
+[  201.601799] cloud-init[1336]: Get:51 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7380 B]
+[  201.714102] cloud-init[1336]: Get:52 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+[  201.826713] cloud-init[1336]: Get:53 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [30.7 kB]
+[  201.865110] cloud-init[1336]: Get:54 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.2 kB]
+[  201.902290] cloud-init[1336]: Get:55 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [13.1 kB]
+[  202.015282] cloud-init[1336]: Get:56 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1480 B]
+[  202.052585] cloud-init[1336]: Get:57 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+[  202.339797] cloud-init[1336]: Get:58 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 c-n-f Metadata [116 B]
+[  202.379055] cloud-init[1336]: Get:59 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [780 B]
+[  202.666612] cloud-init[1336]: Get:60 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [372 B]
+[  202.779683] cloud-init[1336]: Get:61 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+[  202.892180] cloud-init[1336]: Get:62 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 c-n-f Metadata [116 B]
+         Starting [0;1;39mpackagekit.service[0m - PackageKit Daemon...
+[[0;32m  OK  [0m] Started [0;1;39mpackagekit.service[0m - PackageKit Daemon.
+[  208.252251] cloud-init[1336]: Fetched 44.1 MB in 1min 13s (605 kB/s)
+[  208.879756] cloud-init[1336]: Reading package lists...
+[  208.914868] cloud-init[1336]: info: The user `ubuntu' is already a member of `lxd'.
+[  208.940291] cloud-init[1336]: info: The user `ubuntu' is already a member of `adm'.
+         Stopping [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Stopped [0;1;39mdocker.service[0m - Docker Application Container Engine.
+         Starting [0;1;39mdocker.service[0m - Docker Application Container Engine...
+[[0;32m  OK  [0m] Started [0;1;39mdocker.service[0m - Docker Application Container Engine.
+[[0;32m  OK  [0m] Created slice [0;1;39muser-1000.slice[0m - User Slice of UID 1000.
+         Starting [0;1;39muser-runtime-dir@1000.ser���[0mRuntime Directory /run/user/1000...
+[[0;32m  OK  [0m] Finished [0;1;39muser-runtime-dir@1000.ser���[0mr Runtime Directory /run/user/1000.
+         Starting [0;1;39muser@1000.service[0m - User Manager for UID 1000...
+[[0;32m  OK  [0m] Started [0;1;39muser@1000.service[0m - User Manager for UID 1000.
+[[0;32m  OK  [0m] Started [0;1;39msession-c2.scope[0m - Session c2 of User ubuntu.
+[[0;32m  OK  [0m] Started [0;1;39msession-c3.scope[0m - Session c3 of User ubuntu.
+[  209.813125] cloud-init[1336]: #!/usr/bin/env bash
+[  209.813897] cloud-init[1336]: timestamp=$(date +%s)
+[  209.814484] cloud-init[1336]: # Disable exit-on-error, due the need for error handling.
+[  209.814758] cloud-init[1336]: set +e
+[  209.815371] cloud-init[1336]: jq -n \
+[  209.815658] cloud-init[1336]:   --arg workflow "$GITHUB_WORKFLOW" \
+[  209.815966] cloud-init[1336]:   --arg repository "$GITHUB_REPOSITORY" \
+[  209.816893] cloud-init[1336]:   --arg event "$GITHUB_EVENT_NAME" \
+[  209.817470] cloud-init[1336]:   --argjson timestamp "$timestamp" \
+[  209.817772] cloud-init[1336]:   --arg workflow_run_id "$GITHUB_RUN_ID" \
+[  209.818409] cloud-init[1336]:   '{
+[  209.818698] cloud-init[1336]:     "workflow": $workflow,
+[  209.819019] cloud-init[1336]:     "repository": $repository,
+[  209.819304] cloud-init[1336]:     "event": $event,
+[  209.819597] cloud-init[1336]:     "timestamp": $timestamp,
+[  209.819903] cloud-init[1336]:     "workflow_run_id": $workflow_run_id
+[  209.820212] cloud-init[1336]:   }' > "/home/ubuntu/metrics-exchange/pre-job-metrics.json" || true
+[  209.820497] cloud-init[1336]: if [[ -n "$DOCKERHUB_MIRROR" ]]; then
+[  209.820812] cloud-init[1336]:   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
+[  209.821121] cloud-init[1336]:   logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."
+[  209.821405] cloud-init[1336]:   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
+[  209.821699] cloud-init[1336]:   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
+[  209.822017] cloud-init[1336]: fi
+[[0;32m  OK  [0m] Started [0;1;39msession-c4.scope[0m - Session c4 of User ubuntu.
+[  211.928900] cloud-init[1336]: ��� Connected to GitHub
+[  212.835951] cloud-init[1336]: Current runner version: '2.331.0'
+[  212.836145] cloud-init[1336]: 2026-04-06 18:53:16Z: Listening for Jobs
+
+18:53:24 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-lta2  github-pr-1c08b-lxd  localhost/localhost  3.6.20   unsupported  18:53:24Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-cv3oq0ul           active      1  any-charm      latest/beta  133  no       
+test-cv3oq0ul                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-cv3oq0ul/0*  active    idle       0        10.222.216.204         
+test-cv3oq0ul/0*                         active    executing  1        10.222.216.176         (check-runners) 
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.222.216.204  juju-931d60-0  ubuntu@24.04  github-runner  Running
+1        started  10.222.216.176  juju-931d60-1  ubuntu@22.04  github-runner  Running
+
+18:53:24 INFO Juju error logs:
+
+machine-0: 18:45:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:45:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:46:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:46:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cv3oq0ul-0: 18:47:41 ERROR unit.test-cv3oq0ul/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 357, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cv3oq0ul-0: 18:47:42 ERROR unit.test-cv3oq0ul/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cv3oq0ul-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-1: 18:53:17 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.222.216.204:43996: use of closed network connection
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: websocket: close sent
+machine-0: 18:53:17 ERROR juju.worker.dependency "migration-inactive-flag" manifold worker returned unexpected error: watcher has been stopped (stopped)
+machine-0: 18:53:17 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 18:53:17 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+
+18:53:24 INFO Forgetting model main...
