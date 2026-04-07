@@ -1,0 +1,33 @@
+07:00:14 WARNING unexpected facade SSHServer received from the controller
+07:00:14 INFO Adding model github-pr-1c08b-lxd:test-charm-runner-5rzn on cloud localhost
+07:00:14 WARNING unexpected facade SSHServer received from the controller
+07:00:14 WARNING unexpected facade SSHSession received from the controller
+07:00:14 WARNING unexpected facade SSHTunneler received from the controller
+07:00:14 WARNING unexpected facade SecretsRevoker received from the controller
+07:00:14 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+07:00:17 INFO Deploying ch:amd64/noble/any-charm-133
+07:00:29 INFO Deploying local:jammy/github-runner-0
+07:00:29 INFO Waiting for model:
+  test-bip37gvs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bip37gvs/0 [allocating] waiting: waiting for machine
+07:01:00 INFO Waiting for model:
+  test-bip37gvs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bip37gvs/0 [idle] active: 
+07:01:30 INFO Waiting for model:
+  test-bip37gvs/0 [allocating] waiting: waiting for machine
+07:02:00 INFO Waiting for model:
+  test-bip37gvs/0 [allocating] waiting: waiting for machine
+07:02:30 INFO Waiting for model:
+  test-bip37gvs/0 [executing] maintenance: installing charm software
+07:03:07 INFO Waiting for model:
+  test-bip37gvs/0 [executing] maintenance: installing charm software
+07:09:03 INFO Wait for condition not met, sleeping 10
+07:09:16 INFO Wait for condition not met, sleeping 10
+07:09:29 INFO Wait for condition not met, sleeping 10
+07:09:42 INFO Wait for condition not met, sleeping 10
+07:09:55 INFO Wait for condition not met, sleeping 10
+07:10:08 INFO Wait for condition not met, sleeping 10
+07:10:21 INFO Wait for condition not met, sleeping 10
+07:10:34 INFO Wait for condition not met, sleeping 10
+07:10:47 INFO Wait for condition not met, sleeping 10
+07:11:00 INFO Wait for condition not met, sleeping 10

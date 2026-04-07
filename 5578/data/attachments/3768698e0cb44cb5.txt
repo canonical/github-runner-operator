@@ -1,0 +1,46 @@
+07:04:40 WARNING RPC: Connection closed, reconnecting
+07:04:40 ERROR RPC: Automatic reconnect failed
+07:04:41 INFO OpenStack servers: []
+07:04:41 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-fkkp  github-pr-1c08b-lxd  localhost/localhost  3.6.20   unsupported  07:04:41Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-qxmwfn4c           active      1  any-charm      latest/beta  133  no       
+test-qxmwfn4c                                  active    0/1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-qxmwfn4c/0*  active    idle   0        10.248.174.22          
+test-qxmwfn4c/0*                         unknown   lost   1        10.248.174.141         agent lost, see 'juju show-status-log test-qxmwfn4c/0'
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.248.174.22   juju-70e749-0  ubuntu@24.04  github-runner  Running
+1        started  10.248.174.141  juju-70e749-1  ubuntu@24.04  github-runner  Running
+
+07:04:41 INFO Juju error logs:
+
+machine-0: 06:59:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:59:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:01:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:01:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qxmwfn4c-0: 07:02:43 ERROR unit.test-qxmwfn4c/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 357, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qxmwfn4c-0: 07:02:44 ERROR unit.test-qxmwfn4c/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qxmwfn4c-0/charm/./src/charm.py", line 534, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:04:41 INFO Forgetting model main...
