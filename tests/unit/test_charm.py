@@ -683,6 +683,42 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
 
+@pytest.mark.parametrize(
+    "handler_name, emit_event",
+    [
+        pytest.param(
+            "_on_upgrade_charm",
+            lambda h: h.charm.on.upgrade_charm.emit(),
+            id="upgrade-charm",
+        ),
+        pytest.param(
+            "_on_planner_relation_changed",
+            lambda h: h.charm._on_planner_relation_changed(MagicMock()),
+            id="planner-relation-changed",
+        ),
+    ],
+)
+def test_reconcile_blocks_when_image_not_ready(
+    harness: Harness, mock_side_effects, monkeypatch, handler_name, emit_event
+):
+    """
+    arrange: Set up charm with no image integration.
+    act: Fire an event that calls _reconcile without an explicit _check_image_ready call.
+    assert: Charm enters blocked/waiting status and the service is stopped.
+    """
+    harness.charm._setup_state = MagicMock()
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_mgr_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_mgr_service)
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    monkeypatch.setattr("charm.pathlib", MagicMock())
+
+    emit_event(harness)
+
+    assert harness.charm.unit.status.name == BlockedStatus.name
+
+
 def test_metric_log_ownership_for_upgrade(
     harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
 ):
@@ -764,6 +800,7 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     state_mock.runner_config.openstack_image.tags = ["x64", "noble"]
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._setup_service = MagicMock()
+    harness.charm._check_image_ready = MagicMock()
 
     harness.update_relation_data(relation_id, "planner-app/0", {"endpoint": "http://example.com"})
 

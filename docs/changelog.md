@@ -2,9 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-03-31
+## 2026-04-07
 
 - Add GitHub App authentication support using Juju secrets for the private key, alongside the existing PAT-based authentication.
+
+## 2026-04-03
+
+- Fixed charm not entering blocked/waiting status when the image integration has no image available. Previously, some event handlers (`upgrade-charm`, `planner-relation-changed`, `planner-relation-broken`) would start the runner manager service without checking image readiness, causing the service to error with "No runner combinations configured."
 
 ## 2026-03-30
 
