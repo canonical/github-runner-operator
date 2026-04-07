@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-04-03
+
+- Fixed charm not entering blocked/waiting status when the image integration has no image available. Previously, some event handlers (`upgrade-charm`, `planner-relation-changed`, `planner-relation-broken`) would start the runner manager service without checking image readiness, causing the service to error with "No runner combinations configured."
+
 ## 2026-03-30
 
 - Fixed stale `systemd` service files left behind when a unit is removed from a co-located machine. The service is now disabled, the service file removed, and the unit data cleaned up on stop.
