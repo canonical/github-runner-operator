@@ -13,7 +13,12 @@ Store the App's PEM-encoded private key in a Juju secret:
 juju add-secret github-app-key private-key="$(cat /path/to/private-key.pem)"
 ```
 
-Note the secret ID from the output (e.g. `secret:abc123def`), then grant it to the charm and configure the App credentials:
+Note the secret ID from the output (e.g. `secret:abc123def`), then grant it to the charm and configure the App credentials.
+
+- `<APP_NAME>`: the Juju application name (e.g. `github-runner`)
+- `<CLIENT_ID>`: the Client ID shown on the App's settings page (Settings > Developer settings > GitHub Apps)
+- `<INSTALLATION_ID>`: the numeric ID in the URL when viewing the App installation on the organization or user account (e.g. `https://github.com/organizations/<ORG>/settings/installations/<INSTALLATION_ID>`)
+- `<SECRET_ID>`: the Juju secret ID from the previous step
 
 ```shell
 juju grant-secret github-app-key <APP_NAME>
