@@ -19,8 +19,8 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_e2e"]'
-      # INTEGRATION_TOKEN, OS_PASSWORD, GITHUB_APP_INSTALLATION_ID (base slot),
-      # GITHUB_APP_PRIVATE_KEY (slot 11) are passed through
+      # INTEGRATION_TOKEN, OS_PASSWORD, GITHUB_APP_INSTALLATION_ID,
+      # GITHUB_APP_PRIVATE_KEY are passed through
       # INTEGRATION_TEST_SECRET_ENV_VALUE_<N> mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
         -m=openstack \
