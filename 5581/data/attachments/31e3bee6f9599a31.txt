@@ -1,0 +1,197 @@
+07:00:08 WARNING unexpected facade SSHServer received from the controller
+07:00:08 INFO Adding model github-pr-c059a-lxd:test-multi-unit-same-machine-74zk on cloud localhost
+07:00:08 WARNING unexpected facade SSHServer received from the controller
+07:00:08 WARNING unexpected facade SSHSession received from the controller
+07:00:08 WARNING unexpected facade SSHTunneler received from the controller
+07:00:08 WARNING unexpected facade SecretsRevoker received from the controller
+07:00:08 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+07:00:12 INFO Deploying ch:amd64/noble/any-charm-140
+07:00:25 INFO Deploying local:jammy/github-runner-0
+07:00:25 INFO Waiting for model:
+  test-msrdxchv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-msrdxchv/0 [allocating] waiting: waiting for machine
+07:00:55 INFO Waiting for model:
+  test-msrdxchv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-msrdxchv/0 [allocating] waiting: waiting for machine
+07:01:25 INFO Waiting for model:
+  test-msrdxchv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-msrdxchv/0 [allocating] waiting: waiting for machine
+07:01:55 INFO Waiting for model:
+  test-msrdxchv/0 [allocating] waiting: waiting for machine
+07:02:26 INFO Waiting for model:
+  test-msrdxchv/0 [allocating] waiting: agent initialising
+07:02:56 INFO Waiting for model:
+  test-msrdxchv/0 [executing] maintenance: installing charm software
+07:03:27 INFO Waiting for model:
+  test-msrdxchv/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-msrdxchv/0 [idle] active:
+07:03:55 INFO Waiting for model:
+  test-msrdxchv/0 [idle] active: 
+  test-msrdxchv/1 [allocating] waiting: installing agent
+07:04:25 INFO Waiting for model:
+  test-msrdxchv/0 [idle] active: 
+  test-msrdxchv/1 [executing] maintenance: installing charm software
+07:04:55 INFO Waiting for model:
+  test-msrdxchv/0 [idle] active: 
+  test-msrdxchv/1 [idle] active: 
+07:05:04 INFO File content of /var/lib/github-runner-manager/test-msrdxchv-0/http_port: 55555
+07:05:05 ERROR Task tmp raised an exception: watcher was stopped
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/_jasyncio.py", line 36, in _task_result_exp_handler
+    task.result()
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/facade.py", line 482, in wrapper
+    reply = await f(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/_client3.py", line 126, in Next
+    reply = await self.rpc(msg)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/overrides.py", line 116, in rpc
+    result = await self.connection.rpc(msg, encoder=TypeEncoder)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 597, in rpc
+    raise errors.JujuAPIError(result)
+juju.errors.JujuAPIError: watcher was stopped
+07:05:05 WARNING Watcher: watcher stopped, restarting
+07:05:05 WARNING RPC: Connection closed, reconnecting
+07:05:05 WARNING Receiver: Connection closed, reconnecting
+07:05:05 ERROR Task exception was never retrieved
+future: <Task finished name='Task-3120' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Wed, 08 Apr 2026 07:05:05 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+07:05:05 ERROR RPC: Automatic reconnect failed
+07:05:05 WARNING RPC: Connection closed, reconnecting
+07:05:05 ERROR RPC: Automatic reconnect failed
+07:05:05 WARNING RPC: Connection closed, reconnecting
+07:05:05 ERROR RPC: Automatic reconnect failed
+07:05:06 INFO OpenStack servers: []
+07:05:06 ERROR Task exception was never retrieved
+future: <Task finished name='Task-3122' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(503, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Wed, 08 Apr 2026 07:05:05 GMT'), ('Content-Length', '31')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 503
+07:05:10 INFO Model status:
+
+Model                              Controller           Cloud/Region         Version  SLA          Timestamp
+test-multi-unit-same-machine-74zk  github-pr-c059a-lxd  localhost/localhost  3.6.20   unsupported  07:05:10Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-msrdxchv           active      1  any-charm      latest/beta  140  no       
+test-msrdxchv                                  active    0/2  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-msrdxchv/0*  active    idle   0        10.178.247.231         
+test-msrdxchv/0*                         unknown   lost   1        10.178.247.153         agent lost, see 'juju show-status-log test-msrdxchv/0'
+test-msrdxchv/1                          unknown   lost   1        10.178.247.153         agent lost, see 'juju show-status-log test-msrdxchv/1'
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.178.247.231  juju-069e32-0  ubuntu@24.04  github-runner  Running
+1        down     10.178.247.153  juju-069e32-1  ubuntu@22.04  github-runner  Running
+
+07:05:10 INFO Juju error logs:
+
+machine-0: 07:01:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:01:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:02:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:02:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-msrdxchv-0: 07:03:19 ERROR unit.test-msrdxchv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 357, in _on_config_changed
+    self._reconcile(state)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 390, in _reconcile
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 529, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-msrdxchv-0: 07:03:20 ERROR unit.test-msrdxchv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-msrdxchv-0/charm/./src/charm.py", line 529, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-msrdxchv-1: 07:04:26 ERROR unit.test-msrdxchv/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 357, in _on_config_changed
+    self._reconcile(state)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 390, in _reconcile
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 529, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-msrdxchv-1: 07:04:27 ERROR unit.test-msrdxchv/1.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 320, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-msrdxchv-1/charm/./src/charm.py", line 529, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:05:10 INFO Forgetting model main...
