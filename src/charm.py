@@ -387,8 +387,6 @@ class GithubRunnerCharm(CharmBase):
             ]
             flush_runners = True
 
-        self._check_image_ready()
-
         self._reconcile(state)
 
         if flush_runners:
@@ -430,6 +428,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             state: The charm state.
         """
+        self._check_image_ready()
         self._setup_service(state)
         self._update_planner_flavor(state)
 
@@ -516,8 +515,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 
@@ -539,8 +536,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         self.unit.status = MaintenanceStatus("Update image for runners")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 
