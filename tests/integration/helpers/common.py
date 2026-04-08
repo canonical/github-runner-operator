@@ -160,9 +160,11 @@ async def deploy_github_runner_charm(
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
     }
 
+    secret_name = None
     if github_config.has_app_auth:
+        secret_name = f"{app_name}-gh-app-key"
         secret_id = await model.add_secret(
-            name=f"{app_name}-gh-app-key",
+            name=secret_name,
             data_args=[f"private-key={github_config.private_key}"],
         )
         default_config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = github_config.app_client_id
@@ -183,6 +185,9 @@ async def deploy_github_runner_charm(
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),
     )
+
+    if secret_name:
+        await model.grant_secret(secret_name, app_name)
 
     if wait_idle:
         await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
