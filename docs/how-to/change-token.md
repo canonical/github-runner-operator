@@ -3,7 +3,7 @@
 The charm supports two authentication methods: a GitHub App or a personal access token (PAT).
 See [Authentication and token scopes](https://charmhub.io/github-runner/docs/reference-token-scopes) for required permissions.
 
-## GitHub App authentication
+## Authenticate using a GitHub App
 
 Create a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) with the required permissions and install it on the target organization or repository.
 
@@ -29,7 +29,7 @@ To rotate the private key, update the Juju secret:
 juju update-secret github-app-key private-key="$(cat /path/to/new-private-key.pem)"
 ```
 
-## Personal access token authentication
+## Authenticate using a personal access token
 
 Create a new [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
