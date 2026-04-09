@@ -1,0 +1,30 @@
+07:17:56 INFO OpenStack servers: []
+07:17:56 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-vi15  github-pr-c059a-lxd  localhost/localhost  3.6.21   unsupported  07:17:56Z
+
+App                                   Version  Status   Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-zdasja9k           active       1  any-charm      latest/beta  140  no       
+test-zdasja9k                                  waiting    0/1  github-runner                 0  no       agent initialising
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-zdasja9k/0*  active    idle        0        10.232.187.215         
+test-zdasja9k/0*                         waiting   allocating  1        10.232.187.29          agent initialising
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.232.187.215  juju-f6716f-0  ubuntu@24.04  github-runner  Running
+1        started  10.232.187.29   juju-f6716f-1  ubuntu@24.04  github-runner  Running
+
+07:17:56 INFO Juju error logs:
+
+machine-0: 07:16:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:16:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:16:51 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.232.187.215:42622: use of closed network connection
+machine-0: 07:16:51 ERROR juju.worker.dependency "migration-minion" manifold worker returned unexpected error: watcher has been stopped (stopped)
+machine-0: 07:16:51 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 07:16:51 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-1: 07:17:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:17:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+07:17:56 INFO Forgetting model main...
