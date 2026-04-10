@@ -143,19 +143,16 @@ config:
         https://charmhub.io/github-runner/docs/how-to-change-token.
     github-app-client-id:
       type: string
-      default: ""
       description: >-
         GitHub App Client ID used instead of `token` for GitHub API authentication.
         This is the Client ID shown on the GitHub App settings page (e.g. "Iv23liXXXXXX").
         The legacy numeric App ID is also accepted.
     github-app-installation-id:
       type: int
-      default: 0
       description: >-
         GitHub App installation ID used instead of `token` for GitHub API authentication.
     github-app-private-key-secret-id:
       type: string
-      default: ""
       description: >-
         Juju secret ID containing the PEM-encoded GitHub App private key under the `private-key`
         field. Use this together with `github-app-client-id` and `github-app-installation-id`.

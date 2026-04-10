@@ -168,12 +168,12 @@ class GithubConfig:
 
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME)) or None
-        app_client_id = cast(str, charm.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME, "")) or None
+        app_client_id = cast(str, charm.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)) or None
         installation_id = (
-            cast(int, charm.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME, 0)) or None
+            cast(int, charm.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME)) or None
         )
         private_key_secret_id = (
-            cast(str, charm.config.get(GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "")) or None
+            cast(str, charm.config.get(GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME)) or None
         )
 
         if not path_str:

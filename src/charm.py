@@ -205,15 +205,15 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
-            github_app_client_id=self.config[
+            github_app_client_id=self.config.get(
                 GITHUB_APP_CLIENT_ID_CONFIG_NAME
-            ],  # for detecting changes
-            github_app_installation_id=self.config[
+            ),  # for detecting changes
+            github_app_installation_id=self.config.get(
                 GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
-            ],  # for detecting changes
-            github_app_private_key_secret_id=self.config[
+            ),  # for detecting changes
+            github_app_private_key_secret_id=self.config.get(
                 GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
-            ],  # for detecting changes
+            ),  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             allow_external_contributor=self.config[
                 ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
@@ -353,24 +353,24 @@ class GithubRunnerCharm(CharmBase):
         if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_runners = True
-        if self.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] != self._stored.github_app_client_id:
-            self._stored.github_app_client_id = self.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME]
+        if self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME) != self._stored.github_app_client_id:
+            self._stored.github_app_client_id = self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)
             flush_runners = True
         if (
-            self.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME]
+            self.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME)
             != self._stored.github_app_installation_id
         ):
-            self._stored.github_app_installation_id = self.config[
+            self._stored.github_app_installation_id = self.config.get(
                 GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
-            ]
+            )
             flush_runners = True
         if (
-            self.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME]
+            self.config.get(GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME)
             != self._stored.github_app_private_key_secret_id
         ):
-            self._stored.github_app_private_key_secret_id = self.config[
+            self._stored.github_app_private_key_secret_id = self.config.get(
                 GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
-            ]
+            )
             flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
