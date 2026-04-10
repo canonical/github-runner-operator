@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-04-10
+
+- Removed `KillMode=process` from the runner manager systemd service, restoring the default `control-group` kill mode. This ensures all child processes in the service's cgroup are properly terminated when the service stops, preventing orphaned runner processes.
+
 ## 2026-04-03
 
 - Fixed charm not entering blocked/waiting status when the image integration has no image available. Previously, some event handlers (`upgrade-charm`, `planner-relation-changed`, `planner-relation-broken`) would start the runner manager service without checking image readiness, causing the service to error with "No runner combinations configured."
