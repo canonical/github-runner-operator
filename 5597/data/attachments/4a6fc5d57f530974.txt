@@ -1,0 +1,26 @@
+18:39:40 INFO OpenStack servers: []
+18:39:40 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-81qz  github-pr-c059a-lxd  localhost/localhost  3.6.21   unsupported  18:39:40Z
+
+App                                   Version  Status       Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-e6dj4lna           active           1  any-charm      latest/beta  140  no       
+test-e6dj4lna                                  maintenance      1  github-runner                 0  no       installing charm software
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-e6dj4lna/0*  active       idle       0        10.172.36.224          
+test-e6dj4lna/0                          maintenance  executing  1        10.172.36.49           (install) installing charm software
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.172.36.224  juju-836abc-0  ubuntu@24.04  github-runner  Running
+1        down     10.172.36.49   juju-836abc-1  ubuntu@22.04  github-runner  Running
+
+18:39:40 INFO Juju error logs:
+
+machine-0: 18:37:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:37:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:38:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:38:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+18:39:40 INFO Forgetting model main...
