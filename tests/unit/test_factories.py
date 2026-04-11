@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import dataclasses
 
+import pytest
 from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
@@ -13,6 +14,7 @@ from github_runner_manager.configuration.base import (
     SupportServiceConfig,
 )
 from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
     GitHubConfiguration,
     GitHubOrg,
     GitHubTokenAuth,
@@ -145,3 +147,51 @@ def test_create_application_configuration_with_planner(
 
     assert str(app_configuration.planner_url) == "http://planner.example.com"
     assert app_configuration.planner_token == "planner-token-value"
+
+
+@pytest.mark.parametrize(
+    "charm_config_updates, expected_auth",
+    [
+        pytest.param(
+            {
+                "token": "githubtoken",
+                "app_client_id": None,
+                "installation_id": None,
+                "private_key": None,
+            },
+            GitHubTokenAuth(token="githubtoken"),
+            id="token-auth",
+        ),
+        pytest.param(
+            {
+                "token": None,
+                "app_client_id": "Iv23liExample",
+                "installation_id": 456,
+                "private_key": "private-key",
+            },
+            GitHubAppAuth(
+                app_client_id="Iv23liExample", installation_id=456, private_key="private-key"
+            ),
+            id="app-auth",
+        ),
+    ],
+)
+def test_create_application_configuration_with_github_auth(
+    complete_charm_state: charm_state.CharmState,
+    charm_config_updates: dict,
+    expected_auth,
+):
+    """
+    arrange: Prepare CharmState with either PAT or GitHub App auth.
+    act: Call create_application_configuration.
+    assert: The resulting GitHubConfiguration contains the right auth model.
+    """
+    state = dataclasses.replace(
+        complete_charm_state,
+        charm_config=complete_charm_state.charm_config.copy(update=charm_config_updates),
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
+    assert app_configuration.github_config
+    assert app_configuration.github_config.auth == expected_auth
