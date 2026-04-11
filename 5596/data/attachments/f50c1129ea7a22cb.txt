@@ -1,0 +1,38 @@
+06:51:22 WARNING unexpected facade SSHServer received from the controller
+06:51:22 INFO cli: juju debug-log --model github-pr-c059a-lxd:test-charm-no-runner-i00c --limit 1000
+06:51:23 INFO OpenStack servers: []
+06:51:23 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-i00c  github-pr-c059a-lxd  localhost/localhost  3.6.21   unsupported  06:51:23Z
+
+App                                   Version  Status   Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-w0c1mqqd           active       1  any-charm      latest/beta  140  no       
+test-w0c1mqqd                                  waiting    0/1  github-runner                 0  no       agent initialising
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-w0c1mqqd/0*  active    idle        0        10.98.13.147           
+test-w0c1mqqd/0*                         waiting   allocating  1        10.98.13.117           agent initialising
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.98.13.147  juju-9e6b5a-0  ubuntu@24.04  github-runner  Running
+1        started  10.98.13.117  juju-9e6b5a-1  ubuntu@22.04  github-runner  Running
+
+06:51:23 INFO Juju error logs:
+
+machine-0: 06:49:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:49:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:50:22 ERROR juju.worker.dependency "log-sender" manifold worker returned unexpected error: sending log message: websocket: close 1006 (abnormal closure): unexpected EOF: set tcp 10.98.13.147:56992: use of closed network connection
+machine-0: 06:50:22 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 06:50:22 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 06:50:22 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 06:50:22 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 06:50:26 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [508563] "machine-0" cannot open api: unable to connect to API: dial tcp 10.98.13.155:17070: connect: connection refused
+machine-0: 06:50:31 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [508563] "machine-0" cannot open api: unable to connect to API: dial tcp 10.98.13.155:17070: connect: connection refused
+machine-0: 06:50:36 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [508563] "machine-0" cannot open api: unable to connect to API: dial tcp 10.98.13.155:17070: connect: connection refused
+machine-0: 06:50:43 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [508563] "machine-0" cannot open api: unable to connect to API: dial tcp 10.98.13.155:17070: connect: connection refused
+machine-0: 06:50:50 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [508563] "machine-0" cannot open api: unable to connect to API: dial tcp 10.98.13.155:17070: connect: connection refused
+machine-1: 06:51:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:51:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+06:51:23 INFO Forgetting model main...

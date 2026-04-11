@@ -1,0 +1,71 @@
+07:01:13 INFO OpenStack servers: []
+07:01:13 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-9b8h  github-pr-c059a-lxd  localhost/localhost  3.6.21   unsupported  07:01:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-cjxwqu19           active      1  any-charm      latest/beta  140  no       
+test-cjxwqu19                                  error       1  github-runner                 0  no       hook failed: "install"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-cjxwqu19/0*  active    idle   0        10.68.66.161           
+test-cjxwqu19/0*                         error     idle   1        10.68.66.137           hook failed: "install"
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.68.66.161  juju-984319-0  ubuntu@24.04  github-runner  Running
+1        started  10.68.66.137  juju-984319-1  ubuntu@22.04  github-runner  Running
+
+07:01:13 INFO Juju error logs:
+
+machine-0: 06:51:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:51:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:52:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:52:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cjxwqu19-0: 07:01:09 ERROR unit.test-cjxwqu19/0.juju-log Command /usr/bin/apt-get install -qy run-one python3-pip python3-venv failed with code 100: b'E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/r/rpcsvc-proto/rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb  Connection timed out [IP: 10.151.41.7 3128]\nE: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libn/libnsl/libnsl-dev_1.3.0-2build2_amd64.deb  Connection timed out [IP: 10.151.41.7 3128]\nE: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?\n'
+unit-test-cjxwqu19-0: 07:01:09 ERROR unit.test-cjxwqu19/0.juju-log Failed to install charm dependencies
+unit-test-cjxwqu19-0: 07:01:09 ERROR unit.test-cjxwqu19/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/apt-get', 'install', '-qy', 'run-one', 'python3-pip', 'python3-venv']' returned non-zero exit status 100.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 648, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/__init__.py", line 360, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/_main.py", line 507, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/_main.py", line 491, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/_main.py", line 426, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/_main.py", line 470, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/framework.py", line 337, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/framework.py", line 910, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/venv/ops/framework.py", line 1028, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 315, in _on_install
+    self._common_install_code()
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 286, in _common_install_code
+    self._install_deps()
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 455, in _install_deps
+    self._apt_install(["run-one", "python3-pip", "python3-venv"])
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/./src/charm.py", line 471, in _apt_install
+    execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+  File "/var/lib/juju/agents/unit-test-cjxwqu19-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/apt-get install -qy run-one python3-pip python3-venv] failed with return code 100: b'E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/r/rpcsvc-proto/rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb  Connection timed out [IP: 10.151.41.7 3128]\nE: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libn/libnsl/libnsl-dev_1.3.0-2build2_amd64.deb  Connection timed out [IP: 10.151.41.7 3128]\nE: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?\n'
+unit-test-cjxwqu19-0: 07:01:09 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+07:01:13 INFO Forgetting model main...
