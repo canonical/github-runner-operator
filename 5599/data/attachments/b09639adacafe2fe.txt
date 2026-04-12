@@ -1,0 +1,37 @@
+18:38:48 WARNING unexpected facade SSHServer received from the controller
+18:38:48 INFO Adding model github-pr-a204e-lxd:test-charm-runner-ue9y on cloud localhost
+18:38:48 WARNING unexpected facade SSHServer received from the controller
+18:38:48 WARNING unexpected facade SSHSession received from the controller
+18:38:48 WARNING unexpected facade SSHTunneler received from the controller
+18:38:48 WARNING unexpected facade SecretsRevoker received from the controller
+18:38:48 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+18:38:50 INFO Deploying ch:amd64/noble/any-charm-140
+18:39:02 INFO Deploying local:jammy/github-runner-0
+18:39:03 INFO Waiting for model:
+  test-cyl8fs41/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cyl8fs41/0 [allocating] waiting: waiting for machine
+18:39:33 INFO Waiting for model:
+  test-cyl8fs41/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cyl8fs41/0 [idle] active: 
+18:40:03 INFO Waiting for model:
+  test-cyl8fs41/0 [allocating] waiting: waiting for machine
+18:40:34 INFO Waiting for model:
+  test-cyl8fs41/0 [allocating] waiting: waiting for machine
+18:41:04 INFO Waiting for model:
+  test-cyl8fs41/0 [allocating] waiting: agent initialising
+18:41:35 INFO Waiting for model:
+  test-cyl8fs41/0 [executing] maintenance: installing charm software
+18:42:05 INFO Waiting for model:
+  test-cyl8fs41/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cyl8fs41/0 [idle] active:
+18:47:48 INFO Wait for condition not met, sleeping 10
+18:48:01 INFO Wait for condition not met, sleeping 10
+18:48:13 INFO Wait for condition not met, sleeping 10
+18:48:25 INFO Wait for condition not met, sleeping 10
+18:48:37 INFO Wait for condition not met, sleeping 10
+18:48:49 INFO Wait for condition not met, sleeping 10
+18:49:02 INFO Wait for condition not met, sleeping 10
+18:49:14 INFO Wait for condition not met, sleeping 10
+18:49:26 INFO Wait for condition not met, sleeping 10
+18:49:40 INFO Wait for condition not met, sleeping 10
+18:49:52 INFO Wait for condition not met, sleeping 10
