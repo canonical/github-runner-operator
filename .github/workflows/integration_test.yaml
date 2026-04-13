@@ -17,6 +17,7 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      bootstrap-options: "--agent-version=3.6.20"
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
@@ -43,6 +44,7 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      bootstrap-options: "--agent-version=3.6.20"
       charmcraft-channel: latest/stable
       juju-channel: 3.6/stable
       pre-run-script: tests/integration/setup-integration-tests.sh
@@ -74,6 +76,7 @@ jobs:
       matrix:
         base: ["22.04", "24.04"]
     with:
+      bootstrap-options: "--agent-version=3.6.20"
       charmcraft-channel: latest/stable
       juju-channel: 3.6/stable
       provider: lxd

@@ -15,6 +15,7 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      bootstrap-options: "--agent-version=3.6.20"
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
