@@ -166,3 +166,21 @@ def pytest_addoption(parser: Parser):
         help="The DockerHub mirror URL to use for testing.",
         default=None,
     )
+    parser.addoption(
+        "--github-app-client-id",
+        action="store",
+        help="The GitHub App Client ID for GitHub App authentication testing.",
+        default=os.environ.get("GITHUB_APP_CLIENT_ID"),
+    )
+    parser.addoption(
+        "--github-app-installation-id",
+        action="store",
+        help="The GitHub App installation ID for GitHub App authentication testing.",
+        default=os.environ.get("GITHUB_APP_INSTALLATION_ID"),
+    )
+    parser.addoption(
+        "--github-app-private-key",
+        action="store",
+        help="The GitHub App PEM-encoded private key for GitHub App authentication testing.",
+        default=os.environ.get("GITHUB_APP_PRIVATE_KEY"),
+    )

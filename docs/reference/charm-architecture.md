@@ -90,7 +90,7 @@ would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 ## GitHub API usage
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
+The charm requires GitHub API credentials — either a [GitHub App](https://charmhub.io/github-runner/docs/reference-token-scopes) or a [personal access token](https://charmhub.io/github-runner/configure#token). These credentials are used for:
 
 - Requesting self-hosted runner registration tokens
 - Requesting a list of runner applications
@@ -98,7 +98,7 @@ The charm requires a GitHub personal access token for the [`token` configuration
 - Deleting self-hosted runners
 
 Note that the GitHub API uses a [rate-limiting mechanism](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28). When this is reached, the charm may not be able to perform the necessary operations and may go into
-BlockedStatus. The charm will automatically recover from this state once the rate limit is reset, but using a different token with a higher rate limit may be a better solution depending on your deployment requirements.
+BlockedStatus. The charm will automatically recover from this state once the rate limit is reset.
 
 <!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## External contributor access control

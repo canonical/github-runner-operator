@@ -1,5 +1,12 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
+
+"""End-to-end integration test.
+
+Uses GitHub App authentication when credentials are provided, falling back to PAT.
+"""
+
+import logging
 from typing import AsyncIterator
 
 import pytest
@@ -9,11 +16,33 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from tests.integration.conftest import GitHubConfig
 from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
     dispatch_workflow,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
+
+
+@pytest.fixture(scope="module")
+def github_config(pytestconfig: pytest.Config, github_config: GitHubConfig) -> GitHubConfig:
+    """Override github_config to prefer GitHub App auth when credentials are available."""
+    app_client_id = pytestconfig.getoption("--github-app-client-id") or None
+    installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
+    private_key = pytestconfig.getoption("--github-app-private-key") or None
+
+    if not all((app_client_id, installation_id_raw, private_key)):
+        logging.info("Using PAT authentication for e2e test")
+        return github_config
+
+    logging.info("Using GitHub App authentication for e2e test")
+    return GitHubConfig(
+        token=github_config.token,
+        path=github_config.path,
+        app_client_id=app_client_id,
+        installation_id=int(installation_id_raw),  # type: ignore[arg-type]
+        private_key=private_key,
+    )
 
 
 @pytest_asyncio.fixture(scope="function", name="app")

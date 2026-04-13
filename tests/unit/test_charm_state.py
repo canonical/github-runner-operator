@@ -21,6 +21,9 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
@@ -84,6 +87,114 @@ def test_github_config_from_charm_invalid_token():
     arrange: Create a mock CharmBase instance with an empty token configuration.
     act: Call from_charm method with the mock CharmBase instance.
     assert: Verify that the method raises CharmConfigInvalidError.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_token_only():
+    """
+    arrange: Charm configured with PAT only.
+    act: Call from_charm.
+    assert: GithubConfig contains PAT fields only.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token == mock_charm.config[TOKEN_CONFIG_NAME]
+    assert result.app_client_id is None
+    assert result.installation_id is None
+    assert result.private_key is None
+
+
+def test_github_config_from_charm_app_only():
+    """
+    arrange: Charm configured with GitHub App auth only.
+    act: Call from_charm.
+    assert: GithubConfig resolves the private key secret content.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = "Iv23liExample"
+    mock_charm.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = 456
+    mock_charm.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = "secret:abc123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"private-key": "private-key-pem"}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token is None
+    assert result.app_client_id == "Iv23liExample"
+    assert result.installation_id == 456
+    assert result.private_key == "private-key-pem"
+    mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
+
+
+@pytest.mark.parametrize(
+    "config_updates",
+    [
+        pytest.param(
+            {
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME: "Iv23liExample",
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME: 456,
+            },
+            id="missing-private-key-secret-id",
+        ),
+        pytest.param(
+            {
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME: "Iv23liExample",
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: "secret:abc123",
+            },
+            id="missing-installation-id",
+        ),
+        pytest.param(
+            {
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME: 456,
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: "secret:abc123",
+            },
+            id="missing-app-id",
+        ),
+    ],
+)
+def test_github_config_from_charm_partial_app_fields(config_updates: dict[str, object]):
+    """
+    arrange: Charm configured with only part of the GitHub App fields.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config.update(config_updates)
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_rejects_both_pat_and_app_auth():
+    """
+    arrange: Charm configured with both PAT and GitHub App auth.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = "Iv23liExample"
+    mock_charm.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = 456
+    mock_charm.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = "secret:abc123"
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_rejects_missing_auth():
+    """
+    arrange: Charm configured with neither PAT nor GitHub App auth.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[TOKEN_CONFIG_NAME] = ""

@@ -26,7 +26,6 @@ from github import Github, GithubException
 from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.github_client import GithubClient
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
@@ -68,12 +67,24 @@ class GitHubConfig:
     """GitHub configuration for tests.
 
     Attributes:
-        token: GitHub personal access token.
+        token: GitHub personal access token (always required for test harness API calls).
         path: GitHub repository path in <owner>/<repo> or <user>/<repo> format.
+        app_client_id: GitHub App Client ID (optional, for App auth testing).
+        installation_id: GitHub App installation ID (optional, for App auth testing).
+        private_key: GitHub App PEM-encoded private key (optional, for App auth testing).
+        has_app_auth: Whether GitHub App authentication credentials are configured.
     """
 
     token: str
     path: str
+    app_client_id: str | None = None
+    installation_id: int | None = None
+    private_key: str | None = None
+
+    @property
+    def has_app_auth(self) -> bool:
+        """Whether GitHub App authentication credentials are configured."""
+        return all((self.app_client_id, self.installation_id, self.private_key))
 
 
 @dataclass
@@ -464,11 +475,6 @@ async def model(ops_test: OpsTest, proxy_config: ProxyConfig) -> Model:
         }
     )
     return ops_test.model
-
-
-@pytest.fixture(scope="module")
-def runner_manager_github_client(github_config: GitHubConfig) -> GithubClient:
-    return GithubClient(token=github_config.token)
 
 
 @pytest_asyncio.fixture(scope="module")

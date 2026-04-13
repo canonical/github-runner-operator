@@ -5,6 +5,9 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2026-04-10
 
 - Removed `KillMode=process` from the runner manager systemd service, restoring the default `control-group` kill mode. This ensures all child processes in the service's cgroup are properly terminated when the service stops, preventing orphaned runner processes.
+## 2026-04-07
+
+- Add GitHub App authentication support using Juju secrets for the private key, alongside the existing PAT-based authentication.
 
 ## 2026-04-03
 

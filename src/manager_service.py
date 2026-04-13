@@ -6,6 +6,7 @@
 import fcntl
 import json
 import logging
+import os
 import shutil
 import socket
 import textwrap
@@ -359,8 +360,11 @@ def _setup_config_file(config: ApplicationConfiguration, unit_name: str) -> Path
     unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
     unit_dir.mkdir(parents=True, exist_ok=True)
     path = unit_dir / "config.yaml"
-    with open(path, "w+", encoding="utf-8") as file:
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    os.fchmod(fd, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as file:
         yaml_safe_dump(config_dict, file)
+    shutil.chown(path, user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP)
     return path
 
 

@@ -29,6 +29,9 @@ from juju.unit import Unit
 from charm import UPGRADE_MSG
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
@@ -152,11 +155,23 @@ async def deploy_github_runner_charm(
 
     default_config = {
         PATH_CONFIG_NAME: github_config.path,
-        TOKEN_CONFIG_NAME: github_config.token,
         BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
     }
+
+    secret_name = None
+    if github_config.has_app_auth:
+        secret_name = f"{app_name}-gh-app-key"
+        secret_id = await model.add_secret(
+            name=secret_name,
+            data_args=[f"private-key={github_config.private_key}"],
+        )
+        default_config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = github_config.app_client_id
+        default_config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = github_config.installation_id
+        default_config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = secret_id
+    else:
+        default_config[TOKEN_CONFIG_NAME] = github_config.token
 
     if config:
         default_config.update(config)
@@ -170,6 +185,9 @@ async def deploy_github_runner_charm(
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),
     )
+
+    if secret_name:
+        await model.grant_secret(secret_name, app_name)
 
     if wait_idle:
         await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
