@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-04-13
+
+- Fixed Juju secrets not picking up new revisions. The charm now uses `refresh=True` when reading secret contents, ensuring it always retrieves the latest revision instead of a cached one.
+
 ## 2026-04-07
 
 - Add GitHub App authentication support using Juju secrets for the private key, alongside the existing PAT-based authentication.

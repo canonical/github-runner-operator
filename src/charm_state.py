@@ -205,7 +205,7 @@ class GithubConfig:
         if private_key_secret_id:
             try:
                 private_key_secret = charm.model.get_secret(id=private_key_secret_id)
-                private_key = private_key_secret.get_content().get("private-key")
+                private_key = private_key_secret.get_content(refresh=True).get("private-key")
             except SecretNotFoundError as exc:
                 raise CharmConfigInvalidError(
                     f"GitHub App private key secret {private_key_secret_id} not found"
@@ -808,8 +808,7 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
         return None
     try:
         token_secret = charm.model.get_secret(id=token_secret_id)
-        # no need for refresh - there shouldn't be multiple secret revisions
-        token_content = token_secret.get_content()
+        token_content = token_secret.get_content(refresh=True)
         token = token_content.get("token")
         if not token:
             logger.warning(
