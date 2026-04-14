@@ -1,0 +1,47 @@
+07:06:59 INFO OpenStack servers: []
+07:06:59 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-bie2  github-pr-a204e-lxd  localhost/localhost  3.6.21   unsupported  07:06:59Z
+
+App                                   Version  Status   Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-iud3g54p           active       1  any-charm      latest/beta  140  no       
+test-iud3g54p                                  waiting    0/1  github-runner                 0  no       waiting for machine
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-iud3g54p/0*  active    idle        0        10.20.175.94           
+test-iud3g54p/0                          waiting   allocating  1        10.20.175.174          waiting for machine
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.20.175.94   juju-f83931-0  ubuntu@24.04  github-runner  Running
+1        pending  10.20.175.174  juju-f83931-1  ubuntu@24.04  github-runner  Running
+
+07:06:59 INFO Juju error logs:
+
+machine-0: 07:05:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:05:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:05:54 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: api connection broken unexpectedly
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:54 ERROR juju.api.watcher error trying to stop watcher: connection is shutdown before send: connection is shut down
+machine-0: 07:05:58 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [d421fd] "machine-0" cannot open api: unable to connect to API: dial tcp 10.20.175.102:17070: connect: connection refused
+machine-0: 07:06:03 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [d421fd] "machine-0" cannot open api: unable to connect to API: dial tcp 10.20.175.102:17070: connect: connection refused
+machine-0: 07:06:08 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [d421fd] "machine-0" cannot open api: unable to connect to API: dial tcp 10.20.175.102:17070: connect: connection refused
+machine-0: 07:06:15 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [d421fd] "machine-0" cannot open api: unable to connect to API: dial tcp 10.20.175.102:17070: connect: connection refused
+machine-0: 07:06:23 ERROR juju.worker.dependency "api-caller" manifold worker returned unexpected error: [d421fd] "machine-0" cannot open api: unable to connect to API: dial tcp 10.20.175.102:17070: connect: connection refused
+
+07:06:59 INFO Forgetting model main...

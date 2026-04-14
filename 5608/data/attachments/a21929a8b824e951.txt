@@ -1,0 +1,226 @@
+07:04:49 WARNING unexpected facade SSHServer received from the controller
+07:04:49 INFO Adding model github-pr-a204e-lxd:test-charm-fork-path-change-b35v on cloud localhost
+07:04:49 WARNING unexpected facade SSHServer received from the controller
+07:04:49 WARNING unexpected facade SSHSession received from the controller
+07:04:49 WARNING unexpected facade SSHTunneler received from the controller
+07:04:49 WARNING unexpected facade SecretsRevoker received from the controller
+07:04:49 WARNING unexpected facade SSHServer received from the controller
+07:04:49 INFO Deploying fake image builder via any-charm for image ID bbff14d0-0db4-4eee-b368-8b83483508e5
+07:04:52 INFO Deploying ch:amd64/noble/any-charm-140
+07:05:08 INFO Deploying local:jammy/github-runner-0
+07:05:08 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:05:38 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:06:09 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg41qsvm/0 [idle] active: 
+07:06:39 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:07:09 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:07:39 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:08:10 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: waiting for machine
+07:08:47 INFO Waiting for model:
+  test-jg41qsvm/0 [allocating] waiting: agent initialising
+07:09:14 ERROR Task tmp raised an exception: watcher was stopped
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/_jasyncio.py", line 36, in _task_result_exp_handler
+    task.result()
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/facade.py", line 482, in wrapper
+    reply = await f(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/_client3.py", line 126, in Next
+    reply = await self.rpc(msg)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/overrides.py", line 116, in rpc
+    result = await self.connection.rpc(msg, encoder=TypeEncoder)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 597, in rpc
+    raise errors.JujuAPIError(result)
+juju.errors.JujuAPIError: watcher was stopped
+07:09:14 WARNING Watcher: watcher stopped, restarting
+07:09:14 WARNING RPC: Connection closed, reconnecting
+07:09:14 WARNING Receiver: Connection closed, reconnecting
+07:09:14 WARNING Receiver: Connection closed, reconnecting
+07:09:14 ERROR Task exception was never retrieved
+future: <Task finished name='Task-2669' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidMessage('did not receive a valid HTTP response')>
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 120, in read_response
+    status_line = await read_line(stream)
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 200, in read_line
+    raise EOFError("line without CRLF")
+EOFError: line without CRLF
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 134, in read_http_response
+    status_code, reason, headers = await read_response(self.reader)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 122, in read_response
+    raise EOFError("connection closed while reading HTTP status line") from exc
+EOFError: connection closed while reading HTTP status line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 316, in handshake
+    status_code, response_headers = await self.read_http_response()
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 136, in read_http_response
+    raise InvalidMessage("did not receive a valid HTTP response") from exc
+websockets.legacy.exceptions.InvalidMessage: did not receive a valid HTTP response
+07:09:14 ERROR Task exception was never retrieved
+future: <Task finished name='Task-2667' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidStatusCode(404, Headers([('Content-Type', 'text/plain; charset=utf-8'), ('X-Content-Type-Options', 'nosniff'), ('Date', 'Tue, 14 Apr 2026 07:09:14 GMT'), ('Content-Length', '19'), ('Connection', 'close')]))>
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 322, in handshake
+    raise InvalidStatusCode(status_code, response_headers)
+websockets.legacy.exceptions.InvalidStatusCode: server rejected WebSocket connection: HTTP 404
+07:09:14 ERROR RPC: Automatic reconnect failed
+07:09:14 ERROR Task exception was never retrieved
+future: <Task finished name='Task-2670' coro=<Connection.reconnect() done, defined at /home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py:697> exception=InvalidMessage('did not receive a valid HTTP response')>
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 120, in read_response
+    status_line = await read_line(stream)
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 200, in read_line
+    raise EOFError("line without CRLF")
+EOFError: line without CRLF
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 134, in read_http_response
+    status_code, reason, headers = await read_response(self.reader)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/http.py", line 122, in read_response
+    raise EOFError("connection closed while reading HTTP status line") from exc
+EOFError: connection closed while reading HTTP status line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 709, in reconnect
+    res = await connector(
+          ^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 800, in _connect_with_login
+    await self._connect(endpoints)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 743, in _connect
+    result = await task
+             ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 631, in _wait_for_one
+    return f.result()  # May raise f.exception().
+           ^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/futures.py", line 203, in result
+    raise self._exception.with_traceback(self._exception_tb)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 314, in __step_run_and_handle_result
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 729, in _try_endpoint
+    return await self._open(endpoint, cacert)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/juju/client/connection.py", line 333, in _open
+    await websockets.connect(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 656, in __await_impl__
+    await protocol.handshake(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 316, in handshake
+    status_code, response_headers = await self.read_http_response()
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.12/site-packages/websockets/legacy/client.py", line 136, in read_http_response
+    raise InvalidMessage("did not receive a valid HTTP response") from exc
+websockets.legacy.exceptions.InvalidMessage: did not receive a valid HTTP response
+07:09:14 WARNING RPC: Connection closed, reconnecting
+07:09:14 ERROR RPC: Automatic reconnect failed
+07:09:15 INFO OpenStack servers: []
+07:09:15 INFO cli: juju debug-log --model github-pr-a204e-lxd:test-charm-fork-path-change-b35v --limit 1000
+07:09:19 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-b35v  github-pr-a204e-lxd  localhost/localhost  3.6.21   unsupported  07:09:19Z
+
+App                                   Version  Status       Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-jg41qsvm           active         0/1  any-charm      latest/beta  140  no       
+test-jg41qsvm                                  maintenance      1  github-runner                 0  no       installing charm software
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-jg41qsvm/0*  unknown      lost       0        10.189.79.79           agent lost, see 'juju show-status-log github-runner-image-builder-jg41qsvm/0'
+test-jg41qsvm/0*                         maintenance  executing  1        10.189.79.104          (install) installing charm software
+
+Machine  State  Address        Inst id        Base          AZ             Message
+0        down   10.189.79.79   juju-993b57-0  ubuntu@24.04  github-runner  Running
+1        down   10.189.79.104  juju-993b57-1  ubuntu@22.04  github-runner  Running
+
+07:09:20 INFO Juju error logs:
+
+machine-0: 07:05:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:05:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:08:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:08:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+07:09:20 INFO Forgetting model main...
