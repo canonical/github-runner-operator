@@ -159,7 +159,7 @@ class OpenStackInstanceHelper:
         self.juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
         if num_runners == 0:
             return
-        wait_for_runner_ready(self.juju, app_name)
+        wait_for_runner_ready(self.juju, app_name, num_runners=num_runners)
 
     def get_runner_names(self, unit_name: str) -> list[str]:
         """Get the name of all the runners in the unit.

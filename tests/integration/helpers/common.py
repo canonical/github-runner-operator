@@ -86,12 +86,15 @@ def run_in_unit(
     return code, stdout, stderr
 
 
-def wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
-    """Wait until a runner is ready.
+def wait_for_runner_ready(
+    juju: jubilant.Juju, app_name: str, num_runners: int = 1
+) -> None:
+    """Wait until the expected number of runners are online.
 
     Args:
         juju: Jubilant Juju instance.
         app_name: The GitHub Runner Charm application name.
+        num_runners: The minimum number of runners expected online.
     """
     unit_name = f"{app_name}/0"
     for attempt in range(20):
@@ -102,12 +105,12 @@ def wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
             time.sleep(30)
             continue
 
-        if result.status == "completed" and int(result.results["online"]) >= 1:
+        if result.status == "completed" and int(result.results["online"]) >= num_runners:
             break
 
         time.sleep(30)
     else:
-        assert False, "Timeout waiting for runner to be ready"
+        assert False, f"Timeout waiting for {num_runners} runner(s) to be ready"
 
 
 def deploy_github_runner_charm(
