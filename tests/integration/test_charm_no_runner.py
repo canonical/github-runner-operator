@@ -4,45 +4,35 @@
 """Integration tests for github-runner charm with no runner."""
 
 import json
-import logging
 
 import jubilant
 import pytest
-from juju.application import Application
-from juju.model import Model
-from ops import ActiveStatus
-
-logger = logging.getLogger(__name__)
 
 pytestmark = pytest.mark.openstack
 
 
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_check_runners_no_runners(app_no_runner: Application) -> None:
+def test_check_runners_no_runners(juju: jubilant.Juju, app_no_runner: str) -> None:
     """
     arrange: A working application with no runners.
     act: Run check-runners action.
     assert: Action returns result with no runner.
     """
-    unit = app_no_runner.units[0]
+    unit_name = f"{app_no_runner}/0"
 
-    action = await unit.run_action("check-runners")
-    await action.wait()
+    result = juju.run(unit_name, "check-runners")
 
-    assert action.results["online"] == "0"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-    assert action.results["runners"] == "()"
+    assert result.results["online"] == "0"
+    assert result.results["offline"] == "0"
+    assert result.results["unknown"] == "0"
+    assert result.results["runners"] == "()"
 
 
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_planner_integration(
-    model: Model,
+def test_planner_integration(
     juju: jubilant.Juju,
-    app_no_runner: Application,
-    mock_planner_app: Application,
+    app_no_runner: str,
+    mock_planner_app: str,
     planner_token_secret_name: str,
 ) -> None:
     """
@@ -54,21 +44,20 @@ async def test_planner_integration(
         1. The charm writes its flavor data to the planner relation app data bag.
         2. The charm returns to active status after the relation is removed.
     """
-    await model.grant_secret(planner_token_secret_name, app_no_runner.name)
-    await model.grant_secret(planner_token_secret_name, mock_planner_app.name)
+    juju.grant_secret(planner_token_secret_name, app_no_runner)
+    juju.grant_secret(planner_token_secret_name, mock_planner_app)
 
-    await model.relate(f"{app_no_runner.name}:planner", mock_planner_app.name)
-    await model.wait_for_idle(
-        apps=[app_no_runner.name, mock_planner_app.name],
-        status=ActiveStatus.name,
-        idle_period=30,
+    juju.integrate(f"{app_no_runner}:planner", mock_planner_app)
+    juju.wait(
+        lambda status: jubilant.all_active(status, app_no_runner, mock_planner_app),
+        delay=10,
         timeout=10 * 60,
     )
 
     # Verify the runner charm wrote flavor data to the relation app databag.
     # Query from the planner unit's perspective so "application-data" shows the
     # remote (runner) app's data rather than the planner's own app data.
-    planner_unit_name = mock_planner_app.units[0].name
+    planner_unit_name = f"{mock_planner_app}/0"
     raw = juju.cli("show-unit", planner_unit_name, "--format", "json")
     unit_data = json.loads(raw)[planner_unit_name]
     planner_rel = next(
@@ -77,14 +66,17 @@ async def test_planner_integration(
         if rel["endpoint"] == "provide-github-runner-planner-v0"
     )
     app_data = planner_rel["application-data"]
-    assert app_data["flavor"] == app_no_runner.name
+    assert app_data["flavor"] == app_no_runner
     assert app_data["platform"] == "github"
     assert app_data["priority"] == "50"
     assert app_data["minimum-pressure"] == "0"
 
-    await mock_planner_app.remove_relation(
-        "provide-github-runner-planner-v0", f"{app_no_runner.name}:planner"
+    juju.remove_relation(
+        f"{mock_planner_app}:provide-github-runner-planner-v0",
+        f"{app_no_runner}:planner",
     )
-    await model.wait_for_idle(
-        apps=[app_no_runner.name], status=ActiveStatus.name, idle_period=30, timeout=10 * 60
+    juju.wait(
+        lambda status: jubilant.all_active(status, app_no_runner),
+        delay=10,
+        timeout=10 * 60,
     )

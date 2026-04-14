@@ -10,18 +10,16 @@ those ports, and expose metrics endpoints.
 
 from pathlib import Path
 
+import jubilant
 import pytest
-from juju.application import Application
-from juju.model import Model
 
 from tests.integration.helpers.common import get_file_content, run_in_unit
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_multi_unit_same_machine_co_location(
-    model: Model, app_openstack_runner: Application
+def test_multi_unit_same_machine_co_location(
+    juju: jubilant.Juju, app_openstack_runner: str
 ) -> None:
     """
     arrange: Have one deployed unit, find its machine, and add a second unit to the same machine.
@@ -31,60 +29,60 @@ async def test_multi_unit_same_machine_co_location(
     app = app_openstack_runner
 
     # Get machine id of the first unit
-    unit0 = app.units[0]
-    status = await model.get_status([app.name])
-    app_status = status.applications.get(app.name)
+    status = juju.status()
+    app_status = status.apps.get(app)
     assert app_status is not None, "Application status missing for deployed app"
-    unit0_status = app_status.units.get(unit0.name)
-    assert unit0_status is not None, "Unit status missing for first unit"
-    machine_id = unit0_status.machine
+    unit_names = list(app_status.units.keys())
+    assert len(unit_names) >= 1, "Expected at least one unit"
+    u0_name = unit_names[0]
+    machine_id = app_status.units[u0_name].machine
 
     # Add a second unit to the same machine and wait for it to settle
-    await app.add_unit(to=machine_id)
-    await model.wait_for_idle(apps=[app.name], status="active", timeout=20 * 60)
+    juju.add_unit(app, to=machine_id)
+    juju.wait(
+        lambda status: jubilant.all_active(status, app),
+        timeout=20 * 60,
+    )
 
-    # Refresh units reference (juju lib may not auto-refresh the list)
-    status = await model.get_status([app.name])
-    app_status = status.applications.get(app.name)
+    # Refresh units reference
+    status = juju.status()
+    app_status = status.apps.get(app)
     assert app_status is not None, "Application status missing after add-unit"
     unit_names = list(app_status.units.keys())
     assert len(unit_names) >= 2, "Expected at least two units after add-unit"
 
     # Work with the first two units
     u0_name, u1_name = unit_names[0], unit_names[1]
-    unit_map = {u.name: u for u in app.units}
-    unit0 = unit_map[u0_name]
-    unit1 = unit_map[u1_name]
 
     # Instance service names
     inst0 = f"github-runner-manager@{u0_name.replace('/', '-')}"
     inst1 = f"github-runner-manager@{u1_name.replace('/', '-')}"
 
     # Services should be active
-    rc, out, err = await run_in_unit(unit0, f"systemctl is-active {inst0}.service")
+    rc, out, err = run_in_unit(juju, u0_name, f"systemctl is-active {inst0}.service")
     assert rc == 0 and (out or "").strip() == "active", f"{inst0} not active: {out} {err}"
-    rc, out, err = await run_in_unit(unit1, f"systemctl is-active {inst1}.service")
+    rc, out, err = run_in_unit(juju, u1_name, f"systemctl is-active {inst1}.service")
     assert rc == 0 and (out or "").strip() == "active", f"{inst1} not active: {out} {err}"
 
     # Read persisted ports for each unit
     port_file0 = Path(f"/var/lib/github-runner-manager/{u0_name.replace('/', '-')}/http_port")
     port_file1 = Path(f"/var/lib/github-runner-manager/{u1_name.replace('/', '-')}/http_port")
-    p0 = int((await get_file_content(unit0, port_file0)))
-    p1 = int((await get_file_content(unit1, port_file1)))
+    p0 = int(get_file_content(juju, u0_name, port_file0))
+    p1 = int(get_file_content(juju, u1_name, port_file1))
     assert p0 != p1, f"Expected distinct ports, got {p0} and {p1}"
 
     # Metrics endpoint should respond on both ports
-    rc, _, err = await run_in_unit(unit0, f"curl -sf http://127.0.0.1:{p0}/metrics | head -n 1")
+    rc, _, err = run_in_unit(juju, u0_name, f"curl -sf http://127.0.0.1:{p0}/metrics | head -n 1")
     assert rc == 0, f"Metrics not responding on unit0:{p0} - {err}"
-    rc, _, err = await run_in_unit(unit1, f"curl -sf http://127.0.0.1:{p1}/metrics | head -n 1")
+    rc, _, err = run_in_unit(juju, u1_name, f"curl -sf http://127.0.0.1:{p1}/metrics | head -n 1")
     assert rc == 0, f"Metrics not responding on unit1:{p1} - {err}"
 
     # Restart instance service on unit1 and verify persisted port doesn't change
-    before = int((await get_file_content(unit1, port_file1)))
-    await run_in_unit(unit1, f"sudo systemctl restart {inst1}.service", assert_on_failure=True)
-    rc, out, err = await run_in_unit(unit1, f"systemctl is-active {inst1}.service")
+    before = int(get_file_content(juju, u1_name, port_file1))
+    run_in_unit(juju, u1_name, f"sudo systemctl restart {inst1}.service", assert_on_failure=True)
+    rc, out, err = run_in_unit(juju, u1_name, f"systemctl is-active {inst1}.service")
     assert (
         rc == 0 and (out or "").strip() == "active"
     ), f"{inst1} not active after restart: {out} {err}"
-    after = int((await get_file_content(unit1, port_file1)))
+    after = int(get_file_content(juju, u1_name, port_file1))
     assert before == after, "Persisted port changed after restart"

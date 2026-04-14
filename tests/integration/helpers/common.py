@@ -3,17 +3,15 @@
 
 """Utilities for integration test."""
 
-import inspect
 import logging
 import pathlib
 import time
-import typing
-from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
-from typing import TYPE_CHECKING, Awaitable, Callable, ParamSpec, TypeVar, cast
+from typing import TYPE_CHECKING, Callable, Generator, TypeVar, cast
 
 import github
+import jubilant
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -21,10 +19,6 @@ from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
 from github_runner_manager.metrics.events import get_metrics_log_path
-from juju.action import Action
-from juju.application import Application
-from juju.model import Model
-from juju.unit import Unit
 
 from charm import UPGRADE_MSG
 from charm_state import (
@@ -38,7 +32,6 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
 )
 from manager_service import _get_log_file_path
-from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
@@ -49,22 +42,30 @@ DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml
 
 # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
 # https://github.com/canonical/snapd/pull/16131
-DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 20 * 1024, "virt-type": "virtual-machine"}
+DEFAULT_RUNNER_CONSTRAINTS = {
+    "root-disk": "20480M",
+    "virt-type": "virtual-machine",
+}
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    # Import only for type checking to avoid pytest fixture side effects at runtime
     from tests.integration.conftest import GitHubConfig, ProxyConfig
 
 
-async def run_in_unit(
-    unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
-) -> tuple[int, str | None, str | None]:
+def run_in_unit(
+    juju: jubilant.Juju,
+    unit_name: str,
+    command: str,
+    timeout: float | None = None,
+    assert_on_failure: bool = False,
+    assert_msg: str = "",
+) -> tuple[int, str, str]:
     """Run command in juju unit.
 
     Args:
-        unit: Juju unit to execute the command in.
+        juju: Jubilant Juju instance.
+        unit_name: Name of the unit (e.g. "app/0").
         command: Command to execute.
         timeout: Amount of time to wait for the execution.
         assert_on_failure: Whether to assert on command failure.
@@ -73,14 +74,11 @@ async def run_in_unit(
     Returns:
         Tuple of return code, stdout and stderr.
     """
-    action: Action = await unit.run(command, timeout)
-
-    await action.wait()
-    code, stdout, stderr = (
-        action.results["return-code"],
-        action.results.get("stdout", None),
-        action.results.get("stderr", None),
-    )
+    try:
+        task = juju.exec(command, unit=unit_name, wait=timeout)
+        code, stdout, stderr = task.return_code, task.stdout, task.stderr
+    except jubilant.TaskError as e:
+        code, stdout, stderr = e.task.return_code, e.task.stdout, e.task.stderr
 
     if assert_on_failure:
         assert code == 0, f"{assert_msg}: {stderr}"
@@ -88,29 +86,27 @@ async def run_in_unit(
     return code, stdout, stderr
 
 
-async def wait_for_runner_ready(app: Application) -> None:
+def wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
     """Wait until a runner is ready.
 
-    Uses the first unit found in the application.
-
     Args:
-        app: The GitHub Runner Charm application.
+        juju: Jubilant Juju instance.
+        app_name: The GitHub Runner Charm application name.
     """
-    # Wait for 10 minutes for the runner to come online.
+    unit_name = f"{app_name}/0"
     for _ in range(20):
-        action = await app.units[0].run_action("check-runners")
-        await action.wait()
+        result = juju.run(unit_name, "check-runners")
 
-        if action.status == "completed" and int(action.results["online"]) >= 1:
+        if result.status == "completed" and int(result.results["online"]) >= 1:
             break
 
-        await sleep(30)
+        time.sleep(30)
     else:
         assert False, "Timeout waiting for runner to be ready"
 
 
-async def deploy_github_runner_charm(
-    model: Model,
+def deploy_github_runner_charm(
+    juju: jubilant.Juju,
     charm_file: str,
     app_name: str,
     github_config: "GitHubConfig",
@@ -121,12 +117,11 @@ async def deploy_github_runner_charm(
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
     base: str = "ubuntu@22.04",
-    series: str = "jammy",
-) -> Application:
+) -> str:
     """Deploy github-runner charm.
 
     Args:
-        model: Model to deploy the charm.
+        juju: Jubilant Juju instance.
         charm_file: Path of the charm file to deploy.
         app_name: Application name for the deployment.
         github_config: Object providing GitHub settings with attributes `path` and `token`.
@@ -139,13 +134,12 @@ async def deploy_github_runner_charm(
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
         base: Charm base to deploy on (e.g., ubuntu@22.04).
-        series: Ubuntu series corresponding to the base (e.g., jammy).
 
     Returns:
-        The charm application that was deployed.
+        The application name that was deployed.
     """
-    await model.set_config(
-        {
+    juju.model_config(
+        values={
             "juju-http-proxy": proxy_config.http_proxy,
             "juju-https-proxy": proxy_config.https_proxy,
             "juju-no-proxy": proxy_config.no_proxy,
@@ -153,7 +147,7 @@ async def deploy_github_runner_charm(
         }
     )
 
-    default_config = {
+    default_config: dict[str, str | int | bool] = {
         PATH_CONFIG_NAME: github_config.path,
         BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
@@ -162,37 +156,42 @@ async def deploy_github_runner_charm(
 
     secret_name = None
     if github_config.has_app_auth:
+        assert github_config.app_client_id is not None
+        assert github_config.installation_id is not None
+        assert github_config.private_key is not None
         secret_name = f"{app_name}-gh-app-key"
-        secret_id = await model.add_secret(
+        secret_id = juju.add_secret(
             name=secret_name,
-            data_args=[f"private-key={github_config.private_key}"],
+            content={"private-key": github_config.private_key},
         )
         default_config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = github_config.app_client_id
         default_config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = github_config.installation_id
-        default_config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = secret_id
+        default_config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = str(secret_id)
     else:
         default_config[TOKEN_CONFIG_NAME] = github_config.token
 
     if config:
         default_config.update(config)
 
-    application = await model.deploy(
+    juju.deploy(
         charm_file,
-        application_name=app_name,
+        app=app_name,
         base=base,
-        series=series,
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),
     )
 
     if secret_name:
-        await model.grant_secret(secret_name, app_name)
+        juju.grant_secret(secret_name, app_name)
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
+        juju.wait(
+            lambda status: jubilant.all_active(status, app_name),
+            timeout=60 * 20,
+        )
 
-    return application
+    return app_name
 
 
 def get_job_logs(job: WorkflowJob) -> str:
@@ -214,7 +213,7 @@ def get_workflow_runs(
     workflow: Workflow,
     runner_name: str,
     branch: Branch | None = None,
-) -> typing.Generator[WorkflowRun, None, None]:
+) -> Generator[WorkflowRun, None, None]:
     """Fetch the latest matching runs of a workflow for a given runner.
 
     Args:
@@ -286,8 +285,8 @@ def _has_workflow_run_status(run: WorkflowRun, status: str) -> bool:
     return False
 
 
-async def dispatch_workflow(
-    app: Application | None,
+def dispatch_workflow(
+    app_name: str | None,
     branch: Branch,
     github_repository: Repository,
     conclusion: str,
@@ -300,7 +299,7 @@ async def dispatch_workflow(
     The function assumes that there is only one runner running in the unit.
 
     Args:
-        app: The charm to dispatch the workflow for.
+        app_name: The charm application name to dispatch the workflow for.
         branch: The branch to dispatch the workflow on.
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
@@ -314,8 +313,8 @@ async def dispatch_workflow(
         The workflow run.
     """
     if dispatch_input is None:
-        assert app is not None, "If dispatch input not given the app cannot be None."
-        dispatch_input = {"runner": app.name}
+        assert app_name is not None, "If dispatch input not given the app_name cannot be None."
+        dispatch_input = {"runner": app_name}
 
     start_time = datetime.now(timezone.utc)
 
@@ -325,7 +324,7 @@ async def dispatch_workflow(
     assert workflow.create_dispatch(branch, dispatch_input), "Failed to create workflow"
 
     # There is a very small chance of selecting a run not created by the dispatch above.
-    run: WorkflowRun | None = await wait_for(
+    run: WorkflowRun | None = wait_for(
         partial(_get_latest_run, workflow=workflow, start_time=start_time, branch=branch),
         timeout=10 * 60,
     )
@@ -333,33 +332,33 @@ async def dispatch_workflow(
 
     if not wait:
         return run
-    await wait_for_completion(run=run, conclusion=conclusion)
+    wait_for_completion(run=run, conclusion=conclusion)
 
     return run
 
 
-async def wait_for_status(run: WorkflowRun, status: str) -> None:
+def wait_for_status(run: WorkflowRun, status: str) -> None:
     """Wait for the workflow run to start.
 
     Args:
         run: The workflow run to wait for.
         status: The expected status of the run.
     """
-    await wait_for(
+    wait_for(
         partial(_has_workflow_run_status, run=run, status=status),
         timeout=60 * 5,
         check_interval=10,
     )
 
 
-async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
+def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
     """Wait for the workflow run to complete.
 
     Args:
         run: The workflow run to wait for.
         conclusion: The expected conclusion of the run.
     """
-    await wait_for(
+    wait_for(
         partial(_is_workflow_run_complete, run=run),
         timeout=60 * 30,
         check_interval=60,
@@ -370,13 +369,11 @@ async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
     ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
 
 
-P = ParamSpec("P")
 R = TypeVar("R")
-S = Callable[P, R] | Callable[P, Awaitable[R]]
 
 
-async def wait_for(
-    func: S,
+def wait_for(
+    func: Callable[[], R],
     timeout: int | float = 300,
     check_interval: int = 10,
 ) -> R:
@@ -393,79 +390,78 @@ async def wait_for(
     Returns:
         The result of the function if any.
     """
-
-    async def _call() -> R:
-        """Await the function if it returns an awaitable, otherwise cast and return."""
-        result = func()
-        if inspect.isawaitable(result):
-            return await cast(Awaitable, result)
-        return cast(R, result)
-
     deadline = time.time() + timeout
     while time.time() < deadline:
-        if result := await _call():
+        result = func()
+        if cast(bool, result):
             return result
         logger.info("Wait for condition not met, sleeping %s", check_interval)
         time.sleep(check_interval)
 
     # final check before raising TimeoutError.
-    if result := await _call():
+    result = func()
+    if cast(bool, result):
         return result
     raise TimeoutError()
 
 
-async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
+def is_upgrade_charm_event_emitted(juju: jubilant.Juju, unit_name: str) -> bool:
     """Check if the upgrade_charm event is emitted.
 
     This is to ensure false positives from only waiting for ACTIVE status.
 
     Args:
-        unit: The unit to check for upgrade charm event.
+        juju: Jubilant Juju instance.
+        unit_name: The unit name to check for upgrade charm event.
 
     Returns:
         bool: True if the event is emitted, False otherwise.
     """
-    unit_name_without_slash = unit.name.replace("/", "-")
+    unit_name_without_slash = unit_name.replace("/", "-")
     juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
-    ret_code, stdout, stderr = await run_in_unit(
-        unit=unit, command=f"cat {juju_unit_log_file} | grep '{UPGRADE_MSG}'"
+    ret_code, stdout, stderr = run_in_unit(
+        juju=juju, unit_name=unit_name, command=f"cat {juju_unit_log_file} | grep '{UPGRADE_MSG}'"
     )
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
     return stdout is not None and UPGRADE_MSG in stdout
 
 
-async def get_file_content(unit: Unit, filepath: pathlib.Path) -> str:
+def get_file_content(juju: jubilant.Juju, unit_name: str, filepath: pathlib.Path) -> str:
     """Retrieve the file content in the unit.
 
     Args:
-        unit: The unit to retrieve the file content from.
+        juju: Jubilant Juju instance.
+        unit_name: The unit name to retrieve the file content from.
         filepath: The path of the file to retrieve.
 
     Returns:
         The file content
     """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
+    retcode, stdout, stderr = run_in_unit(
+        juju=juju,
+        unit_name=unit_name,
         command=f"if [ -f {filepath} ]; then cat {filepath}; else echo ''; fi",
     )
     assert retcode == 0, f"Failed to get content of {filepath}: {stdout} {stderr}"
-    assert stdout is not None, f"Failed to get content of {filepath}, no stdout message"
+    assert stdout, f"Failed to get content of {filepath}, no stdout message"
     logging.info("File content of %s: %s", filepath, stdout)
     return stdout.strip()
 
 
-async def get_github_runner_manager_service_log(unit: Unit) -> str:
+def get_github_runner_manager_service_log(juju: jubilant.Juju, unit_name: str) -> str:
     """Get the logs of github-runner-manager service.
 
     Args:
-        unit: The unit to get the logs from.
+        juju: Jubilant Juju instance.
+        unit_name: The unit name to get the logs from.
 
     Returns:
         The logs.
     """
-    log_file_path = _get_log_file_path(unit.name)
-    return_code, stdout, stderr = await run_in_unit(
-        unit,
+    log_file_path = _get_log_file_path(unit_name)
+    return_code, stdout, stderr = run_in_unit(
+        juju,
+        unit_name,
         f"cat {log_file_path}",
         timeout=60,
         assert_on_failure=True,
@@ -473,22 +469,24 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
     )
 
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
-    assert stdout is not None
+    assert stdout
     return stdout
 
 
-async def get_github_runner_metrics_log(unit: Unit) -> str:
+def get_github_runner_metrics_log(juju: jubilant.Juju, unit_name: str) -> str:
     """Get the github-runner-manager metric logs.
 
     Args:
-        unit: The unit to get the logs from.
+        juju: Jubilant Juju instance.
+        unit_name: The unit name to get the logs from.
 
     Returns:
         Runner metrics logs.
     """
     log_file_path = get_metrics_log_path()
-    _, stdout, stderr = await run_in_unit(
-        unit,
+    _, stdout, stderr = run_in_unit(
+        juju,
+        unit_name,
         f"cat {log_file_path}",
         timeout=60,
         assert_on_failure=False,
