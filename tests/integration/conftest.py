@@ -456,7 +456,7 @@ def openstack_connection_fixture(
 def juju(
     request: pytest.FixtureRequest,
     proxy_config: ProxyConfig,
-) -> Generator[jubilant.Juju, None]:
+) -> Generator[jubilant.Juju, None, None]:
     """Pytest fixture that creates a temporary Juju model for integration tests."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
     with jubilant.temp_model(keep=keep_models) as j:
