@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 import yaml
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
+from github_runner_manager.configuration.base import OtelCollectorConfig
 from github_runner_manager.configuration.github import (
     GitHubAppAuth,
     GitHubAuth,
@@ -67,6 +68,7 @@ USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
 RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME = "runner-manager-log-level"
+OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME = "otel-collector-endpoint"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -784,6 +786,32 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
         )
     return ssh_debug_connections
 
+def _build_otel_collector_config_from_charm(charm: CharmBase) -> OtelCollectorConfig | None:
+    """Initialize the OtelCollectorConfig from charm configuration.
+
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        OtelCollectorConfig if endpoint config is set; otherwise None.
+    """
+    endpoint = cast(str, charm.config.get(OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME, ""))
+    if not endpoint:
+        return None
+
+    parsed_endpoint = urlsplit(f"//{endpoint}")
+    if not parsed_endpoint.hostname or parsed_endpoint.port is None:
+        raise CharmConfigInvalidError(
+            f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
+        )
+
+    if parsed_endpoint.username or parsed_endpoint.password or parsed_endpoint.path:
+        raise CharmConfigInvalidError(
+            f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
+        )
+
+    return OtelCollectorConfig(host=parsed_endpoint.hostname, port=parsed_endpoint.port)
+
 
 def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
     """Initialize planner endpoint and token from relation data.
@@ -851,6 +879,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     charm_config: CharmConfig
     runner_config: OpenstackRunnerConfig
     ssh_debug_connections: list[SSHDebugConnection]
+    otel_collector_config: OtelCollectorConfig | None
     planner_config: PlannerConfig | None
 
     @classmethod
@@ -869,6 +898,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
         ]
+        state_dict["otel_collector_config"] = json.loads(state_dict["otel_collector_config"].json()) if state_dict["otel_collector_config"] else None
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
@@ -921,6 +951,12 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        try:
+            otel_collector_config = _build_otel_collector_config_from_charm(charm)
+        except (ValidationError, ValueError) as exc:
+            logger.error("Invalid OpenTelemetry collector config: %s.", exc)
+            raise CharmConfigInvalidError("Invalid OpenTelemetry collector config") from exc
+
         planner_config = _build_planner_config_from_charm(charm)
 
         state = cls(
@@ -930,6 +966,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             charm_config=charm_config,
             runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
+            otel_collector_config=otel_collector_config,
             planner_config=planner_config,
         )
 

@@ -175,6 +175,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
             dockerhub_mirror=service_config.dockerhub_mirror or "",
             ssh_debug_info=ssh_debug_info,
             tmate_server_proxy=runner_http_proxy,
+            otel_collector_endpoint=(
+                f"{service_config.otel_collector_config.host}:{service_config.otel_collector_config.port}"
+                if service_config.otel_collector_config else ""
+            ),
         )
         pre_job_contents_dict = {
             "issue_metrics": True,
