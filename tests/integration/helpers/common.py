@@ -94,8 +94,13 @@ def wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
         app_name: The GitHub Runner Charm application name.
     """
     unit_name = f"{app_name}/0"
-    for _ in range(20):
-        result = juju.run(unit_name, "check-runners")
+    for attempt in range(20):
+        try:
+            result = juju.run(unit_name, "check-runners")
+        except (jubilant.CLIError, TimeoutError):
+            logger.info("check-runners failed (attempt %d), retrying...", attempt)
+            time.sleep(30)
+            continue
 
         if result.status == "completed" and int(result.results["online"]) >= 1:
             break

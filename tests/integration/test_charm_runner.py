@@ -39,7 +39,10 @@ def app_fixture(
 
     def _no_runners() -> bool:
         """Check that no runners are active."""
-        result = juju.run(unit_name, "check-runners")
+        try:
+            result = juju.run(unit_name, "check-runners")
+        except (jubilant.CLIError, TimeoutError):
+            return False
         return (
             result.status == "completed"
             and result.results["online"] == "0"

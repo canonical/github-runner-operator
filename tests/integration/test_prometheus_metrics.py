@@ -183,7 +183,7 @@ def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
     for attempt in range(20):
         try:
             result = juju.run(unit, "check-runners")
-        except TimeoutError:
+        except (jubilant.CLIError, TimeoutError):
             logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
             time.sleep(30)
             continue
@@ -200,7 +200,7 @@ def _wait_for_no_runners(juju: jubilant.Juju, app_name: str) -> None:
     for attempt in range(20):
         try:
             result = juju.run(unit, "check-runners")
-        except TimeoutError:
+        except (jubilant.CLIError, TimeoutError):
             logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
             time.sleep(30)
             continue
