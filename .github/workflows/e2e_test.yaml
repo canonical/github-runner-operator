@@ -17,7 +17,7 @@ jobs:
     with:
       juju-channel: 3.6/stable
       provider: lxd
-      test-tox-env: integration-juju3.6
+      test-tox-env: integration
       modules: '["test_e2e"]'
       # INTEGRATION_TOKEN, OS_PASSWORD, GITHUB_APP_INSTALLATION_ID,
       # GITHUB_APP_PRIVATE_KEY are passed through
