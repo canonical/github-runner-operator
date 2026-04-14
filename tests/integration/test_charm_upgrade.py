@@ -56,8 +56,8 @@ def test_charm_upgrade(
             # --revision cannot be specified together with --arch, --base, --channel
             "--channel",
             "latest/edge",
-            "--series",
-            "jammy",
+            "--base",
+            "ubuntu@22.04",
             "--filepath",
             str(latest_edge_path),
             "--no-progress",
