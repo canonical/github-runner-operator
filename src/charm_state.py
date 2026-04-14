@@ -786,6 +786,7 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
         )
     return ssh_debug_connections
 
+
 def _build_otel_collector_config_from_charm(charm: CharmBase) -> OtelCollectorConfig | None:
     """Initialize the OtelCollectorConfig from charm configuration.
 
@@ -898,7 +899,11 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
         ]
-        state_dict["otel_collector_config"] = json.loads(state_dict["otel_collector_config"].json()) if state_dict["otel_collector_config"] else None
+        state_dict["otel_collector_config"] = (
+            json.loads(state_dict["otel_collector_config"].json())
+            if state_dict["otel_collector_config"]
+            else None
+        )
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 

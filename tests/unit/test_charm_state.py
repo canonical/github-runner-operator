@@ -29,9 +29,9 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
-    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
+    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -1185,7 +1185,9 @@ def test_build_otel_collector_config_from_charm_valid_endpoint(hostname: str, po
     assert otel_collector_config.port == port
 
 
-@pytest.mark.parametrize("endpoint", ["10.10.0.12", "10.10.0.12:", "http://10.10.0.12:4317", "fake_hostname"])
+@pytest.mark.parametrize(
+    "endpoint", ["10.10.0.12", "10.10.0.12:", "http://10.10.0.12:4317", "fake_hostname"]
+)
 def test_build_otel_collector_config_from_charm_invalid_endpoint(endpoint: str) -> None:
     """
     arrange: Mock CharmBase with malformed endpoint formats.

@@ -127,6 +127,7 @@ class SupportServiceConfig(BaseModel):
             raise ValueError("aproxy requires the runner http or https to be set")
         return values
 
+
 class OtelCollectorConfig(BaseModel):
     """Configuration for OpenTelemetry collector.
 
@@ -134,8 +135,10 @@ class OtelCollectorConfig(BaseModel):
         host: The OpenTelemetry collector hostname.
         port: The OpenTelemetry collector port.
     """
+
     host: str
     port: int = Field(0, gt=0, le=65535)
+
 
 class ProxyConfig(BaseModel):
     """Proxy configuration.
