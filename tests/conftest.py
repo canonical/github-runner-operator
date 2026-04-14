@@ -184,3 +184,9 @@ def pytest_addoption(parser: Parser):
         help="The GitHub App PEM-encoded private key for GitHub App authentication testing.",
         default=os.environ.get("GITHUB_APP_PRIVATE_KEY"),
     )
+    parser.addoption(
+        "--keep-models",
+        action="store_true",
+        default=False,
+        help="Keep temporary Juju models after test runs.",
+    )

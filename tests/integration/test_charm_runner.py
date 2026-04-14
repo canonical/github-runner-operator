@@ -3,14 +3,12 @@
 
 """Integration tests for github-runner charm containing one runner."""
 
-from typing import AsyncIterator
+from typing import Iterator
 
+import jubilant
 import pytest
-import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
-from juju.action import Action
-from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
 from tests.integration.helpers.common import (
@@ -24,57 +22,62 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
-@pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(
-    basic_app: Application,
-) -> AsyncIterator[Application]:
+@pytest.fixture(scope="function", name="app")
+def app_fixture(
+    juju: jubilant.Juju,
+    basic_app: str,
+) -> Iterator[str]:
     """Setup and teardown the charm after each test.
 
     Ensure the charm has no runner after a test.
     """
     yield basic_app
 
-    await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
-    async def _no_runners() -> bool:
+    unit_name = f"{basic_app}/0"
+
+    def _no_runners() -> bool:
         """Check that no runners are active."""
-        action: Action = await basic_app.units[0].run_action("check-runners")
-        await action.wait()
+        try:
+            result = juju.run(unit_name, "check-runners")
+        except (jubilant.CLIError, TimeoutError):
+            return False
         return (
-            action.status == "completed"
-            and action.results["online"] == "0"
-            and action.results["offline"] == "0"
-            and action.results["unknown"] == "0"
+            result.status == "completed"
+            and result.results["online"] == "0"
+            and result.results["offline"] == "0"
+            and result.results["unknown"] == "0"
         )
 
-    await wait_for(_no_runners, timeout=10 * 60, check_interval=10)
+    wait_for(_no_runners, timeout=10 * 60, check_interval=10)
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_check_runner(app: Application, instance_helper: OpenStackInstanceHelper) -> None:
+def test_check_runner(
+    juju: jubilant.Juju, app: str, instance_helper: OpenStackInstanceHelper
+) -> None:
     """
     arrange: A working application with one runner.
     act: Run check_runner action.
     assert: Action returns result with one runner.
     """
-    await instance_helper.set_app_runner_amount(app, 2)
+    instance_helper.set_app_runner_amount(app, 2)
 
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
+    result = juju.run(f"{app}/0", "check-runners")
 
-    assert action.status == "completed"
-    assert action.results["online"] == "2"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+    assert result.status == "completed"
+    assert result.results["online"] == "2"
+    assert result.results["offline"] == "0"
+    assert result.results["unknown"] == "0"
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_flush_runner_and_resource_config(
-    app: Application,
+def test_flush_runner_and_resource_config(
+    juju: jubilant.Juju,
+    app: str,
     github_repository: Repository,
     test_github_branch: Branch,
     instance_helper: OpenStackInstanceHelper,
@@ -93,60 +96,58 @@ async def test_flush_runner_and_resource_config(
 
     Test are combined to reduce number of runner spawned.
     """
-    await instance_helper.ensure_charm_has_runner(app)
+    instance_helper.ensure_charm_has_runner(app)
+
+    unit_name = f"{app}/0"
 
     # 1.
-    action: Action = await app.units[0].run_action("check-runners")
-    await action.wait()
+    result = juju.run(unit_name, "check-runners")
 
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+    assert result.status == "completed"
+    assert result.results["online"] == "1"
+    assert result.results["offline"] == "0"
+    assert result.results["unknown"] == "0"
 
-    runner_names = action.results["runners"].split(", ")
+    runner_names = result.results["runners"].split(", ")
     assert len(runner_names) == 1
 
     # 2.
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
+    juju.run(unit_name, "flush-runners")
 
-    await wait_for_runner_ready(app)
+    wait_for_runner_ready(juju, app)
 
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
+    result = juju.run(unit_name, "check-runners")
 
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+    assert result.status == "completed"
+    assert result.results["online"] == "1"
+    assert result.results["offline"] == "0"
+    assert result.results["unknown"] == "0"
 
-    new_runner_names = action.results["runners"].split(", ")
+    new_runner_names = result.results["runners"].split(", ")
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
 
     # 3.
-    workflow = await dispatch_workflow(
-        app=app,
+    workflow = dispatch_workflow(
+        app_name=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name, "minutes": "5"},
+        dispatch_input={"runner": app, "minutes": "5"},
         wait=False,
     )
-    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
+    wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    result = juju.run(unit_name, "flush-runners")
 
-    assert action.status == "completed"
+    assert result.status == "completed"
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_custom_pre_job_script(
-    app: Application,
+def test_custom_pre_job_script(
+    juju: jubilant.Juju,
+    app: str,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -155,8 +156,9 @@ async def test_custom_pre_job_script(
     act: Dispatch a workflow.
     assert: Workflow run successfully passed and pre-job script has been executed.
     """
-    await app.set_config(
-        {
+    juju.config(
+        app,
+        values={
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
             CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
 #!/usr/bin/env bash
@@ -169,17 +171,17 @@ host github.com
 EOF
 logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
-        }
+        },
     )
-    await wait_for_runner_ready(app)
+    wait_for_runner_ready(juju, app)
 
-    workflow_run = await dispatch_workflow(
-        app=app,
+    workflow_run = dispatch_workflow(
+        app_name=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name},
+        dispatch_input={"runner": app},
     )
     logs = get_job_logs(workflow_run.jobs("latest")[0])
     assert "SSH config" in logs
