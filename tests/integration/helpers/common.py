@@ -86,9 +86,7 @@ def run_in_unit(
     return code, stdout, stderr
 
 
-def wait_for_runner_ready(
-    juju: jubilant.Juju, app_name: str, num_runners: int = 1
-) -> None:
+def wait_for_runner_ready(juju: jubilant.Juju, app_name: str, num_runners: int = 1) -> None:
     """Wait until the expected number of runners are online.
 
     Args:
