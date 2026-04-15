@@ -11,7 +11,6 @@ import logging
 import jubilant
 import pytest
 from github.Repository import Repository
-from juju.application import Application
 
 from charm_state import PATH_CONFIG_NAME
 from tests.integration.conftest import GitHubConfig
@@ -22,11 +21,10 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_path_config_change(
+def test_path_config_change(
     juju: jubilant.Juju,
-    app_with_forked_repo: Application,
+    app_with_forked_repo: str,
     github_repository: Repository,
     github_config: GitHubConfig,
     instance_helper: OpenStackInstanceHelper,
@@ -38,22 +36,21 @@ async def test_path_config_change(
     """
     logger.info("test_path_config_change")
     juju.wait(
-        lambda status: jubilant.all_active(status, app_with_forked_repo.name),
+        lambda status: jubilant.all_active(status, app_with_forked_repo),
         delay=10,
         timeout=10 * 60,
     )
 
-    unit = app_with_forked_repo.units[0]
-
     logger.info("Ensure there is a runner (this calls reconcile)")
-    await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
+    instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
-    juju.config(app_with_forked_repo.name, values={PATH_CONFIG_NAME: github_config.path})
+    juju.config(app_with_forked_repo, values={PATH_CONFIG_NAME: github_config.path})
 
     logger.info("Reconciling (again)")
-    await wait_for_runner_ready(app=app_with_forked_repo)
+    wait_for_runner_ready(juju, app_with_forked_repo)
 
-    runner_names = await instance_helper.get_runner_names(unit)
+    unit_name = f"{app_with_forked_repo}/0"
+    runner_names = instance_helper.get_runner_names(unit_name)
     logger.info("runners: %s", runner_names)
     assert len(runner_names) == 1
     runner_name = runner_names[0]

@@ -13,24 +13,18 @@ import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
+from typing import Any, Generator, Iterator, Optional, cast
 
 import jubilant
-import nest_asyncio
 import openstack
 import pytest
-import pytest_asyncio
 import yaml
 from git import Repo
 from github import Github, GithubException
 from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
-from juju.application import Application
-from juju.client._definitions import FullStatus, UnitStatus
-from juju.model import Model
 from openstack.connection import Connection
-from pytest_operator.plugin import OpsTest
 
 from charm_state import (
     APROXY_REDIRECT_PORTS_CONFIG_NAME,
@@ -51,15 +45,10 @@ from tests.integration.helpers.common import (
     wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
-from tests.status_name import ACTIVE
 
 DEFAULT_RECONCILE_INTERVAL = 2
 
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
-
-# The following line is required because we are using request.getfixturevalue in conjunction
-# with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
-nest_asyncio.apply()
 
 
 @dataclass
@@ -213,7 +202,8 @@ def resolve_series(base_token: str) -> tuple[str, str]:
     mapped = BASE_SERIES_MAP.get(base_token)
     if not mapped:
         raise ValueError(
-            f"Unknown base token '{base_token}'. Please update BASE_SERIES_MAP to include the corresponding series."
+            f"Unknown base token '{base_token}'. Please update BASE_SERIES_MAP to include"
+            " the corresponding series."
         )
     return mapped
 
@@ -254,7 +244,8 @@ def selected_artifact(
         if art.base_token == cli_base_option:
             return art
     raise ValueError(
-        "No charm artifact found matching the specified base token. Please check your --charm-file options."
+        "No charm artifact found matching the specified base token. Please check your"
+        " --charm-file options."
     )
 
 
@@ -430,7 +421,8 @@ def dockerhub_mirror(pytestconfig: pytest.Config) -> Optional[str]:
 def openstack_connection_fixture(
     openstack_config: OpenStackConfig,
     app_name: str,
-    existing_app_suffix: str,
+    existing_app_suffix: Optional[str],
+    juju: jubilant.Juju,
     request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
@@ -450,9 +442,6 @@ def openstack_connection_fixture(
             logging.info("Server %s console log:\n%s", server.name, console_log)
 
     if not existing_app_suffix:
-        # servers, keys, security groups, security rules, images are created by the charm.
-        # don't remove security groups & rules since they are single instances.
-        # don't remove images since it will be moved to image-builder
         for server in servers:
             server_name: str = server.name
             if server_name.startswith(app_name):
@@ -463,38 +452,51 @@ def openstack_connection_fixture(
                 connection.delete_keypair(key_name)
 
 
-@pytest_asyncio.fixture(scope="module")
-async def model(ops_test: OpsTest, proxy_config: ProxyConfig) -> Model:
-    """Juju model used in the test."""
-    assert ops_test.model is not None
-    await ops_test.model.set_config(
-        {
-            "juju-http-proxy": proxy_config.http_proxy,
-            "juju-https-proxy": proxy_config.https_proxy,
-            "juju-no-proxy": proxy_config.no_proxy,
-        }
-    )
-    return ops_test.model
+@pytest.fixture(scope="module")
+def juju(
+    request: pytest.FixtureRequest,
+    proxy_config: ProxyConfig,
+) -> Generator[jubilant.Juju, None, None]:
+    """Pytest fixture that creates a temporary Juju model for integration tests."""
+    keep_models = cast(bool, request.config.getoption("--keep-models"))
+    with jubilant.temp_model(keep=keep_models) as j:
+        j.wait_timeout = 20 * 60
+        j.model_config(
+            values={
+                "juju-http-proxy": proxy_config.http_proxy,
+                "juju-https-proxy": proxy_config.https_proxy,
+                "juju-no-proxy": proxy_config.no_proxy,
+                "logging-config": "<root>=INFO;unit=INFO",
+            }
+        )
+        yield j
+        if request.session.testsfailed:
+            log = j.debug_log(limit=1000)
+            print(log, end="")
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_no_runner(
-    model: Model,
-    basic_app: Application,
-) -> AsyncIterator[Application]:
+@pytest.fixture(scope="module")
+def app_no_runner(
+    juju: jubilant.Juju,
+    basic_app: str,
+) -> Iterator[str]:
     """Application with no runner."""
-    await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=20 * 60)
+    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    juju.wait(
+        lambda status: jubilant.all_active(status, basic_app),
+        timeout=20 * 60,
+    )
     yield basic_app
 
 
-@pytest_asyncio.fixture(scope="module")
-async def openstack_model_proxy(
+@pytest.fixture(scope="module")
+def openstack_model_proxy(
     openstack_config: OpenStackConfig,
-    model: Model,
+    juju: jubilant.Juju,
 ) -> None:
-    await model.set_config(
-        {
+    """Set model proxy config for OpenStack environments."""
+    juju.model_config(
+        values={
             "juju-http-proxy": openstack_config.http_proxy,
             "juju-https-proxy": openstack_config.https_proxy,
             "juju-no-proxy": openstack_config.no_proxy,
@@ -503,10 +505,10 @@ async def openstack_model_proxy(
     )
 
 
-@pytest_asyncio.fixture(scope="module", name="image_builder_config")
-async def image_builder_config_fixture(
+@pytest.fixture(scope="module", name="image_builder_config")
+def image_builder_config_fixture(
     openstack_config: OpenStackConfig,
-):
+) -> dict:
     """The image builder application default for OpenStack runners."""
     return {
         "build-interval": "12",
@@ -524,16 +526,16 @@ async def image_builder_config_fixture(
     }
 
 
-@pytest_asyncio.fixture(scope="module", name="image_builder")
-async def image_builder_fixture(
-    model: Model,
+@pytest.fixture(scope="module", name="image_builder")
+def image_builder_fixture(
+    juju: jubilant.Juju,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
     openstack_config: OpenStackConfig,
     image_builder_config: dict,
-    openstack_connection,
+    openstack_connection: Connection,
     request: pytest.FixtureRequest,
-):
+) -> Iterator[str]:
     """The image builder application for OpenStack runners.
 
     If openstack_config.test_image_id is provided, uses any-charm to mock the image relation.
@@ -541,26 +543,27 @@ async def image_builder_fixture(
     """
     if existing_app_suffix:
         logging.info("Using existing image builder %s", image_builder_app_name)
-        yield model.applications[image_builder_app_name]
+        yield image_builder_app_name
         return
 
     if not openstack_config.test_image_id:
         logging.info("Deploying image builder %s", image_builder_app_name)
-        # Deploy the real github-runner-image-builder
-        yield await model.deploy(
+        juju.deploy(
             "github-runner-image-builder",
-            application_name=image_builder_app_name,
+            app=image_builder_app_name,
             channel="latest/edge",
             config=image_builder_config,
             constraints={
-                "root-disk": 20 * 1024,
-                "mem": 2 * 1024,
+                "root-disk": "20480M",
+                "mem": "2048M",
                 # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
                 # https://github.com/canonical/snapd/pull/16131
                 "virt-type": "virtual-machine",
-                "cores": 2,
+                "cores": "2",
             },
         )
+
+        yield image_builder_app_name
 
         # The github-image-builder does not clean keypairs. Until it does,
         # we clean them manually here.
@@ -573,7 +576,6 @@ async def image_builder_fixture(
         return
 
     # Use any-charm to mock the image relation provider
-    # Determine series based on selected deployment context
     dep_ctx: DeploymentContext = request.getfixturevalue("deployment_context")
     series = dep_ctx.series
 
@@ -597,32 +599,33 @@ relation_changed, self._image_relation_changed)
         "Deploying fake image builder via any-charm for image ID %s",
         openstack_config.test_image_id,
     )
-    yield await model.deploy(
+    juju.deploy(
         "any-charm",
-        application_name=image_builder_app_name,
+        app=image_builder_app_name,
         channel="latest/beta",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
     )
+    yield image_builder_app_name
 
 
-@pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
-async def app_openstack_runner_fixture(
-    model: Model,
+@pytest.fixture(scope="module", name="app_openstack_runner")
+def app_openstack_runner_fixture(
+    juju: jubilant.Juju,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig,
     existing_app_suffix: Optional[str],
-    image_builder: Application,
+    image_builder: str,
     dockerhub_mirror: Optional[str],
     request: pytest.FixtureRequest,
-) -> AsyncIterator[Application]:
+) -> Iterator[str]:
     """Application launching VMs and no runners."""
     if existing_app_suffix:
-        application = model.applications[app_name]
+        application_name = app_name
     else:
-        application = await deploy_github_runner_charm(
-            model=model,
+        application_name = deploy_github_runner_charm(
+            juju=juju,
             charm_file=deployment_context.charm_path,
             app_name=app_name,
             github_config=github_config,
@@ -632,7 +635,11 @@ async def app_openstack_runner_fixture(
                 no_proxy=openstack_config.no_proxy,
             ),
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
-            constraints={"root-disk": 50 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
+            constraints={
+                "root-disk": "51200M",
+                "mem": "2048M",
+                "virt-type": "virtual-machine",
+            },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
@@ -643,115 +650,112 @@ async def app_openstack_runner_fixture(
                 **({DOCKERHUB_MIRROR_CONFIG_NAME: dockerhub_mirror} if dockerhub_mirror else {}),
             },
             base=deployment_context.base,
-            series=deployment_context.series,
             wait_idle=False,
         )
-        await model.integrate(image_builder.name, f"{application.name}:image")
-    await model.wait_for_idle(
-        apps=[application.name, image_builder.name],
-        status=ACTIVE,
+        juju.integrate(image_builder, f"{application_name}:image")
+    juju.wait(
+        lambda status: jubilant.all_active(status, application_name, image_builder),
         timeout=IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS,
     )
 
-    yield application
+    yield application_name
 
     if request.session.testsfailed:
         try:
-            app_log = await get_github_runner_manager_service_log(unit=application.units[0])
+            unit_name = f"{application_name}/0"
+            app_log = get_github_runner_manager_service_log(juju=juju, unit_name=unit_name)
             logging.info("Application log: \n%s", app_log)
-            metrics_log = await get_github_runner_metrics_log(unit=application.units[0])
+            metrics_log = get_github_runner_metrics_log(juju=juju, unit_name=unit_name)
             logging.info("Metrics log: \n%s", metrics_log)
         except AssertionError:
             logging.warning("Failed to get application log.", exc_info=True)
 
 
-@pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
-async def app_scheduled_events_fixture(
-    model: Model,
-    app_openstack_runner,
-):
+@pytest.fixture(scope="module", name="app_scheduled_events")
+def app_scheduled_events_fixture(
+    juju: jubilant.Juju,
+    app_openstack_runner: str,
+) -> str:
     """Application to check scheduled events."""
-    application = app_openstack_runner
-    await application.set_config({"reconcile-interval": "8"})
-    await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
-    await wait_for_runner_ready(app=application)
-    return application
+    juju.config(app_openstack_runner, values={"reconcile-interval": "8"})
+    juju.config(app_openstack_runner, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    juju.wait(
+        lambda status: jubilant.all_active(status, app_openstack_runner),
+        timeout=20 * 60,
+    )
+    wait_for_runner_ready(juju, app_openstack_runner)
+    return app_openstack_runner
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_runner(
-    model: Model,
+@pytest.fixture(scope="module")
+def app_runner(
+    juju: jubilant.Juju,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     proxy_config: ProxyConfig,
-) -> AsyncIterator[Application]:
+) -> str:
     """Application to test runners."""
     # Use a different app_name so workflows can select runners from this deployment.
-    application = await deploy_github_runner_charm(
-        model=model,
+    return deploy_github_runner_charm(
+        juju=juju,
         charm_file=deployment_context.charm_path,
         app_name=f"{app_name}-test",
         github_config=github_config,
         proxy_config=proxy_config,
         reconcile_interval=1,
         base=deployment_context.base,
-        series=deployment_context.series,
     )
-    return application
 
 
-@pytest_asyncio.fixture(scope="module", name="app_no_wait")
-async def app_no_wait_fixture(
-    model: Model,
+@pytest.fixture(scope="module", name="app_no_wait")
+def app_no_wait_fixture(
+    juju: jubilant.Juju,
     deployment_context: DeploymentContext,
     app_name: str,
     github_config: GitHubConfig,
     proxy_config: ProxyConfig,
-) -> AsyncIterator[Application]:
+) -> str:
     """Github runner charm application without waiting for active."""
-    app: Application = await deploy_github_runner_charm(
-        model=model,
+    deployed_name = deploy_github_runner_charm(
+        juju=juju,
         charm_file=deployment_context.charm_path,
         app_name=app_name,
         github_config=github_config,
         proxy_config=proxy_config,
         reconcile_interval=1,
         base=deployment_context.base,
-        series=deployment_context.series,
         wait_idle=False,
     )
-    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    return app
+    juju.config(deployed_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    return deployed_name
 
 
-@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
-async def tmate_ssh_server_app_fixture(model: Model) -> AsyncIterator[Application]:
+@pytest.fixture(scope="module", name="tmate_ssh_server_app")
+def tmate_ssh_server_app_fixture(juju: jubilant.Juju) -> str:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
-    tmate_app: Application = await model.deploy(
-        "tmate-ssh-server",
+    tmate_app_name = "tmate-ssh-server"
+    juju.deploy(
+        tmate_app_name,
         channel="edge",
         # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
         # https://github.com/canonical/snapd/pull/16131
         constraints={"virt-type": "virtual-machine"},
     )
-    return tmate_app
+    return tmate_app_name
 
 
-@pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_unit_ip")
-async def tmate_ssh_server_unit_ip_fixture(
-    model: Model,
-    tmate_ssh_server_app: Application,
-) -> bytes | str:
+@pytest.fixture(scope="module", name="tmate_ssh_server_unit_ip")
+def tmate_ssh_server_unit_ip_fixture(
+    juju: jubilant.Juju,
+    tmate_ssh_server_app: str,
+) -> str:
     """tmate-ssh-server charm unit ip."""
-    app_name = tmate_ssh_server_app.name
-    status: FullStatus = await model.get_status([app_name])
-    app_status = status.applications[app_name]
-    assert app_status is not None, f"Application {app_name} not found in status"
+    status = juju.status()
+    app_status = status.apps.get(tmate_ssh_server_app)
+    assert app_status is not None, f"Application {tmate_ssh_server_app} not found in status"
     try:
-        # mypy does not recognize that app_status is of type ApplicationStatus
-        unit_status: UnitStatus = next(iter(app_status.units.values()))  # type: ignore
+        unit_status = next(iter(app_status.units.values()))
         assert unit_status.public_address, "Invalid unit address"
         return unit_status.public_address
     except StopIteration as exc:
@@ -829,22 +833,22 @@ def forked_github_branch(
     branch_ref.delete()
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_with_forked_repo(
-    model: Model, basic_app: Application, forked_github_repository: Repository
-) -> Application:
+@pytest.fixture(scope="module")
+def app_with_forked_repo(
+    juju: jubilant.Juju, basic_app: str, forked_github_repository: Repository
+) -> str:
     """Application with no runner on a forked repo.
 
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
+    juju.config(basic_app, values={PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app
 
 
-@pytest_asyncio.fixture(scope="module", name="test_github_branch")
-async def test_github_branch_fixture(github_repository: Repository) -> AsyncIterator[Branch]:
+@pytest.fixture(scope="module", name="test_github_branch")
+def test_github_branch_fixture(github_repository: Repository) -> Iterator[Branch]:
     """Create a new branch for testing, from latest commit in current branch."""
     test_branch = f"test-{secrets.token_hex(4)}"
     branch_ref = github_repository.create_git_ref(
@@ -869,59 +873,27 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
             raise
         return branch
 
-    await wait_for(get_branch)
+    wait_for(get_branch)
 
     yield get_branch()
 
     branch_ref.delete()
 
 
-@pytest_asyncio.fixture(scope="module", name="basic_app")
-async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
+@pytest.fixture(scope="module", name="basic_app")
+def basic_app_fixture(request: pytest.FixtureRequest) -> str:
     """Setup the charm with the basic configuration."""
     return request.getfixturevalue("app_openstack_runner")
 
 
-@pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackInstanceHelper:
+@pytest.fixture(scope="function", name="instance_helper")
+def instance_helper_fixture(
+    request: pytest.FixtureRequest,
+    juju: jubilant.Juju,
+) -> OpenStackInstanceHelper:
     """Instance helper fixture."""
     openstack_connection = request.getfixturevalue("openstack_connection")
-    return OpenStackInstanceHelper(openstack_connection=openstack_connection)
-
-
-@pytest_asyncio.fixture(scope="module")
-async def juju(
-    request: pytest.FixtureRequest, model: Model
-) -> AsyncGenerator[jubilant.Juju, None]:
-    """Pytest fixture that wraps :meth:`jubilant.with_model`."""
-
-    def show_debug_log(juju: jubilant.Juju):
-        """Show debug log if tests failed.
-
-        Args:
-            juju: The jubilant.Juju instance.
-        """
-        if request.session.testsfailed:
-            log = juju.debug_log(limit=1000)
-            print(log, end="")
-
-    controller = await model.get_controller()
-    if model:
-        # Currently juju has no way of switching controller context, this is required to operate
-        # in the right controller's right model when using multiple controllers.
-        # See: https://github.com/canonical/jubilant/issues/158
-        juju = jubilant.Juju(model=f"{controller.controller_name}:{model.name}")
-        yield juju
-        show_debug_log(juju)
-        return
-
-    keep_models = cast(bool, request.config.getoption("--keep-models"))
-    with jubilant.temp_model(keep=keep_models, controller=controller.controller_name) as juju:
-        juju.model = f"{controller.controller_name}:{juju.model}"
-        juju.wait_timeout = 10 * 60
-        yield juju
-        show_debug_log(juju)
-        return
+    return OpenStackInstanceHelper(openstack_connection=openstack_connection, juju=juju)
 
 
 @pytest.fixture(scope="module")
@@ -930,16 +902,19 @@ def planner_token_secret_name() -> str:
     return "planner-token-secret"
 
 
-@pytest_asyncio.fixture(scope="module")
-async def planner_token_secret(model: Model, planner_token_secret_name: str) -> str:
+@pytest.fixture(scope="module")
+def planner_token_secret(juju: jubilant.Juju, planner_token_secret_name: str) -> str:
     """Create a planner token secret."""
-    return await model.add_secret(
-        name=planner_token_secret_name, data_args=["token=MOCK_PLANNER_TOKEN"]
+    return str(
+        juju.add_secret(
+            name=planner_token_secret_name,
+            content={"token": "MOCK_PLANNER_TOKEN"},
+        )
     )
 
 
-@pytest_asyncio.fixture(scope="module")
-async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[Application]:
+@pytest.fixture(scope="module")
+def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator[str]:
     """Deploy a minimal any-charm that acts as the requires side of the planner relation."""
     planner_name = "planner"
 
@@ -961,12 +936,15 @@ async def mock_planner_app(model: Model, planner_token_secret) -> AsyncIterator[
             """),
     }
 
-    planner_app: Application = await model.deploy(
+    juju.deploy(
         "any-charm",
-        planner_name,
+        app=planner_name,
         channel="latest/beta",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
     )
 
-    await model.wait_for_idle(apps=[planner_app.name], status=ACTIVE, timeout=10 * 60)
-    yield planner_app
+    juju.wait(
+        lambda status: jubilant.all_active(status, planner_name),
+        timeout=10 * 60,
+    )
+    yield planner_name
