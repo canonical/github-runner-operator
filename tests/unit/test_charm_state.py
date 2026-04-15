@@ -135,6 +135,7 @@ def test_github_config_from_charm_app_only():
     assert result.installation_id == 456
     assert result.private_key == "private-key-pem"
     mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
 
 
 @pytest.mark.parametrize(
@@ -771,6 +772,7 @@ def test_planner_config_from_charm_extracts_endpoint_token():
         endpoint="http://planner.example.com", token="planner-token-value"
     )
     mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
 
 
 def test_planner_config_from_charm_no_relation():
