@@ -45,6 +45,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju) -> AppStatus:
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.prometheus-k8s",
@@ -60,6 +61,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus) -> A
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.grafana-k8s",
@@ -120,6 +122,7 @@ def test_prometheus_metrics(
     assert: the datasource is registered and basic metrics are available.
     """
     app_name = openstack_app_cos_agent
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     juju.consume(
         f"{k8s_juju_model_name}.prometheus-k8s",

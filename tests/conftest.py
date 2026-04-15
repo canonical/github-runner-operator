@@ -221,5 +221,5 @@ def pytest_runtest_setup(item: pytest.Item):
         item: The test item.
     """
     failed_mod = getattr(item.session, "_abort_on_fail_module", None)
-    if failed_mod is not None and item.module is failed_mod:
+    if failed_mod is not None and getattr(item, "module", None) is failed_mod:
         pytest.skip("skipped: prior abort_on_fail test failed")
