@@ -133,6 +133,8 @@ jq -n \
 
 # Setup the OpenTelemetry collector configurations.
 {% if otel_collector_endpoint %}
+/usr/bin/sudo /usr/bin/mkdir -p /etc/otelcol/config.d
+/usr/bin/sudo /usr/bin/touch /etc/otelcol/config.d/github.yaml
 /usr/bin/sudo /usr/bin/tee /etc/otelcol/config.d/github.yaml <<EOF
 receivers:
   hostmetrics:
