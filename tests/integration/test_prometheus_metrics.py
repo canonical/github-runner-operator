@@ -1,12 +1,9 @@
 #  Copyright 2026 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-"""Prometheus metrics integration test — fully jubilant, no python-libjuju awaits.
+"""Prometheus metrics integration test — fully jubilant, no python-libjuju.
 
-Uses jubilant for ALL juju operations (deploy, integrate, wait, config, run)
-to avoid the python-libjuju AllWatcher hang after cross-controller integrations.
-The conftest ``app_openstack_runner`` fixture still creates a libjuju Model in the
-background, but this test never awaits on any libjuju object.
+Uses jubilant for ALL juju operations (deploy, integrate, wait, config, run).
 """
 
 import logging
@@ -15,12 +12,10 @@ from typing import Any, Generator, cast
 
 import jubilant
 import pytest
-import pytest_asyncio
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
 from jubilant.statustypes import AppStatus
-from juju.application import Application
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
@@ -37,7 +32,7 @@ MICROK8S_CONTROLLER_NAME = "microk8s"
 COS_AGENT_CHARM = "opentelemetry-collector"
 
 
-@pytest_asyncio.fixture(scope="module", name="k8s_juju")
+@pytest.fixture(scope="module", name="k8s_juju")
 def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju, None, None]:
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
@@ -50,6 +45,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju) -> AppStatus:
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.prometheus-k8s",
@@ -65,6 +61,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus) -> A
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
         f"{k8s_juju_model_name}.grafana-k8s",
@@ -93,9 +90,9 @@ def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus) ->
 
 
 @pytest.fixture(scope="module", name="openstack_app_cos_agent")
-def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: Application) -> str:
+def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: str) -> str:
     """Deploy cos-agent subordinate charm. Return the app name as a string."""
-    app_name = app_openstack_runner.name
+    app_name = app_openstack_runner
     juju.deploy(
         COS_AGENT_CHARM,
         channel="2/candidate",
@@ -109,7 +106,7 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: A
 
 @pytest.mark.usefixtures("traefik_ingress")
 @pytest.mark.openstack
-async def test_prometheus_metrics(
+def test_prometheus_metrics(
     juju: jubilant.Juju,
     k8s_juju: jubilant.Juju,
     openstack_app_cos_agent: str,
@@ -125,6 +122,7 @@ async def test_prometheus_metrics(
     assert: the datasource is registered and basic metrics are available.
     """
     app_name = openstack_app_cos_agent
+    assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     juju.consume(
         f"{k8s_juju_model_name}.prometheus-k8s",
@@ -149,8 +147,8 @@ async def test_prometheus_metrics(
     juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     _wait_for_runner_ready(juju, app_name)
 
-    await dispatch_workflow(
-        app=None,
+    dispatch_workflow(
+        app_name=None,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
@@ -188,7 +186,7 @@ def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
     for attempt in range(20):
         try:
             result = juju.run(unit, "check-runners")
-        except TimeoutError:
+        except (jubilant.CLIError, TimeoutError):
             logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
             time.sleep(30)
             continue
@@ -205,7 +203,7 @@ def _wait_for_no_runners(juju: jubilant.Juju, app_name: str) -> None:
     for attempt in range(20):
         try:
             result = juju.run(unit, "check-runners")
-        except TimeoutError:
+        except (jubilant.CLIError, TimeoutError):
             logger.info("check-runners action timed out (attempt %d), retrying...", attempt)
             time.sleep(30)
             continue
