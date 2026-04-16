@@ -10,7 +10,11 @@ import pytest
 from github.Branch import Branch
 from github.Repository import Repository
 
-from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME
+from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME,
+    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
+)
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,

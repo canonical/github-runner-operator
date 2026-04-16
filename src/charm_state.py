@@ -870,6 +870,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         runner_proxy_config: Proxy-related configuration for the runner.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
+        otel_collector_config: OpenTelemetry collector configuration information.
         planner_config: Planner endpoint and token from relation data.
     """
 

@@ -91,6 +91,7 @@ class SupportServiceConfig(BaseModel):
         aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
+        otel_collector_config: The configuration for the OpenTelemetry collector.
         custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
