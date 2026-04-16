@@ -40,7 +40,7 @@ jobs:
       self-hosted-runner-label: pfe-ci
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-artefacts
     secrets: inherit
     with:
       charmcraft-channel: latest/stable
@@ -68,7 +68,7 @@ jobs:
       self-hosted-runner-label: pfe-ci
   openstack-integration-tests-runner-bases:
     name: Runner tests across bases
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@fix/deduplicate-artefacts
     secrets: inherit
     strategy:
       matrix:
@@ -101,4 +101,4 @@ jobs:
       - openstack-integration-tests-private-endpoint
       - openstack-integration-tests-cross-controller-private-endpoint
       - openstack-integration-tests-runner-bases
-    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@fix/deduplicate-artefacts
