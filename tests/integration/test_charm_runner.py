@@ -193,10 +193,10 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
 
 
 @pytest.mark.openstack
-@pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_otel_collector_endpoint_pre_job_installs_config(
-    app: Application,
+def test_otel_collector_endpoint_pre_job_installs_config(
+    juju: jubilant.Juju,
+    app: str,
     github_repository: Repository,
     test_github_branch: Branch,
     instance_helper: OpenStackInstanceHelper,
@@ -207,25 +207,26 @@ async def test_otel_collector_endpoint_pre_job_installs_config(
     assert: The workflow writes otel collector config to /etc/otelcol/config.d/github.yaml.
     """
     endpoint = "10.10.0.12:4317"
-    await app.set_config(
-        {
+    juju.config(
+        app,
+        values={
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
             OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME: endpoint,
-        }
+        },
     )
-    await wait_for_runner_ready(app)
+    wait_for_runner_ready(juju, app)
 
-    await dispatch_workflow(
-        app=app,
+    dispatch_workflow(
+        app_name=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name},
+        dispatch_input={"runner": app},
     )
 
-    exit_code, stdout, stderr = await instance_helper.run_in_instance(
-        unit=app.units[0],
+    exit_code, stdout, stderr = instance_helper.run_in_instance(
+        unit_name=f"{app}/0",
         command="sudo cat /etc/otelcol/config.d/github.yaml",
     )
 
