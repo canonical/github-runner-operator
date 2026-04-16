@@ -43,7 +43,7 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
 @pytest.fixture(scope="module", name="prometheus_app")
 def prometheus_app_fixture(k8s_juju: jubilant.Juju) -> AppStatus:
     """Deploy prometheus charm."""
-    k8s_juju.deploy("prometheus-k8s", channel="1/stable")
+    k8s_juju.deploy("prometheus-k8s", channel="1/stable", log=False)
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
     assert k8s_juju.model is not None
     k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
@@ -58,7 +58,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju) -> AppStatus:
 @pytest.fixture(scope="module", name="grafana_app")
 def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus) -> AppStatus:
     """Deploy grafana charm."""
-    k8s_juju.deploy("grafana-k8s", channel="1/stable")
+    k8s_juju.deploy("grafana-k8s", channel="1/stable", log=False)
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
     assert k8s_juju.model is not None
@@ -76,7 +76,7 @@ def traefik_ingress_fixture(
     k8s_juju: jubilant.Juju, prometheus_app: AppStatus, grafana_app: AppStatus
 ) -> None:
     """Ingress for cross controller communication."""
-    k8s_juju.deploy("traefik-k8s", channel="latest/stable")
+    k8s_juju.deploy("traefik-k8s", channel="latest/stable", log=False)
     k8s_juju.integrate("traefik-k8s", f"{prometheus_app.charm_name}:ingress")
     k8s_juju.integrate("traefik-k8s", f"{grafana_app.charm_name}:ingress")
 
@@ -94,10 +94,7 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: s
     """Deploy cos-agent subordinate charm. Return the app name as a string."""
     app_name = app_openstack_runner
     juju.deploy(
-        COS_AGENT_CHARM,
-        channel="2/candidate",
-        base="ubuntu@22.04",
-        revision=149,
+        COS_AGENT_CHARM, channel="2/candidate", base="ubuntu@22.04", revision=149, log=False
     )
     juju.integrate(app_name, COS_AGENT_CHARM)
     juju.wait(lambda status: jubilant.all_agents_idle(status, app_name, COS_AGENT_CHARM))
@@ -144,7 +141,7 @@ def test_prometheus_metrics(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
 
-    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}, log=False)
     _wait_for_runner_ready(juju, app_name)
 
     dispatch_workflow(
@@ -156,7 +153,7 @@ def test_prometheus_metrics(
         dispatch_input={"runner": app_name},
     )
 
-    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"}, log=False)
     _wait_for_no_runners(juju, app_name)
 
     prometheus_ip = prometheus_app.address

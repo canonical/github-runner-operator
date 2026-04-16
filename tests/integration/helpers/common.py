@@ -75,7 +75,7 @@ def run_in_unit(
         Tuple of return code, stdout and stderr.
     """
     try:
-        task = juju.exec(command, unit=unit_name, wait=timeout)
+        task = juju.exec(command, unit=unit_name, wait=timeout, log=False)
         code, stdout, stderr = task.return_code, task.stdout, task.stderr
     except jubilant.TaskError as e:
         code, stdout, stderr = e.task.return_code, e.task.stdout, e.task.stderr

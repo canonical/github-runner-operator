@@ -156,7 +156,9 @@ class OpenStackInstanceHelper:
             app_name: The GitHub Runner Charm app name to create the runner for.
             num_runners: The number of runners.
         """
-        self.juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
+        self.juju.config(
+            app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"}, log=False
+        )
         if num_runners == 0:
             return
         wait_for_runner_ready(self.juju, app_name, num_runners=num_runners)

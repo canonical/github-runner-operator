@@ -44,7 +44,7 @@ def test_path_config_change(
     logger.info("Ensure there is a runner (this calls reconcile)")
     instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
-    juju.config(app_with_forked_repo, values={PATH_CONFIG_NAME: github_config.path})
+    juju.config(app_with_forked_repo, values={PATH_CONFIG_NAME: github_config.path}, log=False)
 
     logger.info("Reconciling (again)")
     wait_for_runner_ready(juju, app_with_forked_repo)

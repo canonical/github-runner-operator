@@ -33,7 +33,7 @@ def app_fixture(
     """
     yield basic_app
 
-    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"}, log=False)
 
     unit_name = f"{basic_app}/0"
 
@@ -172,6 +172,7 @@ EOF
 logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         },
+        log=False,
     )
     wait_for_runner_ready(juju, app)
 

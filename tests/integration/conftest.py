@@ -481,7 +481,7 @@ def app_no_runner(
     basic_app: str,
 ) -> Iterator[str]:
     """Application with no runner."""
-    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    juju.config(basic_app, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"}, log=False)
     juju.wait(
         lambda status: jubilant.all_active(status, basic_app),
         timeout=20 * 60,
@@ -581,8 +581,7 @@ def image_builder_fixture(
     series = dep_ctx.series
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -595,8 +594,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = '{series}, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -607,6 +605,7 @@ relation_changed, self._image_relation_changed)
         app=image_builder_app_name,
         channel="latest/beta",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+        log=False,
     )
     yield image_builder_app_name
 
@@ -680,8 +679,8 @@ def app_scheduled_events_fixture(
     app_openstack_runner: str,
 ) -> str:
     """Application to check scheduled events."""
-    juju.config(app_openstack_runner, values={"reconcile-interval": "8"})
-    juju.config(app_openstack_runner, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    juju.config(app_openstack_runner, values={"reconcile-interval": "8"}, log=False)
+    juju.config(app_openstack_runner, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}, log=False)
     juju.wait(
         lambda status: jubilant.all_active(status, app_openstack_runner),
         timeout=20 * 60,
@@ -730,7 +729,7 @@ def app_no_wait_fixture(
         base=deployment_context.base,
         wait_idle=False,
     )
-    juju.config(deployed_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    juju.config(deployed_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}, log=False)
     return deployed_name
 
 
@@ -744,6 +743,7 @@ def tmate_ssh_server_app_fixture(juju: jubilant.Juju) -> str:
         # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
         # https://github.com/canonical/snapd/pull/16131
         constraints={"virt-type": "virtual-machine"},
+        log=False,
     )
     return tmate_app_name
 
@@ -845,7 +845,9 @@ def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
-    juju.config(basic_app, values={PATH_CONFIG_NAME: forked_github_repository.full_name})
+    juju.config(
+        basic_app, values={PATH_CONFIG_NAME: forked_github_repository.full_name}, log=False
+    )
 
     return basic_app
 
@@ -922,8 +924,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -937,8 +938,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.app]["endpoint"] = "http://mock:8080"
                     event.relation.data[self.app]["token"] = "{planner_token_secret}"
-            """
-        ),
+            """),
     }
 
     juju.deploy(
@@ -946,6 +946,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
         app=planner_name,
         channel="latest/beta",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+        log=False,
     )
 
     juju.wait(
