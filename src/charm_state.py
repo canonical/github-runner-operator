@@ -207,7 +207,8 @@ class GithubConfig:
             )
         if not token and not app_fields_set:
             raise CharmConfigInvalidError(
-                f"Missing {TOKEN_CONFIG_NAME} or GitHub App authentication configuration"
+                f"Missing {TOKEN_CONFIG_NAME}, {TOKEN_SECRET_ID_CONFIG_NAME} "
+                "or GitHub App authentication configuration"
             )
         if not token and app_fields_set != 3:
             raise CharmConfigInvalidError(
