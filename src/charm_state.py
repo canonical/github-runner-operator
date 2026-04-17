@@ -406,8 +406,10 @@ class CharmConfig(BaseModel):
         openstack_clouds_yaml_str: str | None = cast(
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
+        source = OPENSTACK_CLOUDS_YAML_CONFIG_NAME
 
         if openstack_clouds_yaml_secret_id:
+            source = OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
             try:
                 cloud_secret = charm.model.get_secret(id=openstack_clouds_yaml_secret_id)
                 openstack_clouds_yaml_str = cloud_secret.get_content(refresh=True).get("clouds-yaml")
@@ -435,9 +437,9 @@ class CharmConfig(BaseModel):
             # use Pydantic to validate TypedDict.
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
-            logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
+            logger.error("Invalid %s config: %s.", source, exc)
             raise CharmConfigInvalidError(
-                f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
+                f"Invalid {source} config. Invalid yaml."
             ) from exc
 
         return openstack_clouds_yaml
