@@ -35,8 +35,10 @@ pytestmark = pytest.mark.openstack
 @pytest.mark.skip(
     reason=(
         "latest/edge charm predates token-secret-id and openstack-clouds-yaml-secret-id "
-        "config options. Re-enable once a release containing these options has been "
-        "promoted to latest/edge."
+        "config options. Falling back to the plaintext token/openstack-clouds-yaml options "
+        "is not acceptable because jubilant logs deploy config, which leaks the token. "
+        "Re-enable once a release containing the secret-id options has been promoted to "
+        "latest/edge."
     )
 )
 def test_charm_upgrade(
