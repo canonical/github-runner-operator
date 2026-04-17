@@ -204,6 +204,8 @@ def deploy_github_runner_charm(
 
     if config:
         default_config.update(config)
+        if TOKEN_SECRET_ID_CONFIG_NAME in default_config:
+            default_config[TOKEN_CONFIG_NAME] = ""
         if OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME in default_config:
             default_config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
 

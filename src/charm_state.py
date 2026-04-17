@@ -422,7 +422,11 @@ class CharmConfig(BaseModel):
                 )
 
         if not openstack_clouds_yaml_str:
-            raise CharmConfigInvalidError("No openstack_clouds_yaml")
+            raise CharmConfigInvalidError(
+                "Missing OpenStack clouds configuration; set either "
+                f"{OPENSTACK_CLOUDS_YAML_CONFIG_NAME} or "
+                f"{OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME}."
+            )
 
         try:
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(

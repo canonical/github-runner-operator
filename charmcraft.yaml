@@ -148,7 +148,7 @@ config:
         runners. Prefer setting token-secret-id.
         The token requires 'repo' scope for repository runners and 'repo' + 'admin:org' scope for
         organization runners.
-        For fine grained token scopes, see
+        For fine-grained token scopes, see
         https://charmhub.io/github-runner/docs/how-to-change-token.
     token-secret-id:
       type: string
