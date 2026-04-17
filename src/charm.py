@@ -53,7 +53,6 @@ from charm_state import (
     GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
@@ -88,7 +87,12 @@ LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
 
 # Config keys whose change triggers a runner flush, mapped to the attribute
-# on `_stored` that tracks the last-seen value.
+# on `_stored` that tracks the last-seen value. The plaintext
+# `openstack-clouds-yaml` option is intentionally omitted: tracking it here would
+# persist the credentials to `.unit-state.db` on disk. Operators who want
+# automatic flush on credential rotation should use
+# `openstack-clouds-yaml-secret-id`, which is flushed via this mapping and via
+# `on_secret_changed` when the secret content rotates.
 _FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
     (TOKEN_CONFIG_NAME, "token"),
     (TOKEN_SECRET_ID_CONFIG_NAME, "token_secret_id"),
@@ -97,7 +101,6 @@ _FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
     (GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "github_app_private_key_secret_id"),
     (PATH_CONFIG_NAME, "path"),
     (LABELS_CONFIG_NAME, "labels"),
-    (OPENSTACK_CLOUDS_YAML_CONFIG_NAME, "openstack_clouds_yaml"),
     (OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME, "openstack_clouds_yaml_secret_id"),
     (ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, "allow_external_contributor"),
 )
@@ -233,9 +236,6 @@ class GithubRunnerCharm(CharmBase):
             github_app_private_key_secret_id=self.config.get(
                 GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
             ),  # for detecting changes
-            openstack_clouds_yaml=self.config[
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME
-            ],  # for detecting changes
             openstack_clouds_yaml_secret_id=self.config.get(
                 OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
             ),  # for detecting changes

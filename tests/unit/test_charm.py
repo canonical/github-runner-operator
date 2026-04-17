@@ -283,12 +283,6 @@ def test_on_config_changed_failure(harness: Harness):
         ),
         pytest.param(LABELS_CONFIG_NAME, "label-a", "label-b", id="Labels"),
         pytest.param(
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
-            "clouds: {old: {}}",
-            "clouds: {new: {}}",
-            id="OpenStack clouds yaml",
-        ),
-        pytest.param(
             OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
             "secret:clouds-old",
             "secret:clouds-new",
@@ -343,11 +337,6 @@ def test__on_config_changed_flush(
             id="GitHub App Private Key Secret ID",
         ),
         pytest.param(LABELS_CONFIG_NAME, secrets.token_hex(16), id="Labels"),
-        pytest.param(
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
-            f"clouds: {{auth: {secrets.token_hex(4)}}}",
-            id="OpenStack clouds yaml",
-        ),
         pytest.param(
             OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
             f"secret:{secrets.token_hex(8)}",
