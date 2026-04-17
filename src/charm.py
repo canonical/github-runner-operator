@@ -53,6 +53,7 @@ from charm_state import (
     GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
@@ -96,6 +97,7 @@ _FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
     (GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "github_app_private_key_secret_id"),
     (PATH_CONFIG_NAME, "path"),
     (LABELS_CONFIG_NAME, "labels"),
+    (OPENSTACK_CLOUDS_YAML_CONFIG_NAME, "openstack_clouds_yaml"),
     (OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME, "openstack_clouds_yaml_secret_id"),
     (ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, "allow_external_contributor"),
 )
@@ -231,6 +233,9 @@ class GithubRunnerCharm(CharmBase):
             github_app_private_key_secret_id=self.config.get(
                 GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
             ),  # for detecting changes
+            openstack_clouds_yaml=self.config[
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+            ],  # for detecting changes
             openstack_clouds_yaml_secret_id=self.config.get(
                 OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
             ),  # for detecting changes

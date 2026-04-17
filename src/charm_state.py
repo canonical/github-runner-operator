@@ -442,6 +442,16 @@ class CharmConfig(BaseModel):
             # use Pydantic to validate TypedDict.
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
+            if source == OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME:
+                logger.error(
+                    "Invalid OpenStack clouds.yaml content in secret %s: %s.",
+                    openstack_clouds_yaml_secret_id,
+                    exc,
+                )
+                raise CharmConfigInvalidError(
+                    "Invalid OpenStack clouds.yaml content in secret "
+                    f"{openstack_clouds_yaml_secret_id}. Invalid yaml."
+                ) from exc
             logger.error("Invalid %s config: %s.", source, exc)
             raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 

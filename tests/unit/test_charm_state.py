@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 import pytest
 import yaml
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from ops.model import SecretNotFoundError
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -152,6 +153,23 @@ def test_github_config_from_charm_token_secret_takes_precedence_over_plaintext()
     result = GithubConfig.from_charm(mock_charm)
 
     assert result.token == "secret-token-value"
+
+
+def test_github_config_from_charm_token_secret_not_found():
+    """
+    arrange: Charm configured with token secret ID pointing to a missing secret.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised identifying the missing secret.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_SECRET_ID_CONFIG_NAME] = "secret:token123"
+    mock_charm.model.get_secret.side_effect = SecretNotFoundError("boom")
+
+    with pytest.raises(
+        CharmConfigInvalidError, match="GitHub token secret secret:token123 not found"
+    ):
+        GithubConfig.from_charm(mock_charm)
 
 
 def test_github_config_from_charm_token_secret_missing_field():
@@ -448,6 +466,24 @@ def test_parse_openstack_clouds_config_secret_precedence(valid_yaml_config: str)
 
     assert isinstance(result, dict)
     assert "clouds" in result
+
+
+def test_parse_openstack_clouds_config_secret_not_found():
+    """
+    arrange: OpenStack clouds secret ID points to a non-existent secret.
+    act: Parse OpenStack clouds config.
+    assert: CharmConfigInvalidError is raised identifying the missing secret.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = "secret:cloud123"
+    mock_charm.model.get_secret.side_effect = SecretNotFoundError("boom")
+
+    with pytest.raises(
+        CharmConfigInvalidError,
+        match="OpenStack clouds.yaml secret secret:cloud123 not found",
+    ):
+        CharmConfig._parse_openstack_clouds_config(mock_charm)
 
 
 def test_parse_openstack_clouds_config_secret_missing_field():
