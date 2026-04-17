@@ -47,9 +47,16 @@ config:
       type: string
       default: ""
       description: >-
-        The clouds.yaml yaml necessary for OpenStack integration.
-        The format for the clouds.yaml is described in the docs:
+        (Compatibility fallback) The clouds.yaml yaml necessary for OpenStack integration.
+        Prefer setting openstack-clouds-yaml-secret-id.
+        The format for clouds.yaml is described in the docs:
         (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
+    openstack-clouds-yaml-secret-id:
+      type: string
+      default: ""
+      description: >-
+        Juju secret ID containing OpenStack clouds.yaml content under the `clouds-yaml` field.
+        When set, this takes precedence over `openstack-clouds-yaml`.
     openstack-flavor:
       type: string
       default: ""
@@ -137,10 +144,18 @@ config:
       type: string
       default: ""
       description: >-
-        The GitHub Personal Access Token for registering the self-hosted runners. The token requires
-        'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
+        (Compatibility fallback) The GitHub Personal Access Token for registering self-hosted
+        runners. Prefer setting token-secret-id.
+        The token requires 'repo' scope for repository runners and 'repo' + 'admin:org' scope for
+        organization runners.
         For fine grained token scopes, see
         https://charmhub.io/github-runner/docs/how-to-change-token.
+    token-secret-id:
+      type: string
+      default: ""
+      description: >-
+        Juju secret ID containing the GitHub token under the `github-token` field.
+        When set, this takes precedence over `token`.
     github-app-client-id:
       type: string
       description: >-

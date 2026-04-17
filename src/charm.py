@@ -55,7 +55,9 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
@@ -205,6 +207,7 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
+            token_secret_id=self.config.get(TOKEN_SECRET_ID_CONFIG_NAME),  # for detecting changes
             github_app_client_id=self.config.get(
                 GITHUB_APP_CLIENT_ID_CONFIG_NAME
             ),  # for detecting changes
@@ -213,6 +216,9 @@ class GithubRunnerCharm(CharmBase):
             ),  # for detecting changes
             github_app_private_key_secret_id=self.config.get(
                 GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
+            ),  # for detecting changes
+            openstack_clouds_yaml_secret_id=self.config.get(
+                OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
             ),  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             allow_external_contributor=self.config[
@@ -353,6 +359,9 @@ class GithubRunnerCharm(CharmBase):
         if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_runners = True
+        if self.config.get(TOKEN_SECRET_ID_CONFIG_NAME) != self._stored.token_secret_id:
+            self._stored.token_secret_id = self.config.get(TOKEN_SECRET_ID_CONFIG_NAME)
+            flush_runners = True
         if self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME) != self._stored.github_app_client_id:
             self._stored.github_app_client_id = self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)
             flush_runners = True
@@ -377,6 +386,14 @@ class GithubRunnerCharm(CharmBase):
             flush_runners = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
+            flush_runners = True
+        if (
+            self.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)
+            != self._stored.openstack_clouds_yaml_secret_id
+        ):
+            self._stored.openstack_clouds_yaml_secret_id = self.config.get(
+                OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
+            )
             flush_runners = True
         if (
             self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]

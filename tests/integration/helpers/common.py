@@ -26,10 +26,13 @@ from charm_state import (
     GITHUB_APP_CLIENT_ID_CONFIG_NAME,
     GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
     GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
 )
 from manager_service import _get_log_file_path
 
@@ -160,7 +163,7 @@ def deploy_github_runner_charm(
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
     }
 
-    secret_name = None
+    secret_names: list[str] = []
     if github_config.has_app_auth:
         assert github_config.app_client_id is not None
         assert github_config.installation_id is not None
@@ -170,14 +173,39 @@ def deploy_github_runner_charm(
             name=secret_name,
             content={"private-key": github_config.private_key},
         )
+        secret_names.append(secret_name)
         default_config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = github_config.app_client_id
         default_config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = github_config.installation_id
         default_config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = str(secret_id)
     else:
-        default_config[TOKEN_CONFIG_NAME] = github_config.token
+        token_secret_name = f"{app_name}-github-token"
+        token_secret_id = juju.add_secret(
+            name=token_secret_name,
+            content={"github-token": github_config.token},
+        )
+        secret_names.append(token_secret_name)
+        default_config[TOKEN_SECRET_ID_CONFIG_NAME] = str(token_secret_id)
+
+    clouds_yaml = None
+    if config:
+        clouds_yaml = cast(str | None, config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME))
+
+    if clouds_yaml and not (config and config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)):
+        openstack_secret_name = f"{app_name}-openstack-clouds"
+        openstack_secret_id = juju.add_secret(
+            name=openstack_secret_name,
+            content={"clouds-yaml": clouds_yaml},
+        )
+        secret_names.append(openstack_secret_name)
+        default_config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = str(openstack_secret_id)
+
+    default_config[TOKEN_CONFIG_NAME] = ""
+    default_config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
 
     if config:
         default_config.update(config)
+        if OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME in default_config:
+            default_config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
 
     juju.deploy(
         charm_file,
@@ -189,7 +217,7 @@ def deploy_github_runner_charm(
         **(deploy_kwargs or {}),
     )
 
-    if secret_name:
+    for secret_name in secret_names:
         juju.grant_secret(secret_name, app_name)
 
     if wait_idle:
