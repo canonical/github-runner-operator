@@ -154,6 +154,7 @@ class GithubConfig:
     path: GitHubPath
 
     @classmethod
+    # pylint: disable=too-many-locals
     def from_charm(cls, charm: CharmBase) -> "GithubConfig":  # noqa: C901
         """Get github related charm configuration values from charm.
 
@@ -195,7 +196,9 @@ class GithubConfig:
                 token_secret = charm.model.get_secret(id=token_secret_id)
                 token = token_secret.get_content(refresh=True).get("github-token")
             except SecretNotFoundError as exc:
-                raise CharmConfigInvalidError(f"GitHub token secret {token_secret_id} not found") from exc
+                raise CharmConfigInvalidError(
+                    f"GitHub token secret {token_secret_id} not found"
+                ) from exc
             if not token:
                 raise CharmConfigInvalidError(
                     f"GitHub token secret {token_secret_id} is missing github-token"
@@ -400,9 +403,9 @@ class CharmConfig(BaseModel):
         Returns:
             The openstack clouds yaml.
         """
-        openstack_clouds_yaml_secret_id = cast(
-            str, charm.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)
-        ) or None
+        openstack_clouds_yaml_secret_id = (
+            cast(str, charm.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)) or None
+        )
         openstack_clouds_yaml_str: str | None = cast(
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
@@ -412,7 +415,9 @@ class CharmConfig(BaseModel):
             source = OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
             try:
                 cloud_secret = charm.model.get_secret(id=openstack_clouds_yaml_secret_id)
-                openstack_clouds_yaml_str = cloud_secret.get_content(refresh=True).get("clouds-yaml")
+                openstack_clouds_yaml_str = cloud_secret.get_content(refresh=True).get(
+                    "clouds-yaml"
+                )
             except SecretNotFoundError as exc:
                 raise CharmConfigInvalidError(
                     f"OpenStack clouds.yaml secret {openstack_clouds_yaml_secret_id} not found"
@@ -438,9 +443,7 @@ class CharmConfig(BaseModel):
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
             logger.error("Invalid %s config: %s.", source, exc)
-            raise CharmConfigInvalidError(
-                f"Invalid {source} config. Invalid yaml."
-            ) from exc
+            raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 
         return openstack_clouds_yaml
 

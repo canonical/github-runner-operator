@@ -53,9 +53,9 @@ from charm_state import (
     GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
-    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     TOKEN_SECRET_ID_CONFIG_NAME,
     CharmConfigInvalidError,
@@ -85,6 +85,20 @@ UPGRADE_MSG = "Upgrading github-runner charm."
 LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
 LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
+
+# Config keys whose change triggers a runner flush, mapped to the attribute
+# on `_stored` that tracks the last-seen value.
+_FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
+    (TOKEN_CONFIG_NAME, "token"),
+    (TOKEN_SECRET_ID_CONFIG_NAME, "token_secret_id"),
+    (GITHUB_APP_CLIENT_ID_CONFIG_NAME, "github_app_client_id"),
+    (GITHUB_APP_INSTALLATION_ID_CONFIG_NAME, "github_app_installation_id"),
+    (GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "github_app_private_key_secret_id"),
+    (PATH_CONFIG_NAME, "path"),
+    (LABELS_CONFIG_NAME, "labels"),
+    (OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME, "openstack_clouds_yaml_secret_id"),
+    (ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, "allow_external_contributor"),
+)
 
 
 logger = logging.getLogger(__name__)
@@ -356,53 +370,11 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         flush_runners = False
-        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
-            self._stored.token = self.config[TOKEN_CONFIG_NAME]
-            flush_runners = True
-        if self.config.get(TOKEN_SECRET_ID_CONFIG_NAME) != self._stored.token_secret_id:
-            self._stored.token_secret_id = self.config.get(TOKEN_SECRET_ID_CONFIG_NAME)
-            flush_runners = True
-        if self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME) != self._stored.github_app_client_id:
-            self._stored.github_app_client_id = self.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)
-            flush_runners = True
-        if (
-            self.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME)
-            != self._stored.github_app_installation_id
-        ):
-            self._stored.github_app_installation_id = self.config.get(
-                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
-            )
-            flush_runners = True
-        if (
-            self.config.get(GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME)
-            != self._stored.github_app_private_key_secret_id
-        ):
-            self._stored.github_app_private_key_secret_id = self.config.get(
-                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
-            )
-            flush_runners = True
-        if self.config[PATH_CONFIG_NAME] != self._stored.path:
-            self._stored.path = self.config[PATH_CONFIG_NAME]
-            flush_runners = True
-        if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
-            self._stored.labels = self.config[LABELS_CONFIG_NAME]
-            flush_runners = True
-        if (
-            self.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)
-            != self._stored.openstack_clouds_yaml_secret_id
-        ):
-            self._stored.openstack_clouds_yaml_secret_id = self.config.get(
-                OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
-            )
-            flush_runners = True
-        if (
-            self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]
-            != self._stored.allow_external_contributor
-        ):
-            self._stored.allow_external_contributor = self.config[
-                ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
-            ]
-            flush_runners = True
+        for config_key, stored_attr in _FLUSH_ON_CHANGE_CONFIG_TO_STORED:
+            new_value = self.config.get(config_key)
+            if new_value != getattr(self._stored, stored_attr):
+                setattr(self._stored, stored_attr, new_value)
+                flush_runners = True
 
         self._reconcile(state)
 
