@@ -443,15 +443,18 @@ class CharmConfig(BaseModel):
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
             if source == OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME:
+                # Don't log `exc` or chain with `from exc`: yaml.YAMLError and
+                # pydantic TypeError messages can embed a snippet of the
+                # offending input (here, the decrypted clouds.yaml), and the
+                # chained cause would be printed by `logger.exception` upstream.
                 logger.error(
-                    "Invalid OpenStack clouds.yaml content in secret %s: %s.",
+                    "Invalid OpenStack clouds.yaml content in secret %s.",
                     openstack_clouds_yaml_secret_id,
-                    exc,
                 )
                 raise CharmConfigInvalidError(
                     "Invalid OpenStack clouds.yaml content in secret "
                     f"{openstack_clouds_yaml_secret_id}. Invalid yaml."
-                ) from exc
+                ) from None
             logger.error("Invalid %s config: %s.", source, exc)
             raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 
