@@ -213,7 +213,6 @@ def deploy_github_runner_charm(
         base=base,
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        log=False,
         **(deploy_kwargs or {}),
     )
 
