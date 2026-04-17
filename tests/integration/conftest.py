@@ -561,7 +561,6 @@ def image_builder_fixture(
                 "virt-type": "virtual-machine",
                 "cores": "2",
             },
-            log=False,
         )
 
         yield image_builder_app_name
