@@ -454,7 +454,7 @@ class CharmConfig(BaseModel):
                 raise CharmConfigInvalidError(
                     "Invalid OpenStack clouds.yaml content in secret "
                     f"{openstack_clouds_yaml_secret_id}. Invalid yaml."
-                ) from None
+                )
             logger.error("Invalid %s config: %s.", source, exc)
             raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 
