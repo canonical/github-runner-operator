@@ -13,7 +13,6 @@ import string
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from time import sleep
 from typing import Any, Generator, Iterator, Optional, cast
 
 import jubilant
@@ -34,7 +33,6 @@ from charm_state import (
     LABELS_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
-    PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
@@ -792,76 +790,6 @@ def github_client(github_config: GitHubConfig) -> Github:
 def github_repository(github_client: Github, github_config: GitHubConfig) -> Repository:
     """Returns client to the Github repository."""
     return github_client.get_repo(github_config.path)
-
-
-@pytest.fixture(scope="module")
-def forked_github_repository(
-    github_repository: Repository,
-) -> Repository:
-    """Create a fork for a GitHub repository."""
-    # After fork creation, the repository workflow run must be enabled manually. Otherwise, a 404
-    # on the workflow get API will be returned.
-    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
-
-    # Wait for repo to be ready
-    for _ in range(10):
-        try:
-            sleep(10)
-            forked_repository.get_branches()
-            break
-        except GithubException:
-            pass
-    else:
-        assert False, "timed out whilst waiting for repository creation"
-
-    return forked_repository
-
-    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
-
-
-@pytest.fixture(scope="module")
-def forked_github_branch(
-    github_repository: Repository, forked_github_repository: Repository
-) -> Iterator[Branch]:
-    """Create a new forked branch for testing."""
-    branch_name = f"test/{secrets.token_hex(4)}"
-
-    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
-    branch_ref = forked_github_repository.create_git_ref(
-        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
-    )
-
-    for _ in range(10):
-        try:
-            branch = forked_github_repository.get_branch(branch_name)
-            break
-        except GithubException as err:
-            if err.status == 404:
-                sleep(5)
-                continue
-            raise
-    else:
-        assert (
-            False
-        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
-
-    yield branch
-
-    branch_ref.delete()
-
-
-@pytest.fixture(scope="module")
-def app_with_forked_repo(
-    juju: jubilant.Juju, basic_app: str, forked_github_repository: Repository
-) -> str:
-    """Application with no runner on a forked repo.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    juju.config(basic_app, values={PATH_CONFIG_NAME: forked_github_repository.full_name})
-
-    return basic_app
 
 
 @pytest.fixture(scope="module", name="test_github_branch")
