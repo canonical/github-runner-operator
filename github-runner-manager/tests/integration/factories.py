@@ -27,11 +27,23 @@ class GitHubConfig:
         token: GitHub personal access token.
         alt_token: Alternate GitHub personal access token for external contributor.
         path: GitHub path in <owner>/<repo> or <org> format.
+        app_client_id: GitHub App Client ID.
+        installation_id: GitHub App installation ID.
+        private_key: GitHub App PEM-encoded private key.
+        has_app_auth: Whether GitHub App authentication credentials are configured.
     """
 
     token: str
     alt_token: str
     path: str
+    app_client_id: str | None = None
+    installation_id: int | None = None
+    private_key: str | None = None
+
+    @property
+    def has_app_auth(self) -> bool:
+        """Whether GitHub App authentication credentials are configured."""
+        return all((self.app_client_id, self.installation_id, self.private_key))
 
 
 @dataclass
@@ -214,7 +226,15 @@ def create_default_config(
         "allow_external_contributor": allow_external_contributor,
         "extra_labels": test_config.labels,
         "github_config": {
-            "auth": {"token": github_config.token},
+            "auth": (
+                {
+                    "app_client_id": github_config.app_client_id,
+                    "installation_id": github_config.installation_id,
+                    "private_key": github_config.private_key,
+                }
+                if github_config.has_app_auth
+                else {"token": github_config.token}
+            ),
             "path": path_config,
         },
         "service_config": {

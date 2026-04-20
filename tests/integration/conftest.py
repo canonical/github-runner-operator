@@ -319,6 +319,21 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         "path of <org>/<repo> or <user>/<repo> format."
     )
 
+    app_client_id = pytestconfig.getoption("--github-app-client-id") or None
+    installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
+    private_key = pytestconfig.getoption("--github-app-private-key") or None
+
+    if all((app_client_id, installation_id_raw, private_key)):
+        logging.info("Using GitHub App authentication for integration tests")
+        return GitHubConfig(
+            token=random_token,
+            path=path,
+            app_client_id=app_client_id,
+            installation_id=int(cast(str, installation_id_raw)),
+            private_key=private_key,
+        )
+
+    logging.info("Using PAT authentication for integration tests")
     return GitHubConfig(token=random_token, path=path)
 
 

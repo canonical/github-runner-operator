@@ -30,6 +30,24 @@ def pytest_addoption(parser):
         default=os.getenv("INTEGRATION_TOKEN_ALT"),
     )
     parser.addoption(
+        "--github-app-client-id",
+        action="store",
+        help="GitHub App Client ID for integration tests.",
+        default=os.getenv("GITHUB_APP_CLIENT_ID"),
+    )
+    parser.addoption(
+        "--github-app-installation-id",
+        action="store",
+        help="GitHub App installation ID for integration tests.",
+        default=os.getenv("GITHUB_APP_INSTALLATION_ID"),
+    )
+    parser.addoption(
+        "--github-app-private-key",
+        action="store",
+        help="GitHub App PEM-encoded private key for integration tests.",
+        default=os.getenv("GITHUB_APP_PRIVATE_KEY"),
+    )
+    parser.addoption(
         "--openstack-auth-url",
         action="store",
         help="OpenStack authentication URL for integration tests.",

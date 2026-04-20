@@ -6,7 +6,7 @@
 import logging
 import time
 from pathlib import Path
-from typing import Generator
+from typing import Generator, cast
 
 import openstack
 import pytest
@@ -50,6 +50,9 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
     token = pytestconfig.getoption("--github-token")
     alt_token = pytestconfig.getoption("--github-token-alt", None)
     path = pytestconfig.getoption("--github-repository")
+    app_client_id = pytestconfig.getoption("--github-app-client-id") or None
+    installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
+    private_key = pytestconfig.getoption("--github-app-private-key") or None
 
     if not token or not alt_token or not path:
         pytest.fail(
@@ -58,6 +61,18 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
             "GITHUB_REPOSITORY environment variables."
         )
 
+    if all((app_client_id, installation_id_raw, private_key)):
+        logger.info("Using GitHub App authentication for integration tests")
+        return GitHubConfig(
+            token=token,
+            alt_token=alt_token,
+            path=path,
+            app_client_id=app_client_id,
+            installation_id=int(cast(str, installation_id_raw)),
+            private_key=private_key,
+        )
+
+    logger.info("Using PAT authentication for integration tests")
     return GitHubConfig(token=token, alt_token=alt_token, path=path)
 
 
