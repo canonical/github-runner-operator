@@ -1,33 +1,14 @@
-Applicable spec: <link>
+#### What this PR does
 
-### Overview
+#### Why we need it
 
-<!-- A high level overview of the change -->
+#### Checklist
 
-### Rationale
-
-<!-- The reason the change is needed -->
-
-### Juju Events Changes
-
-<!-- Any changes to the juju events being observed (newly added, significantly modified or deleted) -->
-
-### Module Changes
-
-<!-- Any high level changes to modules and why (Service, Observer, helper) -->
-
-### Library Changes
-
-<!-- Any changes to charm libraries -->
-
-### Checklist
-
-- [ ] The [charm style guide](https://juju.is/docs/sdk/styleguide) was applied.
-- [ ] The [contributing guide](https://github.com/canonical/is-charms-contributing-guide) was applied.
-- [ ] The changes are compliant with [ISD054 - Managing Charm Complexity](https://discourse.charmhub.io/t/specification-isd014-managing-charm-complexity/11619)
-- [ ] The documentation for charmhub is updated.
-- [ ] The PR is tagged with appropriate label (`urgent`, `trivial`, `complex`).
-- [ ] The changelog is updated with changes that affects the users of the charm.
-- [ ] The application version number is updated in `github-runner-manager/pyproject.toml`.
-
-<!-- Explanation for any unchecked items above -->
+- [ ] I followed the [contributing guide](https://github.com/canonical/is-charms-contributing-guide)
+- [ ] I added or updated the documentation (if applicable)
+- [ ] I updated `docs/changelog.md` with user-relevant changes
+- [ ] I used AI to assist with preparing this PR
+- [ ] I added or updated tests as needed (unit and integration)
+- [ ] **If this is a Grafana dashboard:** I added a screenshot of the dashboard
+- [ ] **If this is Terraform:** `terraform fmt` passes and `tflint` reports no errors
+- [ ] **If the github-runner-manager application has been changed:** The application version number is updated in `github-runner-manager/pyproject.toml`.
