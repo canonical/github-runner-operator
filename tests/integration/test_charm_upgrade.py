@@ -11,7 +11,6 @@ import pytest
 
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
@@ -32,6 +31,15 @@ from tests.integration.helpers.common import (
 pytestmark = pytest.mark.openstack
 
 
+@pytest.mark.skip(
+    reason=(
+        "latest/edge charm predates token-secret-id and openstack-clouds-yaml-secret-id "
+        "config options. Falling back to the plaintext token/openstack-clouds-yaml options "
+        "is not acceptable because jubilant logs deploy config, which leaks the token. "
+        "Re-enable once a release containing the secret-id options has been promoted to "
+        "latest/edge."
+    )
+)
 def test_charm_upgrade(
     juju: jubilant.Juju,
     deployment_context: DeploymentContext,
@@ -78,8 +86,8 @@ def test_charm_upgrade(
             no_proxy=openstack_config.no_proxy,
         ),
         reconcile_interval=5,
+        openstack_clouds_yaml=openstack_config.clouds_yaml_contents,
         config={
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
             OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
             USE_APROXY_CONFIG_NAME: "true",
