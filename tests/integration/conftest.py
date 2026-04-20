@@ -5,6 +5,7 @@
 
 import json
 import logging
+import os
 import random
 import re
 import secrets
@@ -321,7 +322,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
     app_client_id = pytestconfig.getoption("--github-app-client-id") or None
     installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
-    private_key = pytestconfig.getoption("--github-app-private-key") or None
+    private_key = os.getenv("GITHUB_APP_PRIVATE_KEY") or None
 
     if all((app_client_id, installation_id_raw, private_key)):
         logging.info("Using GitHub App authentication for integration tests")

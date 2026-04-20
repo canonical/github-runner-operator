@@ -4,6 +4,7 @@
 """Fixtures for github-runner-manager integration tests."""
 
 import logging
+import os
 import time
 from pathlib import Path
 from typing import Generator, cast
@@ -52,7 +53,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
     path = pytestconfig.getoption("--github-repository")
     app_client_id = pytestconfig.getoption("--github-app-client-id") or None
     installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
-    private_key = pytestconfig.getoption("--github-app-private-key") or None
+    private_key = os.getenv("GITHUB_APP_PRIVATE_KEY") or None
 
     if not token or not alt_token or not path:
         pytest.fail(
