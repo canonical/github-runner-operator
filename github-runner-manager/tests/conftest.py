@@ -24,12 +24,6 @@ def pytest_addoption(parser):
         help="The GitHub repository in <owner>/<repo> format for integration tests.",
     )
     parser.addoption(
-        "--github-token-alt",
-        action="store",
-        help="Alternate GitHub token from a different user for fork testing.",
-        default=os.getenv("INTEGRATION_TOKEN_ALT"),
-    )
-    parser.addoption(
         "--github-app-client-id",
         action="store",
         help="GitHub App Client ID for integration tests.",

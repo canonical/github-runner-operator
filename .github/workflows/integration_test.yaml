@@ -21,7 +21,7 @@ jobs:
       provider: lxd
       test-tox-env: integration
       modules: '["test_multi_unit_same_machine", "test_charm_no_runner", "test_charm_upgrade"]'
-      # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
+      # INTEGRATION_TOKEN, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
         -m=openstack \
@@ -49,7 +49,7 @@ jobs:
       provider: lxd
       test-tox-env: integration
       modules: '["test_prometheus_metrics"]'
-      # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
+      # INTEGRATION_TOKEN, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
       # mapping. See CONTRIBUTING.md for more details.
       extra-arguments: |
         -m=openstack \

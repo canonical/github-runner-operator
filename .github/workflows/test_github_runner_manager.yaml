@@ -37,7 +37,7 @@ jobs:
         working-directory: ./github-runner-manager/
         env:
           # GitHub configuration
-          # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT
+          # INTEGRATION_TOKEN
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
           # OpenStack configuration

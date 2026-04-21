@@ -25,7 +25,6 @@ class GitHubConfig:
 
     Attributes:
         token: GitHub personal access token.
-        alt_token: Alternate GitHub personal access token for external contributor.
         path: GitHub path in <owner>/<repo> or <org> format.
         app_client_id: GitHub App Client ID.
         installation_id: GitHub App installation ID.
@@ -34,7 +33,6 @@ class GitHubConfig:
     """
 
     token: str
-    alt_token: str
     path: str
     app_client_id: str | None = None
     installation_id: int | None = None
@@ -178,7 +176,6 @@ def create_default_config(
     if github_config is None:
         github_config = GitHubConfig(
             token="ghp_test_token_1234567890abcdef",
-            alt_token="ghp_test_alt_token_1234567890abcdef",
             path="test-org",
         )
 

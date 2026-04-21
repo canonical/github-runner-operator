@@ -49,24 +49,21 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
             environment variable is set.
     """
     token = pytestconfig.getoption("--github-token")
-    alt_token = pytestconfig.getoption("--github-token-alt", None)
     path = pytestconfig.getoption("--github-repository")
     app_client_id = pytestconfig.getoption("--github-app-client-id") or None
     installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
     private_key = os.getenv("GITHUB_APP_PRIVATE_KEY") or None
 
-    if not token or not alt_token or not path:
+    if not token or not path:
         pytest.fail(
-            "GitHub configuration not provided. Use --github-token, --github-token-alt, and "
-            "--github-repository options or set INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, and "
-            "GITHUB_REPOSITORY environment variables."
+            "GitHub configuration not provided. Use --github-token and --github-repository "
+            "options or set INTEGRATION_TOKEN and GITHUB_REPOSITORY environment variables."
         )
 
     if all((app_client_id, installation_id_raw, private_key)):
         logger.info("Using GitHub App authentication for integration tests")
         return GitHubConfig(
             token=token,
-            alt_token=alt_token,
             path=path,
             app_client_id=app_client_id,
             installation_id=int(cast(str, installation_id_raw)),
@@ -74,7 +71,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         )
 
     logger.info("Using PAT authentication for integration tests")
-    return GitHubConfig(token=token, alt_token=alt_token, path=path)
+    return GitHubConfig(token=token, path=path)
 
 
 @pytest.fixture(scope="module")

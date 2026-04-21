@@ -15,7 +15,6 @@ def test_create_default_config_uses_token_auth_by_default():
     config = create_default_config(
         github_config=GitHubConfig(
             token="ghp_test_token_1234567890abcdef",
-            alt_token="ghp_test_alt_token_1234567890abcdef",
             path="canonical/example",
         )
     )
@@ -32,7 +31,6 @@ def test_create_default_config_uses_github_app_auth_when_available():
     config = create_default_config(
         github_config=GitHubConfig(
             token="ghp_test_token_1234567890abcdef",
-            alt_token="ghp_test_alt_token_1234567890abcdef",
             path="canonical/example",
             app_client_id="Iv23liExample",
             installation_id=456,
