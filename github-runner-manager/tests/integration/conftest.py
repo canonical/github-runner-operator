@@ -45,10 +45,9 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         GitHub configuration object.
 
     Raises:
-        pytest.fail: If neither --github-token option nor INTEGRATION_TOKEN
-            environment variable is set.
+        pytest.fail: If INTEGRATION_TOKEN or the GitHub repository is not set.
     """
-    token = pytestconfig.getoption("--github-token")
+    token = os.getenv("INTEGRATION_TOKEN")
     path = pytestconfig.getoption("--github-repository")
     app_client_id = pytestconfig.getoption("--github-app-client-id") or None
     installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
@@ -56,8 +55,8 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
     if not token or not path:
         pytest.fail(
-            "GitHub configuration not provided. Use --github-token and --github-repository "
-            "options or set INTEGRATION_TOKEN and GITHUB_REPOSITORY environment variables."
+            "GitHub configuration not provided. Set INTEGRATION_TOKEN and use "
+            "--github-repository."
         )
 
     if all((app_client_id, installation_id_raw, private_key)):

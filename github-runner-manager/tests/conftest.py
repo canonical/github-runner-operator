@@ -13,12 +13,6 @@ def pytest_addoption(parser):
         parser: Pytest parser.
     """
     parser.addoption(
-        "--github-token",
-        action="store",
-        help="GitHub personal access token for integration tests.",
-        default=os.getenv("INTEGRATION_TOKEN"),
-    )
-    parser.addoption(
         "--github-repository",
         action="store",
         help="The GitHub repository in <owner>/<repo> format for integration tests.",
