@@ -32,11 +32,11 @@ class GitHubConfig:
         has_app_auth: Whether GitHub App authentication credentials are configured.
     """
 
-    token: str
+    token: str = field(repr=False)
     path: str
     app_client_id: str | None = None
     installation_id: int | None = None
-    private_key: str | None = None
+    private_key: str | None = field(default=None, repr=False)
 
     @property
     def has_app_auth(self) -> bool:
@@ -64,7 +64,7 @@ class OpenStackConfig:
     auth_url: str
     project: str
     username: str
-    password: str
+    password: str = field(repr=False)
     network: str
     region_name: str = "RegionOne"
     user_domain_name: str = "Default"
