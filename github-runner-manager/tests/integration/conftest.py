@@ -36,7 +36,12 @@ def test_config(pytestconfig: pytest.Config) -> TestConfig:
 
 @pytest.fixture(scope="module")
 def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
-    """Get GitHub configuration from pytest options or environment.
+    """Get GitHub configuration.
+
+    The token and private key are read from the environment only
+    (``INTEGRATION_TOKEN`` and ``GITHUB_APP_PRIVATE_KEY``). The repository path
+    and GitHub App client/installation IDs come from pytest options (which
+    themselves fall back to environment variables; see ``pytest_addoption``).
 
     Args:
         pytestconfig: Pytest configuration object.
