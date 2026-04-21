@@ -21,8 +21,8 @@ jobs:
       provider: lxd
       test-tox-env: integration
       modules: '["test_multi_unit_same_machine", "test_charm_no_runner", "test_charm_upgrade"]'
-      # INTEGRATION_TOKEN, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
+      # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+      # see CONTRIBUTING.md for the slot-to-var mapping.
       extra-arguments: |
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \
@@ -49,8 +49,8 @@ jobs:
       provider: lxd
       test-tox-env: integration
       modules: '["test_prometheus_metrics"]'
-      # INTEGRATION_TOKEN, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
+      # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+      # see CONTRIBUTING.md for the slot-to-var mapping.
       extra-arguments: |
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \

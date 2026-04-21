@@ -36,12 +36,10 @@ jobs:
       - name: Run integration tests - ${{ matrix.test-module }}
         working-directory: ./github-runner-manager/
         env:
-          # GitHub configuration
-          # INTEGRATION_TOKEN
+          # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+          # see CONTRIBUTING.md for the slot-to-var mapping.
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
-          # OpenStack configuration
-          # OS_AUTH_URL, OS_PROJECT_DOMAIN_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_USERNAME, OS_PASSWORD, OS_NETWORK, OS_REGION_NAME
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
