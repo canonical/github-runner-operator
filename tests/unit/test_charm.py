@@ -34,6 +34,7 @@ from charm_state import (
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_DEFAULT_PLATFORM,
@@ -45,6 +46,7 @@ from charm_state import (
     PLANNER_PLATFORM_RELATION_KEY,
     PLANNER_PRIORITY_RELATION_KEY,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     OpenStackCloudsYAML,
     OpenstackImage,
@@ -259,6 +261,12 @@ def test_on_config_changed_failure(harness: Harness):
         pytest.param(PATH_CONFIG_NAME, "initial-path", "updated-path", id="Path"),
         pytest.param(TOKEN_CONFIG_NAME, "initial-token", "updated-token", id="Token"),
         pytest.param(
+            TOKEN_SECRET_ID_CONFIG_NAME,
+            "secret:token-old",
+            "secret:token-new",
+            id="Token secret ID",
+        ),
+        pytest.param(
             GITHUB_APP_CLIENT_ID_CONFIG_NAME, "Iv23liOld", "Iv23liNew", id="GitHub App Client ID"
         ),
         pytest.param(
@@ -274,6 +282,12 @@ def test_on_config_changed_failure(harness: Harness):
             id="GitHub App Private Key Secret ID",
         ),
         pytest.param(LABELS_CONFIG_NAME, "label-a", "label-b", id="Labels"),
+        pytest.param(
+            OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
+            "secret:clouds-old",
+            "secret:clouds-new",
+            id="OpenStack clouds secret ID",
+        ),
     ],
 )
 def test__on_config_changed_flush(
@@ -306,6 +320,11 @@ def test__on_config_changed_flush(
     [
         pytest.param(PATH_CONFIG_NAME, secrets.token_hex(16), id="Path"),
         pytest.param(TOKEN_CONFIG_NAME, secrets.token_hex(16), id="Token"),
+        pytest.param(
+            TOKEN_SECRET_ID_CONFIG_NAME,
+            f"secret:{secrets.token_hex(8)}",
+            id="Token secret ID",
+        ),
         pytest.param(GITHUB_APP_CLIENT_ID_CONFIG_NAME, "Iv23liExample", id="GitHub App Client ID"),
         pytest.param(
             GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
@@ -318,6 +337,11 @@ def test__on_config_changed_flush(
             id="GitHub App Private Key Secret ID",
         ),
         pytest.param(LABELS_CONFIG_NAME, secrets.token_hex(16), id="Labels"),
+        pytest.param(
+            OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
+            f"secret:{secrets.token_hex(8)}",
+            id="OpenStack clouds secret ID",
+        ),
     ],
 )
 def test__on_config_changed_no_flush(
