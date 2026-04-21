@@ -56,6 +56,13 @@ disable = "W0511"
 log_cli_level = "INFO"
 markers = ["amd64", "arm64"]
 
+# Mutation testing: pilot scoped to thread_manager.py — small, pure-logic,
+# no decorators (mutmut 3 skips decorated functions), dedicated test file.
+[tool.mutmut]
+paths_to_mutate = ["src/github_runner_manager/thread_manager.py"]
+tests_dir = ["tests/unit/test_thread_manager.py"]
+also_copy = ["src/github_runner_manager/"]
+
 # Formatting tools configuration
 [tool.black]
 line-length = 99
