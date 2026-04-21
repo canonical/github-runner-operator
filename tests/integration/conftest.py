@@ -593,8 +593,7 @@ def image_builder_fixture(
     series = dep_ctx.series
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -607,8 +606,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = '{series}, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -864,8 +862,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -879,8 +876,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.app]["endpoint"] = "http://mock:8080"
                     event.relation.data[self.app]["token"] = "{planner_token_secret}"
-            """
-        ),
+            """),
     }
 
     juju.deploy(
