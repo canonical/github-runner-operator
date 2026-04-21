@@ -40,8 +40,8 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
     The token and private key are read from the environment only
     (``INTEGRATION_TOKEN`` and ``GITHUB_APP_PRIVATE_KEY``). The repository path
-    and GitHub App client/installation IDs come from pytest options (which
-    themselves fall back to environment variables; see ``pytest_addoption``).
+    and GitHub App client/installation IDs come from pytest options; the app
+    ID options fall back to environment variables (see ``pytest_addoption``).
 
     Args:
         pytestconfig: Pytest configuration object.
