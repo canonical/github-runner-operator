@@ -38,6 +38,7 @@ jobs:
         env:
           # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
           # see CONTRIBUTING.md for the slot-to-var mapping.
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
@@ -48,6 +49,8 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_11 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_11 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_12 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_12 }}
         run: |
           tox -e integration -- -v --tb=native -s \
             tests/integration/${{ matrix.test-module }}.py \
