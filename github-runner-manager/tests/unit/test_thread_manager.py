@@ -8,7 +8,7 @@ from queue import Queue
 
 import pytest
 
-from src.github_runner_manager.thread_manager import ThreadManager
+from github_runner_manager.thread_manager import ThreadManager
 
 
 def test_thread_manager_run():

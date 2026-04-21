@@ -10,7 +10,7 @@ from ipaddress import IPv4Address
 import pytest
 import yaml
 
-from src.github_runner_manager.configuration import (
+from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
     GitHubAppAuth,
@@ -24,7 +24,7 @@ from src.github_runner_manager.configuration import (
     SSHDebugConnection,
     SupportServiceConfig,
 )
-from src.github_runner_manager.openstack_cloud.configuration import (
+from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )

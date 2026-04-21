@@ -14,7 +14,7 @@ from typing import Any
 import requests
 import yaml
 
-from src.github_runner_manager.cli import main
+from github_runner_manager.cli import main
 
 logger = logging.getLogger(__name__)
 
