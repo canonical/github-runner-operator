@@ -31,7 +31,6 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     LABELS_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -561,7 +560,6 @@ def image_builder_fixture(
                 "virt-type": "virtual-machine",
                 "cores": "2",
             },
-            log=False,
         )
 
         yield image_builder_app_name
@@ -581,8 +579,7 @@ def image_builder_fixture(
     series = dep_ctx.series
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -595,8 +592,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = '{series}, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -638,13 +634,13 @@ def app_openstack_runner_fixture(
                 no_proxy=openstack_config.no_proxy,
             ),
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
+            openstack_clouds_yaml=openstack_config.clouds_yaml_contents,
             constraints={
                 "root-disk": "51200M",
                 "mem": "2048M",
                 "virt-type": "virtual-machine",
             },
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_config.http_proxy),
@@ -922,8 +918,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -937,8 +932,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.app]["endpoint"] = "http://mock:8080"
                     event.relation.data[self.app]["token"] = "{planner_token_secret}"
-            """
-        ),
+            """),
     }
 
     juju.deploy(

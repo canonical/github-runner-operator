@@ -20,6 +20,12 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.skip(
+    reason=(
+        "Fork creation fails under the current fine-grained PAT (scoped to canonical org, "
+        "fork lands in a personal namespace). Will be resolved in an upcoming PR."
+    )
+)
 @pytest.mark.openstack
 @pytest.mark.abort_on_fail
 def test_path_config_change(
