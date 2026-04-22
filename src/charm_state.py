@@ -53,6 +53,7 @@ LABELS_CONFIG_NAME = "labels"
 MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
 MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME = "manager-ssh-proxy-command"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
+OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME = "openstack-clouds-yaml-secret-id"  # nosec
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 PATH_CONFIG_NAME = "path"
@@ -61,6 +62,7 @@ RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
+TOKEN_SECRET_ID_CONFIG_NAME = "token-secret-id"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME = "aproxy-exclude-addresses"
 APROXY_REDIRECT_PORTS_CONFIG_NAME = "aproxy-redirect-ports"
@@ -154,6 +156,7 @@ class GithubConfig:
     path: GitHubPath
 
     @classmethod
+    # pylint: disable=too-many-locals
     def from_charm(cls, charm: CharmBase) -> "GithubConfig":  # noqa: C901
         """Get github related charm configuration values from charm.
 
@@ -170,6 +173,7 @@ class GithubConfig:
 
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME)) or None
+        token_secret_id = cast(str, charm.config.get(TOKEN_SECRET_ID_CONFIG_NAME)) or None
         app_client_id = cast(str, charm.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)) or None
         installation_id = (
             cast(int, charm.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME)) or None
@@ -189,13 +193,27 @@ class GithubConfig:
         app_fields = (app_client_id, installation_id, private_key_secret_id)
         app_fields_set = sum(field is not None for field in app_fields)
 
+        if token_secret_id:
+            try:
+                token_secret = charm.model.get_secret(id=token_secret_id)
+                token = token_secret.get_content(refresh=True).get("github-token")
+            except SecretNotFoundError as exc:
+                raise CharmConfigInvalidError(
+                    f"GitHub token secret {token_secret_id} not found"
+                ) from exc
+            if not token:
+                raise CharmConfigInvalidError(
+                    f"GitHub token secret {token_secret_id} is missing github-token"
+                )
+
         if token and app_fields_set:
             raise CharmConfigInvalidError(
                 "Configure either token or GitHub App authentication, not both"
             )
         if not token and not app_fields_set:
             raise CharmConfigInvalidError(
-                f"Missing {TOKEN_CONFIG_NAME} or GitHub App authentication configuration"
+                f"Missing {TOKEN_CONFIG_NAME}, {TOKEN_SECRET_ID_CONFIG_NAME} "
+                "or GitHub App authentication configuration"
             )
         if not token and app_fields_set != 3:
             raise CharmConfigInvalidError(
@@ -387,11 +405,37 @@ class CharmConfig(BaseModel):
         Returns:
             The openstack clouds yaml.
         """
+        openstack_clouds_yaml_secret_id = (
+            cast(str, charm.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)) or None
+        )
         openstack_clouds_yaml_str: str | None = cast(
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
+        source = OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+
+        if openstack_clouds_yaml_secret_id:
+            source = OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
+            try:
+                cloud_secret = charm.model.get_secret(id=openstack_clouds_yaml_secret_id)
+                openstack_clouds_yaml_str = cloud_secret.get_content(refresh=True).get(
+                    "clouds-yaml"
+                )
+            except SecretNotFoundError as exc:
+                raise CharmConfigInvalidError(
+                    f"OpenStack clouds.yaml secret {openstack_clouds_yaml_secret_id} not found"
+                ) from exc
+            if not openstack_clouds_yaml_str:
+                raise CharmConfigInvalidError(
+                    "OpenStack clouds.yaml secret "
+                    f"{openstack_clouds_yaml_secret_id} is missing clouds-yaml"
+                )
+
         if not openstack_clouds_yaml_str:
-            raise CharmConfigInvalidError("No openstack_clouds_yaml")
+            raise CharmConfigInvalidError(
+                "Missing OpenStack clouds configuration; set either "
+                f"{OPENSTACK_CLOUDS_YAML_CONFIG_NAME} or "
+                f"{OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME}."
+            )
 
         try:
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
@@ -400,10 +444,21 @@ class CharmConfig(BaseModel):
             # use Pydantic to validate TypedDict.
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
-            logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
-            raise CharmConfigInvalidError(
-                f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
-            ) from exc
+            if source == OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME:
+                # Don't log `exc` or chain with `from exc`: yaml.YAMLError and
+                # pydantic TypeError messages can embed a snippet of the
+                # offending input (here, the decrypted clouds.yaml), and the
+                # chained cause would be printed by `logger.exception` upstream.
+                logger.error(
+                    "Invalid OpenStack clouds.yaml content in secret %s.",
+                    openstack_clouds_yaml_secret_id,
+                )
+                raise CharmConfigInvalidError(
+                    "Invalid OpenStack clouds.yaml content in secret "
+                    f"{openstack_clouds_yaml_secret_id}. Invalid yaml."
+                ) from None
+            logger.error("Invalid %s config: %s.", source, exc)
+            raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 
         return openstack_clouds_yaml
 

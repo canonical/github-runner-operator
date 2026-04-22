@@ -31,7 +31,6 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     LABELS_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -561,7 +560,6 @@ def image_builder_fixture(
                 "virt-type": "virtual-machine",
                 "cores": "2",
             },
-            log=False,
         )
 
         yield image_builder_app_name
@@ -636,13 +634,13 @@ def app_openstack_runner_fixture(
                 no_proxy=openstack_config.no_proxy,
             ),
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
+            openstack_clouds_yaml=openstack_config.clouds_yaml_contents,
             constraints={
                 "root-disk": "51200M",
                 "mem": "2048M",
                 "virt-type": "virtual-machine",
             },
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_config.http_proxy),
