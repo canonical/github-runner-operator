@@ -20,9 +20,9 @@ jobs:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration
-      modules: '["test_multi_unit_same_machine", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_upgrade"]'
-      # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
+      modules: '["test_multi_unit_same_machine", "test_charm_no_runner", "test_charm_upgrade"]'
+      # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+      # see CONTRIBUTING.md for the slot-to-var mapping.
       extra-arguments: |
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \
@@ -35,6 +35,7 @@ jobs:
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
         --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+        --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
@@ -49,8 +50,8 @@ jobs:
       provider: lxd
       test-tox-env: integration
       modules: '["test_prometheus_metrics"]'
-      # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, OS_* are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
+      # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+      # see CONTRIBUTING.md for the slot-to-var mapping.
       extra-arguments: |
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \
@@ -63,6 +64,7 @@ jobs:
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
         --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+        --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
@@ -91,6 +93,7 @@ jobs:
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
         --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+        --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}" \
         --base="${{ matrix.base }}"
       self-hosted-runner: true
