@@ -180,12 +180,6 @@ def pytest_addoption(parser: Parser):
         default=os.environ.get("GITHUB_APP_INSTALLATION_ID"),
     )
     parser.addoption(
-        "--github-app-private-key",
-        action="store",
-        help="The GitHub App PEM-encoded private key for GitHub App authentication testing.",
-        default=os.environ.get("GITHUB_APP_PRIVATE_KEY"),
-    )
-    parser.addoption(
         "--keep-models",
         action="store_true",
         default=False,

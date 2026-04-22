@@ -13,21 +13,21 @@ def pytest_addoption(parser):
         parser: Pytest parser.
     """
     parser.addoption(
-        "--github-token",
-        action="store",
-        help="GitHub personal access token for integration tests.",
-        default=os.getenv("INTEGRATION_TOKEN"),
-    )
-    parser.addoption(
         "--github-repository",
         action="store",
         help="The GitHub repository in <owner>/<repo> format for integration tests.",
     )
     parser.addoption(
-        "--github-token-alt",
+        "--github-app-client-id",
         action="store",
-        help="Alternate GitHub token from a different user for fork testing.",
-        default=os.getenv("INTEGRATION_TOKEN_ALT"),
+        help="GitHub App Client ID for integration tests.",
+        default=os.getenv("GITHUB_APP_CLIENT_ID"),
+    )
+    parser.addoption(
+        "--github-app-installation-id",
+        action="store",
+        help="GitHub App installation ID for integration tests.",
+        default=os.getenv("GITHUB_APP_INSTALLATION_ID"),
     )
     parser.addoption(
         "--openstack-auth-url",
