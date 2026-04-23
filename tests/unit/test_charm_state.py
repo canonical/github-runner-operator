@@ -1341,7 +1341,15 @@ def test_build_otel_collector_config_from_charm_valid_endpoint(hostname: str, po
 
 
 @pytest.mark.parametrize(
-    "endpoint", ["10.10.0.12", "10.10.0.12:", "http://10.10.0.12:4317", "fake_hostname"]
+    "endpoint",
+    [
+        "10.10.0.12",
+        "10.10.0.12:",
+        "http://10.10.0.12:4317",
+        "fake_hostname",
+        "10.10.0.12:4317?x=y",
+        "10.10.0.12:4317#x",
+    ],
 )
 def test_build_otel_collector_config_from_charm_invalid_endpoint(endpoint: str) -> None:
     """

@@ -861,7 +861,13 @@ def _build_otel_collector_config_from_charm(charm: CharmBase) -> OtelCollectorCo
             f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
         )
 
-    if parsed_endpoint.username or parsed_endpoint.password or parsed_endpoint.path:
+    if (
+        parsed_endpoint.username
+        or parsed_endpoint.password
+        or parsed_endpoint.path
+        or parsed_endpoint.query
+        or parsed_endpoint.fragment
+    ):
         raise CharmConfigInvalidError(
             f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
         )
