@@ -170,7 +170,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
             if service_config.ssh_debug_connections
             else None
         )
-        otel_collector_endpoint = (f"{otel_collector_config.host}:{otel_collector_config.port}" if otel_collector_config else "")
+        otel_collector_config = service_config.otel_collector_config
+        otel_collector_endpoint = (
+            f"{otel_collector_config.host}:{otel_collector_config.port}"
+            if otel_collector_config
+            else ""
+        )
         env_contents = jinja.get_template("env.j2").render(
             pre_job_script=str(PRE_JOB_SCRIPT),
             dockerhub_mirror=service_config.dockerhub_mirror or "",
@@ -178,7 +183,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             tmate_server_proxy=runner_http_proxy,
             otel_collector_endpoint=otel_collector_endpoint,
         )
-        otel_collector_config = service_config.otel_collector_config
         pre_job_contents_dict = {
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
