@@ -138,7 +138,7 @@ class OtelCollectorConfig(BaseModel):
     """
 
     host: str
-    port: int = Field(0, gt=0, le=65535)
+    port: int = Field(gt=0, le=65535)
 
 
 class ProxyConfig(BaseModel):
