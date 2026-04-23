@@ -244,7 +244,7 @@ config:
       type: string
       default: ""
       description: >-
-        The endpoint to send OpenTelemetry traces to in the format "host:port". If not set, OpenTelemetry
+        The endpoint to send OpenTelemetry metrics to in the format "host:port". If not set, OpenTelemetry
         will be disabled.
 
 actions:
