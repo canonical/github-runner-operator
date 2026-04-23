@@ -2,9 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-04-16
+## 2026-04-23
 
 - Exposed the configured GitHub path (org or repo) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
+
+## 2026-04-17
+
+- Added `token-secret-id` and `openstack-clouds-yaml-secret-id` configuration options, allowing the GitHub token and OpenStack `clouds.yaml` to be supplied through Juju user secrets. When set, these take precedence over the plaintext `token` and `openstack-clouds-yaml` options, which remain supported as a compatibility fallback.
 
 ## 2026-04-13
 

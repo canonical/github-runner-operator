@@ -5,6 +5,7 @@
 
 import json
 import logging
+import os
 import random
 import re
 import secrets
@@ -12,7 +13,6 @@ import string
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from time import sleep
 from typing import Any, Generator, Iterator, Optional, cast
 
 import jubilant
@@ -31,10 +31,8 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     LABELS_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
-    PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
@@ -320,6 +318,21 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         "path of <org>/<repo> or <user>/<repo> format."
     )
 
+    app_client_id = pytestconfig.getoption("--github-app-client-id") or None
+    installation_id_raw = pytestconfig.getoption("--github-app-installation-id") or None
+    private_key = os.getenv("GITHUB_APP_PRIVATE_KEY") or None
+
+    if all((app_client_id, installation_id_raw, private_key)):
+        logging.info("Using GitHub App authentication for integration tests")
+        return GitHubConfig(
+            token=random_token,
+            path=path,
+            app_client_id=app_client_id,
+            installation_id=int(cast(str, installation_id_raw)),
+            private_key=private_key,
+        )
+
+    logging.info("Using PAT authentication for integration tests")
     return GitHubConfig(token=random_token, path=path)
 
 
@@ -561,7 +574,6 @@ def image_builder_fixture(
                 "virt-type": "virtual-machine",
                 "cores": "2",
             },
-            log=False,
         )
 
         yield image_builder_app_name
@@ -581,8 +593,7 @@ def image_builder_fixture(
     series = dep_ctx.series
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -595,8 +606,7 @@ relation_changed, self._image_relation_changed)
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = '{series}, amd64'
-            """
-        ),
+            """),
     }
     logging.info(
         "Deploying fake image builder via any-charm for image ID %s",
@@ -638,13 +648,13 @@ def app_openstack_runner_fixture(
                 no_proxy=openstack_config.no_proxy,
             ),
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
+            openstack_clouds_yaml=openstack_config.clouds_yaml_contents,
             constraints={
                 "root-disk": "51200M",
                 "mem": "2048M",
                 "virt-type": "virtual-machine",
             },
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_config.http_proxy),
@@ -780,76 +790,6 @@ def github_repository(github_client: Github, github_config: GitHubConfig) -> Rep
     return github_client.get_repo(github_config.path)
 
 
-@pytest.fixture(scope="module")
-def forked_github_repository(
-    github_repository: Repository,
-) -> Repository:
-    """Create a fork for a GitHub repository."""
-    # After fork creation, the repository workflow run must be enabled manually. Otherwise, a 404
-    # on the workflow get API will be returned.
-    forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
-
-    # Wait for repo to be ready
-    for _ in range(10):
-        try:
-            sleep(10)
-            forked_repository.get_branches()
-            break
-        except GithubException:
-            pass
-    else:
-        assert False, "timed out whilst waiting for repository creation"
-
-    return forked_repository
-
-    # Parallel runs of this test module is allowed. Therefore, the forked repo is not removed.
-
-
-@pytest.fixture(scope="module")
-def forked_github_branch(
-    github_repository: Repository, forked_github_repository: Repository
-) -> Iterator[Branch]:
-    """Create a new forked branch for testing."""
-    branch_name = f"test/{secrets.token_hex(4)}"
-
-    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
-    branch_ref = forked_github_repository.create_git_ref(
-        ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
-    )
-
-    for _ in range(10):
-        try:
-            branch = forked_github_repository.get_branch(branch_name)
-            break
-        except GithubException as err:
-            if err.status == 404:
-                sleep(5)
-                continue
-            raise
-    else:
-        assert (
-            False
-        ), "Failed to get created branch in fork repo, the issue with GitHub or network."
-
-    yield branch
-
-    branch_ref.delete()
-
-
-@pytest.fixture(scope="module")
-def app_with_forked_repo(
-    juju: jubilant.Juju, basic_app: str, forked_github_repository: Repository
-) -> str:
-    """Application with no runner on a forked repo.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    juju.config(basic_app, values={PATH_CONFIG_NAME: forked_github_repository.full_name})
-
-    return basic_app
-
-
 @pytest.fixture(scope="module", name="test_github_branch")
 def test_github_branch_fixture(github_repository: Repository) -> Iterator[Branch]:
     """Create a new branch for testing, from latest commit in current branch."""
@@ -922,8 +862,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
     planner_name = "planner"
 
     any_charm_src_overwrite = {
-        "any_charm.py": textwrap.dedent(
-            f"""\
+        "any_charm.py": textwrap.dedent(f"""\
             from any_charm_base import AnyCharmBase
 
             class AnyCharm(AnyCharmBase):
@@ -937,8 +876,7 @@ def mock_planner_app(juju: jubilant.Juju, planner_token_secret: str) -> Iterator
                 def _on_planner_relation_changed(self, event):
                     event.relation.data[self.app]["endpoint"] = "http://mock:8080"
                     event.relation.data[self.app]["token"] = "{planner_token_secret}"
-            """
-        ),
+            """),
     }
 
     juju.deploy(

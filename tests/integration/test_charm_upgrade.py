@@ -11,7 +11,6 @@ import pytest
 
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
-    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
@@ -78,8 +77,8 @@ def test_charm_upgrade(
             no_proxy=openstack_config.no_proxy,
         ),
         reconcile_interval=5,
+        openstack_clouds_yaml=openstack_config.clouds_yaml_contents,
         config={
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
             OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
             OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
             USE_APROXY_CONFIG_NAME: "true",
