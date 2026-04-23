@@ -152,9 +152,12 @@ processors:
       - key: github_runner
         action: upsert
         value:  "$RUNNER_NAME"
-      - key: github_workflow_job
+      - key: github_workflow
         action: upsert
-        value:  "$GITHUB_WORKFLOW_JOB"
+        value:  "$GITHUB_WORKFLOW"
+      - key: github_job
+        action: upsert
+        value:  "$GITHUB_JOB"
       - key: github_repository
         action: upsert
         value:  "$GITHUB_REPOSITORY"
