@@ -10,7 +10,11 @@ import pytest
 from github.Branch import Branch
 from github.Repository import Repository
 
-from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
+from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME,
+    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
+)
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -186,3 +190,47 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     logs = get_job_logs(workflow_run.jobs("latest")[0])
     assert "SSH config" in logs
     assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
+
+
+@pytest.mark.openstack
+@pytest.mark.abort_on_fail
+def test_otel_collector_endpoint_pre_job_installs_config(
+    juju: jubilant.Juju,
+    app: str,
+    github_repository: Repository,
+    test_github_branch: Branch,
+    instance_helper: OpenStackInstanceHelper,
+) -> None:
+    """
+    arrange: A working application with one runner and otel collector endpoint configured.
+    act: Dispatch a workflow to run pre-job script.
+    assert: The workflow writes otel collector config to /etc/otelcol/config.d/github.yaml.
+    """
+    endpoint = "10.10.0.12:4317"
+    juju.config(
+        app,
+        values={
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME: endpoint,
+        },
+    )
+    wait_for_runner_ready(juju, app)
+
+    dispatch_workflow(
+        app_name=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app},
+    )
+
+    exit_code, stdout, stderr = instance_helper.run_in_instance(
+        unit_name=f"{app}/0",
+        command="sudo cat /etc/otelcol/config.d/github.yaml",
+    )
+
+    assert exit_code == 0, stderr
+    assert stdout is not None
+    assert "exporters:" in stdout
+    assert f"endpoint: {endpoint}" in stdout

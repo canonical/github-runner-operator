@@ -33,6 +33,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
+    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
@@ -53,6 +54,7 @@ from charm_state import (
     PlannerConfig,
     ProxyConfig,
     SSHDebugConnection,
+    _build_otel_collector_config_from_charm,
     _build_planner_config_from_charm,
 )
 from tests.unit.factories import MockGithubRunnerCharmFactory
@@ -1306,3 +1308,57 @@ def test_invalid_aproxy_config_in_charm_state(
 
     with pytest.raises(CharmConfigInvalidError):
         CharmState.from_charm(mock_charm)
+
+
+def test_build_otel_collector_config_from_charm_not_set() -> None:
+    """
+    arrange: Mock CharmBase without otel collector endpoint.
+    act: Build otel collector config.
+    assert: None is returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    otel_collector_config = _build_otel_collector_config_from_charm(mock_charm)
+
+    assert otel_collector_config is None
+
+
+@pytest.mark.parametrize("hostname, port", [("10.10.0.12", 42), ("mock_hostname", 823)])
+def test_build_otel_collector_config_from_charm_valid_endpoint(hostname: str, port: int) -> None:
+    """
+    arrange: Mock CharmBase with a valid otel collector endpoint.
+    act: Build otel collector config.
+    assert: Parsed host and port are returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME] = f"{hostname}:{port}"
+
+    otel_collector_config = _build_otel_collector_config_from_charm(mock_charm)
+
+    assert otel_collector_config is not None
+    assert str(otel_collector_config.host) == hostname
+    assert otel_collector_config.port == port
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "10.10.0.12",
+        "10.10.0.12:",
+        "http://10.10.0.12:4317",
+        "fake_hostname",
+        "10.10.0.12:4317?x=y",
+        "10.10.0.12:4317#x",
+    ],
+)
+def test_build_otel_collector_config_from_charm_invalid_endpoint(endpoint: str) -> None:
+    """
+    arrange: Mock CharmBase with malformed endpoint formats.
+    act: Build otel collector config.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME] = endpoint
+
+    with pytest.raises(CharmConfigInvalidError):
+        _build_otel_collector_config_from_charm(mock_charm)

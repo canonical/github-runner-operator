@@ -7,6 +7,7 @@ from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
     Image,
+    OtelCollectorConfig,
     ProxyConfig,
     RunnerCombination,
     RunnerConfiguration,
@@ -147,6 +148,26 @@ def test_create_application_configuration_with_planner(
 
     assert str(app_configuration.planner_url) == "http://planner.example.com"
     assert app_configuration.planner_token == "planner-token-value"
+
+
+def test_create_application_configuration_with_otel_collector_config(
+    complete_charm_state: charm_state.CharmState,
+):
+    """
+    arrange: Prepare CharmState with otel collector config.
+    act: Call create_application_configuration.
+    assert: The service config contains the collector endpoint.
+    """
+    state = dataclasses.replace(
+        complete_charm_state,
+        otel_collector_config=OtelCollectorConfig(host="10.10.0.12", port=4317),
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
+    assert app_configuration.service_config.otel_collector_config is not None
+    assert str(app_configuration.service_config.otel_collector_config.host) == "10.10.0.12"
+    assert app_configuration.service_config.otel_collector_config.port == 4317
 
 
 @pytest.mark.parametrize(

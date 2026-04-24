@@ -131,6 +131,57 @@ jq -n \
   logger -s "Contributor check passed - proceeding to execute jobs"
 {% endif %}
 
+# Setup the OpenTelemetry collector configurations.
+{% if otel_collector_endpoint %}
+/usr/bin/logger -s "OpenTelemetry collector is enabled."
+/usr/bin/logger -s "Additional OpenTelemetery collector configuration can be added."
+/usr/bin/logger -s "The exporter endpoint is at the environment variable ACTION_OTEL_EXPORTER_OTLP_ENDPOINT."
+/usr/bin/sudo /usr/bin/mkdir -p /etc/otelcol/config.d
+/usr/bin/sudo /usr/bin/touch /etc/otelcol/config.d/github.yaml
+/usr/bin/sudo /usr/bin/tee /etc/otelcol/config.d/github.yaml <<EOF
+receivers:
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      network:
+      load:
+processors:
+  attributes/github_labels:
+    actions:
+      - key: github_runner
+        action: upsert
+        value:  "$RUNNER_NAME"
+      - key: github_workflow
+        action: upsert
+        value:  "$GITHUB_WORKFLOW"
+      - key: github_job
+        action: upsert
+        value:  "$GITHUB_JOB"
+      - key: github_repository
+        action: upsert
+        value:  "$GITHUB_REPOSITORY"
+  batch:
+exporters:
+  otlp/mimir:
+    endpoint: {{ otel_collector_endpoint }}
+    tls:
+      insecure: true
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [attributes/github_labels, batch]
+      exporters: [otlp/mimir]
+EOF
+
+/usr/bin/sudo /usr/bin/snap enable opentelemetry-collector
+/usr/bin/sudo /usr/bin/snap start opentelemetry-collector
+{% endif %}
+
 if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "A private docker registry is setup as a dockerhub mirror for this self-hosted runner."
   logger -s "The docker daemon on this self-hosted runner is configured to use the dockerhub mirror."

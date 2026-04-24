@@ -240,6 +240,12 @@ config:
       description: >-
         The log level for the runner manager application. The value can be CRITICAL, FATAL, ERROR,
         WARNING, INFO, or DEBUG.
+    otel-collector-endpoint:
+      type: string
+      default: ""
+      description: >-
+        The endpoint to send OpenTelemetry metrics to in the format "host:port". If not set, OpenTelemetry
+        will be disabled.
 
 actions:
   check-runners:
