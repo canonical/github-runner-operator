@@ -2,9 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2026-04-23
+## 2026-04-24
 
 - Exposed the configured GitHub path (org or repo) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
+
+## 2026-04-22
+
+- Removed `KillMode=process` from the runner manager systemd service, restoring the default `control-group` kill mode. This ensures all child processes in the service's cgroup are properly terminated when the service stops, preventing orphaned runner processes.
 
 ## 2026-04-17
 
