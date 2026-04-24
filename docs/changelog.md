@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2026-04-24
 
-- Exposed the configured GitHub path (org or repo) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
+- Exposed the configured GitHub path (org or repository) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
 
 ## 2026-04-22
 
