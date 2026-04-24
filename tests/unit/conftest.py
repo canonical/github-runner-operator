@@ -188,5 +188,6 @@ def complete_charm_state_fixture():
                 ed25519_fingerprint="SHA256:ed25519",
             ),
         ],
+        otel_collector_config=None,
         planner_config=None,
     )

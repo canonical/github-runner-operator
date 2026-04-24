@@ -125,10 +125,11 @@ class OpenStackInstanceHelper:
         exit_code, _, _ = run_in_unit(self.juju, unit_name, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
-        ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
-        logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
+        # The SSH command needs to be run as the manager user to have access to the SSH keys.
+        ssh_cmd_as_manager_user = f"su - {constants.RUNNER_MANAGER_USER} -c '{ssh_cmd}'"
+        logging.warning("ssh_cmd: %s", ssh_cmd_as_manager_user)
         exit_code, stdout, stderr = run_in_unit(
-            self.juju, unit_name, ssh_cmd_as_ubuntu_user, timeout
+            self.juju, unit_name, ssh_cmd_as_manager_user, timeout
         )
         logger.info(
             "Run command '%s' in runner with result %s: '%s' '%s'",

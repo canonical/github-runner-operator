@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-04-27
+
+- Added configuration option `otel-collector-endpoint` to enable the otel-collector to export metric. Setting this configuration option will add the environment variable ACTION_OTEL_EXPORTER_OTLP_ENDPOINT to the runner, which allow users to configure their own metrics to be exported.
+
 ## 2026-04-22
 
 - Removed `KillMode=process` from the runner manager systemd service, restoring the default `control-group` kill mode. This ensures all child processes in the service's cgroup are properly terminated when the service stops, preventing orphaned runner processes.

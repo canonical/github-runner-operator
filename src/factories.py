@@ -53,6 +53,7 @@ def create_application_configuration(
         runner_proxy_config=state.runner_proxy_config,
         dockerhub_mirror=state.charm_config.dockerhub_mirror,
         ssh_debug_connections=state.ssh_debug_connections,
+        otel_collector_config=state.otel_collector_config,
         use_aproxy=state.charm_config.use_aproxy,
         aproxy_exclude_addresses=state.charm_config.aproxy_exclude_addresses,
         aproxy_redirect_ports=state.charm_config.aproxy_redirect_ports,
