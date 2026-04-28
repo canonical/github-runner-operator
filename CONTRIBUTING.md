@@ -56,6 +56,8 @@ For sensitive values (`INTEGRATION_TOKEN`, `OS_PASSWORD`, `GITHUB_APP_INSTALLATI
 This is to prevent GitHub from leaking secrets when passing them over the CLI calls (unresolved).
 See the workflow files for the current slot assignments.
 
+To trigger E2E tests (required status check), you can comment "ci: run e2e" on the Pull Request itself. This is to prevent resource intensive CI runs on every PR.
+
 ### Building the charm
 
 Build the charm in this git repository using:
