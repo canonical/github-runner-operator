@@ -192,18 +192,32 @@ processors:
       - key: host.arch
         action: upsert
         value: "$(uname -m)"
-  transform/self_hosted_runner_attributes_to_resource:
-    log_statements:
-      - context: log
-        statements:
-          - set(resource.attributes["service.name"], attributes["service.name"]) where attributes["service.name"] != nil
-          - set(resource.attributes["github.repository"], attributes["github.repository"]) where attributes["github.repository"] != nil
-          - set(resource.attributes["github.runner"], attributes["github.runner"]) where attributes["github.runner"] != nil
-          - set(resource.attributes["github.workflow"], attributes["github.workflow"]) where attributes["github.workflow"] != nil
-          - set(resource.attributes["github.job"], attributes["github.job"]) where attributes["github.job"] != nil
-          - set(resource.attributes["github.run.id"], attributes["github.run.id"]) where attributes["github.run.id"] != nil
-          - set(resource.attributes["github.run.attempt"], attributes["github.run.attempt"]) where attributes["github.run.attempt"] != nil
-          - set(resource.attributes["host.arch"], attributes["host.arch"]) where attributes["host.arch"] != nil
+  resource/self_hosted_runner_github_labels:
+    attributes:
+      - key: service.name
+        action: upsert
+        value: "self-hosted-runner"
+      - key: github.repository
+        action: upsert
+        value: "$GITHUB_REPOSITORY"
+      - key: github.runner
+        action: upsert
+        value: "$RUNNER_NAME"
+      - key: github.workflow
+        action: upsert
+        value: "$GITHUB_WORKFLOW"
+      - key: github.job
+        action: upsert
+        value: "$GITHUB_JOB"
+      - key: github.run.id
+        action: upsert
+        value: "$GITHUB_RUN_ID"
+      - key: github.run.attempt
+        action: upsert
+        value: "$GITHUB_RUN_ATTEMPT"
+      - key: host.arch
+        action: upsert
+        value: "$(uname -m)"
   transform/self_hosted_runner_loki_labels:
     log_statements:
       - context: resource
@@ -236,22 +250,20 @@ service:
     logs/otlp:
       receivers: [otlp]
       processors:
-        - attributes/self_hosted_runner_github_labels
-        - transform/self_hosted_runner_attributes_to_resource
+        - resource/self_hosted_runner_github_labels
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
     logs/loki:
       receivers: [loki]
       processors:
-        - attributes/self_hosted_runner_github_labels
-        - transform/self_hosted_runner_attributes_to_resource
+        - resource/self_hosted_runner_github_labels
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
     traces:
       receivers: [otlp]
-      processors: [attributes/self_hosted_runner_github_labels, batch]
+      processors: [resource/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
 EOF
 
