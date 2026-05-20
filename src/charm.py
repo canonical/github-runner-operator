@@ -34,6 +34,7 @@ from ops.charm import (
     ConfigChangedEvent,
     EventBase,
     InstallEvent,
+    SecretChangedEvent,
     StartEvent,
     StopEvent,
     UpdateStatusEvent,
@@ -47,11 +48,16 @@ import manager_service
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
@@ -79,6 +85,25 @@ UPGRADE_MSG = "Upgrading github-runner charm."
 LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
 LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
+
+# Config keys whose change triggers a runner flush, mapped to the attribute
+# on `_stored` that tracks the last-seen value. The plaintext
+# `openstack-clouds-yaml` option is intentionally omitted: tracking it here would
+# persist the credentials to `.unit-state.db` on disk. Operators who want
+# automatic flush on credential rotation should use
+# `openstack-clouds-yaml-secret-id`, which is flushed via this mapping and via
+# `on_secret_changed` when the secret content rotates.
+_FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
+    (TOKEN_CONFIG_NAME, "token"),
+    (TOKEN_SECRET_ID_CONFIG_NAME, "token_secret_id"),
+    (GITHUB_APP_CLIENT_ID_CONFIG_NAME, "github_app_client_id"),
+    (GITHUB_APP_INSTALLATION_ID_CONFIG_NAME, "github_app_installation_id"),
+    (GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "github_app_private_key_secret_id"),
+    (PATH_CONFIG_NAME, "path"),
+    (LABELS_CONFIG_NAME, "labels"),
+    (OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME, "openstack_clouds_yaml_secret_id"),
+    (ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, "allow_external_contributor"),
+)
 
 
 logger = logging.getLogger(__name__)
@@ -201,6 +226,19 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
+            token_secret_id=self.config.get(TOKEN_SECRET_ID_CONFIG_NAME),  # for detecting changes
+            github_app_client_id=self.config.get(
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME
+            ),  # for detecting changes
+            github_app_installation_id=self.config.get(
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
+            ),  # for detecting changes
+            github_app_private_key_secret_id=self.config.get(
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
+            ),  # for detecting changes
+            openstack_clouds_yaml_secret_id=self.config.get(
+                OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
+            ),  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             allow_external_contributor=self.config[
                 ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
@@ -233,6 +271,7 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[PLANNER_INTEGRATION_NAME].relation_broken, self._on_planner_relation_broken
         )
+        self.framework.observe(self.on.secret_changed, self._on_secret_changed)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
@@ -336,25 +375,11 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         flush_runners = False
-        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
-            self._stored.token = self.config[TOKEN_CONFIG_NAME]
-            flush_runners = True
-        if self.config[PATH_CONFIG_NAME] != self._stored.path:
-            self._stored.path = self.config[PATH_CONFIG_NAME]
-            flush_runners = True
-        if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
-            self._stored.labels = self.config[LABELS_CONFIG_NAME]
-            flush_runners = True
-        if (
-            self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]
-            != self._stored.allow_external_contributor
-        ):
-            self._stored.allow_external_contributor = self.config[
-                ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
-            ]
-            flush_runners = True
-
-        self._check_image_ready()
+        for config_key, stored_attr in _FLUSH_ON_CHANGE_CONFIG_TO_STORED:
+            new_value = self.config.get(config_key)
+            if new_value != getattr(self._stored, stored_attr):
+                setattr(self._stored, stored_attr, new_value)
+                flush_runners = True
 
         self._reconcile(state)
 
@@ -362,6 +387,14 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_secret_changed(self, _: SecretChangedEvent) -> None:
+        """Handle secret content rotation (e.g. GitHub App private key)."""
+        logger.info("Secret changed, reconciling")
+        state = self._setup_state()
+        self._reconcile(state)
+        self._manager_client.flush_runner()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -389,6 +422,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             state: The charm state.
         """
+        self._check_image_ready()
         self._setup_service(state)
         self._update_planner_flavor(state)
 
@@ -475,8 +509,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 
@@ -498,8 +530,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         self.unit.status = MaintenanceStatus("Update image for runners")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 

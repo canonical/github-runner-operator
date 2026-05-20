@@ -13,7 +13,7 @@ from github_runner_manager.configuration import (
     RunnerConfiguration,
     SupportServiceConfig,
 )
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubTokenAuth
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -40,7 +40,7 @@ def create_application_configuration(
     extra_labels = list(state.charm_config.labels)
     github_configuration = (
         GitHubConfiguration(
-            auth=GitHubTokenAuth(token=state.charm_config.token),
+            auth=state.charm_config.auth,
             path=state.charm_config.path,
         )
         if state.charm_config.path
@@ -53,6 +53,7 @@ def create_application_configuration(
         runner_proxy_config=state.runner_proxy_config,
         dockerhub_mirror=state.charm_config.dockerhub_mirror,
         ssh_debug_connections=state.ssh_debug_connections,
+        otel_collector_config=state.otel_collector_config,
         use_aproxy=state.charm_config.use_aproxy,
         aproxy_exclude_addresses=state.charm_config.aproxy_exclude_addresses,
         aproxy_redirect_ports=state.charm_config.aproxy_redirect_ports,

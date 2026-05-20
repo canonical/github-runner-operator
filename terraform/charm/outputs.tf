@@ -29,6 +29,11 @@ output "requires" {
   }
 }
 
+output "path" {
+  description = "GitHub path (org or repo) the runner is registered to."
+  value       = lookup(var.config, "path", "")
+}
+
 output "provides" {
   value = {
     cos_agent = "cos-agent"

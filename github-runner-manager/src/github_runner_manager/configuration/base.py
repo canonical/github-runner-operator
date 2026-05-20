@@ -91,6 +91,7 @@ class SupportServiceConfig(BaseModel):
         aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
+        otel_collector_config: The configuration for the OpenTelemetry collector.
         custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
@@ -103,6 +104,7 @@ class SupportServiceConfig(BaseModel):
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     custom_pre_job_script: str | None
+    otel_collector_config: Optional["OtelCollectorConfig"] = None
 
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod
@@ -125,6 +127,18 @@ class SupportServiceConfig(BaseModel):
         if values.get("use_aproxy") and not runner_proxy_enabled:
             raise ValueError("aproxy requires the runner http or https to be set")
         return values
+
+
+class OtelCollectorConfig(BaseModel):
+    """Configuration for OpenTelemetry collector.
+
+    Attributes:
+        host: The OpenTelemetry collector hostname.
+        port: The OpenTelemetry collector port.
+    """
+
+    host: str
+    port: int = Field(gt=0, le=65535)
 
 
 class ProxyConfig(BaseModel):

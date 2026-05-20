@@ -3,6 +3,9 @@
 
 """State of the Charm."""
 
+# The charm state module intentionally centralizes config/state translation logic.
+# pylint: disable=too-many-lines
+
 import dataclasses
 import ipaddress
 import json
@@ -14,7 +17,14 @@ from urllib.parse import urlsplit
 
 import yaml
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
-from github_runner_manager.configuration.github import GitHubPath, parse_github_path
+from github_runner_manager.configuration.base import OtelCollectorConfig
+from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
+    GitHubAuth,
+    GitHubPath,
+    GitHubTokenAuth,
+    parse_github_path,
+)
 from ops import CharmBase
 from ops.model import SecretNotFoundError
 from pydantic import BaseModel, ValidationError, create_model_from_typeddict, validator
@@ -34,10 +44,16 @@ BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
+GITHUB_APP_CLIENT_ID_CONFIG_NAME = "github-app-client-id"
+GITHUB_APP_INSTALLATION_ID_CONFIG_NAME = "github-app-installation-id"
+GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME = (  # nosec: not a password
+    "github-app-private-key-secret-id"
+)
 LABELS_CONFIG_NAME = "labels"
 MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
 MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME = "manager-ssh-proxy-command"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
+OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME = "openstack-clouds-yaml-secret-id"  # nosec
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 PATH_CONFIG_NAME = "path"
@@ -46,6 +62,7 @@ RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
+TOKEN_SECRET_ID_CONFIG_NAME = "token-secret-id"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME = "aproxy-exclude-addresses"
 APROXY_REDIRECT_PORTS_CONFIG_NAME = "aproxy-redirect-ports"
@@ -53,6 +70,7 @@ USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
 RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME = "runner-manager-log-level"
+OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME = "otel-collector-endpoint"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -124,14 +142,22 @@ class GithubConfig:
 
     Attributes:
         token: The Github API access token (PAT).
+        app_client_id: The GitHub App Client ID (or legacy numeric App ID).
+        installation_id: The GitHub App installation ID.
+        private_key: The GitHub App private key PEM.
+        auth: The github-runner-manager authentication model derived from these fields.
         path: The Github org/repo path.
     """
 
-    token: str
+    token: str | None
+    app_client_id: str | None
+    installation_id: int | None
+    private_key: str | None
     path: GitHubPath
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "GithubConfig | None":
+    # pylint: disable=too-many-locals
+    def from_charm(cls, charm: CharmBase) -> "GithubConfig":  # noqa: C901
         """Get github related charm configuration values from charm.
 
         Args:
@@ -146,7 +172,15 @@ class GithubConfig:
         runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
 
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
-        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
+        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME)) or None
+        token_secret_id = cast(str, charm.config.get(TOKEN_SECRET_ID_CONFIG_NAME)) or None
+        app_client_id = cast(str, charm.config.get(GITHUB_APP_CLIENT_ID_CONFIG_NAME)) or None
+        installation_id = (
+            cast(int, charm.config.get(GITHUB_APP_INSTALLATION_ID_CONFIG_NAME)) or None
+        )
+        private_key_secret_id = (
+            cast(str, charm.config.get(GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME)) or None
+        )
 
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
@@ -156,10 +190,69 @@ class GithubConfig:
         except ValueError as e:
             raise CharmConfigInvalidError(str(e)) from e
 
-        if not token:
-            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+        app_fields = (app_client_id, installation_id, private_key_secret_id)
+        app_fields_set = sum(field is not None for field in app_fields)
 
-        return cls(token=cast(str, token), path=path)
+        if token_secret_id:
+            try:
+                token_secret = charm.model.get_secret(id=token_secret_id)
+                token = token_secret.get_content(refresh=True).get("github-token")
+            except SecretNotFoundError as exc:
+                raise CharmConfigInvalidError(
+                    f"GitHub token secret {token_secret_id} not found"
+                ) from exc
+            if not token:
+                raise CharmConfigInvalidError(
+                    f"GitHub token secret {token_secret_id} is missing github-token"
+                )
+
+        if token and app_fields_set:
+            raise CharmConfigInvalidError(
+                "Configure either token or GitHub App authentication, not both"
+            )
+        if not token and not app_fields_set:
+            raise CharmConfigInvalidError(
+                f"Missing {TOKEN_CONFIG_NAME}, {TOKEN_SECRET_ID_CONFIG_NAME} "
+                "or GitHub App authentication configuration"
+            )
+        if not token and app_fields_set != 3:
+            raise CharmConfigInvalidError(
+                "GitHub App authentication requires github-app-client-id, "
+                "github-app-installation-id and github-app-private-key-secret-id"
+            )
+
+        private_key = None
+        if private_key_secret_id:
+            try:
+                private_key_secret = charm.model.get_secret(id=private_key_secret_id)
+                private_key = private_key_secret.get_content(refresh=True).get("private-key")
+            except SecretNotFoundError as exc:
+                raise CharmConfigInvalidError(
+                    f"GitHub App private key secret {private_key_secret_id} not found"
+                ) from exc
+            if not private_key:
+                raise CharmConfigInvalidError(
+                    f"GitHub App private key secret {private_key_secret_id} is missing private-key"
+                )
+
+        return cls(
+            token=token,
+            app_client_id=app_client_id,
+            installation_id=installation_id,
+            private_key=private_key,
+            path=path,
+        )
+
+    @property
+    def auth(self) -> GitHubAuth:
+        """Build the application GitHub auth configuration."""
+        if self.token is not None:
+            return GitHubTokenAuth(token=self.token)
+        return GitHubAppAuth(
+            app_client_id=cast(str, self.app_client_id),
+            installation_id=cast(int, self.installation_id),
+            private_key=cast(str, self.private_key),
+        )
 
 
 class CharmConfigInvalidError(Exception):
@@ -175,6 +268,7 @@ class CharmConfigInvalidError(Exception):
         Args:
             msg: Explanation of the error.
         """
+        super().__init__(msg)
         self.msg = msg
 
 
@@ -226,6 +320,10 @@ class CharmConfig(BaseModel):
             name.
         reconcile_interval: Time between each reconciliation of runners in minutes.
         token: GitHub personal access token for GitHub API.
+        app_client_id: GitHub App Client ID for GitHub API.
+        installation_id: GitHub App installation ID for GitHub API.
+        private_key: GitHub App private key PEM for GitHub API.
+        auth: The github-runner-manager authentication model derived from the credential fields.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
         aproxy_exclude_addresses: a list of addresses to exclude from the aproxy proxy.
@@ -241,12 +339,26 @@ class CharmConfig(BaseModel):
     path: GitHubPath | None
     reconcile_interval: int
     token: str | None
+    app_client_id: str | None
+    installation_id: int | None
+    private_key: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
     aproxy_exclude_addresses: list[str] = []
     aproxy_redirect_ports: list[str] = []
     custom_pre_job_script: str | None
     runner_manager_log_level: LogLevel
+
+    @property
+    def auth(self) -> GitHubAuth:
+        """Build the GitHub auth configuration from the stored credentials."""
+        return GithubConfig(
+            token=self.token,
+            app_client_id=self.app_client_id,
+            installation_id=self.installation_id,
+            private_key=self.private_key,
+            path=self.path,
+        ).auth
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -293,11 +405,37 @@ class CharmConfig(BaseModel):
         Returns:
             The openstack clouds yaml.
         """
+        openstack_clouds_yaml_secret_id = (
+            cast(str, charm.config.get(OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME)) or None
+        )
         openstack_clouds_yaml_str: str | None = cast(
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
+        source = OPENSTACK_CLOUDS_YAML_CONFIG_NAME
+
+        if openstack_clouds_yaml_secret_id:
+            source = OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
+            try:
+                cloud_secret = charm.model.get_secret(id=openstack_clouds_yaml_secret_id)
+                openstack_clouds_yaml_str = cloud_secret.get_content(refresh=True).get(
+                    "clouds-yaml"
+                )
+            except SecretNotFoundError as exc:
+                raise CharmConfigInvalidError(
+                    f"OpenStack clouds.yaml secret {openstack_clouds_yaml_secret_id} not found"
+                ) from exc
+            if not openstack_clouds_yaml_str:
+                raise CharmConfigInvalidError(
+                    "OpenStack clouds.yaml secret "
+                    f"{openstack_clouds_yaml_secret_id} is missing clouds-yaml"
+                )
+
         if not openstack_clouds_yaml_str:
-            raise CharmConfigInvalidError("No openstack_clouds_yaml")
+            raise CharmConfigInvalidError(
+                "Missing OpenStack clouds configuration; set either "
+                f"{OPENSTACK_CLOUDS_YAML_CONFIG_NAME} or "
+                f"{OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME}."
+            )
 
         try:
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
@@ -306,10 +444,21 @@ class CharmConfig(BaseModel):
             # use Pydantic to validate TypedDict.
             create_model_from_typeddict(OpenStackCloudsYAML)(**openstack_clouds_yaml)
         except (yaml.YAMLError, TypeError) as exc:
-            logger.error(f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config: %s.", exc)
-            raise CharmConfigInvalidError(
-                f"Invalid {OPENSTACK_CLOUDS_YAML_CONFIG_NAME} config. Invalid yaml."
-            ) from exc
+            if source == OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME:
+                # Don't log `exc` or chain with `from exc`: yaml.YAMLError and
+                # pydantic TypeError messages can embed a snippet of the
+                # offending input (here, the decrypted clouds.yaml), and the
+                # chained cause would be printed by `logger.exception` upstream.
+                logger.error(
+                    "Invalid OpenStack clouds.yaml content in secret %s.",
+                    openstack_clouds_yaml_secret_id,
+                )
+                raise CharmConfigInvalidError(
+                    "Invalid OpenStack clouds.yaml content in secret "
+                    f"{openstack_clouds_yaml_secret_id}. Invalid yaml."
+                ) from None
+            logger.error("Invalid %s config: %s.", source, exc)
+            raise CharmConfigInvalidError(f"Invalid {source} config. Invalid yaml.") from exc
 
         return openstack_clouds_yaml
 
@@ -490,9 +639,12 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path if github_config else None,
+            path=github_config.path,
             reconcile_interval=reconcile_interval,
-            token=github_config.token if github_config else None,
+            token=github_config.token,
+            app_client_id=github_config.app_client_id,
+            installation_id=github_config.installation_id,
+            private_key=github_config.private_key,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
             # mypy doesn't know about the validator
@@ -690,6 +842,39 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
     return ssh_debug_connections
 
 
+def _build_otel_collector_config_from_charm(charm: CharmBase) -> OtelCollectorConfig | None:
+    """Initialize the OtelCollectorConfig from charm configuration.
+
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        OtelCollectorConfig if endpoint config is set; otherwise None.
+    """
+    endpoint = cast(str, charm.config.get(OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME, ""))
+    if not endpoint:
+        return None
+
+    parsed_endpoint = urlsplit(f"//{endpoint}")
+    if not parsed_endpoint.hostname or parsed_endpoint.port is None:
+        raise CharmConfigInvalidError(
+            f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
+        )
+
+    if (
+        parsed_endpoint.username
+        or parsed_endpoint.password
+        or parsed_endpoint.path
+        or parsed_endpoint.query
+        or parsed_endpoint.fragment
+    ):
+        raise CharmConfigInvalidError(
+            f"Invalid {OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME} config, expected host:port"
+        )
+
+    return OtelCollectorConfig(host=parsed_endpoint.hostname, port=parsed_endpoint.port)
+
+
 def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
     """Initialize planner endpoint and token from relation data.
 
@@ -713,8 +898,7 @@ def _build_planner_config_from_charm(charm: CharmBase) -> PlannerConfig | None:
         return None
     try:
         token_secret = charm.model.get_secret(id=token_secret_id)
-        # no need for refresh - there shouldn't be multiple secret revisions
-        token_content = token_secret.get_content()
+        token_content = token_secret.get_content(refresh=True)
         token = token_content.get("token")
         if not token:
             logger.warning(
@@ -747,6 +931,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         runner_proxy_config: Proxy-related configuration for the runner.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
+        otel_collector_config: OpenTelemetry collector configuration information.
         planner_config: Planner endpoint and token from relation data.
     """
 
@@ -756,6 +941,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     charm_config: CharmConfig
     runner_config: OpenstackRunnerConfig
     ssh_debug_connections: list[SSHDebugConnection]
+    otel_collector_config: OtelCollectorConfig | None
     planner_config: PlannerConfig | None
 
     @classmethod
@@ -774,6 +960,11 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         state_dict["ssh_debug_connections"] = [
             debug_info.json() for debug_info in state_dict["ssh_debug_connections"]
         ]
+        state_dict["otel_collector_config"] = (
+            json.loads(state_dict["otel_collector_config"].json())
+            if state_dict["otel_collector_config"]
+            else None
+        )
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
 
@@ -826,6 +1017,12 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
 
+        try:
+            otel_collector_config = _build_otel_collector_config_from_charm(charm)
+        except (ValidationError, ValueError) as exc:
+            logger.error("Invalid OpenTelemetry collector config: %s.", exc)
+            raise CharmConfigInvalidError("Invalid OpenTelemetry collector config") from exc
+
         planner_config = _build_planner_config_from_charm(charm)
 
         state = cls(
@@ -835,6 +1032,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             charm_config=charm_config,
             runner_config=runner_config,
             ssh_debug_connections=ssh_debug_connections,
+            otel_collector_config=otel_collector_config,
             planner_config=planner_config,
         )
 

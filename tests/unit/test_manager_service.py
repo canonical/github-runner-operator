@@ -72,11 +72,20 @@ def mock_execute_command_fixture(monkeypatch):
     return mock_execute_command
 
 
+@pytest.fixture(name="mock_chown")
+def mock_chown_fixture(monkeypatch):
+    """Mock shutil.chown so tests pass without the runner-manager OS user."""
+    mock_chown = MagicMock()
+    monkeypatch.setattr("manager_service.shutil.chown", mock_chown)
+    return mock_chown
+
+
 def test_setup_started(
     complete_charm_state: CharmState,
     patched_paths: PatchedPaths,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
+    mock_chown: MagicMock,
     monkeypatch,
 ):
     """
@@ -119,6 +128,7 @@ def test_setup_no_started(
     complete_charm_state: CharmState,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
+    mock_chown: MagicMock,
 ):
     """
     arrange: Mock the service to be not running.
@@ -136,6 +146,7 @@ def test_setup_systemd_error(
     complete_charm_state: CharmState,
     mock_systemd: MagicMock,
     mock_execute_command: MagicMock,
+    mock_chown: MagicMock,
 ):
     """
     arrange: Mock the systemd to raise error.
