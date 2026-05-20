@@ -166,8 +166,8 @@ receivers:
         endpoint: 0.0.0.0:43100
     use_incoming_timestamp: true
 processors:
-  resource/self_hosted_runner_github_labels:
-    attributes:
+  attributes/self_hosted_runner_github_labels:
+    actions:
       - key: service.name
         action: upsert
         value: "self-hosted-runner"
@@ -189,6 +189,21 @@ processors:
       - key: github.run.attempt
         action: upsert
         value: "$GITHUB_RUN_ATTEMPT"
+      - key: host.arch
+        action: upsert
+        value: "$(uname -m)"
+  transform/self_hosted_runner_attributes_to_resource:
+    log_statements:
+      - context: log
+        statements:
+          - set(resource.attributes["service.name"], attributes["service.name"]) where attributes["service.name"] != nil
+          - set(resource.attributes["github.repository"], attributes["github.repository"]) where attributes["github.repository"] != nil
+          - set(resource.attributes["github.runner"], attributes["github.runner"]) where attributes["github.runner"] != nil
+          - set(resource.attributes["github.workflow"], attributes["github.workflow"]) where attributes["github.workflow"] != nil
+          - set(resource.attributes["github.job"], attributes["github.job"]) where attributes["github.job"] != nil
+          - set(resource.attributes["github.run.id"], attributes["github.run.id"]) where attributes["github.run.id"] != nil
+          - set(resource.attributes["github.run.attempt"], attributes["github.run.attempt"]) where attributes["github.run.attempt"] != nil
+          - set(resource.attributes["host.arch"], attributes["host.arch"]) where attributes["host.arch"] != nil
   transform/self_hosted_runner_loki_labels:
     log_statements:
       - context: resource
@@ -196,11 +211,11 @@ processors:
           - >
             set(resource.attributes["loki.resource.labels"],
             Concat([resource.attributes["loki.resource.labels"],
-            ", service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt"], ""))
+            ", service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt, host.arch"], ""))
             where resource.attributes["loki.resource.labels"] != nil
           - >
             set(resource.attributes["loki.resource.labels"],
-            "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt")
+            "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt, host.arch")
             where resource.attributes["loki.resource.labels"] == nil
   batch:
 exporters:
@@ -212,29 +227,31 @@ service:
   pipelines:
     metrics:
       receivers: [hostmetrics]
-      processors: [resource/self_hosted_runner_github_labels, batch]
+      processors: [attributes/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
     metrics/otlp:
       receivers: [otlp]
-      processors: [resource/self_hosted_runner_github_labels, batch]
+      processors: [attributes/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
     logs/otlp:
       receivers: [otlp]
       processors:
-        - resource/self_hosted_runner_github_labels
+        - attributes/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_attributes_to_resource
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
     logs/loki:
       receivers: [loki]
       processors:
-        - resource/self_hosted_runner_github_labels
+        - attributes/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_attributes_to_resource
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
     traces:
       receivers: [otlp]
-      processors: [resource/self_hosted_runner_github_labels, batch]
+      processors: [attributes/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
 EOF
 
