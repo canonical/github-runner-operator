@@ -210,13 +210,6 @@ processors:
             set(attributes["loki.resource.labels"],
             "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt")
             where attributes["loki.resource.labels"] == nil
-          - >
-            set(attributes["loki.attribute.labels"],
-            Concat([attributes["loki.attribute.labels"], ", service.name"], ""))
-            where attributes["loki.attribute.labels"] != nil
-          - >
-            set(attributes["loki.attribute.labels"], "service.name")
-            where attributes["loki.attribute.labels"] == nil
   batch:
 exporters:
   otlp/self_hosted_runner:
