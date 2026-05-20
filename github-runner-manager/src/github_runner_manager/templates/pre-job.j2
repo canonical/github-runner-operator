@@ -154,19 +154,12 @@ receivers:
       filesystem:
       network:
       load:
-  journald/self_hosted_runner_aproxy:
-    units:
-      - snap.aproxy.aproxy.service
   otlp:
     protocols:
       grpc:
         endpoint: 0.0.0.0:44317
       http:
         endpoint: 0.0.0.0:44318
-  prometheusremotewrite:
-    endpoint: 0.0.0.0:49090
-    default_external_labels:
-      source: github-runner
   loki:
     protocols:
       http:
@@ -196,39 +189,23 @@ processors:
       - key: github.run.attempt
         action: upsert
         value: "$GITHUB_RUN_ATTEMPT"
-  resource/self_hosted_runner_journald_attributes:
-    attributes:
-      - key: systemd.unit
-        from_attribute: systemd.unit
-        action: upsert
-  transform/self_hosted_runner_journald_loki_labels:
-    log_statements:
-      - context: resource
-        statements:
-          - >
-            set(attributes["loki.resource.labels"],
-            Concat([attributes["loki.resource.labels"], ", systemd.unit"], ""))
-            where attributes["loki.resource.labels"] != nil
-          - >
-            set(attributes["loki.resource.labels"], "systemd.unit")
-            where attributes["loki.resource.labels"] == nil
   transform/self_hosted_runner_loki_labels:
     log_statements:
       - context: resource
         statements:
           - >
-            set(attributes["loki.resource.labels"],
-            Concat([attributes["loki.resource.labels"],
+            set(resource.attributes["loki.resource.labels"],
+            Concat([resource.attributes["loki.resource.labels"],
             ", service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt"], ""))
-            where attributes["loki.resource.labels"] != nil
+            where resource.attributes["loki.resource.labels"] != nil
           - >
-            set(attributes["loki.resource.labels"],
+            set(resource.attributes["loki.resource.labels"],
             "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt")
-            where attributes["loki.resource.labels"] == nil
+            where resource.attributes["loki.resource.labels"] == nil
   batch:
 exporters:
   otlp/self_hosted_runner:
-    endpoint: {{ otel_collector_endpoint }}
+    endpoint: "$ACTION_OTEL_EXPORTER_OTLP_ENDPOINT"
     tls:
       insecure: true
 service:
@@ -240,19 +217,6 @@ service:
     metrics/otlp:
       receivers: [otlp]
       processors: [resource/self_hosted_runner_github_labels, batch]
-      exporters: [otlp/self_hosted_runner]
-    metrics/prometheus:
-      receivers: [prometheusremotewrite]
-      processors: [resource/self_hosted_runner_github_labels, batch]
-      exporters: [otlp/self_hosted_runner]
-    logs:
-      receivers: [journald/self_hosted_runner_aproxy]
-      processors:
-        - resource/self_hosted_runner_journald_attributes
-        - transform/self_hosted_runner_journald_loki_labels
-        - resource/self_hosted_runner_github_labels
-        - transform/self_hosted_runner_loki_labels
-        - batch
       exporters: [otlp/self_hosted_runner]
     logs/otlp:
       receivers: [otlp]
