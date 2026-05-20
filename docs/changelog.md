@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-05-20
+
+- Enhanced OpenTelemetry Collector configuration in the pre-job script to expose local OTLP (gRPC/HTTP) and Loki endpoints for workflow to push observability data.
+- Enable system.cpu.logical.count and system.cpu.physical.count metrics.
+
 ## 2026-04-24
 
 - Exposed the configured GitHub path (org or repository) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
