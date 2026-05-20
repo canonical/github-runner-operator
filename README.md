@@ -97,46 +97,45 @@ charms and their interactions:
 Below is a diagram representing these components and their relationships, excluding the [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite):
 
 ```mermaid
-C4Container
-title Container diagram for the github-runner Charm System
-Container_Boundary(c1, "Image Builder") {
-    Container(imagebuilder, "Image Builder", "", "Provides images to all related charms")
-}
-Container_Boundary(c2, "GitHub Runner") {
-    Container(githubrunner, "GitHub Runner Charm", "", "Manages self-hosted runners")
-}
-Container_Boundary(c4, "tmate-ssh-server") {
-    Container(tmate_ssh, "tmate-ssh-server", "", "Terminal sharing capabilities to debug GitHub runners")
-}
-Container_Boundary(c6, "Webhook Gateway") {
-    Container(webhookgateway, "Webhook Gateway Charm", "", "Receives and validates GitHub webhooks")
-}
-Container_Boundary(c7, "Planner") {
-    Container(planner, "Planner Charm", "", "Tracks job state and computes runner demand")
-}
-System_Ext(osbuilding, "OpenStack", "OpenStack deployment used for building images")
-System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
-System_Ext(github, "GitHub", "GitHub API")
-System_Ext(rabbitmq, "RabbitMQ", "AMQP broker for webhook event delivery")
-System_Ext(postgresql, "PostgreSQL", "Persistent storage for job state and flavor definitions")
+flowchart TD
+    GH(["GitHub"])
+    OS_BUILD(["OpenStack\n(image building)"])
+    OS_RUNNERS(["OpenStack\n(runner VMs)"])
+    MQ(["RabbitMQ"])
+    PG[(PostgreSQL)]
 
-Rel(imagebuilder, osbuilding, "builds images")
-UpdateRelStyle(imagebuilder, osbuilding, $offsetY="-30", $offsetX="10")
-Rel(imagebuilder, osgithubrunner, "uploads images")
-UpdateRelStyle(imagebuilder, osgithubrunner, $offsetY="-30", $offsetX="-90")
-Rel(imagebuilder, githubrunner, "image ids")
-UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
-Rel(githubrunner, osgithubrunner, "spawns VMs")
-UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
-Rel(githubrunner, github, "Manage runners")
-Rel(githubrunner, imagebuilder, "OpenStack credentials")
-UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
-Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
-Rel(github, webhookgateway, "workflow job webhooks")
-Rel(webhookgateway, rabbitmq, "validated webhooks")
-Rel(rabbitmq, planner, "webhook events")
-Rel(planner, postgresql, "job state")
-Rel(planner, githubrunner, "pressure info (HTTP streaming)")
+    subgraph IB["Image Builder"]
+        imagebuilder["Image Builder Charm"]
+    end
+
+    subgraph GRC["GitHub Runner"]
+        githubrunner["GitHub Runner Charm"]
+    end
+
+    subgraph TMATE["tmate-ssh-server"]
+        tmate["tmate-ssh-server"]
+    end
+
+    subgraph WG["Webhook Gateway"]
+        webhookgateway["Webhook Gateway Charm"]
+    end
+
+    subgraph PL["Planner"]
+        planner["Planner Charm"]
+    end
+
+    imagebuilder -->|"builds images"| OS_BUILD
+    imagebuilder -->|"uploads images"| OS_RUNNERS
+    imagebuilder -->|"image ids"| githubrunner
+    githubrunner -->|"OpenStack credentials"| imagebuilder
+    githubrunner -->|"spawns VMs"| OS_RUNNERS
+    githubrunner <-->|"manage runners"| GH
+    tmate -->|"debug-ssh credentials"| githubrunner
+    GH -->|"workflow job webhooks"| webhookgateway
+    webhookgateway -->|"validated webhooks"| MQ
+    MQ -->|"webhook events"| planner
+    planner -->|"job state"| PG
+    planner -->|"pressure info (HTTP streaming)"| githubrunner
 ```
 
 
