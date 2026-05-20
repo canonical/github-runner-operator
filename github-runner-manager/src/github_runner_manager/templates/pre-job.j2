@@ -157,6 +157,21 @@ receivers:
   journald/self_hosted_runner_aproxy:
     units:
       - snap.aproxy.aproxy.service
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:44317
+      http:
+        endpoint: 0.0.0.0:44318
+  prometheusremotewrite:
+    endpoint: 0.0.0.0:49090
+    default_external_labels:
+      source: github-runner
+  loki:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:43100
+    use_incoming_timestamp: true
 processors:
   resource/self_hosted_runner_github_labels:
     attributes:
@@ -222,6 +237,14 @@ service:
       receivers: [hostmetrics]
       processors: [resource/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
+    metrics/otlp:
+      receivers: [otlp]
+      processors: [resource/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
+    metrics/prometheus:
+      receivers: [prometheusremotewrite]
+      processors: [resource/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
     logs:
       receivers: [journald/self_hosted_runner_aproxy]
       processors:
@@ -230,6 +253,24 @@ service:
         - resource/self_hosted_runner_github_labels
         - transform/self_hosted_runner_loki_labels
         - batch
+      exporters: [otlp/self_hosted_runner]
+    logs/otlp:
+      receivers: [otlp]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    logs/loki:
+      receivers: [loki]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    traces:
+      receivers: [otlp]
+      processors: [resource/self_hosted_runner_github_labels, batch]
       exporters: [otlp/self_hosted_runner]
 EOF
 
