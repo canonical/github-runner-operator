@@ -144,29 +144,82 @@ receivers:
     collection_interval: 10s
     scrapers:
       cpu:
+        metrics:
+          system.cpu.logical.count:
+            enabled: true
+          system.cpu.physical.count:
+            enabled: true
       memory:
       disk:
       filesystem:
       network:
       load:
+  journald/self_hosted_runner_aproxy:
+    units:
+      - snap.aproxy.aproxy.service
 processors:
-  attributes/github_labels:
-    actions:
-      - key: github_runner
+  resource/self_hosted_runner_github_labels:
+    attributes:
+      - key: service.name
         action: upsert
-        value:  "$RUNNER_NAME"
-      - key: github_workflow
+        value: "self-hosted-runner"
+      - key: github.repository
         action: upsert
-        value:  "$GITHUB_WORKFLOW"
-      - key: github_job
+        value: "$GITHUB_REPOSITORY"
+      - key: github.runner
         action: upsert
-        value:  "$GITHUB_JOB"
-      - key: github_repository
+        value: "$RUNNER_NAME"
+      - key: github.workflow
         action: upsert
-        value:  "$GITHUB_REPOSITORY"
+        value: "$GITHUB_WORKFLOW"
+      - key: github.job
+        action: upsert
+        value: "$GITHUB_JOB"
+      - key: github.run.id
+        action: upsert
+        value: "$GITHUB_RUN_ID"
+      - key: github.run.attempt
+        action: upsert
+        value: "$GITHUB_RUN_ATTEMPT"
+  resource/self_hosted_runner_journald_attributes:
+    attributes:
+      - key: systemd.unit
+        from_attribute: systemd.unit
+        action: upsert
+  transform/self_hosted_runner_journald_loki_labels:
+    log_statements:
+      - context: resource
+        statements:
+          - >
+            set(attributes["loki.resource.labels"],
+            Concat([attributes["loki.resource.labels"], ", systemd.unit"], ""))
+            where attributes["loki.resource.labels"] != nil
+          - >
+            set(attributes["loki.resource.labels"], "systemd.unit")
+            where attributes["loki.resource.labels"] == nil
+  transform/self_hosted_runner_loki_labels:
+    log_statements:
+      - context: resource
+        statements:
+          - >
+            set(attributes["loki.resource.labels"],
+            Concat([attributes["loki.resource.labels"],
+            ", service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt"], ""))
+            where attributes["loki.resource.labels"] != nil
+          - >
+            set(attributes["loki.resource.labels"],
+            "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt")
+            where attributes["loki.resource.labels"] == nil
+          - >
+            set(attributes["loki.attribute.labels"],
+            Concat([attributes["loki.attribute.labels"], ", service.name"], ""))
+            where attributes["loki.attribute.labels"] != nil
+          - >
+            set(attributes["loki.attribute.labels"], "service.name")
+            where attributes["loki.attribute.labels"] == nil
   batch:
 exporters:
-  otlp/mimir:
+  otlp/self_hosted_runner:
     endpoint: {{ otel_collector_endpoint }}
     tls:
       insecure: true
@@ -174,8 +227,17 @@ service:
   pipelines:
     metrics:
       receivers: [hostmetrics]
-      processors: [attributes/github_labels, batch]
-      exporters: [otlp/mimir]
+      processors: [resource/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
+    logs:
+      receivers: [journald/self_hosted_runner_aproxy]
+      processors:
+        - resource/self_hosted_runner_journald_attributes
+        - transform/self_hosted_runner_journald_loki_labels
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
 EOF
 
 /usr/bin/sudo /usr/bin/snap enable opentelemetry-collector
