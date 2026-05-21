@@ -234,7 +234,7 @@ processors:
   batch:
 exporters:
   otlp/self_hosted_runner:
-    endpoint: "$ACTION_OTEL_EXPORTER_OTLP_ENDPOINT"
+    endpoint: {{ otel_collector_endpoint }}
     tls:
       insecure: true
 service:
