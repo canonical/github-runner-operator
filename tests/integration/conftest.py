@@ -582,6 +582,7 @@ def image_builder_fixture(
                 "cores": "2",
             },
         )
+        juju.grant_secret(password_secret_name, image_builder_app_name)
 
         yield image_builder_app_name
 
