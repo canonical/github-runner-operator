@@ -224,6 +224,11 @@ processors:
       - key: host.arch
         action: upsert
         value: "$(uname -m)"
+  resource/self_hosted_runner_github_aproxy_labels:
+    attributes:
+      - key: service.name
+        action: upsert
+        value: "aproxy"
   transform/self_hosted_runner_loki_labels:
     log_statements:
       - context: resource
@@ -271,6 +276,7 @@ service:
       receivers: [filelog/aproxy]
       processors:
         - resource/self_hosted_runner_github_labels
+        - resource/self_hosted_runner_github_aproxy_labels
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
