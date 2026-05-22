@@ -527,8 +527,6 @@ def image_builder_config_fixture(
         "build-interval": "12",
         "revision-history-limit": "2",
         "openstack-auth-url": openstack_config.auth_url,
-        # Bandit thinks this is a hardcoded password
-        "openstack-password": openstack_config.password,  # nosec: B105
         "openstack-project-domain-name": openstack_config.project_domain_name,
         "openstack-project-name": openstack_config.project_name,
         "openstack-user-domain-name": openstack_config.user_domain_name,
@@ -561,11 +559,20 @@ def image_builder_fixture(
 
     if not openstack_config.test_image_id:
         logging.info("Deploying image builder %s", image_builder_app_name)
+        password_secret_name = f"{image_builder_app_name}-openstack-password"
+        password_secret_id = juju.add_secret(
+            name=password_secret_name,
+            content={"password": openstack_config.password},
+        )
+        deploy_config = {
+            **image_builder_config,
+            "openstack-password-secret": str(password_secret_id),
+        }
         juju.deploy(
             "github-runner-image-builder",
             app=image_builder_app_name,
             channel="latest/edge",
-            config=image_builder_config,
+            config=deploy_config,
             constraints={
                 "root-disk": "20480M",
                 "mem": "2048M",
