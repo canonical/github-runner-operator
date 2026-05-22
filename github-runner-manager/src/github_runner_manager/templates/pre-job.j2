@@ -165,7 +165,7 @@ receivers:
       http:
         endpoint: 0.0.0.0:43100
     use_incoming_timestamp: true
-  filelog/syslog:
+  filelog/aproxy:
     include:
       - /var/log/syslog
     operators:
@@ -267,8 +267,8 @@ service:
         - transform/self_hosted_runner_loki_labels
         - batch
       exporters: [otlp/self_hosted_runner]
-    logs/syslog:
-      receivers: [filelog/syslog]
+    logs/aproxy:
+      receivers: [filelog/aproxy]
       processors:
         - resource/self_hosted_runner_github_labels
         - transform/self_hosted_runner_loki_labels
