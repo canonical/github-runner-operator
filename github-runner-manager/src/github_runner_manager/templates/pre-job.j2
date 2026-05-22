@@ -165,6 +165,12 @@ receivers:
       http:
         endpoint: 0.0.0.0:43100
     use_incoming_timestamp: true
+  filelog/syslog:
+    include:
+      - /var/log/syslog
+    operators:
+      - type: filter
+        expr: 'body not matches "aproxy.aproxy"'
 processors:
   attributes/self_hosted_runner_github_labels:
     actions:
@@ -256,6 +262,13 @@ service:
       exporters: [otlp/self_hosted_runner]
     logs/loki:
       receivers: [loki]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    logs/syslog:
+      receivers: [filelog/syslog]
       processors:
         - resource/self_hosted_runner_github_labels
         - transform/self_hosted_runner_loki_labels
