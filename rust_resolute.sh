@@ -4,5 +4,8 @@
 #  See LICENSE file for licensing details.
 #
 
-sudo apt-get update
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
 sudo apt-get install -yq rustup docker.io docker-buildx
