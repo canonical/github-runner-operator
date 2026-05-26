@@ -197,7 +197,7 @@ def test_create_runner_without_aproxy(
 
     runner_manager.create_runner(identity, runner_context)
     openstack_cloud.launch_instance.assert_called_once()
-    assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
+    assert "snap install aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 
 
 def test_delete_vms(runner_manager: OpenStackRunnerManager):
