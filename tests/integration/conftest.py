@@ -564,7 +564,7 @@ def image_builder_fixture(
             name=password_secret_name,
             content={"password": openstack_config.password},
         )
-        config = {
+        deploy_config = {
             **image_builder_config,
             "openstack-password-secret": str(password_secret_id),
         }
@@ -572,7 +572,7 @@ def image_builder_fixture(
             "github-runner-image-builder",
             app=image_builder_app_name,
             channel="latest/edge",
-            config=config,
+            config=deploy_config,
             constraints={
                 "root-disk": "20480M",
                 "mem": "2048M",
