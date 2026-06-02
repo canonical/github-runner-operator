@@ -550,7 +550,11 @@ def _issue_runner_start(
         else float("inf")
     )
     RUNNER_IDLE_DURATION_SECONDS.labels(flavor).observe(idle_duration)
-    queue_duration = job_metrics.queue_duration if job_metrics else float("inf")
+    queue_duration = (
+        job_metrics.queue_duration
+        if job_metrics and job_metrics.queue_duration is not None
+        else float("inf")
+    )
     RUNNER_QUEUE_DURATION_SECONDS.labels(flavor).observe(queue_duration)
     return metric_events.RunnerStart
 
@@ -614,14 +618,18 @@ def _create_runner_start(
         pre_job_metrics.timestamp - (runner_metrics.installation_end_timestamp or 0), 0
     )
 
-    # GitHub API returns started_at < created_at in some rare cases.
-    if job_metrics and job_metrics.queue_duration < 0:
+    # GitHub API returns started_at < queued_at in some rare cases.
+    if job_metrics and job_metrics.queue_duration is not None and job_metrics.queue_duration < 0:
         logger.warning(
             "Queue duration for runner %s is negative: %f. Setting it to zero.",
             runner_metrics.instance_id,
             job_metrics.queue_duration,
         )
-    queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
+    queue_duration = (
+        max(job_metrics.queue_duration, 0)
+        if job_metrics and job_metrics.queue_duration is not None
+        else None
+    )
 
     return metric_events.RunnerStart(
         timestamp=pre_job_metrics.timestamp,

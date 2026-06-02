@@ -42,6 +42,7 @@ def test_job(pre_job_metrics: PreJobMetrics):
     created_at = datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc)
     started_at = created_at + timedelta(seconds=3600)
     github_client.get_job_info_by_runner_name.return_value = JobInfo(
+        queued_at=created_at,
         created_at=created_at,
         started_at=started_at,
         conclusion=JobConclusion.SUCCESS,
@@ -60,6 +61,39 @@ def test_job(pre_job_metrics: PreJobMetrics):
     )
 
     assert job_metrics.queue_duration == 3600
+    assert job_metrics.conclusion == JobConclusion.SUCCESS
+
+
+def test_job_missing_started_at(pre_job_metrics: PreJobMetrics):
+    """
+    arrange: create a GithubClient mock with missing started_at.
+    act: Call job.
+    assert: queue_duration is None.
+    """
+    prefix = "app-0"
+    github_client = MagicMock(spec=GithubClient)
+    runner = InstanceID.build(prefix=prefix)
+    created_at = datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc)
+    github_client.get_job_info_by_runner_name.return_value = JobInfo(
+        queued_at=created_at,
+        created_at=created_at,
+        started_at=None,
+        conclusion=JobConclusion.SUCCESS,
+        status=JobStatus.QUEUED,
+        job_id=randint(1, 1000),
+    )
+
+    github_provider = GitHubRunnerPlatform(
+        prefix=prefix, path="canonical", github_client=github_client
+    )
+    job_metrics = github_metrics.job(
+        platform_provider=github_provider,
+        pre_job_metrics=pre_job_metrics,
+        runner=runner,
+        metadata=RunnerMetadata(),
+    )
+
+    assert job_metrics.queue_duration is None
     assert job_metrics.conclusion == JobConclusion.SUCCESS
 
 
