@@ -12,6 +12,11 @@ output "all_runner_names" {
 }
 
 
+output "all_runner_paths" {
+  description = "Map of github-runner application name to its configured GitHub path."
+  value       = { for name, github_runner in module.github_runner : name => github_runner.path }
+}
+
 output "all_app_names" {
   description = "Names of the all the deployed apps, github-runner plus github-runner-image-builder."
   value       = concat([for github_runner in values(module.github_runner) : github_runner.app_name], [module.github_runner_image_builder.app_name])
