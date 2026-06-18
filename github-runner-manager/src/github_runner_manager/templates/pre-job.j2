@@ -144,29 +144,107 @@ receivers:
     collection_interval: 10s
     scrapers:
       cpu:
+        metrics:
+          system.cpu.logical.count:
+            enabled: true
+          system.cpu.physical.count:
+            enabled: true
       memory:
       disk:
       filesystem:
       network:
       load:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:44317
+      http:
+        endpoint: 0.0.0.0:44318
+  loki:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:43100
+    use_incoming_timestamp: true
+  filelog/aproxy:
+    include:
+      - /var/log/syslog
+    operators:
+      - type: filter
+        expr: 'body not matches "aproxy.aproxy"'
 processors:
-  attributes/github_labels:
+  attributes/self_hosted_runner_github_labels:
     actions:
-      - key: github_runner
+      - key: service.name
         action: upsert
-        value:  "$RUNNER_NAME"
-      - key: github_workflow
+        value: "self-hosted-runner"
+      - key: github.repository
         action: upsert
-        value:  "$GITHUB_WORKFLOW"
-      - key: github_job
+        value: "$GITHUB_REPOSITORY"
+      - key: github.runner
         action: upsert
-        value:  "$GITHUB_JOB"
-      - key: github_repository
+        value: "$RUNNER_NAME"
+      - key: github.workflow
         action: upsert
-        value:  "$GITHUB_REPOSITORY"
+        value: "$GITHUB_WORKFLOW"
+      - key: github.job
+        action: upsert
+        value: "$GITHUB_JOB"
+      - key: github.run.id
+        action: upsert
+        value: "$GITHUB_RUN_ID"
+      - key: github.run.attempt
+        action: upsert
+        value: "$GITHUB_RUN_ATTEMPT"
+      - key: host.arch
+        action: upsert
+        value: "$(uname -m)"
+  resource/self_hosted_runner_github_labels:
+    attributes:
+      - key: service.name
+        action: upsert
+        value: "self-hosted-runner"
+      - key: github.repository
+        action: upsert
+        value: "$GITHUB_REPOSITORY"
+      - key: github.runner
+        action: upsert
+        value: "$RUNNER_NAME"
+      - key: github.workflow
+        action: upsert
+        value: "$GITHUB_WORKFLOW"
+      - key: github.job
+        action: upsert
+        value: "$GITHUB_JOB"
+      - key: github.run.id
+        action: upsert
+        value: "$GITHUB_RUN_ID"
+      - key: github.run.attempt
+        action: upsert
+        value: "$GITHUB_RUN_ATTEMPT"
+      - key: host.arch
+        action: upsert
+        value: "$(uname -m)"
+  resource/self_hosted_runner_github_aproxy_labels:
+    attributes:
+      - key: service.name
+        action: upsert
+        value: "aproxy"
+  transform/self_hosted_runner_loki_labels:
+    log_statements:
+      - context: resource
+        statements:
+          - >
+            set(resource.attributes["loki.resource.labels"],
+            Concat([resource.attributes["loki.resource.labels"],
+            ", service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt, host.arch"], ""))
+            where resource.attributes["loki.resource.labels"] != nil
+          - >
+            set(resource.attributes["loki.resource.labels"],
+            "service.name, github.repository, github.runner, github.workflow, github.job, github.run.id, github.run.attempt, host.arch")
+            where resource.attributes["loki.resource.labels"] == nil
   batch:
 exporters:
-  otlp/mimir:
+  otlp/self_hosted_runner:
     endpoint: {{ otel_collector_endpoint }}
     tls:
       insecure: true
@@ -174,8 +252,38 @@ service:
   pipelines:
     metrics:
       receivers: [hostmetrics]
-      processors: [attributes/github_labels, batch]
-      exporters: [otlp/mimir]
+      processors: [attributes/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
+    metrics/otlp:
+      receivers: [otlp]
+      processors: [attributes/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
+    logs/otlp:
+      receivers: [otlp]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    logs/loki:
+      receivers: [loki]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    logs/aproxy:
+      receivers: [filelog/aproxy]
+      processors:
+        - resource/self_hosted_runner_github_labels
+        - resource/self_hosted_runner_github_aproxy_labels
+        - transform/self_hosted_runner_loki_labels
+        - batch
+      exporters: [otlp/self_hosted_runner]
+    traces:
+      receivers: [otlp]
+      processors: [resource/self_hosted_runner_github_labels, batch]
+      exporters: [otlp/self_hosted_runner]
 EOF
 
 /usr/bin/sudo /usr/bin/snap enable opentelemetry-collector
