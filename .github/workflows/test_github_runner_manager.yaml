@@ -24,7 +24,7 @@ jobs:
           - test_planner_runner
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.0
       - name: Setup Astral UV
         uses: astral-sh/setup-uv@v7
       - name: Install tox with UV
