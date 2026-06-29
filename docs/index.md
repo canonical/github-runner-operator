@@ -24,12 +24,12 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 | | |
 |--|--|
-| Get started | [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md) | [Quick start](local-lxd/tutorial/quick-start.md) |
-| Deployment | [Spawn OpenStack runner](how-to/openstack-runner.md) | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) |
-| Operations | [Integrate with COS](how-to/integrate-with-cos.md) | [Debug with SSH](how-to/debug-with-ssh.md) | [Upgrade](how-to/upgrade.md) |
-| Product-specific feature | [Comply with security requirements](how-to/comply-security.md) | [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) |
-| Design | [Charm architecture](reference/charm-architecture.md) | [Security](explanation/security.md) |
-| Security | [Cryptographic overview](reference/cryptographic-overview.md) | [Token scopes](reference/token-scopes.md) | [External Access](reference/external-access.md) |
+| Get started | [Quick start](local-lxd/tutorial/quick-start.md) • [Spawn OpenStack runner](how-to/openstack-runner.md) |
+| Deployment | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md) |
+| Operations | [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md) |
+| LXD runners | [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md) |
+| Design | [Charm architecture](reference/charm-architecture.md) • [Integrations](reference/integrations.md) • [ARM64](local-lxd/explanation/arm64.md) |
+| Security | [Security overview](explanation/security.md) • [Cryptographic overview](reference/cryptographic-overview.md) • [Token scopes](reference/token-scopes.md) • [External Access](reference/external-access.md) • [Comply with security requirements](how-to/comply-security.md) • [Manage external contributors](how-to/manage-external-contributors.md) |
 
 ## How this documentation is organized
 
@@ -39,7 +39,6 @@ This documentation uses the [Diátaxis documentation structure](https://diataxis
 * **How-to guides** — step-by-step guides covering key operations and common tasks.
 * **Reference** — technical information such as specifications, APIs, and configuration options.
 * **Explanation** — background, concepts, and design discussion.
-* **Release notes** — summaries of changes and upgrade notes.
 
 ## Contributing to this documentation
 
@@ -90,10 +89,10 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
    1. [Token scopes](reference/token-scopes.md)
 1. [Explanation](explanation)
    1. [SSH Debug](explanation/ssh-debug.md)
-1. [Changelog](changelog.md)
+   1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
+   1. [Security](explanation/security.md)
 1. [Track local-lxd](local-lxd)
    1. [Tutorial](local-lxd/tutorial)
-      1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
       1. [Quick start](local-lxd/tutorial/quick-start.md)
    1. [How to](local-lxd/how-to)
       1. [Add custom labels](local-lxd/how-to/add-custom-labels.md)
@@ -117,6 +116,5 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
       1. [Token scopes](local-lxd/reference/token-scopes.md)
    1. [Explanation](local-lxd/explanation)
       1. [ARM64](local-lxd/explanation/arm64.md)
-      1. [Security](explanation/security.md)
       1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
 <!-- vale Canonical.004-Canonical-product-names = YES -->
