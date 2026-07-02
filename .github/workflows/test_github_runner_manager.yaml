@@ -9,8 +9,11 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     secrets: inherit
     with:
-      self-hosted-runner: true
-      self-hosted-runner-label: edge
+      # Run on GitHub-hosted Noble (ubuntu-24.04) runners. Pin Python to 3.12: the
+      # open-ended requires-python (>=3.10) otherwise resolves to the newest available
+      # interpreter (3.14), whose default multiprocessing start method (forkserver)
+      # breaks tests that rely on fork (e.g. test_flush_runner_locked).
+      python-version: "3.12"
       working-directory: ./github-runner-manager/
   application-integration-tests:
     name: Integration tests for github-runner-manager
