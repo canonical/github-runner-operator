@@ -21,6 +21,7 @@ jobs:
           tox -e unit,coverage-report
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
+        if: always()
         with:
           mode: qserver
           project: github-runner-operator
