@@ -216,21 +216,36 @@ def test_otel_collector_endpoint_pre_job_installs_config(
     )
     wait_for_runner_ready(juju, app)
 
-    dispatch_workflow(
+    # Dispatch the long-running wait workflow (instead of a quick one) so the runner stays
+    # busy while we inspect it. An ephemeral runner's VM is torn down on job completion, which
+    # races the inspection below; keeping the job in progress guarantees the VM is still alive.
+    workflow = dispatch_workflow(
         app_name=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app},
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app, "minutes": "5"},
+        wait=False,
     )
+    wait_for(lambda: workflow.update() or workflow.status == "in_progress")
 
-    exit_code, stdout, stderr = instance_helper.run_in_instance(
-        unit_name=f"{app}/0",
-        command="sudo cat /etc/otelcol/config.d/github.yaml",
-    )
+    def _read_otel_config() -> str:
+        """Read the otel config written by the pre-job script, retrying until it exists.
 
-    assert exit_code == 0, stderr
-    assert stdout is not None
-    assert "exporters:" in stdout
-    assert f"endpoint: {endpoint}" in stdout
+        The pre-job hook may not have finished writing the file the moment the job is reported
+        in progress, so callers poll on a truthy (non-empty) return value.
+
+        Returns:
+            The otel config file content, or an empty string if not yet written.
+        """
+        exit_code, stdout, _ = instance_helper.run_in_instance(
+            unit_name=f"{app}/0",
+            command="sudo cat /etc/otelcol/config.d/github.yaml",
+        )
+        return stdout if exit_code == 0 and stdout else ""
+
+    config = wait_for(_read_otel_config, timeout=120, check_interval=10)
+
+    assert "exporters:" in config
+    assert f"endpoint: {endpoint}" in config
