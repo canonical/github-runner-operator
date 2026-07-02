@@ -3,7 +3,13 @@ on: [pull_request]
 jobs:
   TICS:
     name: TICS
-    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
+    strategy:
+      matrix:
+        runner:
+          - self-hosted-linux-amd64-resolute-medium-tiobe
+          - self-hosted-linux-amd64-resolute-large-tiobe
+          - self-hosted-linux-amd64-resolute-2xlarge-tiobe
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -28,7 +34,3 @@ jobs:
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
           installTics: true
-
-concurrency:
-  group: tics
-  cancel-in-progress: false
