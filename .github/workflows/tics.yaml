@@ -19,6 +19,10 @@ jobs:
           cd github-runner-manager
           pip install --break-system-packages tox flake8 -r ./requirements.txt
           tox -e unit,coverage-report
+      - name: Run Unit Tests
+        run: |
+          pip install --break-system-packages tox flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
+          tox -e unit,coverage-report
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         if: always()
