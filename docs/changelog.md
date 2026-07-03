@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-06-26
+
+- Fixed runners whose cloud VM entered an error state being kept until the creation timeout (~23 minutes) before cleanup. Such VMs are now cleaned up immediately, freeing the slot for a replacement runner.
+
 ## 2026-05-20
 
 - Enhanced OpenTelemetry Collector configuration in the pre-job script to expose local OTLP (gRPC/HTTP) and Loki endpoints for workflow to push observability data.
