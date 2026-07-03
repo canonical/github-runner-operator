@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-07-03
+
+- Added charm configuration option `planner-pressure-mode` with `stream` (default) and `request` values to control how planner pressure is fetched.
+- Updated pressure reconciler behavior to support both continuous planner streaming and periodic single-request polling based on the configured mode.
+
 ## 2026-06-26
 
 - Fixed runners whose cloud VM entered an error state being kept until the creation timeout (~23 minutes) before cleanup. Such VMs are now cleaned up immediately, freeing the slot for a replacement runner.
