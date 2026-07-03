@@ -87,7 +87,10 @@ PLANNER_MINIMUM_PRESSURE_RELATION_KEY: Final[str] = "minimum-pressure"
 PLANNER_DEFAULT_PLATFORM: Final[str] = "github"
 PLANNER_DEFAULT_PRIORITY: Final[int] = 50
 
+PLANNER_PRESSURE_MODE_CONFIG_NAME = "planner-pressure-mode"
+
 LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+PlannerPressureMode = Literal["stream", "request"]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -319,6 +322,7 @@ class CharmConfig(BaseModel):
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         reconcile_interval: Time between each reconciliation of runners in minutes.
+        planner_pressure_mode: Planner pressure fetch mode (`stream` or `request`).
         token: GitHub personal access token for GitHub API.
         app_client_id: GitHub App Client ID for GitHub API.
         installation_id: GitHub App installation ID for GitHub API.
@@ -338,6 +342,7 @@ class CharmConfig(BaseModel):
     openstack_clouds_yaml: OpenStackCloudsYAML
     path: GitHubPath | None
     reconcile_interval: int
+    planner_pressure_mode: PlannerPressureMode = "stream"
     token: str | None
     app_client_id: str | None
     installation_id: int | None
@@ -612,6 +617,14 @@ class CharmConfig(BaseModel):
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be greater than or equal to 1"
             )
 
+        planner_pressure_mode = cast(
+            str, charm.config.get(PLANNER_PRESSURE_MODE_CONFIG_NAME, "stream")
+        )
+        if planner_pressure_mode not in {"stream", "request"}:
+            raise CharmConfigInvalidError(
+                f"The {PLANNER_PRESSURE_MODE_CONFIG_NAME} config must be one of: stream, request"
+            )
+
         dockerhub_mirror = cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME, "")) or None
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
@@ -641,6 +654,7 @@ class CharmConfig(BaseModel):
             openstack_clouds_yaml=openstack_clouds_yaml,
             path=github_config.path,
             reconcile_interval=reconcile_interval,
+            planner_pressure_mode=cast(PlannerPressureMode, planner_pressure_mode),
             token=github_config.token,
             app_client_id=github_config.app_client_id,
             installation_id=github_config.installation_id,

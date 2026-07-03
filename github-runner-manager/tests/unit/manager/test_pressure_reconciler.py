@@ -82,23 +82,36 @@ class _FakePlanner:
 
     def __init__(
         self,
-        stream_updates: list[int] | None = None,
-        stream_exception: Exception | None = None,
+        pressure_updates: list[int] | None = None,
+        pressure_exception: Exception | None = None,
     ):
-        """Initialize with configurable stream behavior."""
-        self._stream_updates = stream_updates or []
-        self._stream_exception = stream_exception
+        """Initialize with configurable pressure request behavior."""
+        self._pressure_updates = pressure_updates or []
+        self._pressure_exception = pressure_exception
+        self._index = 0
 
     def stream_pressure(self, name: str):  # noqa: ARG002
-        """Yield pressure updates or raise the configured exception.
+        """Yield pressure updates for stream mode tests."""
+        if self._pressure_exception is not None:
+            raise self._pressure_exception
+        for pressure in self._pressure_updates:
+            yield SimpleNamespace(pressure=pressure)
 
-        Yields:
-            Namespace objects with a pressure attribute.
-        """
-        if self._stream_exception is not None:
-            raise self._stream_exception
-        for p in self._stream_updates:
-            yield SimpleNamespace(pressure=p)
+    def get_pressure(self, name: str):  # noqa: ARG002
+        """Return pressure update or raise the configured exception."""
+        if self._pressure_exception is not None:
+            raise self._pressure_exception
+
+        if self._pressure_updates:
+            if self._index < len(self._pressure_updates):
+                pressure = self._pressure_updates[self._index]
+                self._index += 1
+            else:
+                pressure = self._pressure_updates[-1]
+        else:
+            pressure = 0
+
+        return SimpleNamespace(pressure=pressure)
 
 
 @pytest.mark.parametrize(
@@ -117,7 +130,7 @@ def test_min_pressure_used_as_fallback_when_stream_errors(
     assert: min_pressure is used as fallback to create runners.
     """
     mgr = _FakeManager()
-    planner = _FakePlanner(stream_exception=planner_error)
+    planner = _FakePlanner(pressure_exception=planner_error)
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
@@ -148,7 +161,7 @@ def test_fallback_preserves_last_pressure_when_higher(
     assert: The higher last_pressure is used as fallback instead of min_pressure.
     """
     mgr = _FakeManager()
-    planner = _FakePlanner(stream_exception=planner_error)
+    planner = _FakePlanner(pressure_exception=planner_error)
     cfg = PressureReconcilerConfig(flavor_name="small", min_pressure=2)
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
     reconciler._last_pressure = 10
@@ -422,7 +435,7 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
         so no unnecessary runners are created.
     """
     mgr = _FakeManager(runners_count=3)
-    planner = _FakePlanner(stream_updates=[3])
+    planner = _FakePlanner(pressure_updates=[3])
     cfg = PressureReconcilerConfig(flavor_name="small")
     reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
 
@@ -430,7 +443,7 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
     original_stream = planner.stream_pressure
 
     def _stream_once(name):
-        """Yield from original stream, then stop the reconciler."""
+        """Yield one stream batch, then stop the reconciler."""
         yield from original_stream(name)
         reconciler.stop()
 
@@ -439,6 +452,31 @@ def test_create_loop_syncs_runner_count_on_start(monkeypatch: pytest.MonkeyPatch
 
     assert reconciler._runner_count == 3
     assert mgr.created_args == []
+
+
+def test_create_loop_request_mode_uses_get_pressure(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A reconciler in request mode with no existing runners and pressure=2.
+    act: Run start_create_loop for one request cycle.
+    assert: It creates runners from get_pressure and does not require stream updates.
+    """
+    mgr = _FakeManager(runners_count=0)
+    planner = _FakePlanner(pressure_updates=[2])
+    cfg = PressureReconcilerConfig(flavor_name="small", planner_pressure_mode="request")
+    reconciler = PressureReconciler(mgr, planner, cfg, lock=Lock())
+
+    wait_calls = {"count": 0}
+
+    def _wait(_interval: int) -> bool:
+        """Stop after the first request-mode polling wait."""
+        wait_calls["count"] += 1
+        reconciler.stop()
+        return True
+
+    monkeypatch.setattr(reconciler._stop, "wait", _wait)
+    reconciler.start_create_loop()
+
+    assert mgr.created_args == [2]
 
 
 def test_timer_reconcile_scales_down_with_soft_delete():

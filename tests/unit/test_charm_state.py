@@ -36,6 +36,7 @@ from charm_state import (
     OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
+    PLANNER_PRESSURE_MODE_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
@@ -573,6 +574,19 @@ def test_charm_config_from_charm_reconcile_interval_too_low():
         CharmConfig.from_charm(mock_charm)
 
 
+def test_charm_config_from_charm_invalid_planner_pressure_mode():
+    """
+    arrange: Create a mock CharmBase instance with an invalid planner-pressure-mode.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PLANNER_PRESSURE_MODE_CONFIG_NAME] = "invalid-mode"
+
+    with pytest.raises(CharmConfigInvalidError, match="planner-pressure-mode"):
+        CharmConfig.from_charm(mock_charm)
+
+
 def test_charm_config_from_charm_invalid_labels():
     """
     arrange: Create a mock CharmBase instance with an invalid reconcile interval.
@@ -598,6 +612,7 @@ def test_charm_config_from_charm_valid():
         ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME: "False",
         PATH_CONFIG_NAME: "owner/repo",
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
+        PLANNER_PRESSURE_MODE_CONFIG_NAME: "request",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
         # "clouds: { openstack: { auth: { username: 'admin' }}}"
         OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
@@ -639,6 +654,7 @@ cat > ~/.ssh/config <<EOF
 
     assert result.path == GitHubRepo(owner="owner", repo="repo")
     assert result.reconcile_interval == 5
+    assert result.planner_pressure_mode == "request"
     assert result.dockerhub_mirror == "https://example.com"
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")

@@ -17,7 +17,7 @@ import os
 import time
 from dataclasses import dataclass
 from threading import Event, Lock
-from typing import Optional
+from typing import Literal, Optional
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.configuration.base import RunnerCombination, UserInfo
@@ -59,6 +59,7 @@ class PressureReconcilerConfig:
     Attributes:
         flavor_name: Name of the planner flavor to reconcile.
         reconcile_interval: Minutes between timer-based delete reconciliations.
+        planner_pressure_mode: Planner pressure fetch mode (`stream` or `request`).
         min_pressure: Minimum desired runner count (floor) for the flavor.
             Also used as fallback when the planner is unavailable.
         max_pressure: Maximum desired runner count (ceiling). 0 means no cap.
@@ -66,6 +67,7 @@ class PressureReconcilerConfig:
 
     flavor_name: str
     reconcile_interval: int = 5
+    planner_pressure_mode: Literal["stream", "request"] = "stream"
     min_pressure: int = 0
     max_pressure: int = 0
 
@@ -95,16 +97,15 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
 
     The reconcile loop uses the last pressure seen by the create loop rather than
     fetching a fresh value, so it may act on a stale reading if pressure changed
-    between stream events. This is an accepted trade-off: the window is bounded
-    by the stream update frequency.
+    between planner updates. This is an accepted trade-off.
 
     Attributes:
         _manager: Runner manager used to list, create, and clean up runners.
-        _planner: Client used to stream pressure updates.
+        _planner: Client used to fetch pressure updates.
         _config: Reconciler configuration.
         _lock: Shared lock to serialize operations with other reconcile loops.
-        _stop: Event used to signal streaming loops to stop gracefully.
-        _last_pressure: Last pressure value seen in the create stream.
+        _stop: Event used to signal reconciliation loops to stop gracefully.
+        _last_pressure: Last pressure value seen in the create loop.
         _runner_count: In-memory runner count used by the create loop.
         _create_paused: True when creation returned zero IDs, cleared by reconcile loop.
     """
@@ -121,7 +122,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
         Args:
             manager: Runner manager interface for creating, cleaning up,
                 and listing runners.
-            planner_client: Client used to stream pressure updates.
+            planner_client: Client used to fetch pressure updates.
                 None when no planner relation is configured.
             config: Reconciler configuration.
             lock: Shared lock to serialize operations with other reconcile loops.
@@ -152,29 +153,51 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             return
         while not self._stop.is_set():
             try:
-                for update in self._planner.stream_pressure(self._config.flavor_name):
+                if self._config.planner_pressure_mode == "request":
+                    update = self._planner.get_pressure(self._config.flavor_name)
                     if self._stop.is_set():
                         return
                     self._handle_create_runners(update.pressure)
+                    self._stop.wait(5)
+                else:
+                    for update in self._planner.stream_pressure(self._config.flavor_name):
+                        if self._stop.is_set():
+                            return
+                        self._handle_create_runners(update.pressure)
             except PlannerConnectionError as exc:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
-                logger.warning(
-                    "Pressure stream interrupted for flavor %s (%s), falling back to %s runners.",
-                    self._config.flavor_name,
-                    exc,
-                    fallback,
-                )
+                if self._config.planner_pressure_mode == "request":
+                    logger.warning(
+                        "Pressure request failed for flavor %s (%s), falling back to %s runners.",
+                        self._config.flavor_name,
+                        exc,
+                        fallback,
+                    )
+                else:
+                    logger.warning(
+                        "Pressure stream interrupted for flavor %s (%s), falling back to %s runners.",
+                        self._config.flavor_name,
+                        exc,
+                        fallback,
+                    )
                 if self._stop.is_set():
                     return
                 self._handle_create_runners(fallback)
                 self._stop.wait(5)
             except PlannerApiError:
                 fallback = max(self._last_pressure or 0, self._config.min_pressure)
-                logger.exception(
-                    "Error in pressure stream loop for flavor %s, falling back to %s runners.",
-                    self._config.flavor_name,
-                    fallback,
-                )
+                if self._config.planner_pressure_mode == "request":
+                    logger.exception(
+                        "Error in pressure request loop for flavor %s, falling back to %s runners.",
+                        self._config.flavor_name,
+                        fallback,
+                    )
+                else:
+                    logger.exception(
+                        "Error in pressure stream loop for flavor %s, falling back to %s runners.",
+                        self._config.flavor_name,
+                        fallback,
+                    )
                 if self._stop.is_set():
                     return
                 self._handle_create_runners(fallback)
@@ -439,6 +462,7 @@ def build_pressure_reconciler(
         config=PressureReconcilerConfig(
             flavor_name=config.name,
             reconcile_interval=config.reconcile_interval,
+            planner_pressure_mode=config.planner_pressure_mode,
             min_pressure=first.base_virtual_machines,
             max_pressure=first.max_total_virtual_machines,
         ),

@@ -5,7 +5,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Optional, TextIO
+from typing import Literal, Optional, TextIO
 
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, root_validator
@@ -52,6 +52,7 @@ class ApplicationConfiguration(BaseModel):
         planner_url: Base URL of the planner service.
         planner_token: Bearer token to authenticate against the planner service.
         reconcile_interval: Minutes to wait between reconciliation.
+        planner_pressure_mode: Pressure fetch mode (`stream` or `request`).
     """
 
     allow_external_contributor: bool = False
@@ -64,6 +65,7 @@ class ApplicationConfiguration(BaseModel):
     planner_url: Optional[AnyHttpUrl] = None
     planner_token: Optional[str] = None
     reconcile_interval: int = Field(ge=1)
+    planner_pressure_mode: Literal["stream", "request"] = "stream"
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":

@@ -63,6 +63,42 @@ class PlannerClient:  # pylint: disable=too-few-public-methods
         self._session = self._create_session()
         self._config = config
 
+    def get_pressure(self, name: str) -> PressureInfo:
+        """Get pressure for the given flavor with a single request.
+
+        Args:
+            name: Flavor name.
+
+        Returns:
+            Parsed pressure info.
+
+        Raises:
+            PlannerConnectionError: On transient connection failures or timeouts.
+            PlannerApiError: On HTTP errors or invalid payloads.
+        """
+        base = str(self._config.base_url).rstrip("/") + "/"
+        url = urljoin(base, f"api/v1/flavors/{name}/pressure")
+        try:
+            response = self._session.get(
+                url,
+                headers={"Authorization": f"Bearer {self._config.token}"},
+                timeout=self._config.timeout,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            if not isinstance(data, dict) or name not in data:
+                raise PlannerApiError(f"Unexpected pressure response payload: {data}")
+
+            try:
+                return PressureInfo(pressure=int(data[name]))
+            except (TypeError, ValueError) as exc:
+                raise PlannerApiError(f"Invalid pressure value in payload: {data}") from exc
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            raise PlannerConnectionError(str(exc)) from exc
+        except requests.RequestException as exc:
+            raise PlannerApiError(str(exc)) from exc
+
     def stream_pressure(self, name: str) -> Iterable[PressureInfo]:
         """Stream pressure updates for the given flavor.
 
