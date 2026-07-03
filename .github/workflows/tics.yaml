@@ -4,6 +4,7 @@ jobs:
   TICS:
     name: TICS
     strategy:
+      max-parallel: 1
       matrix:
         runner:
           - self-hosted-linux-amd64-resolute-medium-tiobe
