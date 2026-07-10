@@ -22,9 +22,11 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 ## In this documentation
 
-| | |
+If you want to use ephemeral LXD virtual machines, see the [Track local-lxd](#track-local-lxd) section below.
+
+|| |
 |--|--|
-| Get started | [Quick start](local-lxd/tutorial/quick-start.md) • [Spawn OpenStack runner](how-to/openstack-runner.md) |
+| Get started | [Deploy the GitHub runner charm](local-lxd/tutorial/quick-start.md) • [Spawn OpenStack runner](how-to/openstack-runner.md) |
 | Deployment | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md) |
 | Operations | [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md) |
 | LXD runners | [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md) |
@@ -35,7 +37,7 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 This documentation uses the [Diátaxis documentation structure](https://diataxis.fr/):
 
-* **Tutorials** — hands-on introductions for newcomers.
+* **Tutorials** — hands-on introductions for newcomers using a local LXD controller.
 * **How-to guides** — step-by-step guides covering key operations and common tasks.
 * **Reference** — technical information such as specifications, APIs, and configuration options.
 * **Explanation** — background, concepts, and design discussion.
@@ -89,7 +91,7 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
    1. [Token scopes](reference/token-scopes.md)
 1. [Explanation](explanation)
    1. [SSH Debug](explanation/ssh-debug.md)
-   1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
+   1. [Managing resource usage](local-lxd/explanation/managing-resource-usage.md)
    1. [Security](explanation/security.md)
 1. [Track local-lxd](local-lxd)
    1. [Tutorial](local-lxd/tutorial)
