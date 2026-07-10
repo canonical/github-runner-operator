@@ -24,7 +24,9 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 
 ## In this documentation
 
+<!-- vale Canonical.004-Canonical-product-names = NO -->
 If you want to use ephemeral LXD virtual machines, see the [Track local-lxd](#track-local-lxd) section below.
+<!-- vale Canonical.004-Canonical-product-names = YES -->
 
 |             |                                                                                                                                                                                                                                                                                                                                                      |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
