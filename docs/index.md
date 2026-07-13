@@ -4,7 +4,7 @@
 
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-A [Juju](https://juju.is/) [charm](https://documentation.ubuntu.com/juju/3.6/reference/charm/) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance.
+A [Juju](https://juju.is/) [charm](https://canonical.com/juju/docs/juju-cli/3.6/reference/charm/) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance.
 
 Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more.
 For the GitHub runner operator, this includes:
