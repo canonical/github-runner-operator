@@ -4,7 +4,7 @@
 
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-A [Juju](https://juju.is/) [charm](https://documentation.ubuntu.com/juju/3.6/reference/charm/) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance.
+A [Juju](https://juju.is/) [charm](https://canonical.com/juju/docs/juju-cli/3.6/reference/charm/) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance.
 
 Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more.
 For the GitHub runner operator, this includes:
@@ -15,13 +15,6 @@ For the GitHub runner operator, this includes:
 - Supported observability through the `cos-agent` integration.
 - Scheduled dependencies upgrades to mitigate security risks. Furthermore, the Landscape Client charm can be deployed with this charm to ensure other dependencies are kept up to date.
 
-Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
-Just like GitHub's runners, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
-
-Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
-
-The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with security requirements](https://charmhub.io/github-runner/docs/how-to-comply-security).
-
 ## In this documentation
 
 <!-- vale Canonical.004-Canonical-product-names = NO -->
@@ -31,11 +24,11 @@ If you want to use ephemeral LXD virtual machines, see the [Track local-lxd](#tr
 |             |                                                                                                                                                                                                                                                                                                                                                      |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Get started | [Deploy the GitHub runner charm](local-lxd/tutorial/quick-start.md) • [Spawn OpenStack runner](how-to/openstack-runner.md)                                                                                                                                                                                                                           |
-| Deployment  | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md)                                                                                                                                                                             |
-| Operations  | [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md)                                                                                                                                            |
-| LXD runners | [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md)                                                                                                                                                                                                                                    |
+| Deployment  | [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md)                                                                                                                                                                                                                                      |
+| Operations  | [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md)                                                                                                                                                                                                                           |
+| LXD runners | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md)                                                                                                      |
 | Design      | [Charm architecture](reference/charm-architecture.md) • [Integrations](reference/integrations.md) • [ARM64](local-lxd/explanation/arm64.md)                                                                                                                                                                                                          |
-| Security    | [Security overview](explanation/security.md) • [Cryptographic overview](reference/cryptographic-overview.md) • [Token scopes](reference/token-scopes.md) • [External Access](reference/external-access.md) • [Comply with security requirements](how-to/comply-security.md) • [Manage external contributors](how-to/manage-external-contributors.md) |
+| Security    | [Security overview](explanation/security.md) • [Cryptographic overview](reference/cryptographic-overview.md) • [Token scopes](reference/token-scopes.md) • [External access](reference/external-access.md) • [Comply with security requirements](how-to/comply-security.md) • [Manage external contributors](how-to/manage-external-contributors.md) |
 
 ## How this documentation is organized
 
@@ -66,8 +59,6 @@ The GitHub runner operator is a member of the Ubuntu family. It's an open-source
 - [Join our online chat](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
 - [Contribute](https://github.com/canonical/github-runner-operator/blob/main/CONTRIBUTING.md)
 
-### Releases
-
 Thinking about using the GitHub runner operator for your next project? [Get in touch](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)!
 
 # Contents
@@ -90,12 +81,11 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
    1. [Configurations](reference/configurations.md)
    1. [COS Integration](reference/cos.md)
    1. [GitHub runner cryptographic overview](reference/cryptographic-overview.md)
-   1. [External Access](reference/external-access.md)
+   1. [External access](reference/external-access.md)
    1. [Integrations](reference/integrations.md)
    1. [Token scopes](reference/token-scopes.md)
 1. [Explanation](explanation)
    1. [SSH Debug](explanation/ssh-debug.md)
-   1. [Managing resource usage](local-lxd/explanation/managing-resource-usage.md)
    1. [Security](explanation/security.md)
 1. [Track local-lxd](local-lxd)
    1. [Tutorial](local-lxd/tutorial)
@@ -117,8 +107,11 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
       1. [Configurations](local-lxd/reference/configurations.md)
       1. [COS Integration](local-lxd/reference/cos.md)
       1. [GitHub runner cryptographic overview](local-lxd/reference/cryptographic-overview.md)
-      1. [External Access](local-lxd/reference/external-access.md)
+      1. [External access](local-lxd/reference/external-access.md)
       1. [Integrations](local-lxd/reference/integrations.md)
       1. [Token scopes](local-lxd/reference/token-scopes.md)
-   1. [Explanation](local-lxd/explanation) 1. [ARM64](local-lxd/explanation/arm64.md) 1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
+   1. [Explanation](local-lxd/explanation)
+      1. [ARM64](local-lxd/explanation/arm64.md)
+      1. [Managing resource usage](local-lxd/explanation/managing-resource-usage.md)
+      1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
    <!-- vale Canonical.004-Canonical-product-names = YES -->
