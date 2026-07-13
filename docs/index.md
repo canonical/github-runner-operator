@@ -18,15 +18,17 @@ For the GitHub runner operator, this includes:
 ## In this documentation
 
 <!-- vale Canonical.004-Canonical-product-names = NO -->
+
 If you want to use ephemeral LXD virtual machines, see the [Track local-lxd](#track-local-lxd) section below.
+
 <!-- vale Canonical.004-Canonical-product-names = YES -->
 
 |             |                                                                                                                                                                                                                                                                                                                                                      |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Get started | [Deploy the GitHub runner charm](local-lxd/tutorial/quick-start.md) • [Spawn OpenStack runner](how-to/openstack-runner.md)                                                                                                                                                                                                                           |
-| Deployment  | [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md)                                                                                                                                                                                                                                      |
-| Operations  | [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md)                                                                                                                                                                                                                           |
-| LXD runners | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md)                                                                                                      |
+| Deployment  | [Change repository or organization](how-to/change-path.md) • [Change GitHub authentication](how-to/change-token.md)                                                                                                                                                                                                                                  |
+| Operations  | [Configure runner storage](local-lxd/how-to/configure-runner-storage.md) • [Integrate with COS](how-to/integrate-with-cos.md) • [Debug with SSH](how-to/debug-with-ssh.md) • [Upgrade](how-to/upgrade.md)                                                                                                                                            |
+| LXD runners | [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md) • [Add custom labels](local-lxd/how-to/add-custom-labels.md) • [Set base image](local-lxd/how-to/set-base-image.md)                                                                                                                                                                               |
 | Design      | [Charm architecture](reference/charm-architecture.md) • [Integrations](reference/integrations.md) • [ARM64](local-lxd/explanation/arm64.md)                                                                                                                                                                                                          |
 | Security    | [Security overview](explanation/security.md) • [Cryptographic overview](reference/cryptographic-overview.md) • [Token scopes](reference/token-scopes.md) • [External access](reference/external-access.md) • [Comply with security requirements](how-to/comply-security.md) • [Manage external contributors](how-to/manage-external-contributors.md) |
 
@@ -114,4 +116,4 @@ Thinking about using the GitHub runner operator for your next project? [Get in t
       1. [ARM64](local-lxd/explanation/arm64.md)
       1. [Managing resource usage](local-lxd/explanation/managing-resource-usage.md)
       1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
-   <!-- vale Canonical.004-Canonical-product-names = YES -->
+      <!-- vale Canonical.004-Canonical-product-names = YES -->
