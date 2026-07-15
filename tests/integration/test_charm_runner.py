@@ -22,6 +22,7 @@ from tests.integration.helpers.common import (
     get_job_logs,
     wait_for,
     wait_for_runner_ready,
+    wait_for_status,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -141,7 +142,7 @@ def test_flush_runner_and_resource_config(
         dispatch_input={"runner": app, "minutes": "5"},
         wait=False,
     )
-    wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    wait_for_status(workflow, "in_progress")
     result = juju.run(unit_name, "flush-runners")
 
     assert result.status == "completed"
@@ -228,7 +229,7 @@ def test_otel_collector_endpoint_pre_job_installs_config(
         dispatch_input={"runner": app, "minutes": "5"},
         wait=False,
     )
-    wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+    wait_for_status(workflow, "in_progress")
 
     def _read_otel_config() -> str:
         """Read the otel config written by the pre-job script, retrying until it exists.
