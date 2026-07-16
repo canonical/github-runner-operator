@@ -446,10 +446,13 @@ def openstack_connection_fixture(
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
         # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
-        try:
-            cleanup_stale_openstack_resources(connection)
-        except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
-            logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
+        # Skip when reusing an existing app (local --use-existing-app-suffix); those resources
+        # may legitimately be older than min_age.
+        if not existing_app_suffix:
+            try:
+                cleanup_stale_openstack_resources(connection)
+            except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
+                logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
         yield connection
 
         servers = list(connection.list_servers(filters={"name": app_name}) or [])
