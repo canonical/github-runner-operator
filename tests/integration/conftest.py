@@ -464,11 +464,11 @@ def openstack_connection_fixture(
             for server in servers:
                 server_name: str = server.name
                 if server_name.startswith(app_name):
-                    connection.delete_server(server_name)
+                    connection.delete_server(server.id, wait=True)
             for key in connection.list_keypairs():
                 key_name: str = key.name
                 if key_name.startswith(app_name):
-                    connection.delete_keypair(key_name)
+                    connection.delete_keypair(name=key_name)
 
 
 @pytest.fixture(scope="module")
