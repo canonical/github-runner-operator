@@ -444,6 +444,10 @@ def openstack_connection_fixture(
     clouds_yaml_path.write_text(data=openstack_config.clouds_yaml_contents, encoding="utf-8")
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
+        # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
+        from tests.integration.helpers.orphan_cleanup import cleanup_stale_openstack_resources
+
+        cleanup_stale_openstack_resources(connection)
         yield connection
 
     servers = connection.list_servers(filters={"name": app_name})

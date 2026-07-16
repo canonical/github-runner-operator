@@ -182,6 +182,10 @@ def openstack_connection(
         project_domain_name=openstack_config.project_domain_name,
         region_name=openstack_config.region_name,
     )
+    # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
+    from .orphan_cleanup import cleanup_stale_openstack_resources
+
+    cleanup_stale_openstack_resources(conn)
     yield conn
     conn.close()
 
