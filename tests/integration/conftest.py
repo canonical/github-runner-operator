@@ -449,10 +449,10 @@ def openstack_connection_fixture(
         try:
             cleanup_stale_openstack_resources(connection)
         except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
-            logging.warning("OpenStack orphan cleanup failed: %s", exc)
+            logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
         yield connection
 
-        servers = connection.list_servers(filters={"name": app_name})
+        servers = list(connection.list_servers(filters={"name": app_name}) or [])
 
         if request.session.testsfailed:
             logging.info("OpenStack servers: %s", servers)
