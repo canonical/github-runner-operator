@@ -31,17 +31,17 @@ _PROTECTED_NAMES = frozenset(
 _NAME_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(p)
     for p in (
-        r"^test-runner-[a-z0-9]{6,12}($|-)",  # manager TestConfig.vm_prefix
-        r"^test-[a-z0-9]{6,12}($|-)",  # charm app_name
-        r"^github-runner-image-builder-[a-z0-9]{6,12}($|-)",  # image-builder deploy in charm IT
+        r"^test-runner-[a-z0-9]{8}($|-)",  # manager TestConfig.vm_prefix
+        r"^test-[a-z0-9]{8}($|-)",  # charm app_name
+        r"^github-runner-image-builder-[a-z0-9]{8}($|-)",  # image-builder deploy in charm IT
     )
 )
 
 _SG_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(p)
     for p in (
-        r"^test-runner-[a-z0-9]{6,12}-",
-        r"^test-[a-z0-9]{6,12}-",
+        r"^test-runner-[a-z0-9]{8}-",
+        r"^test-[a-z0-9]{8}-",
     )
 )
 
@@ -73,7 +73,7 @@ def cleanup_stale_openstack_resources(
         _safe_delete(
             "server",
             name or server.id,
-            lambda s=server: connection.delete_server(s.id, wait=False),
+            lambda s=server: connection.delete_server(s.id, wait=True),
         )
 
     for image in connection.list_images() or []:

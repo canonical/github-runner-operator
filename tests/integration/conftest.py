@@ -446,26 +446,29 @@ def openstack_connection_fixture(
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
         # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
-        cleanup_stale_openstack_resources(connection)
+        try:
+            cleanup_stale_openstack_resources(connection)
+        except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
+            logging.warning("OpenStack orphan cleanup failed: %s", exc)
         yield connection
 
-    servers = connection.list_servers(filters={"name": app_name})
+        servers = connection.list_servers(filters={"name": app_name})
 
-    if request.session.testsfailed:
-        logging.info("OpenStack servers: %s", servers)
-        for server in servers:
-            console_log = connection.get_server_console(server=server)
-            logging.info("Server %s console log:\n%s", server.name, console_log)
+        if request.session.testsfailed:
+            logging.info("OpenStack servers: %s", servers)
+            for server in servers:
+                console_log = connection.get_server_console(server=server)
+                logging.info("Server %s console log:\n%s", server.name, console_log)
 
-    if not existing_app_suffix:
-        for server in servers:
-            server_name: str = server.name
-            if server_name.startswith(app_name):
-                connection.delete_server(server_name)
-        for key in connection.list_keypairs():
-            key_name: str = key.name
-            if key_name.startswith(app_name):
-                connection.delete_keypair(key_name)
+        if not existing_app_suffix:
+            for server in servers:
+                server_name: str = server.name
+                if server_name.startswith(app_name):
+                    connection.delete_server(server_name)
+            for key in connection.list_keypairs():
+                key_name: str = key.name
+                if key_name.startswith(app_name):
+                    connection.delete_keypair(key_name)
 
 
 @pytest.fixture(scope="module")

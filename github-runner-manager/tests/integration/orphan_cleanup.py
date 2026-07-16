@@ -18,11 +18,11 @@ _PROTECTED_NAMES = frozenset({"github-runner-v1", "default"})
 
 # Matches TestConfig.vm_prefix = test-runner-{8 alnum}
 _NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"^test-runner-[a-z0-9]{6,12}($|-)"),
+    re.compile(r"^test-runner-[a-z0-9]{8}($|-)"),
 )
 
 _SG_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"^test-runner-[a-z0-9]{6,12}-"),
+    re.compile(r"^test-runner-[a-z0-9]{8}-"),
 )
 
 
@@ -50,7 +50,7 @@ def cleanup_stale_openstack_resources(
         _safe_delete(
             "server",
             name or server.id,
-            lambda s=server: connection.delete_server(s.id, wait=False),
+            lambda s=server: connection.delete_server(s.id, wait=True),
         )
 
     for keypair in connection.list_keypairs() or []:
