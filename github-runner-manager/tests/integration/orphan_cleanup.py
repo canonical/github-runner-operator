@@ -87,9 +87,14 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
+    """True if resource is dated and older than ``min_age``.
+
+    Missing/unparseable created_at: skip. Unknown age must not delete
+    concurrent or in-progress CI resources (e.g. keypairs without timestamps).
+    """
     created = _parse_created_at(created_at)
     if created is None:
-        return True
+        return False
     return now - created >= min_age
 
 

@@ -131,11 +131,12 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
     """True if resource should be deleted.
 
-    Missing created_at: treat as stale (keypair API often lacks timestamps).
+    Missing/unparseable created_at: skip (not stale). Keypair APIs often lack
+    timestamps; treating unknown as stale can delete in-progress CI resources.
     """
     created = _parse_created_at(created_at)
     if created is None:
-        return True
+        return False
     return now - created >= min_age
 
 
