@@ -1,0 +1,69 @@
+name: Cleanup OpenStack CI resources
+
+on:
+  schedule:
+    # Every 6 hours UTC
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      min-age-hours:
+        description: Minimum resource age in hours before deletion
+        required: false
+        default: "6"
+      apply:
+        description: Actually delete (true) or dry-run (false)
+        required: false
+        default: "true"
+
+concurrency:
+  group: cleanup-openstack-ci-resources
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Cleanup dangling OpenStack CI resources
+    runs-on: self-hosted-linux-amd64-noble-private-endpoint-small
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Install openstacksdk
+        run: |
+          python3 -m pip install --user --upgrade pip
+          python3 -m pip install --user 'openstacksdk>=3.0.0'
+
+      - name: Run cleanup
+        env:
+          # Sensitive OpenStack / integration env vars are injected via the same
+          # name→value slot mapping used by integration tests (see CONTRIBUTING.md).
+          # Expect OS_AUTH_URL, OS_PASSWORD, OS_PROJECT_NAME, OS_USERNAME,
+          # OS_USER_DOMAIN_NAME, OS_PROJECT_DOMAIN_NAME, OS_REGION_NAME (etc.)
+          # to arrive via those slots.
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_6 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_6 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_7 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_7 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_11 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_11 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_12 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_12 }}
+          OS_IDENTITY_API_VERSION: "3"
+        run: |
+          set -euo pipefail
+          export PATH="${HOME}/.local/bin:${PATH}"
+          MIN_AGE="${{ github.event.inputs.min-age-hours || '6' }}"
+          APPLY="${{ github.event.inputs.apply || 'true' }}"
+          extra_flags=(--min-age-hours "${MIN_AGE}" --aggressive-keypairs --json-summary)
+          if [ "${APPLY}" = "true" ]; then
+            extra_flags+=(--apply)
+          fi
+          python3 scripts/cleanup_openstack_ci_resources.py -v "${extra_flags[@]}"
