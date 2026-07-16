@@ -468,7 +468,7 @@ def openstack_connection_fixture(
             for key in connection.list_keypairs():
                 key_name: str = key.name
                 if key_name.startswith(app_name):
-                    connection.delete_keypair(name=key_name)
+                    connection.delete_keypair(key_name)
 
 
 @pytest.fixture(scope="module")

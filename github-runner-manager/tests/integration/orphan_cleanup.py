@@ -59,7 +59,7 @@ def cleanup_stale_openstack_resources(
             continue
         if not _is_stale(getattr(keypair, "created_at", None), min_age, now):
             continue
-        _safe_delete("keypair", name or "", lambda n=name: connection.delete_keypair(name=n))
+        _safe_delete("keypair", name or "", lambda n=name: connection.delete_keypair(n))
 
     for sg in connection.list_security_groups() or []:
         name = getattr(sg, "name", None)

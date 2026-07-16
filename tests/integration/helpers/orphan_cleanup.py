@@ -100,7 +100,7 @@ def cleanup_stale_openstack_resources(
         _safe_delete(
             "keypair",
             name or "",
-            lambda n=name: connection.delete_keypair(name=n),
+            lambda n=name: connection.delete_keypair(n),
         )
 
     for sg in connection.list_security_groups() or []:
