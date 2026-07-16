@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 import re
 from datetime import datetime, timedelta, timezone
-from typing import Iterable
+from collections.abc import Callable, Iterable
 
 from openstack.connection import Connection
 
@@ -24,44 +24,6 @@ _NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
 _SG_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^test-runner-[a-z0-9]{6,12}-"),
 )
-
-
-def _parse_created_at(value: object) -> datetime | None:
-    if value is None:
-        return None
-    if isinstance(value, datetime):
-        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
-    text = str(value).strip().replace("Z", "+00:00")
-    if not text:
-        return None
-    try:
-        dt = datetime.fromisoformat(text)
-    except ValueError:
-        return None
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
-
-
-def _matches(name: str | None, patterns: Iterable[re.Pattern[str]]) -> bool:
-    if not name or name in _PROTECTED_NAMES:
-        return False
-    return any(p.search(name) for p in patterns)
-
-
-def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
-    created = _parse_created_at(created_at)
-    if created is None:
-        return True
-    return now - created >= min_age
-
-
-def _safe_delete(label: str, name: str, delete_fn) -> None:
-    try:
-        delete_fn()
-        logger.info("Orphan cleanup deleted %s %s", label, name)
-    except Exception as exc:  # noqa: BLE001
-        logger.warning("Orphan cleanup failed deleting %s %s: %s", label, name, exc)
 
 
 def cleanup_stale_openstack_resources(
@@ -114,3 +76,41 @@ def cleanup_stale_openstack_resources(
         )
 
     logger.info("OpenStack orphan cleanup finished")
+
+
+def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None:
+    try:
+        delete_fn()
+        logger.info("Orphan cleanup deleted %s %s", label, name)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Orphan cleanup failed deleting %s %s: %s", label, name, exc)
+
+
+def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
+    created = _parse_created_at(created_at)
+    if created is None:
+        return True
+    return now - created >= min_age
+
+
+def _matches(name: str | None, patterns: Iterable[re.Pattern[str]]) -> bool:
+    if not name or name in _PROTECTED_NAMES:
+        return False
+    return any(p.search(name) for p in patterns)
+
+
+def _parse_created_at(value: object) -> datetime | None:
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    text = str(value).strip().replace("Z", "+00:00")
+    if not text:
+        return None
+    try:
+        dt = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)

@@ -17,6 +17,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
+from .orphan_cleanup import cleanup_stale_openstack_resources
 from .planner_stub import PlannerStub, PlannerStubConfig
 
 logger = logging.getLogger(__name__)
@@ -183,8 +184,6 @@ def openstack_connection(
         region_name=openstack_config.region_name,
     )
     # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
-    from .orphan_cleanup import cleanup_stale_openstack_resources
-
     cleanup_stale_openstack_resources(conn)
     yield conn
     conn.close()
