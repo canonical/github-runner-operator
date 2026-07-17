@@ -23,7 +23,7 @@ OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (MANAGER_VM_PREFIX,)
 
 
 def generate_test_id() -> str:
-    """Return a unique id for one suite run."""
+    """Return a random id for one suite run."""
     return "".join(secrets.choice(TEST_ID_ALPHABET) for _ in range(TEST_ID_LENGTH))
 
 
