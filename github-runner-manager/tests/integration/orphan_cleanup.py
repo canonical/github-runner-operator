@@ -15,9 +15,9 @@ before new ones are created.
 """
 
 import logging
-from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 
+import openstack.exceptions
 from openstack.connection import Connection
 
 from .factories import is_manager_openstack_resource_name
@@ -46,11 +46,13 @@ def cleanup_stale_openstack_resources(
             now,
         ):
             continue
-        _safe_delete(
-            "server",
-            name or server.id,
-            lambda s=server: connection.delete_server(s.id, wait=True),
-        )
+        try:
+            connection.delete_server(server.id, wait=True)
+            logger.info("Orphan cleanup deleted server %s", name or server.id)
+        except (openstack.exceptions.ResourceNotFound, openstack.exceptions.ConflictException):
+            logger.warning(
+                "Orphan cleanup failed deleting server %s", name or server.id, exc_info=True
+            )
 
     for keypair in connection.list_keypairs() or []:
         name = getattr(keypair, "name", None)
@@ -58,19 +60,15 @@ def cleanup_stale_openstack_resources(
             continue
         if not _is_stale(getattr(keypair, "created_at", None), min_age, now):
             continue
-        _safe_delete("keypair", name or "", lambda n=name: connection.delete_keypair(n))
+        try:
+            connection.delete_keypair(name)
+            logger.info("Orphan cleanup deleted keypair %s", name)
+        except (openstack.exceptions.ResourceNotFound, openstack.exceptions.ConflictException):
+            logger.warning(
+                "Orphan cleanup failed deleting keypair %s", name, exc_info=True
+            )
 
     logger.info("OpenStack orphan cleanup finished")
-
-
-def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None:
-    try:
-        delete_fn()
-        logger.info("Orphan cleanup deleted %s %s", label, name)
-    except Exception as exc:  # noqa: BLE001
-        logger.warning(
-            "Orphan cleanup failed deleting %s %s: %s", label, name, exc, exc_info=True
-        )
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
