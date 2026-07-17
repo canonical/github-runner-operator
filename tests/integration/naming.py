@@ -60,6 +60,13 @@ def is_ci_openstack_resource_name(name: str | None) -> bool:
         if not rest:
             continue
         test_id = rest.split("-", 1)[0]
-        if len(test_id) == TEST_ID_LENGTH and all(c in TEST_ID_ALPHABET for c in test_id):
-            return True
+        if len(test_id) != TEST_ID_LENGTH:
+            continue
+        if not all(c in TEST_ID_ALPHABET for c in test_id):
+            continue
+        # Charm app suffixes always start with a letter; manager test ids may
+        # start with a digit.
+        if prefix != "test-runner-" and not test_id[0].isalpha():
+            continue
+        return True
     return False
