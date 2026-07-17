@@ -458,7 +458,11 @@ def openstack_connection_fixture(
                 logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
         yield connection
 
-        servers = list(connection.list_servers(filters={"name": app_name}) or [])
+        servers = [
+            server
+            for server in (connection.list_servers() or [])
+            if str(getattr(server, "name", "") or "").startswith(app_name)
+        ]
 
         if request.session.testsfailed:
             logging.info("OpenStack servers: %s", servers)

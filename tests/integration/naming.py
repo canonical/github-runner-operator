@@ -1,17 +1,18 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Shared application/OpenStack resource naming for charm integration tests.
+"""Shared application/OpenStack resource naming for integration tests.
 
 Who uses this module
 --------------------
 - Producers: fixtures in ``tests/integration/conftest.py`` that choose Juju app
-  names and related OpenStack resource names for a suite run.
+  names for a suite run.
 - Consumers: ``tests/integration/helpers/orphan_cleanup.py``, which deletes
-  leftover OpenStack resources from force-cancelled previous runs.
+  leftover OpenStack resources from force-cancelled previous runs, including
+  names produced by github-runner-manager on shared CI tenants.
 
-Keeping both sides on the same helpers means renaming a resource format only
-requires changing this file once.
+Keeping producers and orphan cleanup on the same helpers means renaming a
+resource format only requires changing this file once.
 """
 
 import random
@@ -33,7 +34,7 @@ OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (
 
 
 def generate_app_suffix() -> str:
-    """Return a unique application name suffix for one suite run."""
+    """Return a random application name suffix for one suite run."""
     return random.choice(string.ascii_lowercase) + "".join(
         random.choices(TEST_ID_ALPHABET, k=TEST_ID_LENGTH - 1)
     )
