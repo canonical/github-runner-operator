@@ -10,13 +10,55 @@ from pathlib import Path
 from typing import Any
 
 
-def _generate_test_id() -> str:
+# Single source of truth for OpenStack resource names in this suite.
+# Orphan cleanup imports these so patterns cannot drift from producers.
+TEST_ID_LENGTH = 8
+TEST_ID_ALPHABET = string.ascii_lowercase + string.digits
+MANAGER_VM_PREFIX = "test-runner-"
+MANAGER_RUNNER_NAME_PREFIX = "test-manager-"
+# Labels use "test-{id}" (not the openstack prefix); kept as a formatter only.
+
+OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (MANAGER_VM_PREFIX,)
+
+
+def generate_test_id() -> str:
     """Generate a unique test identifier.
 
     Returns:
         A random 8-character alphanumeric string.
     """
-    return "".join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+    return "".join(secrets.choice(TEST_ID_ALPHABET) for _ in range(TEST_ID_LENGTH))
+
+
+def manager_vm_prefix(test_id: str) -> str:
+    """OpenStack VM / keypair name prefix for a suite run."""
+    return f"{MANAGER_VM_PREFIX}{test_id}"
+
+
+def manager_runner_name(test_id: str) -> str:
+    """Runner-manager process name for a suite run."""
+    return f"{MANAGER_RUNNER_NAME_PREFIX}{test_id}"
+
+
+def manager_labels(test_id: str) -> list[str]:
+    """Extra GitHub runner labels for a suite run."""
+    return [f"test-{test_id}"]
+
+
+def is_manager_openstack_resource_name(name: str | None) -> bool:
+    """True if *name* is a manager-IT OpenStack resource from this suite's scheme."""
+    if not name:
+        return False
+    for prefix in OPENSTACK_RESOURCE_PREFIXES:
+        if not name.startswith(prefix):
+            continue
+        rest = name[len(prefix) :]
+        if not rest:
+            continue
+        test_id = rest.split("-", 1)[0]
+        if len(test_id) == TEST_ID_LENGTH and all(c in TEST_ID_ALPHABET for c in test_id):
+            return True
+    return False
 
 
 @dataclass
@@ -107,16 +149,16 @@ class TestConfig:
     """
 
     debug_log_dir: Path = Path("/tmp/github-runner-manager-test-logs")
-    test_id: str = field(default_factory=_generate_test_id)
+    test_id: str = field(default_factory=generate_test_id)
     runner_name: str = field(init=False)
     labels: list[str] = field(init=False)
     vm_prefix: str = field(init=False)
 
     def __post_init__(self) -> None:
         """Initialize derived fields based on test_id."""
-        self.runner_name = f"test-manager-{self.test_id}"
-        self.labels = [f"test-{self.test_id}"]
-        self.vm_prefix = f"test-runner-{self.test_id}"
+        self.runner_name = manager_runner_name(self.test_id)
+        self.labels = manager_labels(self.test_id)
+        self.vm_prefix = manager_vm_prefix(self.test_id)
 
 
 @dataclass

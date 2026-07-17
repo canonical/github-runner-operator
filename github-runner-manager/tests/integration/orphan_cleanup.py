@@ -3,34 +3,26 @@
 
 """Delete stale OpenStack resources left by interrupted manager integration runs."""
 
-from __future__ import annotations
-
 import logging
-import re
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from collections.abc import Callable, Iterable
 
 from openstack.connection import Connection
 
+from .factories import is_manager_openstack_resource_name
+
 logger = logging.getLogger(__name__)
-
-_PROTECTED_NAMES = frozenset({"github-runner-v1", "default"})
-
-# Matches TestConfig.vm_prefix = test-runner-{8 alnum}
-_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"^test-runner-[a-z0-9]{8}($|-)"),
-)
-
-_SG_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"^test-runner-[a-z0-9]{8}-"),
-)
 
 
 def cleanup_stale_openstack_resources(
     connection: Connection,
     min_age: timedelta = timedelta(hours=6),
 ) -> None:
-    """Remove manager-IT OpenStack leftovers older than ``min_age``."""
+    """Remove manager-IT OpenStack leftovers older than ``min_age``.
+
+    Only servers and keypairs. Security groups are not suite-scoped; runtime
+    reuses the permanent ``github-runner-v1`` group.
+    """
     now = datetime.now(tz=timezone.utc)
     logger.info(
         "OpenStack orphan cleanup starting (min_age=%sh)",
@@ -39,7 +31,7 @@ def cleanup_stale_openstack_resources(
 
     for server in connection.list_servers(bare=True) or []:
         name = getattr(server, "name", None)
-        if not _matches(name, _NAME_PATTERNS):
+        if not is_manager_openstack_resource_name(name):
             continue
         if not _is_stale(
             getattr(server, "created_at", None) or getattr(server, "created", None),
@@ -55,25 +47,11 @@ def cleanup_stale_openstack_resources(
 
     for keypair in connection.list_keypairs() or []:
         name = getattr(keypair, "name", None)
-        if not _matches(name, _NAME_PATTERNS):
+        if not is_manager_openstack_resource_name(name):
             continue
         if not _is_stale(getattr(keypair, "created_at", None), min_age, now):
             continue
         _safe_delete("keypair", name or "", lambda n=name: connection.delete_keypair(n))
-
-    for sg in connection.list_security_groups() or []:
-        name = getattr(sg, "name", None)
-        if name in _PROTECTED_NAMES:
-            continue
-        if not (_matches(name, _SG_PATTERNS) or _matches(name, _NAME_PATTERNS)):
-            continue
-        if not _is_stale(getattr(sg, "created_at", None), min_age, now):
-            continue
-        _safe_delete(
-            "security_group",
-            name or sg.id,
-            lambda g=sg: connection.delete_security_group(g.id),
-        )
 
     logger.info("OpenStack orphan cleanup finished")
 
@@ -83,25 +61,21 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
         delete_fn()
         logger.info("Orphan cleanup deleted %s %s", label, name)
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Orphan cleanup failed deleting %s %s: %s", label, name, exc, exc_info=True)
+        logger.warning(
+            "Orphan cleanup failed deleting %s %s: %s", label, name, exc, exc_info=True
+        )
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
     """True if resource is dated and older than ``min_age``.
 
-    Missing/unparseable created_at: skip. Unknown age must not delete
-    concurrent or in-progress CI resources (e.g. keypairs without timestamps).
+    Missing/unparseable created_at: skip. Unknown age must not delete concurrent
+    or in-progress CI resources (e.g. keypairs without timestamps).
     """
     created = _parse_created_at(created_at)
     if created is None:
         return False
     return now - created >= min_age
-
-
-def _matches(name: str | None, patterns: Iterable[re.Pattern[str]]) -> bool:
-    if not name or name in _PROTECTED_NAMES:
-        return False
-    return any(p.search(name) for p in patterns)
 
 
 def _parse_created_at(value: object) -> datetime | None:

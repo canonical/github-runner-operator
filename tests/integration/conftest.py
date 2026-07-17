@@ -44,6 +44,11 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.integration.helpers.orphan_cleanup import cleanup_stale_openstack_resources
+from tests.integration.naming import (
+    app_name_from_suffix,
+    generate_app_suffix,
+    image_builder_app_name_from_suffix,
+)
 
 DEFAULT_RECONCILE_INTERVAL = 2
 
@@ -280,22 +285,19 @@ def existing_app_suffix(pytestconfig: pytest.Config) -> Optional[str]:
 def random_app_name_suffix(existing_app_suffix: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized suffix name to avoid collision when runner is connecting to GitHub.
-    return existing_app_suffix or (
-        random.choice(string.ascii_lowercase)
-        + "".join(random.choices(string.ascii_lowercase + string.digits, k=7))
-    )
+    return existing_app_suffix or generate_app_suffix()
 
 
 @pytest.fixture(scope="module")
 def app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
-    return f"test-{random_app_name_suffix}"
+    return app_name_from_suffix(random_app_name_suffix)
 
 
 @pytest.fixture(scope="module")
 def image_builder_app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
-    return f"github-runner-image-builder-{random_app_name_suffix}"
+    return image_builder_app_name_from_suffix(random_app_name_suffix)
 
 
 @pytest.fixture(scope="module")

@@ -7,43 +7,15 @@ Called at the start of integration tests so force-cancelled previous jobs still
 get cleaned up the next time a suite runs against the tenant.
 """
 
-from __future__ import annotations
-
 import logging
-import re
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from collections.abc import Callable, Iterable
 
 from openstack.connection import Connection
 
+from tests.integration.naming import is_ci_openstack_resource_name
+
 logger = logging.getLogger(__name__)
-
-# Permanent SGs used by runtime code — never touch.
-_PROTECTED_NAMES = frozenset(
-    {
-        "github-runner-v1",
-        "github-runner-image-builder-v1",
-        "default",
-    }
-)
-
-# CI leftovers from this repository's charm + manager integration tests.
-_NAME_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
-    re.compile(p)
-    for p in (
-        r"^test-runner-[a-z0-9]{8}($|-)",  # manager TestConfig.vm_prefix
-        r"^test-[a-z0-9]{8}($|-)",  # charm app_name
-        r"^github-runner-image-builder-[a-z0-9]{8}($|-)",  # image-builder deploy in charm IT
-    )
-)
-
-_SG_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
-    re.compile(p)
-    for p in (
-        r"^test-runner-[a-z0-9]{8}-",
-        r"^test-[a-z0-9]{8}-",
-    )
-)
 
 
 def cleanup_stale_openstack_resources(
@@ -52,7 +24,9 @@ def cleanup_stale_openstack_resources(
 ) -> None:
     """Remove CI-named OpenStack resources older than ``min_age``.
 
-    Order: servers (may hold SG/keypair refs) → images → keypairs → security groups.
+    Order: servers (hold keypairs/refs) → images → keypairs.
+    Security groups are not touched: runtime uses a permanent docker-project
+    group (``github-runner-v1``) that is get-or-create, never suite-scoped.
     """
     now = datetime.now(tz=timezone.utc)
     logger.info(
@@ -62,7 +36,7 @@ def cleanup_stale_openstack_resources(
 
     for server in connection.list_servers(bare=True) or []:
         name = getattr(server, "name", None)
-        if not _matches(name, _NAME_PATTERNS):
+        if not is_ci_openstack_resource_name(name):
             continue
         if not _is_stale(
             getattr(server, "created_at", None) or getattr(server, "created", None),
@@ -81,7 +55,7 @@ def cleanup_stale_openstack_resources(
         visibility = str(getattr(image, "visibility", "") or "").lower()
         if visibility in {"public", "community"}:
             continue
-        if not _matches(name, _NAME_PATTERNS):
+        if not is_ci_openstack_resource_name(name):
             continue
         if not _is_stale(getattr(image, "created_at", None), min_age, now):
             continue
@@ -93,29 +67,11 @@ def cleanup_stale_openstack_resources(
 
     for keypair in connection.list_keypairs() or []:
         name = getattr(keypair, "name", None)
-        if not _matches(name, _NAME_PATTERNS):
+        if not is_ci_openstack_resource_name(name):
             continue
         if not _is_stale(getattr(keypair, "created_at", None), min_age, now):
             continue
-        _safe_delete(
-            "keypair",
-            name or "",
-            lambda n=name: connection.delete_keypair(n),
-        )
-
-    for sg in connection.list_security_groups() or []:
-        name = getattr(sg, "name", None)
-        if name in _PROTECTED_NAMES:
-            continue
-        if not (_matches(name, _SG_PATTERNS) or _matches(name, _NAME_PATTERNS)):
-            continue
-        if not _is_stale(getattr(sg, "created_at", None), min_age, now):
-            continue
-        _safe_delete(
-            "security_group",
-            name or sg.id,
-            lambda g=sg: connection.delete_security_group(g.id),
-        )
+        _safe_delete("keypair", name or "", lambda n=name: connection.delete_keypair(n))
 
     logger.info("OpenStack orphan cleanup finished")
 
@@ -125,25 +81,21 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
         delete_fn()
         logger.info("Orphan cleanup deleted %s %s", label, name)
     except Exception as exc:  # noqa: BLE001 - best-effort, already-gone is fine
-        logger.warning("Orphan cleanup failed deleting %s %s: %s", label, name, exc, exc_info=True)
+        logger.warning(
+            "Orphan cleanup failed deleting %s %s: %s", label, name, exc, exc_info=True
+        )
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
-    """True if resource should be deleted.
+    """True if resource is dated and older than ``min_age``.
 
-    Missing/unparseable created_at: skip (not stale). Keypair APIs often lack
-    timestamps; treating unknown as stale can delete in-progress CI resources.
+    Missing/unparseable created_at: skip. Unknown age must not delete concurrent
+    or in-progress CI resources (e.g. keypairs without timestamps).
     """
     created = _parse_created_at(created_at)
     if created is None:
         return False
     return now - created >= min_age
-
-
-def _matches(name: str | None, patterns: Iterable[re.Pattern[str]]) -> bool:
-    if not name or name in _PROTECTED_NAMES:
-        return False
-    return any(p.search(name) for p in patterns)
 
 
 def _parse_created_at(value: object) -> datetime | None:
