@@ -9,7 +9,6 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-
 # Single source of truth for resource names created by
 # github-runner-manager/tests/integration/. Orphan cleanup imports the matchers
 # and formatters so names cannot drift from what the suite actually creates.
