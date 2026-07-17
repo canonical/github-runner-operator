@@ -457,28 +457,35 @@ def openstack_connection_fixture(
             except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
                 logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
         yield connection
+        _teardown_charm_suite_openstack(connection, app_name, existing_app_suffix, request)
 
-        servers = [
-            server
-            for server in (connection.list_servers() or [])
-            if str(getattr(server, "name", "") or "").startswith(app_name)
-        ]
 
-        if request.session.testsfailed:
-            logging.info("OpenStack servers: %s", servers)
-            for server in servers:
-                console_log = connection.get_server_console(server=server)
-                logging.info("Server %s console log:\n%s", server.name, console_log)
+def _teardown_charm_suite_openstack(
+    connection: Connection,
+    app_name: str,
+    existing_app_suffix: Optional[str],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Log and delete OpenStack resources created during this suite run."""
+    servers = [
+        server
+        for server in (connection.list_servers() or [])
+        if str(getattr(server, "name", "") or "").startswith(app_name)
+    ]
 
-        if not existing_app_suffix:
-            for server in servers:
-                server_name: str = server.name
-                if server_name.startswith(app_name):
-                    connection.delete_server(server.id, wait=True)
-            for key in connection.list_keypairs():
-                key_name: str = key.name
-                if key_name.startswith(app_name):
-                    connection.delete_keypair(key_name)
+    if request.session.testsfailed:
+        logging.info("OpenStack servers: %s", servers)
+        for server in servers:
+            console_log = connection.get_server_console(server=server)
+            logging.info("Server %s console log:\n%s", server.name, console_log)
+
+    if not existing_app_suffix:
+        for server in servers:
+            connection.delete_server(server.id, wait=True)
+        for key in connection.list_keypairs():
+            key_name: str = key.name
+            if key_name.startswith(app_name):
+                connection.delete_keypair(key_name)
 
 
 @pytest.fixture(scope="module")

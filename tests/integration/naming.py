@@ -34,24 +34,49 @@ OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (
 
 
 def generate_app_suffix() -> str:
-    """Return a random application name suffix for one suite run."""
+    """Return a random application name suffix for one suite run.
+
+    Returns:
+        An 8-character suffix starting with a lowercase letter.
+    """
     return random.choice(string.ascii_lowercase) + "".join(
         random.choices(TEST_ID_ALPHABET, k=TEST_ID_LENGTH - 1)
     )
 
 
 def app_name_from_suffix(suffix: str) -> str:
-    """Return the github-runner application name for *suffix*."""
+    """Return the github-runner application name for *suffix*.
+
+    Args:
+        suffix: The application name suffix.
+
+    Returns:
+        The full Juju application name.
+    """
     return f"test-{suffix}"
 
 
 def image_builder_app_name_from_suffix(suffix: str) -> str:
-    """Return the github-runner-image-builder application name for *suffix*."""
+    """Return the github-runner-image-builder application name for *suffix*.
+
+    Args:
+        suffix: The application name suffix.
+
+    Returns:
+        The full Juju application name.
+    """
     return f"github-runner-image-builder-{suffix}"
 
 
 def is_ci_openstack_resource_name(name: str | None) -> bool:
-    """Return True if *name* belongs to this repository's CI OpenStack resources."""
+    """Return True if *name* belongs to this repository's CI OpenStack resources.
+
+    Args:
+        name: The OpenStack resource name to check.
+
+    Returns:
+        Whether the name matches a known CI prefix and test id format.
+    """
     if not name:
         return False
     for prefix in OPENSTACK_RESOURCE_PREFIXES:
