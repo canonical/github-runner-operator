@@ -23,8 +23,8 @@ TEST_ID_LENGTH = 8
 TEST_ID_ALPHABET = string.ascii_lowercase + string.digits
 
 # OpenStack / app name prefixes produced by this repository's integration tests.
-# Longest-first so matching does not stop early at the shorter ``test-`` prefix
-# when the real name starts with ``test-runner-``.
+# Longer prefixes are listed first so readers see the more specific form before
+# the shorter ``test-`` prefix (``test-runner-`` vs ``test-``).
 OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (
     "github-runner-image-builder-",  # image-builder charm app name in the charm suite
     "test-runner-",  # github-runner-manager VM/keypair prefix (shared CI tenant)
