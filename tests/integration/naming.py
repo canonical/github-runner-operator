@@ -33,33 +33,24 @@ OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (
 
 
 def generate_app_suffix() -> str:
-    """Return a new 8-character application name suffix for one suite run."""
+    """Return a unique application name suffix for one suite run."""
     return random.choice(string.ascii_lowercase) + "".join(
         random.choices(TEST_ID_ALPHABET, k=TEST_ID_LENGTH - 1)
     )
 
 
 def app_name_from_suffix(suffix: str) -> str:
-    """Return the github-runner Juju application name for *suffix*."""
+    """Return the github-runner application name for *suffix*."""
     return f"test-{suffix}"
 
 
 def image_builder_app_name_from_suffix(suffix: str) -> str:
-    """Return the github-runner-image-builder Juju application name for *suffix*."""
+    """Return the github-runner-image-builder application name for *suffix*."""
     return f"github-runner-image-builder-{suffix}"
 
 
 def is_ci_openstack_resource_name(name: str | None) -> bool:
-    """Return True if *name* looks like an OpenStack resource from our CI suites.
-
-    A name matches when it starts with one of :data:`OPENSTACK_RESOURCE_PREFIXES`,
-    then an 8-character test id from :data:`TEST_ID_ALPHABET`, optionally followed
-    by further ``-...`` segments (e.g. per-instance suffixes).
-
-    Examples that match: ``test-abcdef12``, ``test-runner-abcdef12-0``,
-    ``github-runner-image-builder-abcdef12``.
-    Examples that do not: ``github-runner-v1``, ``prod-runner``, ``test-short``.
-    """
+    """Return True if *name* belongs to this repository's CI OpenStack resources."""
     if not name:
         return False
     for prefix in OPENSTACK_RESOURCE_PREFIXES:

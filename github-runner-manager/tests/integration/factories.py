@@ -23,32 +23,27 @@ OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (MANAGER_VM_PREFIX,)
 
 
 def generate_test_id() -> str:
-    """Return a random 8-character id distinguishing one suite run from another."""
+    """Return a unique id for one suite run."""
     return "".join(secrets.choice(TEST_ID_ALPHABET) for _ in range(TEST_ID_LENGTH))
 
 
 def manager_vm_prefix(test_id: str) -> str:
-    """Return the OpenStack server/keypair name prefix for this suite run."""
+    """Return the OpenStack resource name prefix for this suite run."""
     return f"{MANAGER_VM_PREFIX}{test_id}"
 
 
 def manager_runner_name(test_id: str) -> str:
-    """Return the github-runner-manager unit/process name for this suite run."""
+    """Return the github-runner-manager name for this suite run."""
     return f"{MANAGER_RUNNER_NAME_PREFIX}{test_id}"
 
 
 def manager_labels(test_id: str) -> list[str]:
-    """Return extra GitHub runner labels that identify this suite run."""
+    """Return extra GitHub runner labels for this suite run."""
     return [f"test-{test_id}"]
 
 
 def is_manager_openstack_resource_name(name: str | None) -> bool:
-    """Return True if *name* is an OpenStack resource from this manager test suite.
-
-    Matches names that start with ``test-runner-`` followed by an 8-character
-    test id (and optional further ``-…`` segments). Used by orphan cleanup so
-    only leftovers from github-runner-manager integration tests are considered.
-    """
+    """Return True if *name* belongs to this suite's OpenStack resources."""
     if not name:
         return False
     for prefix in OPENSTACK_RESOURCE_PREFIXES:

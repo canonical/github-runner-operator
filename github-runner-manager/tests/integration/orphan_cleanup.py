@@ -29,18 +29,7 @@ def cleanup_stale_openstack_resources(
     connection: Connection,
     min_age: timedelta = timedelta(hours=6),
 ) -> None:
-    """Delete old OpenStack servers and keypairs from previous manager test runs.
-
-    Only considers names that match this suite's naming
-    (``test-runner-{8-char-id}…`` — see :func:`is_manager_openstack_resource_name`).
-    Resources younger than ``min_age`` are left alone so an in-progress job
-    is not damaged. Resources without a parseable creation timestamp are also
-    left alone (OpenStack keypairs often omit timestamps).
-
-    Does not delete security groups: the application uses a single permanent
-    project security group named ``github-runner-v1`` (get-or-create), not a
-    per-test group.
-    """
+    """Delete leftover OpenStack resources from previous suite runs older than ``min_age``."""
     now = datetime.now(tz=timezone.utc)
     logger.info(
         "OpenStack orphan cleanup starting (min_age=%sh)",
@@ -85,12 +74,7 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
-    """Return True only when the resource has a known age older than ``min_age``.
-
-    If ``created_at`` is missing or cannot be parsed, return False so concurrent
-    or in-progress CI resources (especially keypairs without timestamps) are
-    never deleted by guesswork.
-    """
+    """Return True if the resource is older than ``min_age``."""
     created = _parse_created_at(created_at)
     if created is None:
         return False
