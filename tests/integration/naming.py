@@ -1,51 +1,64 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Shared naming for charm integration tests and OpenStack orphan cleanup.
+"""Shared application/OpenStack resource naming for charm integration tests.
 
-Producers (fixtures) and consumers (orphan cleanup) both import from here so
-resource name formats cannot drift.
+Who uses this module
+--------------------
+- Producers: fixtures in ``tests/integration/conftest.py`` that choose Juju app
+  names and related OpenStack resource names for a suite run.
+- Consumers: ``tests/integration/helpers/orphan_cleanup.py``, which deletes
+  leftover OpenStack resources from force-cancelled previous runs.
+
+Keeping both sides on the same helpers means renaming a resource format only
+requires changing this file once.
 """
 
 import random
 import string
 
-# Suffixes for app names are 8 characters: 1 lowercase letter + 7 alnum
-# (see random_app_name_suffix historical shape).
+# Application name suffixes are 8 characters: 1 lowercase letter + 7 alnum.
+# Matches the historical ``random_app_name_suffix`` shape used by the charm suite.
 TEST_ID_LENGTH = 8
 TEST_ID_ALPHABET = string.ascii_lowercase + string.digits
 
-# Longest-first matters for matching: "test-runner-" before "test-".
+# OpenStack / app name prefixes produced by this repository's integration tests.
+# Longest-first so matching does not stop early at the shorter ``test-`` prefix
+# when the real name starts with ``test-runner-``.
 OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (
-    "github-runner-image-builder-",  # image builder charm app in charm IT
-    "test-runner-",  # github-runner-manager TestConfig.vm_prefix (shared tenant)
-    "test-",  # github-runner charm app_name
+    "github-runner-image-builder-",  # image-builder charm app name in the charm suite
+    "test-runner-",  # github-runner-manager VM/keypair prefix (shared CI tenant)
+    "test-",  # github-runner charm application name
 )
 
 
 def generate_app_suffix() -> str:
-    """Return a fresh 8-char application name suffix for a suite run."""
+    """Return a new 8-character application name suffix for one suite run."""
     return random.choice(string.ascii_lowercase) + "".join(
         random.choices(TEST_ID_ALPHABET, k=TEST_ID_LENGTH - 1)
     )
 
 
 def app_name_from_suffix(suffix: str) -> str:
-    """github-runner application name for a given suffix."""
+    """Return the github-runner Juju application name for *suffix*."""
     return f"test-{suffix}"
 
 
 def image_builder_app_name_from_suffix(suffix: str) -> str:
-    """github-runner-image-builder application name for a given suffix."""
+    """Return the github-runner-image-builder Juju application name for *suffix*."""
     return f"github-runner-image-builder-{suffix}"
 
 
 def is_ci_openstack_resource_name(name: str | None) -> bool:
-    """True if *name* matches a known CI/OpenStack resource prefix + test id.
+    """Return True if *name* looks like an OpenStack resource from our CI suites.
 
-    A resource is considered CI-created when it starts with one of
-    :data:`OPENSTACK_RESOURCE_PREFIXES` followed by an 8-char test id, optionally
-    with further ``-...`` segments (InstanceID-style suffixes).
+    A name matches when it starts with one of :data:`OPENSTACK_RESOURCE_PREFIXES`,
+    then an 8-character test id from :data:`TEST_ID_ALPHABET`, optionally followed
+    by further ``-...`` segments (e.g. per-instance suffixes).
+
+    Examples that match: ``test-abcdef12``, ``test-runner-abcdef12-0``,
+    ``github-runner-image-builder-abcdef12``.
+    Examples that do not: ``github-runner-v1``, ``prod-runner``, ``test-short``.
     """
     if not name:
         return False

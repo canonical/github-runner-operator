@@ -1,7 +1,18 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Delete stale OpenStack resources left by interrupted manager integration runs."""
+"""Delete leftover OpenStack resources from github-runner-manager integration tests.
+
+This module is used by the suite under ``github-runner-manager/tests/integration/``.
+That suite runs the github-runner-manager application against a real OpenStack
+cloud (servers and SSH keypairs named with the suite's ``test-runner-{id}``
+prefix from ``factories.TestConfig``).
+
+When a previous CI job is force-cancelled, those OpenStack resources can be
+left behind. The next time this suite starts, it calls
+:func:`cleanup_stale_openstack_resources` so older leftovers are removed
+before new ones are created.
+"""
 
 import logging
 from collections.abc import Callable
@@ -18,10 +29,17 @@ def cleanup_stale_openstack_resources(
     connection: Connection,
     min_age: timedelta = timedelta(hours=6),
 ) -> None:
-    """Remove manager-IT OpenStack leftovers older than ``min_age``.
+    """Delete old OpenStack servers and keypairs from previous manager test runs.
 
-    Only servers and keypairs. Security groups are not suite-scoped; runtime
-    reuses the permanent ``github-runner-v1`` group.
+    Only considers names that match this suite's naming
+    (``test-runner-{8-char-id}…`` — see :func:`is_manager_openstack_resource_name`).
+    Resources younger than ``min_age`` are left alone so an in-progress job
+    is not damaged. Resources without a parseable creation timestamp are also
+    left alone (OpenStack keypairs often omit timestamps).
+
+    Does not delete security groups: the application uses a single permanent
+    project security group named ``github-runner-v1`` (get-or-create), not a
+    per-test group.
     """
     now = datetime.now(tz=timezone.utc)
     logger.info(
@@ -67,10 +85,11 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
-    """True if resource is dated and older than ``min_age``.
+    """Return True only when the resource has a known age older than ``min_age``.
 
-    Missing/unparseable created_at: skip. Unknown age must not delete concurrent
-    or in-progress CI resources (e.g. keypairs without timestamps).
+    If ``created_at`` is missing or cannot be parsed, return False so concurrent
+    or in-progress CI resources (especially keypairs without timestamps) are
+    never deleted by guesswork.
     """
     created = _parse_created_at(created_at)
     if created is None:

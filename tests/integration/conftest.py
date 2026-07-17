@@ -447,9 +447,10 @@ def openstack_connection_fixture(
     clouds_yaml_path.write_text(data=openstack_config.clouds_yaml_contents, encoding="utf-8")
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
-        # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
-        # Skip when reusing an existing app (local --use-existing-app-suffix); those resources
-        # may legitimately be older than min_age.
+        # Previous force-cancelled CI jobs can leave OpenStack servers/images/keypairs
+        # under our CI name prefixes. Delete ones older than the default min age so they
+        # cannot accumulate across runs. Skip when --use-existing-app-suffix reuses a
+        # long-lived local app whose resources may legitimately be older than min_age.
         if not existing_app_suffix:
             try:
                 cleanup_stale_openstack_resources(connection)

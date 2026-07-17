@@ -183,7 +183,10 @@ def openstack_connection(
         project_domain_name=openstack_config.project_domain_name,
         region_name=openstack_config.region_name,
     )
-    # Reclaim leftovers from force-cancelled previous CI runs before creating new ones.
+    # Previous force-cancelled github-runner-manager integration jobs can leave OpenStack
+    # servers/keypairs named test-runner-{id}…. Delete ones older than the default min age
+    # so they cannot accumulate across runs. Failures are logged and ignored so a flaky
+    # OpenStack API cannot block the suite.
     try:
         cleanup_stale_openstack_resources(conn)
     except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite

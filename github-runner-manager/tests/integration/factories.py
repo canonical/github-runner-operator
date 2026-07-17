@@ -10,43 +10,45 @@ from pathlib import Path
 from typing import Any
 
 
-# Single source of truth for OpenStack resource names in this suite.
-# Orphan cleanup imports these so patterns cannot drift from producers.
+# Single source of truth for resource names created by
+# github-runner-manager/tests/integration/. Orphan cleanup imports the matchers
+# and formatters so names cannot drift from what the suite actually creates.
 TEST_ID_LENGTH = 8
 TEST_ID_ALPHABET = string.ascii_lowercase + string.digits
 MANAGER_VM_PREFIX = "test-runner-"
 MANAGER_RUNNER_NAME_PREFIX = "test-manager-"
-# Labels use "test-{id}" (not the openstack prefix); kept as a formatter only.
+# GitHub extra labels use "test-{id}" — not an OpenStack name prefix.
 
 OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (MANAGER_VM_PREFIX,)
 
 
 def generate_test_id() -> str:
-    """Generate a unique test identifier.
-
-    Returns:
-        A random 8-character alphanumeric string.
-    """
+    """Return a random 8-character id distinguishing one suite run from another."""
     return "".join(secrets.choice(TEST_ID_ALPHABET) for _ in range(TEST_ID_LENGTH))
 
 
 def manager_vm_prefix(test_id: str) -> str:
-    """OpenStack VM / keypair name prefix for a suite run."""
+    """Return the OpenStack server/keypair name prefix for this suite run."""
     return f"{MANAGER_VM_PREFIX}{test_id}"
 
 
 def manager_runner_name(test_id: str) -> str:
-    """Runner-manager process name for a suite run."""
+    """Return the github-runner-manager unit/process name for this suite run."""
     return f"{MANAGER_RUNNER_NAME_PREFIX}{test_id}"
 
 
 def manager_labels(test_id: str) -> list[str]:
-    """Extra GitHub runner labels for a suite run."""
+    """Return extra GitHub runner labels that identify this suite run."""
     return [f"test-{test_id}"]
 
 
 def is_manager_openstack_resource_name(name: str | None) -> bool:
-    """True if *name* is a manager-IT OpenStack resource from this suite's scheme."""
+    """Return True if *name* is an OpenStack resource from this manager test suite.
+
+    Matches names that start with ``test-runner-`` followed by an 8-character
+    test id (and optional further ``-…`` segments). Used by orphan cleanup so
+    only leftovers from github-runner-manager integration tests are considered.
+    """
     if not name:
         return False
     for prefix in OPENSTACK_RESOURCE_PREFIXES:

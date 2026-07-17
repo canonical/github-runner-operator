@@ -1,10 +1,19 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Delete stale OpenStack resources left by interrupted CI integration runs.
+"""Delete leftover OpenStack resources from github-runner charm integration tests.
 
-Called at the start of integration tests so force-cancelled previous jobs still
-get cleaned up the next time a suite runs against the tenant.
+This module is used by the suite under ``tests/integration/`` (the Juju charm
+suite). That suite deploys the github-runner charm (and optionally related
+helpers) and creates OpenStack servers, images, and keypairs whose names
+follow the shared prefixes in :mod:`tests.integration.naming`
+(for example ``test-{id}…``, ``test-runner-{id}…``,
+``github-runner-image-builder-{id}…``).
+
+When a previous CI job is force-cancelled, those OpenStack resources can be
+left behind. The next time this suite starts, it calls
+:func:`cleanup_stale_openstack_resources` so older leftovers are removed
+before new ones are created.
 """
 
 import logging
@@ -22,11 +31,19 @@ def cleanup_stale_openstack_resources(
     connection: Connection,
     min_age: timedelta = timedelta(hours=6),
 ) -> None:
-    """Remove CI-named OpenStack resources older than ``min_age``.
+    """Delete old OpenStack servers, images, and keypairs from previous CI runs.
 
-    Order: servers (hold keypairs/refs) → images → keypairs.
-    Security groups are not touched: runtime uses a permanent docker-project
-    group (``github-runner-v1``) that is get-or-create, never suite-scoped.
+    Only considers names recognized by :func:`is_ci_openstack_resource_name`.
+    Resources younger than ``min_age`` are left alone so an in-progress job
+    is not damaged. Resources without a parseable creation timestamp are also
+    left alone (OpenStack keypairs often omit timestamps).
+
+    Deletion order is servers, then images, then keypairs (servers may still
+    reference keypairs until they are gone).
+
+    Does not delete security groups: github-runner-manager uses a single
+    permanent project security group named ``github-runner-v1`` (get-or-create),
+    not a per-test group.
     """
     now = datetime.now(tz=timezone.utc)
     logger.info(
@@ -87,10 +104,11 @@ def _safe_delete(label: str, name: str, delete_fn: Callable[[], object]) -> None
 
 
 def _is_stale(created_at: object, min_age: timedelta, now: datetime) -> bool:
-    """True if resource is dated and older than ``min_age``.
+    """Return True only when the resource has a known age older than ``min_age``.
 
-    Missing/unparseable created_at: skip. Unknown age must not delete concurrent
-    or in-progress CI resources (e.g. keypairs without timestamps).
+    If ``created_at`` is missing or cannot be parsed, return False so concurrent
+    or in-progress CI resources (especially keypairs without timestamps) are
+    never deleted by guesswork.
     """
     created = _parse_created_at(created_at)
     if created is None:
