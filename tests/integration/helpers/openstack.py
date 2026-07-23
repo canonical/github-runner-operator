@@ -158,8 +158,21 @@ class OpenStackInstanceHelper:
             num_runners: The number of runners.
         """
         self.juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
+        # Verify the config value was actually applied before proceeding.
+        actual_config = self.juju.config(app_name)
+        assert str(actual_config.get(BASE_VIRTUAL_MACHINES_CONFIG_NAME)) == str(num_runners), (
+            f"Expected {BASE_VIRTUAL_MACHINES_CONFIG_NAME}={num_runners}, "
+            f"got {actual_config.get(BASE_VIRTUAL_MACHINES_CONFIG_NAME)}"
+        )
         if num_runners == 0:
             return
+        # Wait for the config-changed hook to complete and the service to be restarted
+        # with the new config. Without this, the test polls check-runners while the
+        # service is still running with the previous base_virtual_machines value.
+        self.juju.wait(
+            lambda status: jubilant.all_active(status, app_name),
+            timeout=60 * 5,
+        )
         wait_for_runner_ready(self.juju, app_name, num_runners=num_runners)
 
     def get_runner_names(self, unit_name: str) -> list[str]:
