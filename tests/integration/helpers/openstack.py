@@ -157,13 +157,17 @@ class OpenStackInstanceHelper:
             app_name: The GitHub Runner Charm app name to create the runner for.
             num_runners: The number of runners.
         """
+        logger.info("Setting runner app amount for %s to %d", app_name, num_runners)
         self.juju.config(app_name, values={BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
         # Verify the config value was actually applied before proceeding.
         actual_config = self.juju.config(app_name)
+        logger.info("Applied config: %s for %s", actual_config, app_name)
         assert str(actual_config.get(BASE_VIRTUAL_MACHINES_CONFIG_NAME)) == str(num_runners), (
             f"Expected {BASE_VIRTUAL_MACHINES_CONFIG_NAME}={num_runners}, "
             f"got {actual_config.get(BASE_VIRTUAL_MACHINES_CONFIG_NAME)}"
         )
+        cli_output = self.juju.cli("config", app_name, "--format", "yaml")
+        logger.info("CLI config output after setting runner amount: %s", cli_output)
         if num_runners == 0:
             return
         # Wait for the config-changed hook to complete and the service to be restarted
