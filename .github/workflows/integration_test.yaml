@@ -39,6 +39,8 @@ jobs:
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
+      tmate-debug: true
+      tmate-timeout: 90
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -68,6 +70,8 @@ jobs:
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
+      tmate-debug: true
+      tmate-timeout: 90
   openstack-integration-tests-runner-bases:
     name: Runner tests across bases
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -98,6 +102,8 @@ jobs:
         --base="${{ matrix.base }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
+      tmate-debug: true
+      tmate-timeout: 90
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
