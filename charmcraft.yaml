@@ -126,6 +126,12 @@ config:
         Minutes between each reconciliation of the current runners state and their targeted state.
         On reconciliation, the charm polls the state of runners and see if actions are needed. The
         value should be kept low, unless Github API rate limiting is encountered.
+    planner-pressure-mode:
+      type: string
+      default: stream
+      description: >-
+        Planner pressure fetch mode. Set to `stream` to consume continuous planner updates,
+        or `request` to poll the planner with periodic one-shot requests.
     allow-external-contributor:
       type: boolean
       default: True

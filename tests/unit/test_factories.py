@@ -148,6 +148,7 @@ def test_create_application_configuration_with_planner(
 
     assert str(app_configuration.planner_url) == "http://planner.example.com"
     assert app_configuration.planner_token == "planner-token-value"
+    assert app_configuration.planner_pressure_mode == "stream"
 
 
 def test_create_application_configuration_with_otel_collector_config(

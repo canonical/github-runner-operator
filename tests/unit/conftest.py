@@ -156,6 +156,7 @@ def complete_charm_state_fixture():
             ),
             path=GitHubOrg(org="canonical", group="group"),
             reconcile_interval=5,
+            planner_pressure_mode="stream",
             token="githubtoken",
             app_client_id=None,
             installation_id=None,
