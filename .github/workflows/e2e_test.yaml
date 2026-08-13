@@ -1,17 +1,32 @@
 name: End-to-End tests
 
 on:
-  pull_request:
+  issue_comment:
+    types: [created]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
+  check_comment:
+    name: Check comment trigger
+    runs-on: ubuntu-latest
+    if: "${{ github.event.issue.pull_request && contains(github.event.comment.body, 'ci: run e2e') }}"
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
+    steps:
+      - name: Check comment
+        id: check
+        run: |
+          echo "triggered=true" >> $GITHUB_OUTPUT
+
   # test option values defined at test/conftest.py are passed on via repository secret
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   openstack-integration-end-to-end-test:
     name: end-to-end test using private-endpoint
+    needs: check_comment
+    if: needs.check_comment.outputs.triggered == 'true'
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
