@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-07-14
+
+- aproxy now only redirects traffic leaving the runner's default-route interface(s), so local traffic is no longer captured and private ranges no longer need to be added to `aproxy-exclude-addresses`.
+
 ## 2026-06-26
 
 - Fixed runners whose cloud VM entered an error state being kept until the creation timeout (~23 minutes) before cleanup. Such VMs are now cleaned up immediately, freeing the slot for a replacement runner.
