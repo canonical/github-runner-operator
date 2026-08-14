@@ -14,7 +14,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerInstance,
     RunnerManager,
 )
-from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, VMState
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import SelfHostedRunner
 from tests.unit.factories.runner_instance_factory import (
@@ -178,6 +178,21 @@ def test_flush_runners(
             [runner_with_cloud],
             [runner_with_platform, runner_without_platform],
             id="some in cloud, some not in cloud",
+        ),
+        pytest.param(
+            [
+                errored_runner := SelfHostedRunnerFactory(
+                    status="offline", busy=False, deletable=False
+                )
+            ],
+            [
+                CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=errored_runner, state=VMState.ERROR
+                )
+            ],
+            [],
+            [],
+            id="recent errored-state cloud VM is cleaned up despite not being timed out",
         ),
     ],
 )
