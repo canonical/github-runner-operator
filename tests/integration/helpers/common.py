@@ -96,6 +96,10 @@ def wait_for_runner_ready(juju: jubilant.Juju, app_name: str, num_runners: int =
         num_runners: The minimum number of runners expected online.
     """
     unit_name = f"{app_name}/0"
+    # Give the service time to start creating runners before the first poll.
+    # Even after the config-changed hook completes, OpenStack VM creation and
+    # GitHub registration take time.
+    time.sleep(30)
     for attempt in range(20):
         try:
             result = juju.run(unit_name, "check-runners")
