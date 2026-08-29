@@ -303,6 +303,7 @@ class GitHubRunnerPlatform(PlatformProvider):
             job_info,
         )
         return JobInfo(
+            queued_at=job_info.queued_at,
             created_at=job_info.created_at,
             started_at=job_info.started_at,
             conclusion=job_info.conclusion,
