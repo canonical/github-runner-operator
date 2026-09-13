@@ -17,7 +17,9 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
+      charmcraft-channel: latest/stable
       juju-channel: 3.6/stable
+      pre-build-script: tests/integration/cleanup-charmcraft-lxd-cache.sh
       provider: lxd
       test-tox-env: integration
       modules: '["test_multi_unit_same_machine", "test_charm_no_runner", "test_charm_upgrade"]'
