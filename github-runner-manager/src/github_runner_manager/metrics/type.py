@@ -19,5 +19,5 @@ class GithubJobMetrics(NamedTuple):
         conclusion: The conclusion of the job.
     """
 
-    queue_duration: float
+    queue_duration: Optional[float]
     conclusion: Optional[JobConclusion]
