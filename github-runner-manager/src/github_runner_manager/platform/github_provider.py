@@ -304,6 +304,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         )
         return JobInfo(
             created_at=job_info.created_at,
+            queued_at=job_info.queued_at,
             started_at=job_info.started_at,
             conclusion=job_info.conclusion,
         )

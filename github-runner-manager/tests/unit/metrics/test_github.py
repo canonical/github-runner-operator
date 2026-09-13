@@ -40,9 +40,11 @@ def test_job(pre_job_metrics: PreJobMetrics):
     github_client = MagicMock(spec=GithubClient)
     runner = InstanceID.build(prefix=prefix)
     created_at = datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc)
-    started_at = created_at + timedelta(seconds=3600)
+    queued_at = created_at + timedelta(seconds=60)
+    started_at = queued_at + timedelta(seconds=3600)
     github_client.get_job_info_by_runner_name.return_value = JobInfo(
         created_at=created_at,
+        queued_at=queued_at,
         started_at=started_at,
         conclusion=JobConclusion.SUCCESS,
         status=JobStatus.COMPLETED,

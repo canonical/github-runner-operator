@@ -484,7 +484,16 @@ class GithubClient:
         # datetime strings should be in ISO 8601 format, but they can also use Z instead of +00:00,
         # which is not supported by datetime.fromisoformat
         created_at = datetime.fromisoformat(job["created_at"].replace("Z", "+00:00"))
-        started_at = datetime.fromisoformat(job["started_at"].replace("Z", "+00:00"))
+        queued_at_raw = job.get("queued_at")
+        queued_at = (
+            datetime.fromisoformat(queued_at_raw.replace("Z", "+00:00")) if queued_at_raw else None
+        )
+        started_at_raw = job.get("started_at")
+        started_at = (
+            datetime.fromisoformat(started_at_raw.replace("Z", "+00:00"))
+            if started_at_raw
+            else None
+        )
         # conclusion could be null or an empty dictionary per api schema, so we need to handle
         # that though we would assume that it should always be present, as the job should be
         # finished.
@@ -495,6 +504,7 @@ class GithubClient:
         return JobInfo(
             job_id=job_id,
             created_at=created_at,
+            queued_at=queued_at,
             started_at=started_at,
             conclusion=conclusion,
             status=status,
