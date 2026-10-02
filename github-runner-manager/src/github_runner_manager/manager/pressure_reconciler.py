@@ -393,7 +393,7 @@ class PressureReconciler:  # pylint: disable=too-few-public-methods,too-many-ins
             The desired total number of runners.
         """
         total = max(pressure, self._config.min_pressure, 0)
-        if self._config.max_pressure > 0 and total > self._config.max_pressure:
+        if 0 < self._config.max_pressure < total:
             logger.info(
                 "Pressure %s exceeds max_pressure %s, clamping to %s",
                 pressure,
