@@ -100,10 +100,12 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;
+                  fib daddr oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
           chain output {
                   type nat hook output priority -100; policy accept;
+                  oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
@@ -123,10 +125,12 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;
+                  fib daddr oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
           chain output {
                   type nat hook output priority -100; policy accept;
+                  oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
