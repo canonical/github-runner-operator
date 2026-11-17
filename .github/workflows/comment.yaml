@@ -9,4 +9,6 @@ on:
 jobs:
   comment-on-pr:
     uses: canonical/operator-workflows/.github/workflows/comment.yaml@main
+    permissions:
+      pull-requests: write
     secrets: inherit

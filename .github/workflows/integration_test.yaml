@@ -105,3 +105,5 @@ jobs:
       - openstack-integration-tests-cross-controller-private-endpoint
       - openstack-integration-tests-runner-bases
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+    permissions:
+      contents: write
