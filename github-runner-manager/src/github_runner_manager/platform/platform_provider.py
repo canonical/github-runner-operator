@@ -243,12 +243,14 @@ class JobInfo:
     """Stats for a job on a platform.
 
     Attributes:
+        queued_at: The time the job entered the queue.
         created_at: The time the job was created.
         started_at: The time the job was started.
         conclusion: The end result of a job.
     """
 
+    queued_at: datetime | None
     created_at: datetime
-    started_at: datetime
+    started_at: datetime | None
     # A str until we realise a common pattern, use a simple str
     conclusion: str | None
