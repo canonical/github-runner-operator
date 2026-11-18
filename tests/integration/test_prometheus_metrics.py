@@ -21,6 +21,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
+    WAIT_FOR_RUNNER_ONLINE_ATTEMPTS,
     dispatch_workflow,
 )
 
@@ -183,7 +184,7 @@ def test_prometheus_metrics(
 def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
     """Poll check-runners action until at least one runner is online."""
     unit = f"{app_name}/0"
-    for attempt in range(20):
+    for attempt in range(WAIT_FOR_RUNNER_ONLINE_ATTEMPTS):
         try:
             result = juju.run(unit, "check-runners")
         except (jubilant.CLIError, TimeoutError):
@@ -194,7 +195,9 @@ def _wait_for_runner_ready(juju: jubilant.Juju, app_name: str) -> None:
             return
         logger.info("Waiting for runner (attempt %d): online=%s", attempt, result.results)
         time.sleep(30)
-    raise TimeoutError(f"Runner on {unit} never came online after 20 attempts")
+    raise TimeoutError(
+        f"Runner on {unit} never came online after {WAIT_FOR_RUNNER_ONLINE_ATTEMPTS} attempts"
+    )
 
 
 def _wait_for_no_runners(juju: jubilant.Juju, app_name: str) -> None:
