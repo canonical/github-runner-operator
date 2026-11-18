@@ -34,6 +34,9 @@ from charm_state import (
 )
 from manager_service import _get_log_file_path
 
+# Runner VMs on the CI cloud are sometimes slow to come online. Each poll waits 30 seconds, so this
+# allows up to 30 minutes.
+WAIT_FOR_RUNNER_ONLINE_ATTEMPTS = 60
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
 DISPATCH_CRASH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_crash_test.yaml"
 DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME = "workflow_dispatch_failure_test.yaml"
@@ -96,7 +99,7 @@ def wait_for_runner_ready(juju: jubilant.Juju, app_name: str, num_runners: int =
         num_runners: The minimum number of runners expected online.
     """
     unit_name = f"{app_name}/0"
-    for attempt in range(20):
+    for attempt in range(WAIT_FOR_RUNNER_ONLINE_ATTEMPTS):
         try:
             result = juju.run(unit_name, "check-runners")
         except (jubilant.CLIError, TimeoutError):
