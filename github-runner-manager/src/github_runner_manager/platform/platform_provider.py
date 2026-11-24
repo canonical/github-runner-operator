@@ -244,11 +244,13 @@ class JobInfo:
 
     Attributes:
         created_at: The time the job was created.
+        queued_at: The time the job was queued for a runner.
         started_at: The time the job was started.
         conclusion: The end result of a job.
     """
 
     created_at: datetime
-    started_at: datetime
+    queued_at: datetime | None
+    started_at: datetime | None
     # A str until we realise a common pattern, use a simple str
     conclusion: str | None
