@@ -7,6 +7,7 @@ import fcntl
 import json
 import logging
 import os
+import shutil
 import socket
 import textwrap
 from pathlib import Path
@@ -40,6 +41,7 @@ GITHUB_RUNNER_MANAGER_SERVICE_DIR = Path("/var/lib/github-runner-manager")
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
 _SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager application"
+_SERVICE_CLEANUP_ERROR_MESSAGE = "Unable to clean up the github-runner-manager service"
 
 logger = logging.getLogger(__name__)
 
@@ -268,6 +270,34 @@ def stop(unit_name: str) -> None:
     _stop(unit_name)
 
 
+def cleanup(unit_name: str) -> None:
+    """Stop, disable, and remove all artifacts for a unit's service.
+
+    Used during unit removal to ensure no stale systemd service or data remains
+    on the machine.
+
+    Args:
+        unit_name: The Juju unit name.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to clean up the service.
+    """
+    _stop(unit_name)
+    instance_service = _instance_service_name(unit_name)
+    service_file = SYSTEMD_SERVICE_PATH / f"{instance_service}.service"
+    try:
+        systemd.service_disable(instance_service)
+    except SystemdError:
+        logger.warning("Failed to disable %s, unit may already be absent", instance_service)
+    try:
+        service_file.unlink(missing_ok=True)
+        systemd.daemon_reload()
+    except (SystemdError, OSError) as err:
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from err
+
+    _remove_unit_data(unit_name)
+
+
 def _stop(unit_name: str) -> None:
     """Stop the GitHub runner manager service.
 
@@ -330,8 +360,11 @@ def _setup_config_file(config: ApplicationConfiguration, unit_name: str) -> Path
     unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / _normalized_unit(unit_name)
     unit_dir.mkdir(parents=True, exist_ok=True)
     path = unit_dir / "config.yaml"
-    with open(path, "w+", encoding="utf-8") as file:
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    os.fchmod(fd, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as file:
         yaml_safe_dump(config_dict, file)
+    shutil.chown(path, user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP)
     return path
 
 
@@ -344,7 +377,6 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         log_file: The file location to store the logs.
         log_level: The log level of the service.
     """
-    python_path = Path(os.getcwd()) / "venv"
     instance = _normalized_unit(unit_name)
     # NOTE: Port allocation and persistence are performed under a process-wide
     # lock in `ensure_http_port_for_unit()`; this returns a stable per-unit port.
@@ -360,12 +392,11 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {http_port} \
---python-path {str(python_path)} --log-level {log_level}
+--log-level {log_level}
         Restart=on-failure
         RestartSec=30
         RestartSteps=5
         RestartMaxDelaySec=600
-        KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
 
@@ -377,3 +408,24 @@ def _setup_service_file(unit_name: str, config_file: Path, log_file: Path, log_l
     )
     service_path.parent.mkdir(parents=True, exist_ok=True)
     service_path.write_text(service_file_content, "utf-8")
+
+
+def _remove_unit_data(unit_name: str) -> None:
+    """Remove the per-unit data directory and log file.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to remove unit data.
+    """
+    normalized = _normalized_unit(unit_name)
+    unit_dir = GITHUB_RUNNER_MANAGER_SERVICE_DIR / normalized
+    try:
+        shutil.rmtree(unit_dir)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from exc
+    log_file = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / f"{normalized}.log"
+    try:
+        log_file.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RunnerManagerApplicationStopError(_SERVICE_CLEANUP_ERROR_MESSAGE) from exc

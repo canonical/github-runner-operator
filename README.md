@@ -87,49 +87,60 @@ charms and their interactions:
 
 * [GitHub Runner](https://charmhub.io/github-runner): The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
 * [Image Builder](https://charmhub.io/github-runner-image-builder): Responsible for generating images. It builds images on the builder OpenStack project and uploads them to the GitHub Runner OpenStack project.
-* [MongoDB](https://charmhub.io/mongodb): Acts as a message queue to handle reactive runner requests. The [github-runner-webhook-router](https://charmhub.io/github-runner-webhook-router) charm will put events in MongoDB that will be consumed by the `github-runner` charm. Only for reactive runners.
+* [Planner](https://charmhub.io/github-runner-planner): Consumes webhook events from an AMQP broker, tracks job state in PostgreSQL, and streams runner demand ("pressure") to the `github-runner` charm. Optional — without the Planner, the `github-runner` charm pre-spawns a fixed pool of runners configured via `base-virtual-machines`. The Planner integration requires:
+  * [Webhook Gateway](https://charmhub.io/github-runner-webhook-gateway): Receives and validates incoming GitHub webhook events and forwards them to the AMQP broker.
+  * [RabbitMQ](https://charmhub.io/rabbitmq-k8s): AMQP broker that carries webhook events from the Webhook Gateway to the Planner.
+  * [PostgreSQL](https://charmhub.io/postgresql): Persistent storage for the Planner's job state, flavor definitions, and auth token metadata.
 * [tmate-ssh-server](https://charmhub.io/tmate-ssh-server): Provides terminal-sharing capabilities to enable debugging of GitHub runners. Optional.
 * [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite): Provides observability to the GitHub runners ecosystem. Optional.
 
 Below is a diagram representing these components and their relationships, excluding the [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite):
 
 ```mermaid
-C4Container
-title Container diagram for the github-runner Charm System
- Container_Boundary(c1, "Image Builder") {
-    Container(imagebuilder, "Image Builder", "", "Provides images to all related charms")
- }
-    System_Ext(osbuilding, "OpenStack", "OpenStack deployment used for building images")
-Container_Boundary(c2, "GitHub Runner"){
-    Container(githubrunner, "GitHub Runner Charm", "", "Manages self-hosted runners")
-}
-Container_Boundary(c3, "monbodb"){
-    Container(mongodb, "MongoDB", "", "Used as a message queue for reactive runner requests")
-}
-Container_Boundary(c4, "tmate-ssh-server"){
-    Container(tmate_ssh, "tmate-ssh-server", "", "Terminal sharing capabilities to debug GitHub runners")
-}
+flowchart TD
+    GH(["GitHub"])
+    OS_BUILD(["OpenStack\n(image building)"])
+    OS_RUNNERS(["OpenStack\n(runner VMs)"])
+    subgraph MQSG["RabbitMQ"]
+        MQ(["RabbitMQ Charm"])
+    end
 
-Container_Boundary(c5, "github-runner-webhook-router"){
-    Container(router, "github-runner-webhook-router", "", "Listens to GitHub webhooks")
-}
+    subgraph PGSG["PostgreSQL"]
+        PG[(PostgreSQL)]
+    end
 
-    Rel(imagebuilder, osbuilding, "builds images")
-    UpdateRelStyle(imagebuilder, osbuilding, $offsetY="-30", $offsetX="10")
-    Rel(imagebuilder, osgithubrunner, "uploads images")
-    UpdateRelStyle(imagebuilder, osgithubrunner, $offsetY="-30", $offsetX="-90")
-    Rel(imagebuilder, githubrunner, "image ids")
-    UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
-    System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
-    System_Ext(github, "GitHub", "GitHub API")
-    Rel(githubrunner, osgithubrunner, "spawns VMs")
-    UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
-    Rel(githubrunner, github, "Manage runners")
-    Rel(githubrunner, imagebuilder, "OpenStack credentials")
-    UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
-    Rel(mongodb, githubrunner, "database credentials")
-    Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
-    Rel(router, mongodb, "new runner requests")
+    subgraph IB["Image Builder"]
+        imagebuilder["Image Builder Charm"]
+    end
+
+    subgraph GRC["GitHub Runner"]
+        githubrunner["GitHub Runner Charm"]
+    end
+
+    subgraph TMATE["tmate-ssh-server"]
+        tmate["tmate-ssh-server"]
+    end
+
+    subgraph WG["Webhook Gateway"]
+        webhookgateway["Webhook Gateway Charm"]
+    end
+
+    subgraph PL["Planner"]
+        planner["Planner Charm"]
+    end
+
+    imagebuilder -->|"builds images"| OS_BUILD
+    imagebuilder -->|"uploads images"| OS_RUNNERS
+    imagebuilder -->|"image ids"| githubrunner
+    githubrunner -->|"provides OpenStack credentials"| imagebuilder
+    githubrunner -->|"spawns VMs"| OS_RUNNERS
+    githubrunner <-->|"manage runners"| GH
+    tmate -->|"debug-ssh credentials"| githubrunner
+    GH -->|"workflow job webhooks"| webhookgateway
+    webhookgateway -->|"validates webhooks"| MQ
+    MQ -->|"webhook events"| planner
+    planner -->|"job state"| PG
+    planner -->|"pressure info (HTTP streaming)"| githubrunner
 ```
 
 

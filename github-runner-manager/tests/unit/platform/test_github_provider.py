@@ -8,6 +8,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubTokenAuth,
+)
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.github_provider import (
@@ -20,6 +26,37 @@ from github_runner_manager.platform.platform_provider import (
     RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+
+
+@pytest.mark.parametrize(
+    "auth",
+    [
+        pytest.param(GitHubTokenAuth(token="token"), id="token-auth"),
+        pytest.param(
+            GitHubAppAuth(
+                app_client_id="Iv23liExample", installation_id=2, private_key="private-key"
+            ),
+            id="app-auth",
+        ),
+    ],
+)
+def test_build_uses_github_configuration_auth(monkeypatch: pytest.MonkeyPatch, auth):
+    """
+    arrange: A GitHub configuration with either PAT or GitHub App auth.
+    act: Build GitHubRunnerPlatform.
+    assert: GithubClient is constructed with the auth object.
+    """
+    github_client_ctor = MagicMock(return_value=MagicMock(spec=GithubClient))
+    monkeypatch.setattr(
+        "github_runner_manager.platform.github_provider.GithubClient", github_client_ctor
+    )
+
+    config = GitHubConfiguration(auth=auth, path=GitHubOrg(org="canonical", group="default"))
+
+    platform = GitHubRunnerPlatform.build(prefix="unit-0", github_configuration=config)
+
+    assert isinstance(platform, GitHubRunnerPlatform)
+    github_client_ctor.assert_called_once_with(auth)
 
 
 def _params_test_get_runner_health():

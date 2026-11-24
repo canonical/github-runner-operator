@@ -9,14 +9,52 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+# Single source of truth for resource names created by
+# github-runner-manager/tests/integration/. Orphan cleanup imports the matchers
+# and formatters so names cannot drift from what the suite actually creates.
+TEST_ID_LENGTH = 8
+TEST_ID_ALPHABET = string.ascii_lowercase + string.digits
+MANAGER_VM_PREFIX = "test-runner-"
+MANAGER_RUNNER_NAME_PREFIX = "test-manager-"
+# GitHub extra labels use "test-{id}" — not an OpenStack name prefix.
 
-def _generate_test_id() -> str:
-    """Generate a unique test identifier.
+OPENSTACK_RESOURCE_PREFIXES: tuple[str, ...] = (MANAGER_VM_PREFIX,)
 
-    Returns:
-        A random 8-character alphanumeric string.
-    """
-    return "".join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+
+def generate_test_id() -> str:
+    """Return a random id for one suite run."""
+    return "".join(secrets.choice(TEST_ID_ALPHABET) for _ in range(TEST_ID_LENGTH))
+
+
+def manager_vm_prefix(test_id: str) -> str:
+    """Return the OpenStack resource name prefix for this suite run."""
+    return f"{MANAGER_VM_PREFIX}{test_id}"
+
+
+def manager_runner_name(test_id: str) -> str:
+    """Return the github-runner-manager name for this suite run."""
+    return f"{MANAGER_RUNNER_NAME_PREFIX}{test_id}"
+
+
+def manager_labels(test_id: str) -> list[str]:
+    """Return extra GitHub runner labels for this suite run."""
+    return [f"test-{test_id}"]
+
+
+def is_manager_openstack_resource_name(name: str | None) -> bool:
+    """Return True if *name* belongs to this suite's OpenStack resources."""
+    if not name:
+        return False
+    for prefix in OPENSTACK_RESOURCE_PREFIXES:
+        if not name.startswith(prefix):
+            continue
+        rest = name[len(prefix) :]
+        if not rest:
+            continue
+        test_id = rest.split("-", 1)[0]
+        if len(test_id) == TEST_ID_LENGTH and all(c in TEST_ID_ALPHABET for c in test_id):
+            return True
+    return False
 
 
 @dataclass
@@ -25,13 +63,23 @@ class GitHubConfig:
 
     Attributes:
         token: GitHub personal access token.
-        alt_token: Alternate GitHub personal access token for external contributor.
         path: GitHub path in <owner>/<repo> or <org> format.
+        app_client_id: GitHub App Client ID.
+        installation_id: GitHub App installation ID.
+        private_key: GitHub App PEM-encoded private key.
+        has_app_auth: Whether GitHub App authentication credentials are configured.
     """
 
-    token: str
-    alt_token: str
+    token: str = field(repr=False)
     path: str
+    app_client_id: str | None = None
+    installation_id: int | None = None
+    private_key: str | None = field(default=None, repr=False)
+
+    @property
+    def has_app_auth(self) -> bool:
+        """Whether GitHub App authentication credentials are configured."""
+        return all((self.app_client_id, self.installation_id, self.private_key))
 
 
 @dataclass
@@ -54,7 +102,7 @@ class OpenStackConfig:
     auth_url: str
     project: str
     username: str
-    password: str
+    password: str = field(repr=False)
     network: str
     region_name: str = "RegionOne"
     user_domain_name: str = "Default"
@@ -97,16 +145,16 @@ class TestConfig:
     """
 
     debug_log_dir: Path = Path("/tmp/github-runner-manager-test-logs")
-    test_id: str = field(default_factory=_generate_test_id)
+    test_id: str = field(default_factory=generate_test_id)
     runner_name: str = field(init=False)
     labels: list[str] = field(init=False)
     vm_prefix: str = field(init=False)
 
     def __post_init__(self) -> None:
         """Initialize derived fields based on test_id."""
-        self.runner_name = f"test-manager-{self.test_id}"
-        self.labels = [f"test-{self.test_id}"]
-        self.vm_prefix = f"test-runner-{self.test_id}"
+        self.runner_name = manager_runner_name(self.test_id)
+        self.labels = manager_labels(self.test_id)
+        self.vm_prefix = manager_vm_prefix(self.test_id)
 
 
 @dataclass
@@ -157,7 +205,7 @@ def create_default_config(
         planner_url: Planner service URL. Omitted from config when not provided.
         planner_token: Planner service token. Omitted from config when not provided.
         reconcile_interval: Minutes between delete-loop reconciliation ticks.
-        base_virtual_machines: Floor for non-reactive desired runners.
+        base_virtual_machines: Floor for desired runners.
 
     Returns:
         Configuration dictionary for the application.
@@ -166,7 +214,6 @@ def create_default_config(
     if github_config is None:
         github_config = GitHubConfig(
             token="ghp_test_token_1234567890abcdef",
-            alt_token="ghp_test_alt_token_1234567890abcdef",
             path="test-org",
         )
 
@@ -214,7 +261,15 @@ def create_default_config(
         "allow_external_contributor": allow_external_contributor,
         "extra_labels": test_config.labels,
         "github_config": {
-            "token": github_config.token,
+            "auth": (
+                {
+                    "app_client_id": github_config.app_client_id,
+                    "installation_id": github_config.installation_id,
+                    "private_key": github_config.private_key,
+                }
+                if github_config.has_app_auth
+                else {"token": github_config.token}
+            ),
             "path": path_config,
         },
         "service_config": {
@@ -233,7 +288,7 @@ def create_default_config(
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },
-        "non_reactive_configuration": {
+        "runner_configuration": {
             "combinations": [
                 {
                     "image": {
@@ -246,7 +301,6 @@ def create_default_config(
                 }
             ]
         },
-        "reactive_configuration": None,
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,

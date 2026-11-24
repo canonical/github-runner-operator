@@ -45,16 +45,19 @@ When `allow-external-contributor` is set to `false`, external contributors can s
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
 
-## Permission for GitHub app or personal access token
+## Permissions for GitHub App or personal access token
 
-The charm interacts with GitHub via RESTful API. This requires a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+The charm interacts with GitHub using the RESTful API. This requires either a [GitHub App](https://docs.github.com/en/apps) or a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
-It is generally recommended to grant the minimal permissions necessary for security reasons. Use a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) to control the scope of permission. See [token scopes](https://charmhub.io/github-runner/docs/reference-token-scopes) for more information.
+GitHub App authentication is preferred as it provides fine-grained permissions and does not tie access to a personal user account. The App's private key is stored securely in a Juju secret.
+
+When using a personal access token, use a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) to control the scope of permission. See [authentication and token scopes](https://charmhub.io/github-runner/docs/reference-token-scopes) for more information.
 
 ### Good practices
 
-- Use a fine-grained personal access token.
+- Prefer GitHub App authentication over personal access tokens.
 - Give the minimal permission required.
+- When using a personal access token, use a fine-grained token.
 
 ## OpenStack project management
 

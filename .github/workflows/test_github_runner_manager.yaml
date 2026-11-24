@@ -9,8 +9,11 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     secrets: inherit
     with:
-      self-hosted-runner: true
-      self-hosted-runner-label: edge
+      # Run on GitHub-hosted Noble (ubuntu-24.04) runners. Pin Python to 3.12: the
+      # open-ended requires-python (>=3.10) otherwise resolves to the newest available
+      # interpreter (3.14), whose default multiprocessing start method (forkserver)
+      # breaks tests that rely on fork (e.g. test_flush_runner_locked).
+      python-version: "3.12"
       working-directory: ./github-runner-manager/
   application-integration-tests:
     name: Integration tests for github-runner-manager
@@ -36,12 +39,11 @@ jobs:
       - name: Run integration tests - ${{ matrix.test-module }}
         working-directory: ./github-runner-manager/
         env:
-          # GitHub configuration
-          # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT
+          # Sensitive env vars are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>;
+          # see CONTRIBUTING.md for the slot-to-var mapping.
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
-          # OpenStack configuration
-          # OS_AUTH_URL, OS_PROJECT_DOMAIN_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_USERNAME, OS_PASSWORD, OS_NETWORK, OS_REGION_NAME
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
@@ -50,6 +52,8 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_11 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_11 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_12 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_12 }}
         run: |
           tox -e integration -- -v --tb=native -s \
             tests/integration/${{ matrix.test-module }}.py \
@@ -63,6 +67,9 @@ jobs:
             --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
             --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
             --debug-log-dir="/tmp/github-runner-manager-test-logs"
+      - name: Tmate session for debugging
+        if: ${{ failure() }}
+        uses: canonical/action-tmate@main
       - name: Print debug logs
         if: ${{ failure() }}
         run: |

@@ -5,6 +5,7 @@
 
 import os
 
+import pytest
 from pytest import Parser
 
 
@@ -166,3 +167,53 @@ def pytest_addoption(parser: Parser):
         help="The DockerHub mirror URL to use for testing.",
         default=None,
     )
+    parser.addoption(
+        "--github-app-client-id",
+        action="store",
+        help="The GitHub App Client ID for GitHub App authentication testing.",
+        default=os.environ.get("GITHUB_APP_CLIENT_ID"),
+    )
+    parser.addoption(
+        "--github-app-installation-id",
+        action="store",
+        help="The GitHub App installation ID for GitHub App authentication testing.",
+        default=os.environ.get("GITHUB_APP_INSTALLATION_ID"),
+    )
+    parser.addoption(
+        "--keep-models",
+        action="store_true",
+        default=False,
+        help="Keep temporary Juju models after test runs.",
+    )
+
+
+def pytest_configure(config: pytest.Config):
+    """Register custom markers.
+
+    Args:
+        config: The pytest Config object.
+    """
+    config.addinivalue_line("markers", "abort_on_fail: skip remaining tests after a failure")
+
+
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo):
+    """Record abort_on_fail failures so subsequent tests in the module are skipped.
+
+    Args:
+        item: The test item.
+        call: The test call info.
+    """
+    if call.when == "call" and call.excinfo is not None:
+        if any(item.iter_markers("abort_on_fail")):
+            item.session._abort_on_fail_module = item.module  # type: ignore[attr-defined]
+
+
+def pytest_runtest_setup(item: pytest.Item):
+    """Skip tests if a prior abort_on_fail test in the same module failed.
+
+    Args:
+        item: The test item.
+    """
+    failed_mod = getattr(item.session, "_abort_on_fail_module", None)
+    if failed_mod is not None and getattr(item, "module", None) is failed_mod:
+        pytest.skip("skipped: prior abort_on_fail test failed")

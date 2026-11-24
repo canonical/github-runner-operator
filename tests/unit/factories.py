@@ -27,7 +27,6 @@ from charm_state import (
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
-    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
@@ -111,7 +110,6 @@ class MockGithubRunnerCharmModelFactory(factory.Factory):
         {
             COS_AGENT_INTEGRATION_NAME: [],
             DEBUG_SSH_INTEGRATION_NAME: [],
-            MONGO_DB_INTEGRATION_NAME: [],
             PLANNER_INTEGRATION_NAME: [],
         }
     )

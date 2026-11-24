@@ -36,13 +36,33 @@ logger = logging.getLogger(__name__)
 # the time waiting before each health check against the platform provider.
 RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 
-# For the reconcile loop, specially for reactive runner (as it is outside of this loop),
-# we do not want to delete runners that are offline and not busy in the platform and
-# that are not very old in the cloud, as they could be just starting. The creation time will
-# be equal to all the possible wait times in creation plus an extra amount.
+# Do not delete runners that are offline and not busy in the platform and not very old in
+# the cloud, as they could still be starting. The creation time equals all possible wait
+# times in creation plus an extra buffer.
 RUNNER_MAXIMUM_CREATION_TIME = CREATE_SERVER_TIMEOUT + sum(RUNNER_CREATION_WAITING_TIMES) + 120
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
+
+
+@dataclass(frozen=True)
+class RunnerInfo:
+    """Aggregated information on the runners.
+
+    Attributes:
+        online: The number of runners in online state.
+        busy: The number of runners in busy state.
+        offline: The number of runners in offline state.
+        unknown: The number of runners in unknown state.
+        runners: The names of the online runners.
+        busy_runners: The names of the busy runners.
+    """
+
+    online: int
+    busy: int
+    offline: int
+    unknown: int
+    runners: tuple[str, ...]
+    busy_runners: tuple[str, ...]
 
 
 class FlushMode(Enum):
@@ -147,15 +167,12 @@ class RunnerManager:
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
 
-    def create_runners(
-        self, num: int, metadata: RunnerMetadata, reactive: bool = False
-    ) -> tuple[InstanceID, ...]:
+    def create_runners(self, num: int, metadata: RunnerMetadata) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
             metadata: Metadata information for the runner.
-            reactive: If the runner is reactive.
 
         Returns:
             List of instance ID of the runners.
@@ -174,7 +191,6 @@ class RunnerManager:
                 # assign for example the id of the runner if it was not provided.
                 metadata=copy.copy(metadata),
                 labels=labels,
-                reactive=reactive,
             )
             for _ in range(num)
         ]
@@ -186,9 +202,7 @@ class RunnerManager:
     ) -> tuple[InstanceID, ...]:
         """Spawn runners in parallel using multiprocessing.
 
-        Multiprocessing is only used if there are more than one runner to spawn. Otherwise,
-        the runner is created in the current process, which is required for reactive,
-        where we don't assume to spawn another process inside the reactive process.
+        Multiprocessing is only used if there are more than one runner to spawn.
 
         The length of the create_runner_args is number _create_runner invocation, and therefore the
         number of runner spawned.
@@ -261,6 +275,42 @@ class RunnerManager:
                 platform_health_state=health_runners_map.get(vm.instance_id, None),
             )
             for vm in vms
+        )
+
+    def get_runner_info(self) -> RunnerInfo:
+        """Get aggregated information on the runners.
+
+        Returns:
+            Aggregated runner counts and names.
+        """
+        runner_list = self.get_runners()
+        online = 0
+        busy = 0
+        offline = 0
+        unknown = 0
+        online_runners: list[str] = []
+        busy_runners: list[str] = []
+        for runner in runner_list:
+            match runner.platform_state:
+                case PlatformRunnerState.BUSY:
+                    online += 1
+                    online_runners.append(runner.name)
+                    busy += 1
+                    busy_runners.append(runner.name)
+                case PlatformRunnerState.IDLE:
+                    online += 1
+                    online_runners.append(runner.name)
+                case PlatformRunnerState.OFFLINE:
+                    offline += 1
+                case _:
+                    unknown += 1
+        return RunnerInfo(
+            online=online,
+            busy=busy,
+            offline=offline,
+            unknown=unknown,
+            runners=tuple(online_runners),
+            busy_runners=tuple(busy_runners),
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
@@ -540,14 +590,12 @@ class RunnerManager:
             platform_provider: To manage self-hosted runner on the Platform side.
             metadata: Metadata for the runner to create.
             labels: List of labels to add to the runners.
-            reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager
         platform_provider: PlatformProvider
         metadata: RunnerMetadata
         labels: list[str]
-        reactive: bool
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceID:
@@ -564,7 +612,7 @@ class RunnerManager:
         Raises:
             RunnerError: On error creating OpenStack runner.
         """
-        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
+        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix)
         runner_context, runner_info = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
@@ -591,10 +639,11 @@ def _get_platform_runners_to_cleanup(
 ) -> set[str]:
     """Determine platform runners to clean up.
 
-    1. Always clean up danging platform runners (platform runners that have no VM associated).
+    1. Always clean up dangling platform runners (platform runners that have no VM associated).
     2. Always clean up deletable platform runners (deletable decision made by platform provider).
-    3. Clean up runners that in offline-idle status that have timed out where the possible
-        scenarios is:
+    3. Always clean up runners whose VM is in an error state in the cloud, as such a VM will
+        never recover and would otherwise occupy a runner slot until it times out.
+    4. Clean up runners that are offline and idle and have timed out. The possible scenario is:
         - runner registered (during registration token generation) but VM has failed to spawn.
 
     Args:
@@ -622,6 +671,17 @@ def _get_platform_runners_to_cleanup(
     logger.debug("Deletable runner IDs: %s", deletable_runners)
 
     vm_instance_id_map = {vm.instance_id: vm for vm in vms}
+    # Kill runners whose cloud VM is in an error state. Such VMs never recover, so there is no
+    # point waiting for the creation timeout; deleting now frees the slot for a replacement.
+    errored_runners: set[str] = set(
+        runner.identity.metadata.runner_id
+        for runner in runners.requested_runners
+        if runner.identity.metadata.runner_id
+        and (vm := vm_instance_id_map.get(runner.identity.instance_id))
+        and vm.state == VMState.ERROR
+    )
+    logger.debug("Errored runner IDs: %s", errored_runners)
+
     # Kill old runners that are offline and idle as they could be in failed state.
     # We may also kill here runners that were online and not busy and went temporarily to
     # offline, but that should not be an issue, as those runners will be spawned again.
@@ -639,7 +699,7 @@ def _get_platform_runners_to_cleanup(
     reconcile_metrics.TIMED_OUT_RUNNERS_TOTAL.inc(len(timed_out_offline_idle_runners))
     logger.debug("Timed out offline idle runner IDs: %s", timed_out_offline_idle_runners)
 
-    return dangling_runners | deletable_runners | timed_out_offline_idle_runners
+    return dangling_runners | deletable_runners | errored_runners | timed_out_offline_idle_runners
 
 
 def _get_platform_runners_to_flush(

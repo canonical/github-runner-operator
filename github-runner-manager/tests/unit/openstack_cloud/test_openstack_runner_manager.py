@@ -100,10 +100,12 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;
+                  fib daddr oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
           chain output {
                   type nat hook output priority -100; policy accept;
+                  oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
@@ -123,10 +125,12 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;
+                  fib daddr oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
           chain output {
                   type nat hook output priority -100; policy accept;
+                  oifname != \\$nics return
                   ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
           }
     }
@@ -197,7 +201,9 @@ def test_create_runner_without_aproxy(
 
     runner_manager.create_runner(identity, runner_context)
     openstack_cloud.launch_instance.assert_called_once()
-    assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
+    assert (
+        "snap install aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
+    )
 
 
 def test_delete_vms(runner_manager: OpenStackRunnerManager):
@@ -206,7 +212,7 @@ def test_delete_vms(runner_manager: OpenStackRunnerManager):
     act: when delete_vms method is called.
     assert: the mocked service call is made and the deleted instance IDs are returned.
     """
-    test_instance_ids = [InstanceID(prefix="test-prefix", reactive=None, suffix="test-suffix")]
+    test_instance_ids = [InstanceID(prefix="test-prefix", suffix="test-suffix")]
     mock_cloud = MagicMock()
     mock_cloud.delete_instances = MagicMock(return_value=test_instance_ids)
     runner_manager._openstack_cloud = mock_cloud

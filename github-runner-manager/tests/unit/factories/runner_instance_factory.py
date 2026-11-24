@@ -32,7 +32,6 @@ class InstanceIDFactory(factory.Factory):
         model = InstanceID
 
     prefix = factory.Faker("word")
-    reactive = factory.Iterator([True, False, None])
     suffix = factory.LazyAttribute(lambda _: secrets.token_hex(6))
 
 
@@ -71,18 +70,22 @@ class CloudRunnerInstanceFactory(factory.Factory):
     created_at = factory.LazyFunction(lambda: datetime.now(tz=timezone.utc))
 
     @classmethod
-    def from_self_hosted_runner(cls, self_hosted_runner: SelfHostedRunner) -> VM:
+    def from_self_hosted_runner(
+        cls, self_hosted_runner: SelfHostedRunner, state: VMState = VMState.ACTIVE
+    ) -> VM:
         """Construct CloudRunnerInstance associated to self hosted runner.
 
         Args:
             self_hosted_runner: The target self hosted runner to associate.
+            state: The cloud VM state of the instance.
 
         Returns:
             The Instantiated CloudRunnerInstance.
         """
-        return CloudRunnerInstanceFactory(
+        return cls(
             instance_id=self_hosted_runner.identity.instance_id,
             metadata=RunnerMetadataFactory(runner_id=str(self_hosted_runner.id)),
+            state=state,
         )
 
 

@@ -2,8 +2,56 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2026-07-14
+
+- aproxy now only redirects traffic leaving the runner's default-route interface(s), so local traffic is no longer captured and private ranges no longer need to be added to `aproxy-exclude-addresses`.
+
+## 2026-06-26
+
+- Fixed runners whose cloud VM entered an error state being kept until the creation timeout (~23 minutes) before cleanup. Such VMs are now cleaned up immediately, freeing the slot for a replacement runner.
+
+## 2026-05-20
+
+- Enhanced OpenTelemetry Collector configuration in the pre-job script to expose local OTLP (gRPC/HTTP) and Loki endpoints for workflow to push observability data.
+- Enable system.cpu.logical.count and system.cpu.physical.count metrics.
+
+## 2026-04-24
+
+- Exposed the configured GitHub path (org or repository) as a Terraform module output, allowing consumers to make decisions based on which path a runner is registered to.
+- Added configuration option `otel-collector-endpoint` to enable the otel-collector to export metric. Setting this configuration option will add the environment variable ACTION_OTEL_EXPORTER_OTLP_ENDPOINT to the runner, which allow users to configure their own metrics to be exported.
+
+## 2026-04-22
+
+- Removed `KillMode=process` from the runner manager systemd service, restoring the default `control-group` kill mode. This ensures all child processes in the service's cgroup are properly terminated when the service stops, preventing orphaned runner processes.
+
+## 2026-04-17
+
+- Added `token-secret-id` and `openstack-clouds-yaml-secret-id` configuration options, allowing the GitHub token and OpenStack `clouds.yaml` to be supplied through Juju user secrets. When set, these take precedence over the plaintext `token` and `openstack-clouds-yaml` options, which remain supported as a compatibility fallback.
+
+## 2026-04-13
+
+- Fixed Juju secrets not picking up new revisions. The charm now uses `refresh=True` when reading secret contents, ensuring it always retrieves the latest revision instead of a cached one.
+
+## 2026-04-07
+
+- Add GitHub App authentication support using Juju secrets for the private key, alongside the existing PAT-based authentication.
+
+## 2026-04-03
+
+- Fixed charm not entering blocked/waiting status when the image integration has no image available. Previously, some event handlers (`upgrade-charm`, `planner-relation-changed`, `planner-relation-broken`) would start the runner manager service without checking image readiness, causing the service to error with "No runner combinations configured."
+
+## 2026-03-30
+
+- Fixed stale `systemd` service files left behind when a unit is removed from a co-located machine. The service is now disabled, the service file removed, and the unit data cleaned up on stop.
+
+## 2026-03-25
+
+- Removed `mongodb` relation. MongoDB-based reactive runner spawning is no longer supported. **If you have an active MongoDB relation, remove it with `juju remove-relation` before upgrading.**
+- Updated documentation to clarify that reactive MongoDB-based runner spawning is no longer supported.
+
 ## 2026-03-20
 
+- The pressure reconciler is now always used, replacing the legacy reconcile mode. When no planner relation is configured, it uses `base-virtual-machines` as static pressure to maintain the configured minimum runner count.
 - Set GitHub API pagination page size to 100 (up from PyGithub default of 30), reducing API calls when listing runners.
 
 ## 2026-03-18

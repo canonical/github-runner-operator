@@ -29,39 +29,25 @@ Container_Boundary(c1, "GitHub Runner Charm"){
 
     Component(openstackrunnermanager, "OpenstackRunnerManager", "", "")
     Component(runnermanager, "RunnerManager", "", "")
-    Component(runnerscaler, "RunnerScaler", "", "")
+    Component(pressurereconciler, "PressureReconciler", "", "")
 
-    Rel(runnerscaler, runnermanager, "uses", "")
+    Rel(pressurereconciler, runnermanager, "uses", "")
     Rel(runnermanager, cloudrunnermanager, "uses", "")
     Rel(runnermanager, githubrunnermanager, "uses", "")
     Rel(openstackrunnermanager, cloudrunnermanager, "implements", "")
 }
 
-Container_Boundary(c2, "Reactive Processes"){
-        Component(runnerprocess, "github_runner_manager.reactive.runner", "Reactive Process", "")
-}
-
 Rel(githubrunnermanager, github, "manages VMs", "")
 Rel(openstackrunnermanager, osrunnign, "manages VMs", "")
-
-Rel(runnermanager, runnerprocess, "creates/deletes processes", "")
-
-Rel(runnerprocess, github, "manages VMs", "")
-Rel(runnerprocess, osrunnign, "manages VMs", "")
 
 UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 ```
 
-The `RunnerScaler` is the entry point component to reconcile the desired number of runners using the `RunnerManager`.
+The `PressureReconciler` is the entry point component to reconcile the desired number of runners using the `RunnerManager`.
 The `RunnerManager` is the main component of the charm. The `RunnerManager` interacts with the other charm components in the following ways:
 * `CloudRunnerManager`: To interact with the compute infrastructure to create and manage
-  self-hosted runners. OpenStack is currently the only available cloud implementation. 
+  self-hosted runners. OpenStack is currently the only available cloud implementation.
 * `GithubRunnerManager`: To interact with the GitHub API.
-
-In the case of reactive runners, the `RunnerManager` will also create processes that
-will be in charge of consuming events that were created from GitHub webhooks, and starting GitHub runners in a
-reactive manner. Those events are stored in `mongodb` and are enqueued by
-the charm [`github-runner-webhook-router`](https://github.com/canonical/github-runner-webhook-router).
 
 ## Virtual machines
 
@@ -104,7 +90,7 @@ would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 ## GitHub API usage
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
+The charm requires GitHub API credentials — either a [GitHub App](https://charmhub.io/github-runner/docs/reference-token-scopes) or a [personal access token](https://charmhub.io/github-runner/configure#token). These credentials are used for:
 
 - Requesting self-hosted runner registration tokens
 - Requesting a list of runner applications
@@ -112,7 +98,7 @@ The charm requires a GitHub personal access token for the [`token` configuration
 - Deleting self-hosted runners
 
 Note that the GitHub API uses a [rate-limiting mechanism](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28). When this is reached, the charm may not be able to perform the necessary operations and may go into
-BlockedStatus. The charm will automatically recover from this state once the rate limit is reset, but using a different token with a higher rate limit may be a better solution depending on your deployment requirements.
+BlockedStatus. The charm will automatically recover from this state once the rate limit is reset.
 
 <!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## External contributor access control

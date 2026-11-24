@@ -157,6 +157,9 @@ def complete_charm_state_fixture():
             path=GitHubOrg(org="canonical", group="group"),
             reconcile_interval=5,
             token="githubtoken",
+            app_client_id=None,
+            installation_id=None,
+            private_key=None,
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,
             runner_manager_log_level="INFO",
@@ -176,9 +179,6 @@ def complete_charm_state_fixture():
                 tags=["arm64", "noble"],
             ),
         ),
-        reactive_config=charm_state.ReactiveConfig(
-            mq_uri="mongodb://user:password@localhost:27017",
-        ),
         ssh_debug_connections=[
             charm_state.SSHDebugConnection(
                 host="10.10.10.10",
@@ -188,5 +188,6 @@ def complete_charm_state_fixture():
                 ed25519_fingerprint="SHA256:ed25519",
             ),
         ],
+        otel_collector_config=None,
         planner_config=None,
     )

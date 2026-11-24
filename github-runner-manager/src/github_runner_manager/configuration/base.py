@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Optional, TextIO
 
 import yaml
-from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, root_validator
 
 from github_runner_manager.configuration import github
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 # user would be the current user running the application.
 @dataclass
 class UserInfo:
-    """The user to run the reactive process.
+    """The user running the application.
 
     Attributes:
-        user: The user for running the reactive processes.
-        group: The user group for running the reactive processes.
+        user: The username.
+        group: The user group.
     """
 
     user: str
@@ -47,8 +47,7 @@ class ApplicationConfiguration(BaseModel):
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
         service_config: The configuration for supporting services.
-        non_reactive_configuration: Configuration for non-reactive mode.
-        reactive_configuration: Configuration for reactive mode.
+        runner_configuration: Runner flavor/image configuration.
         openstack_configuration: Configuration for authorization to a OpenStack host.
         planner_url: Base URL of the planner service.
         planner_token: Bearer token to authenticate against the planner service.
@@ -60,12 +59,11 @@ class ApplicationConfiguration(BaseModel):
     extra_labels: list[str]
     github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
-    non_reactive_configuration: "NonReactiveConfiguration"
-    reactive_configuration: "ReactiveConfiguration | None"
+    runner_configuration: "RunnerConfiguration"
     openstack_configuration: OpenStackConfiguration
     planner_url: Optional[AnyHttpUrl] = None
     planner_token: Optional[str] = None
-    reconcile_interval: int
+    reconcile_interval: int = Field(ge=1)
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":
@@ -93,6 +91,7 @@ class SupportServiceConfig(BaseModel):
         aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
+        otel_collector_config: The configuration for the OpenTelemetry collector.
         custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
@@ -105,6 +104,7 @@ class SupportServiceConfig(BaseModel):
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     custom_pre_job_script: str | None
+    otel_collector_config: Optional["OtelCollectorConfig"] = None
 
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod
@@ -127,6 +127,18 @@ class SupportServiceConfig(BaseModel):
         if values.get("use_aproxy") and not runner_proxy_enabled:
             raise ValueError("aproxy requires the runner http or https to be set")
         return values
+
+
+class OtelCollectorConfig(BaseModel):
+    """Configuration for OpenTelemetry collector.
+
+    Attributes:
+        host: The OpenTelemetry collector hostname.
+        port: The OpenTelemetry collector port.
+    """
+
+    host: str
+    port: int = Field(gt=0, le=65535)
 
 
 class ProxyConfig(BaseModel):
@@ -197,18 +209,18 @@ class SSHDebugConnection(BaseModel):
     local_proxy_port: int = 3129
 
 
-class NonReactiveConfiguration(BaseModel):
-    """Configuration for non-reactive mode.
+class RunnerConfiguration(BaseModel):
+    """Runner flavor/image configuration.
 
     Attributes:
-        combinations: Different combinations of flavor and image to spawn in non-reactive mode.
+        combinations: Different combinations of flavor and image to spawn.
     """
 
-    combinations: "list[NonReactiveCombination]"
+    combinations: "list[RunnerCombination]"
 
 
-class NonReactiveCombination(BaseModel):
-    """Combination of image and flavor that the application can spawn in non-reactive mode.
+class RunnerCombination(BaseModel):
+    """Combination of image and flavor that the application can spawn.
 
     Attributes:
         image: Information about the image to spawn.
@@ -246,36 +258,6 @@ class NonReactiveCombination(BaseModel):
         return values
 
 
-class ReactiveConfiguration(BaseModel):
-    """Configuration for reactive mode.
-
-    Attributes:
-        queue: Queue to listen for reactive requests to spawn runners.
-        max_total_virtual_machines: Maximum number of instances to spawn by the application.
-           This value will be only checked in reactive mode, and will include all the instances
-           (reactive and non-reactive) spawned by the application.
-        images: List of valid images to spawn in reactive mode.
-        flavors: List of valid flavors to spawn in reactive mode.
-    """
-
-    queue: "QueueConfig"
-    max_total_virtual_machines: int
-    images: "list[Image]"
-    flavors: "list[Flavor]"
-
-
-class QueueConfig(BaseModel):
-    """The configuration for the message queue.
-
-    Attributes:
-        mongodb_uri: The URI of the MongoDB database.
-        queue_name: The name of the queue.
-    """
-
-    mongodb_uri: MongoDsn
-    queue_name: str
-
-
 class Image(BaseModel):
     """Information for an image with its associated labels.
 
@@ -303,6 +285,5 @@ class Flavor(BaseModel):
 # For pydantic to work with forward references.
 ApplicationConfiguration.update_forward_refs()
 SupportServiceConfig.update_forward_refs()
-NonReactiveConfiguration.update_forward_refs()
-NonReactiveCombination.update_forward_refs()
-ReactiveConfiguration.update_forward_refs()
+RunnerConfiguration.update_forward_refs()
+RunnerCombination.update_forward_refs()

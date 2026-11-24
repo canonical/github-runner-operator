@@ -60,8 +60,6 @@ Relevant log files are (replace `<app-name>` with the name of the application an
 - `/var/log/github-runner-manager/<app-name>-<unit-no>.log` : It contains logs from the runner manager application. This is particularly useful 
 for resolving issues related to reconciliation, such as problems with spawning VMs or contacting GitHub.
 - `/var/log/juju/unit-<app-name>-<unit-no>.log` : It contains the Juju debug logs. These are relevant for inspecting issues with the charm operating the runner manager application.
-- `/var/log/reactive_runner/<reactive-process-pid>.log` : It contains logs of the process of spawning a runner on demand. This is particularly relevant for troubleshooting issues
-, such as queue consumption issues or the inability to spawn VMs on OpenStack.
 - `/var/log/github-runner-metrics.log` : This contains the logs used to calculate metrics.
 
 Use Loki to filter through multiple files or units.

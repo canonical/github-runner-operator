@@ -140,7 +140,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Shows the number of available (and max expected) runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.\n\nNote that there is no maximum expected number of reactive runners.",
+      "description": "Shows the number of available (and max expected) runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -651,7 +651,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.\n\nThere is no expected number of runners for runners in reactive mode, which means that the total number of idle + active runners could be greater than expected if reactive applications are not filtered out in this view.",
+      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.",
       "fieldConfig": {
         "defaults": {
           "color": {

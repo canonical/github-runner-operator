@@ -17,6 +17,9 @@ venv/
 .mypy_cache
 *.egg-info/
 
+# OS artifacts
+.DS_Store
+
 # BEGIN VALE WORKFLOW IGNORE
 .vale/styles/*
 !.vale/styles/local

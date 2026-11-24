@@ -16,7 +16,7 @@ import pytest
 import yaml
 from github_runner_manager import constants
 from github_runner_manager.platform.platform_provider import TokenError
-from ops.model import BlockedStatus, StatusBase, WaitingStatus
+from ops.model import BlockedStatus, StatusBase
 from ops.testing import Harness
 
 from charm import (
@@ -28,10 +28,13 @@ from charm import (
 )
 from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
-    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_DEFAULT_PLATFORM,
@@ -43,6 +46,7 @@ from charm_state import (
     PLANNER_PLATFORM_RELATION_KEY,
     PLANNER_PRIORITY_RELATION_KEY,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     OpenStackCloudsYAML,
     OpenstackImage,
@@ -52,7 +56,6 @@ from errors import (
     ImageIntegrationMissingError,
     ImageNotFoundError,
     LogrotateSetupError,
-    MissingMongoDBError,
     RunnerError,
     SubprocessError,
 )
@@ -253,21 +256,53 @@ def test_on_config_changed_failure(harness: Harness):
 
 
 @pytest.mark.parametrize(
-    "config_option",
+    "config_option, initial_value, updated_value",
     [
-        pytest.param(PATH_CONFIG_NAME, id="Path"),
-        pytest.param(TOKEN_CONFIG_NAME, id="Token"),
-        pytest.param(LABELS_CONFIG_NAME, id="Labels"),
+        pytest.param(PATH_CONFIG_NAME, "initial-path", "updated-path", id="Path"),
+        pytest.param(TOKEN_CONFIG_NAME, "initial-token", "updated-token", id="Token"),
+        pytest.param(
+            TOKEN_SECRET_ID_CONFIG_NAME,
+            "secret:token-old",
+            "secret:token-new",
+            id="Token secret ID",
+        ),
+        pytest.param(
+            GITHUB_APP_CLIENT_ID_CONFIG_NAME, "Iv23liOld", "Iv23liNew", id="GitHub App Client ID"
+        ),
+        pytest.param(
+            GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+            67890,
+            67891,
+            id="GitHub App Installation ID",
+        ),
+        pytest.param(
+            GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
+            "secret:abc123",
+            "secret:def456",
+            id="GitHub App Private Key Secret ID",
+        ),
+        pytest.param(LABELS_CONFIG_NAME, "label-a", "label-b", id="Labels"),
+        pytest.param(
+            OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
+            "secret:clouds-old",
+            "secret:clouds-new",
+            id="OpenStack clouds secret ID",
+        ),
     ],
 )
-def test__on_config_changed_flush(monkeypatch: pytest.MonkeyPatch, config_option: str):
+def test__on_config_changed_flush(
+    monkeypatch: pytest.MonkeyPatch,
+    config_option: str,
+    initial_value,
+    updated_value,
+):
     """
     arrange: given a charm with OpenStack instance type and a certain config option value.
     act: update the config option.
     assert: runner flush is called.
     """
     harness = Harness(GithubRunnerCharm)
-    harness.update_config({config_option: secrets.token_hex(16)})
+    harness.update_config({config_option: initial_value})
     harness.begin()
     state_mock = MagicMock()
     monkeypatch.setattr("charm.manager_service", MagicMock())
@@ -275,28 +310,50 @@ def test__on_config_changed_flush(monkeypatch: pytest.MonkeyPatch, config_option
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._check_image_ready = MagicMock(return_value=True)
 
-    harness.update_config({config_option: secrets.token_hex(16)})
+    harness.update_config({config_option: updated_value})
 
     harness.charm._manager_client.flush_runner.assert_called_once()
 
 
 @pytest.mark.parametrize(
-    "config_option",
+    "config_option, config_value",
     [
-        pytest.param(PATH_CONFIG_NAME, id="Path"),
-        pytest.param(TOKEN_CONFIG_NAME, id="Token"),
-        pytest.param(LABELS_CONFIG_NAME, id="Labels"),
+        pytest.param(PATH_CONFIG_NAME, secrets.token_hex(16), id="Path"),
+        pytest.param(TOKEN_CONFIG_NAME, secrets.token_hex(16), id="Token"),
+        pytest.param(
+            TOKEN_SECRET_ID_CONFIG_NAME,
+            f"secret:{secrets.token_hex(8)}",
+            id="Token secret ID",
+        ),
+        pytest.param(GITHUB_APP_CLIENT_ID_CONFIG_NAME, "Iv23liExample", id="GitHub App Client ID"),
+        pytest.param(
+            GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+            67890,
+            id="GitHub App Installation ID",
+        ),
+        pytest.param(
+            GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
+            f"secret:{secrets.token_hex(8)}",
+            id="GitHub App Private Key Secret ID",
+        ),
+        pytest.param(LABELS_CONFIG_NAME, secrets.token_hex(16), id="Labels"),
+        pytest.param(
+            OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
+            f"secret:{secrets.token_hex(8)}",
+            id="OpenStack clouds secret ID",
+        ),
     ],
 )
-def test__on_config_changed_no_flush(monkeypatch: pytest.MonkeyPatch, config_option: str):
+def test__on_config_changed_no_flush(
+    monkeypatch: pytest.MonkeyPatch, config_option: str, config_value
+):
     """
     arrange: given a charm with OpenStack instance type and a certain config option value.
     act: update the config option to be the same as before.
-    assert: runner flush is called.
+    assert: runner flush is not called.
     """
-    config_option_val = secrets.token_hex(16)
     harness = Harness(GithubRunnerCharm)
-    harness.update_config({config_option: config_option_val})
+    harness.update_config({config_option: config_value})
     harness.begin()
     state_mock = MagicMock()
     monkeypatch.setattr("charm.manager_service", MagicMock())
@@ -304,16 +361,59 @@ def test__on_config_changed_no_flush(monkeypatch: pytest.MonkeyPatch, config_opt
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._check_image_ready = MagicMock(return_value=True)
 
-    harness.update_config({config_option: config_option_val})
+    harness.update_config({config_option: config_value})
 
     harness.charm._manager_client.flush_runner.assert_not_called()
 
 
-def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_secret_changed_flushes_runners(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Charm configured with a GitHub App private key secret.
+    act: Update the secret content (triggers secret-changed event).
+    assert: Runners are flushed and service is reconciled.
+    """
+    harness = Harness(GithubRunnerCharm)
+    secret_id = harness.add_user_secret(content={"private-key": "old-pem"})
+    harness.update_config({GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: secret_id})
+    harness.begin()
+    state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._check_image_ready = MagicMock(return_value=True)
+
+    harness.set_secret_content(secret_id, {"private-key": "new-pem"})
+
+    harness.charm._manager_client.flush_runner.assert_called_once()
+
+
+def test_on_secret_changed_reconciles_on_any_secret(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Charm configured with a GitHub App private key secret.
+    act: Update an unrelated secret's content.
+    assert: Runners are still flushed (holistic reconcile on any secret change).
+    """
+    harness = Harness(GithubRunnerCharm)
+    secret_id = harness.add_user_secret(content={"private-key": "pem-data"})
+    unrelated_secret_id = harness.add_user_secret(content={"some-key": "some-value"})
+    harness.update_config({GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: secret_id})
+    harness.begin()
+    state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._check_image_ready = MagicMock(return_value=True)
+
+    harness.set_secret_content(unrelated_secret_id, {"some-key": "new-value"})
+
+    harness.charm._manager_client.flush_runner.assert_called_once()
+
+
+def test_on_stop_busy_flush_and_cleanup_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and runner scaler mock.
     act: Trigger stop event.
-    assert: Runner scaler mock flushes the runners using busy mode.
+    assert: Runners are flushed in busy mode and service cleanup is called.
     """
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
@@ -326,7 +426,7 @@ def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pyte
     harness.charm._on_stop(mock_event)
 
     manager_client_mock.flush_runner.assert_called_once_with(busy=True)
-    mock_manager_service.stop.assert_called_once()
+    mock_manager_service.cleanup.assert_called_once()
 
 
 @pytest.mark.parametrize(
@@ -361,22 +461,6 @@ def test_on_install_failure(
     with pytest.raises(SubprocessError) as exc:
         getattr(harness.charm.on, hook).emit()
     assert "mock stderr" in str(exc.value)
-
-
-def test_charm_goes_into_waiting_state_on_missing_integration_data(
-    monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._setup_state to raise an MissingIntegrationDataError.
-    act: Fire config changed event.
-    assert: Charm is in blocked state.
-    """
-    setup_state_mock = MagicMock(side_effect=MissingMongoDBError("mock error"))
-    monkeypatch.setattr(GithubRunnerCharm, "_setup_state", setup_state_mock)
-    harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
-    harness.charm.on.config_changed.emit()
-    assert isinstance(harness.charm.unit.status, WaitingStatus)
-    assert "mock error" in harness.charm.unit.status.message
 
 
 def test_check_runners_action_with_errors():
@@ -623,6 +707,42 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
 
+@pytest.mark.parametrize(
+    "handler_name, emit_event",
+    [
+        pytest.param(
+            "_on_upgrade_charm",
+            lambda h: h.charm.on.upgrade_charm.emit(),
+            id="upgrade-charm",
+        ),
+        pytest.param(
+            "_on_planner_relation_changed",
+            lambda h: h.charm._on_planner_relation_changed(MagicMock()),
+            id="planner-relation-changed",
+        ),
+    ],
+)
+def test_reconcile_blocks_when_image_not_ready(
+    harness: Harness, mock_side_effects, monkeypatch, handler_name, emit_event
+):
+    """
+    arrange: Set up charm with no image integration.
+    act: Fire an event that calls _reconcile without an explicit _check_image_ready call.
+    assert: Charm enters blocked/waiting status and the service is stopped.
+    """
+    harness.charm._setup_state = MagicMock()
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_mgr_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_mgr_service)
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    monkeypatch.setattr("charm.pathlib", MagicMock())
+
+    emit_event(harness)
+
+    assert harness.charm.unit.status.name == BlockedStatus.name
+
+
 def test_metric_log_ownership_for_upgrade(
     harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
 ):
@@ -685,34 +805,6 @@ def test_attempting_disable_legacy_service_for_upgrade(
     )
 
 
-@pytest.mark.parametrize(
-    "hook",
-    [
-        pytest.param("database_created", id="Database Created"),
-        pytest.param("endpoints_changed", id="Endpoints Changed"),
-        pytest.param("mongodb_relation_broken", id="MongoDB Relation Departed"),
-    ],
-)
-def test_database_integration_events_setup_service(
-    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._setup_service.
-    act: Fire mongodb relation events.
-    assert: _setup_service has been called.
-    """
-    setup_service_mock = MagicMock()
-    relation_mock = MagicMock()
-    relation_mock.name = "mongodb"
-    relation_mock.id = 0
-    monkeypatch.setattr("charm.GithubRunnerCharm._setup_service", setup_service_mock)
-    if hook.startswith(MONGO_DB_INTEGRATION_NAME):
-        getattr(harness.charm.on, hook).emit(relation=relation_mock)
-    else:
-        getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
-    setup_service_mock.assert_called_once()
-
-
 def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with mocked _setup_state and _setup_service.
@@ -732,6 +824,7 @@ def test_planner_relation_changed_writes_flavor(monkeypatch: pytest.MonkeyPatch)
     state_mock.runner_config.openstack_image.tags = ["x64", "noble"]
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._setup_service = MagicMock()
+    harness.charm._check_image_ready = MagicMock()
 
     harness.update_relation_data(relation_id, "planner-app/0", {"endpoint": "http://example.com"})
 

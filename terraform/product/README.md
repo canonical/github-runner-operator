@@ -66,6 +66,5 @@ the bundle deployment onto any Kubernetes environment managed by [Juju][Juju].
 | <a name="output_all_app_names"></a> [all_app_names](#output_all_app_names)                                                                      | Names of the all the deployed apps, github-runner plus github-runner-image-builder. |
 | <a name="output_all_runner_names"></a> [all_runner_names](#output_all_runner_names)                                                             | Names of the all the deployed github-runner applications.                           |
 | <a name="output_github_runner_image_builder_app_name"></a> [github_runner_image_builder_app_name](#output_github_runner_image_builder_app_name) | Name of the the deployed github-runner-image-builder application.                   |
-| <a name="output_reactive_runner_names"></a> [reactive_runner_names](#output_reactive_runner_names)                                              | Names of the all the deployed github-runner applications that are reactive.         |
 
 <!-- END_TF_DOCS -->

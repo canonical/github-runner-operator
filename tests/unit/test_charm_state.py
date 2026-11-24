@@ -1,14 +1,13 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 import json
-import logging
 import secrets
 from unittest.mock import MagicMock
 
 import pytest
 import yaml
-from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from ops.model import SecretNotFoundError
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -23,19 +22,25 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
+    OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
@@ -49,9 +54,9 @@ from charm_state import (
     PlannerConfig,
     ProxyConfig,
     SSHDebugConnection,
+    _build_otel_collector_config_from_charm,
     _build_planner_config_from_charm,
 )
-from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
@@ -87,6 +92,190 @@ def test_github_config_from_charm_invalid_token():
     arrange: Create a mock CharmBase instance with an empty token configuration.
     act: Call from_charm method with the mock CharmBase instance.
     assert: Verify that the method raises CharmConfigInvalidError.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_token_only():
+    """
+    arrange: Charm configured with PAT only.
+    act: Call from_charm.
+    assert: GithubConfig contains PAT fields only.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token == mock_charm.config[TOKEN_CONFIG_NAME]
+    assert result.app_client_id is None
+    assert result.installation_id is None
+    assert result.private_key is None
+
+
+def test_github_config_from_charm_token_secret_only():
+    """
+    arrange: Charm configured with token secret ID.
+    act: Call from_charm.
+    assert: GithubConfig resolves token from Juju secret content.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_SECRET_ID_CONFIG_NAME] = "secret:token123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"github-token": "secret-token-value"}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token == "secret-token-value"
+    assert result.app_client_id is None
+    assert result.installation_id is None
+    assert result.private_key is None
+    mock_charm.model.get_secret.assert_called_once_with(id="secret:token123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
+
+
+def test_github_config_from_charm_token_secret_takes_precedence_over_plaintext():
+    """
+    arrange: Charm configured with both plaintext token and token secret ID.
+    act: Call from_charm.
+    assert: Secret content is used as token value.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = "plaintext-token"
+    mock_charm.config[TOKEN_SECRET_ID_CONFIG_NAME] = "secret:token123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"github-token": "secret-token-value"}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token == "secret-token-value"
+
+
+def test_github_config_from_charm_token_secret_not_found():
+    """
+    arrange: Charm configured with token secret ID pointing to a missing secret.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised identifying the missing secret.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_SECRET_ID_CONFIG_NAME] = "secret:token123"
+    mock_charm.model.get_secret.side_effect = SecretNotFoundError("boom")
+
+    with pytest.raises(
+        CharmConfigInvalidError, match="GitHub token secret secret:token123 not found"
+    ):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_token_secret_missing_field():
+    """
+    arrange: Charm configured with token secret missing required field.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_SECRET_ID_CONFIG_NAME] = "secret:token123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    with pytest.raises(CharmConfigInvalidError, match="missing github-token"):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_app_only():
+    """
+    arrange: Charm configured with GitHub App auth only.
+    act: Call from_charm.
+    assert: GithubConfig resolves the private key secret content.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = "Iv23liExample"
+    mock_charm.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = 456
+    mock_charm.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = "secret:abc123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"private-key": "private-key-pem"}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result.token is None
+    assert result.app_client_id == "Iv23liExample"
+    assert result.installation_id == 456
+    assert result.private_key == "private-key-pem"
+    mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
+
+
+@pytest.mark.parametrize(
+    "config_updates",
+    [
+        pytest.param(
+            {
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME: "Iv23liExample",
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME: 456,
+            },
+            id="missing-private-key-secret-id",
+        ),
+        pytest.param(
+            {
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME: "Iv23liExample",
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: "secret:abc123",
+            },
+            id="missing-installation-id",
+        ),
+        pytest.param(
+            {
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME: 456,
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME: "secret:abc123",
+            },
+            id="missing-app-id",
+        ),
+    ],
+)
+def test_github_config_from_charm_partial_app_fields(config_updates: dict[str, object]):
+    """
+    arrange: Charm configured with only part of the GitHub App fields.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+    mock_charm.config.update(config_updates)
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_rejects_both_pat_and_app_auth():
+    """
+    arrange: Charm configured with both PAT and GitHub App auth.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[GITHUB_APP_CLIENT_ID_CONFIG_NAME] = "Iv23liExample"
+    mock_charm.config[GITHUB_APP_INSTALLATION_ID_CONFIG_NAME] = 456
+    mock_charm.config[GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME] = "secret:abc123"
+
+    with pytest.raises(CharmConfigInvalidError):
+        GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_rejects_missing_auth():
+    """
+    arrange: Charm configured with neither PAT nor GitHub App auth.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[TOKEN_CONFIG_NAME] = ""
@@ -241,6 +430,81 @@ def test_parse_openstack_clouds_config_empty():
         CharmConfig._parse_openstack_clouds_config(mock_charm)
 
 
+def test_parse_openstack_clouds_config_from_secret(valid_yaml_config: str):
+    """
+    arrange: OpenStack config provided through Juju secret.
+    act: Parse OpenStack clouds config.
+    assert: Parsed YAML dictionary is returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = "secret:cloud123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"clouds-yaml": valid_yaml_config}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = CharmConfig._parse_openstack_clouds_config(mock_charm)
+
+    assert isinstance(result, dict)
+    assert "clouds" in result
+    mock_charm.model.get_secret.assert_called_once_with(id="secret:cloud123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
+
+
+def test_parse_openstack_clouds_config_secret_precedence(valid_yaml_config: str):
+    """
+    arrange: OpenStack config provided via plaintext and secret ID.
+    act: Parse OpenStack clouds config.
+    assert: Secret-provided value takes precedence.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = "invalid: ["
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = "secret:cloud123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {"clouds-yaml": valid_yaml_config}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    result = CharmConfig._parse_openstack_clouds_config(mock_charm)
+
+    assert isinstance(result, dict)
+    assert "clouds" in result
+
+
+def test_parse_openstack_clouds_config_secret_not_found():
+    """
+    arrange: OpenStack clouds secret ID points to a non-existent secret.
+    act: Parse OpenStack clouds config.
+    assert: CharmConfigInvalidError is raised identifying the missing secret.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = "secret:cloud123"
+    mock_charm.model.get_secret.side_effect = SecretNotFoundError("boom")
+
+    with pytest.raises(
+        CharmConfigInvalidError,
+        match="OpenStack clouds.yaml secret secret:cloud123 not found",
+    ):
+        CharmConfig._parse_openstack_clouds_config(mock_charm)
+
+
+def test_parse_openstack_clouds_config_secret_missing_field():
+    """
+    arrange: OpenStack secret is present but missing required field.
+    act: Parse OpenStack clouds config.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_CONFIG_NAME] = ""
+    mock_charm.config[OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME] = "secret:cloud123"
+    secret_mock = MagicMock()
+    secret_mock.get_content.return_value = {}
+    mock_charm.model.get_secret.return_value = secret_mock
+
+    with pytest.raises(CharmConfigInvalidError, match="missing clouds-yaml"):
+        CharmConfig._parse_openstack_clouds_config(mock_charm)
+
+
 def test_parse_openstack_clouds_config_invalid_yaml(invalid_yaml_config: str):
     """
     arrange: Create a mock CharmBase instance with an invalid YAML config.
@@ -282,33 +546,6 @@ def test_parse_openstack_clouds_config_valid(valid_yaml_config: str):
     assert "clouds" in result
 
 
-@pytest.mark.parametrize("reconcile_interval", [(0), (1)])
-def test_check_reconcile_interval_invalid(reconcile_interval: int):
-    """
-    arrange: Provide an invalid reconcile interval value.
-    act: Call check_reconcile_interval method with the provided value.
-    assert: Verify that the method raises ValueError with the correct message.
-    """
-    with pytest.raises(ValueError) as exc_info:
-        CharmConfig.check_reconcile_interval(reconcile_interval)
-    assert (
-        str(exc_info.value)
-        == "The reconcile-interval configuration needs to be greater or equal to 1"
-    )
-
-
-@pytest.mark.parametrize("reconcile_interval", [(2), (5), (10)])
-def test_check_reconcile_interval_valid(reconcile_interval: int):
-    """
-    arrange: Provide a valid reconcile interval value.
-    act: Call check_reconcile_interval method with the provided value.
-    assert: Verify that the method returns the same value.
-    """
-    result = CharmConfig.check_reconcile_interval(reconcile_interval)
-
-    assert result == reconcile_interval
-
-
 def test_charm_config_from_charm_invalid_reconcile_interval():
     """
     arrange: Create a mock CharmBase instance with an invalid reconcile interval.
@@ -321,6 +558,19 @@ def test_charm_config_from_charm_invalid_reconcile_interval():
     with pytest.raises(CharmConfigInvalidError) as exc_info:
         CharmConfig.from_charm(mock_charm)
     assert str(exc_info.value) == "The reconcile-interval config must be int"
+
+
+def test_charm_config_from_charm_reconcile_interval_too_low():
+    """
+    arrange: Create a mock CharmBase instance with a reconcile interval below 1.
+    act: Call from_charm.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[RECONCILE_INTERVAL_CONFIG_NAME] = "0"
+
+    with pytest.raises(CharmConfigInvalidError, match="greater than or equal to 1"):
+        CharmConfig.from_charm(mock_charm)
 
 
 def test_charm_config_from_charm_invalid_labels():
@@ -573,81 +823,6 @@ def test_ssh_debug_connection_from_charm(use_runner_http_proxy: bool):
     assert connections[0].use_runner_http_proxy == use_runner_http_proxy
 
 
-def test_reactive_config_from_charm():
-    """
-    arrange: Mock CharmBase instance with relation data and config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: Verify that the method returns the expected object.
-    """
-    mongodb_uri = "mongodb://user:password@localhost:27017"
-    mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    mock_charm.app = app_mock
-    relation_mock.data = {
-        app_mock: {
-            "uris": mongodb_uri,
-        },
-        mock_charm.model.unit: {},
-    }
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    connection_info = charm_state.ReactiveConfig.from_database(database)
-
-    assert isinstance(connection_info, charm_state.ReactiveConfig)
-    assert connection_info.mq_uri == mongodb_uri
-
-
-def test_reactive_config_from_database_returns_none():
-    """
-    arrange: Mock CharmBase instance without relation data.
-    act: Call ReactiveConfig.from_database method.
-    assert: None is returned.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = []
-
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    connection_info = charm_state.ReactiveConfig.from_database(database)
-
-    assert connection_info is None
-
-
-def test_reactive_config_from_database_integration_data_missing():
-    """
-    arrange: Mock CharmBase instance with relation but without data and with config option set.
-    act: Call ReactiveConfig.from_charm method.
-    assert: IntegrationDataMissingError is raised.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    relation_mock = MagicMock()
-    app_mock = MagicMock()
-    relation_mock.app = app_mock
-    relation_mock.data = {
-        app_mock: {},
-        mock_charm.model.unit: {},
-    }
-    mock_charm.model.relations[charm_state.MONGO_DB_INTEGRATION_NAME] = [relation_mock]
-
-    database = DatabaseRequires(
-        mock_charm, relation_name=charm_state.MONGO_DB_INTEGRATION_NAME, database_name="test"
-    )
-
-    with pytest.raises(MissingMongoDBError) as exc:
-        charm_state.ReactiveConfig.from_database(database)
-
-    assert f"Missing uris for {charm_state.MONGO_DB_INTEGRATION_NAME} integration" in str(
-        exc.value
-    )
-
-
 @pytest.fixture
 def mock_charm_state_path():
     """Fixture to mock CHARM_STATE_PATH."""
@@ -662,7 +837,6 @@ def mock_charm_state_data():
         "is_metrics_logging_available": True,
         "proxy_config": {"http": "http://example.com", "https": "https://example.com"},
         "charm_config": {"token": secrets.token_hex(16)},
-        "reactive_config": {"uri": "mongodb://user:password@localhost:27017"},
         "runner_config": {
             "virtual_machines": 2,
         },
@@ -695,7 +869,6 @@ def test_charm_state_from_charm_invalid_cases(
     assert: Ensure CharmConfigInvalidError is raised with the appropriate message.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     mock_charm_config = MagicMock()
     mock_charm_config.openstack_clouds_yaml = None
@@ -707,7 +880,7 @@ def test_charm_state_from_charm_invalid_cases(
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm, mock_database)
+        CharmState.from_charm(mock_charm)
 
 
 def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
@@ -717,17 +890,15 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     assert: Ensure no errors are raised.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_database = MagicMock(spec=DatabaseRequires)
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr("charm_state._build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
-    assert CharmState.from_charm(mock_charm, mock_database)
+    assert CharmState.from_charm(mock_charm)
 
 
 def test_planner_config_from_charm_extracts_endpoint_token():
@@ -754,6 +925,7 @@ def test_planner_config_from_charm_extracts_endpoint_token():
         endpoint="http://planner.example.com", token="planner-token-value"
     )
     mock_charm.model.get_secret.assert_called_once_with(id="secret:abc123")
+    secret_mock.get_content.assert_called_once_with(refresh=True)
 
 
 def test_planner_config_from_charm_no_relation():
@@ -810,16 +982,14 @@ def test_parse_virtual_machine_numbers(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
-    mock_database = MagicMock(spec=DatabaseRequires)
 
     mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
     mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
     mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
-    state = CharmState.from_charm(mock_charm, mock_database)
+    state = CharmState.from_charm(mock_charm)
 
     assert state.runner_config.base_virtual_machines == expected_base
     assert state.runner_config.max_total_virtual_machines == expected_max
@@ -868,17 +1038,15 @@ def test_error_parse_virtual_machine_numbers(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
-    mock_database = MagicMock(spec=DatabaseRequires)
 
     mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
     mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
     mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        _ = CharmState.from_charm(mock_charm, mock_database)
+        _ = CharmState.from_charm(mock_charm)
     assert expected_error_message in str(exc_info.value)
 
 
@@ -919,7 +1087,6 @@ def test_parse_flavor_config(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
@@ -927,8 +1094,7 @@ def test_parse_flavor_config(
     mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
     mock_charm.config[LABELS_CONFIG_NAME] = labels
 
-    mock_database = MagicMock(spec=DatabaseRequires)
-    state = CharmState.from_charm(mock_charm, mock_database)
+    state = CharmState.from_charm(mock_charm)
     assert state.charm_config.labels == expected_labels
     assert state.runner_config.flavor_label_combinations == expected_flavor_label_combinations
 
@@ -967,7 +1133,6 @@ def test_errror_flavor_config(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
@@ -975,25 +1140,9 @@ def test_errror_flavor_config(
     mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
     mock_charm.config[LABELS_CONFIG_NAME] = labels
 
-    mock_database = MagicMock(spec=DatabaseRequires)
     with pytest.raises(CharmConfigInvalidError) as exc_info:
-        _ = CharmState.from_charm(mock_charm, mock_database)
+        _ = CharmState.from_charm(mock_charm)
     assert expected_error_message in str(exc_info.value)
-
-
-def test_charm_state__log_prev_state_redacts_sensitive_information(
-    mock_charm_state_data: dict, caplog: pytest.LogCaptureFixture
-):
-    """
-    arrange: Arrange charm state data with a token and set log level to DEBUG.
-    act: Call the __log_prev_state method on the class.
-    assert: Verify that the method redacts the sensitive information in the log message.
-    """
-    caplog.set_level(logging.DEBUG)
-    CharmState._log_prev_state(mock_charm_state_data)
-
-    assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
-    assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -1118,10 +1267,8 @@ def test_proxy_config(
     mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
     mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
-    mock_database = MagicMock(spec=DatabaseRequires)
-    mock_database.relations = []
 
-    charm_state = CharmState.from_charm(mock_charm, mock_database)
+    charm_state = CharmState.from_charm(mock_charm)
 
     assert charm_state.charm_config.use_aproxy == use_aproxy
     assert ", ".join(charm_state.charm_config.aproxy_exclude_addresses) == aproxy_exclude_addresses
@@ -1158,8 +1305,60 @@ def test_invalid_aproxy_config_in_charm_state(
     mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
     mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
-    mock_database = MagicMock(spec=DatabaseRequires)
-    mock_database.relations = []
 
     with pytest.raises(CharmConfigInvalidError):
-        CharmState.from_charm(mock_charm, mock_database)
+        CharmState.from_charm(mock_charm)
+
+
+def test_build_otel_collector_config_from_charm_not_set() -> None:
+    """
+    arrange: Mock CharmBase without otel collector endpoint.
+    act: Build otel collector config.
+    assert: None is returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    otel_collector_config = _build_otel_collector_config_from_charm(mock_charm)
+
+    assert otel_collector_config is None
+
+
+@pytest.mark.parametrize("hostname, port", [("10.10.0.12", 42), ("mock_hostname", 823)])
+def test_build_otel_collector_config_from_charm_valid_endpoint(hostname: str, port: int) -> None:
+    """
+    arrange: Mock CharmBase with a valid otel collector endpoint.
+    act: Build otel collector config.
+    assert: Parsed host and port are returned.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME] = f"{hostname}:{port}"
+
+    otel_collector_config = _build_otel_collector_config_from_charm(mock_charm)
+
+    assert otel_collector_config is not None
+    assert str(otel_collector_config.host) == hostname
+    assert otel_collector_config.port == port
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "10.10.0.12",
+        "10.10.0.12:",
+        "http://10.10.0.12:4317",
+        "fake_hostname",
+        "10.10.0.12:4317?x=y",
+        "10.10.0.12:4317#x",
+    ],
+)
+def test_build_otel_collector_config_from_charm_invalid_endpoint(endpoint: str) -> None:
+    """
+    arrange: Mock CharmBase with malformed endpoint formats.
+    act: Build otel collector config.
+    assert: CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[OTEL_COLLECTOR_ENDPOINT_CONFIG_NAME] = endpoint
+
+    with pytest.raises(CharmConfigInvalidError):
+        _build_otel_collector_config_from_charm(mock_charm)

@@ -2,24 +2,28 @@
 #  See LICENSE file for licensing details.
 import dataclasses
 
+import pytest
 from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
     Image,
-    NonReactiveCombination,
-    NonReactiveConfiguration,
+    OtelCollectorConfig,
     ProxyConfig,
-    QueueConfig,
-    ReactiveConfiguration,
+    RunnerCombination,
+    RunnerConfiguration,
     SSHDebugConnection,
     SupportServiceConfig,
 )
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubOrg
+from github_runner_manager.configuration.github import (
+    GitHubAppAuth,
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubTokenAuth,
+)
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )
-from pydantic import MongoDsn
 from pydantic.networks import IPv4Address
 
 import charm_state
@@ -43,7 +47,8 @@ def test_create_application_configuration(
         name="app_name",
         extra_labels=["label1", "label2"],
         github_config=GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            auth=GitHubTokenAuth(token="githubtoken"),
+            path=GitHubOrg(org="canonical", group="group"),
         ),
         service_config=SupportServiceConfig(
             manager_proxy_command="ssh -W %h:%p example.com",
@@ -71,32 +76,15 @@ def test_create_application_configuration(
                 )
             ],
         ),
-        non_reactive_configuration=NonReactiveConfiguration(
+        runner_configuration=RunnerConfiguration(
             combinations=[
-                NonReactiveCombination(
+                RunnerCombination(
                     image=Image(name="image_id", labels=["arm64", "noble"]),
                     flavor=Flavor(name="flavor", labels=["flavorlabel"]),
                     base_virtual_machines=1,
                     max_total_virtual_machines=2,
                 )
             ]
-        ),
-        reactive_configuration=ReactiveConfiguration(
-            queue=QueueConfig(
-                mongodb_uri=MongoDsn(
-                    "mongodb://user:password@localhost:27017",
-                    scheme="mongodb",
-                    user="user",
-                    password="password",
-                    host="localhost",
-                    host_type="int_domain",
-                    port="27017",
-                ),
-                queue_name="app_name",
-            ),
-            max_total_virtual_machines=2,
-            images=[Image(name="image_id", labels=["arm64", "noble"])],
-            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
             vm_prefix="unit_name",
@@ -160,3 +148,71 @@ def test_create_application_configuration_with_planner(
 
     assert str(app_configuration.planner_url) == "http://planner.example.com"
     assert app_configuration.planner_token == "planner-token-value"
+
+
+def test_create_application_configuration_with_otel_collector_config(
+    complete_charm_state: charm_state.CharmState,
+):
+    """
+    arrange: Prepare CharmState with otel collector config.
+    act: Call create_application_configuration.
+    assert: The service config contains the collector endpoint.
+    """
+    state = dataclasses.replace(
+        complete_charm_state,
+        otel_collector_config=OtelCollectorConfig(host="10.10.0.12", port=4317),
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
+    assert app_configuration.service_config.otel_collector_config is not None
+    assert str(app_configuration.service_config.otel_collector_config.host) == "10.10.0.12"
+    assert app_configuration.service_config.otel_collector_config.port == 4317
+
+
+@pytest.mark.parametrize(
+    "charm_config_updates, expected_auth",
+    [
+        pytest.param(
+            {
+                "token": "githubtoken",
+                "app_client_id": None,
+                "installation_id": None,
+                "private_key": None,
+            },
+            GitHubTokenAuth(token="githubtoken"),
+            id="token-auth",
+        ),
+        pytest.param(
+            {
+                "token": None,
+                "app_client_id": "Iv23liExample",
+                "installation_id": 456,
+                "private_key": "private-key",
+            },
+            GitHubAppAuth(
+                app_client_id="Iv23liExample", installation_id=456, private_key="private-key"
+            ),
+            id="app-auth",
+        ),
+    ],
+)
+def test_create_application_configuration_with_github_auth(
+    complete_charm_state: charm_state.CharmState,
+    charm_config_updates: dict,
+    expected_auth,
+):
+    """
+    arrange: Prepare CharmState with either PAT or GitHub App auth.
+    act: Call create_application_configuration.
+    assert: The resulting GitHubConfiguration contains the right auth model.
+    """
+    state = dataclasses.replace(
+        complete_charm_state,
+        charm_config=complete_charm_state.charm_config.copy(update=charm_config_updates),
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
+    assert app_configuration.github_config
+    assert app_configuration.github_config.auth == expected_auth

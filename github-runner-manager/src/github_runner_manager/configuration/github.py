@@ -8,15 +8,42 @@ from typing import TypeAlias
 from pydantic import BaseModel
 
 
+class GitHubTokenAuth(BaseModel):
+    """GitHub personal access token authentication.
+
+    Attributes:
+        token: GitHub personal access token.
+    """
+
+    token: str
+
+
+class GitHubAppAuth(BaseModel):
+    """GitHub App installation authentication.
+
+    Attributes:
+        app_client_id: GitHub App Client ID (or legacy numeric App ID).
+        installation_id: GitHub App installation ID.
+        private_key: PEM-encoded private key for the GitHub App.
+    """
+
+    app_client_id: str
+    installation_id: int
+    private_key: str
+
+
+GitHubAuth: TypeAlias = GitHubTokenAuth | GitHubAppAuth
+
+
 class GitHubConfiguration(BaseModel):
     """GitHub configuration for the application.
 
     Attributes:
-       token: GitHub Token.
+       auth: GitHub authentication configuration.
        path: Information of the repository or organization.
     """
 
-    token: str
+    auth: GitHubAuth
     path: "GitHubPath"
 
 

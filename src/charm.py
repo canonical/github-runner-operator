@@ -22,7 +22,6 @@ import shutil
 from typing import Any, Callable, Sequence, TypeVar
 
 import ops
-from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager import constants
@@ -35,6 +34,7 @@ from ops.charm import (
     ConfigChangedEvent,
     EventBase,
     InstallEvent,
+    SecretChangedEvent,
     StartEvent,
     StopEvent,
     UpdateStatusEvent,
@@ -48,12 +48,16 @@ import manager_service
 from charm_state import (
     ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
+    GITHUB_APP_CLIENT_ID_CONFIG_NAME,
+    GITHUB_APP_INSTALLATION_ID_CONFIG_NAME,
+    GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
-    MONGO_DB_INTEGRATION_NAME,
+    OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME,
     PATH_CONFIG_NAME,
     PLANNER_INTEGRATION_NAME,
     TOKEN_CONFIG_NAME,
+    TOKEN_SECRET_ID_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
@@ -65,17 +69,12 @@ from errors import (
     ImageIntegrationMissingError,
     ImageNotFoundError,
     LogrotateSetupError,
-    MissingMongoDBError,
     RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
     RunnerManagerServiceError,
     SubprocessError,
 )
 from manager_client import GitHubRunnerManagerClient
-
-# This is currently hardcoded and may be moved to a config option in the future.
-REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
-
 
 ACTIVE_STATUS_RECONCILIATION_FAILED_MSG = "Last reconciliation failed."
 FAILED_TO_RECONCILE_RUNNERS_MSG = "Failed to reconcile runners"
@@ -86,6 +85,25 @@ UPGRADE_MSG = "Upgrading github-runner charm."
 LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
 LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 LEGACY_MANAGER_SINGLETON_SERVICE = "github-runner-manager.service"
+
+# Config keys whose change triggers a runner flush, mapped to the attribute
+# on `_stored` that tracks the last-seen value. The plaintext
+# `openstack-clouds-yaml` option is intentionally omitted: tracking it here would
+# persist the credentials to `.unit-state.db` on disk. Operators who want
+# automatic flush on credential rotation should use
+# `openstack-clouds-yaml-secret-id`, which is flushed via this mapping and via
+# `on_secret_changed` when the secret content rotates.
+_FLUSH_ON_CHANGE_CONFIG_TO_STORED: tuple[tuple[str, str], ...] = (
+    (TOKEN_CONFIG_NAME, "token"),
+    (TOKEN_SECRET_ID_CONFIG_NAME, "token_secret_id"),
+    (GITHUB_APP_CLIENT_ID_CONFIG_NAME, "github_app_client_id"),
+    (GITHUB_APP_INSTALLATION_ID_CONFIG_NAME, "github_app_installation_id"),
+    (GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME, "github_app_private_key_secret_id"),
+    (PATH_CONFIG_NAME, "path"),
+    (LABELS_CONFIG_NAME, "labels"),
+    (OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME, "openstack_clouds_yaml_secret_id"),
+    (ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, "allow_external_contributor"),
+)
 
 
 logger = logging.getLogger(__name__)
@@ -126,9 +144,6 @@ def catch_charm_errors(
         except TokenError as err:
             logger.exception("Issue with GitHub token")
             self.unit.status = BlockedStatus(str(err))
-        except MissingMongoDBError as err:
-            logger.exception("Missing integration data")
-            self.unit.status = WaitingStatus(str(err))
         except ImageIntegrationMissingError:
             logger.exception("Missing image integration.")
             self.unit.status = BlockedStatus("Please provide image integration.")
@@ -211,6 +226,19 @@ class GithubRunnerCharm(CharmBase):
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
+            token_secret_id=self.config.get(TOKEN_SECRET_ID_CONFIG_NAME),  # for detecting changes
+            github_app_client_id=self.config.get(
+                GITHUB_APP_CLIENT_ID_CONFIG_NAME
+            ),  # for detecting changes
+            github_app_installation_id=self.config.get(
+                GITHUB_APP_INSTALLATION_ID_CONFIG_NAME
+            ),  # for detecting changes
+            github_app_private_key_secret_id=self.config.get(
+                GITHUB_APP_PRIVATE_KEY_SECRET_ID_CONFIG_NAME
+            ),  # for detecting changes
+            openstack_clouds_yaml_secret_id=self.config.get(
+                OPENSTACK_CLOUDS_YAML_SECRET_ID_CONFIG_NAME
+            ),  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
             allow_external_contributor=self.config[
                 ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
@@ -243,17 +271,10 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[PLANNER_INTEGRATION_NAME].relation_broken, self._on_planner_relation_broken
         )
+        self.framework.observe(self.on.secret_changed, self._on_secret_changed)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
-        self.database = DatabaseRequires(
-            self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
-        )
-        self.framework.observe(self.database.on.database_created, self._on_database_created)
-        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
-        self.framework.observe(
-            self.on[MONGO_DB_INTEGRATION_NAME].relation_broken, self._on_mongodb_relation_broken
-        )
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
@@ -270,7 +291,7 @@ class GithubRunnerCharm(CharmBase):
             The charm state.
         """
         try:
-            return CharmState.from_charm(charm=self, database=self.database)
+            return CharmState.from_charm(charm=self)
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
@@ -354,25 +375,11 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         flush_runners = False
-        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
-            self._stored.token = self.config[TOKEN_CONFIG_NAME]
-            flush_runners = True
-        if self.config[PATH_CONFIG_NAME] != self._stored.path:
-            self._stored.path = self.config[PATH_CONFIG_NAME]
-            flush_runners = True
-        if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
-            self._stored.labels = self.config[LABELS_CONFIG_NAME]
-            flush_runners = True
-        if (
-            self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]
-            != self._stored.allow_external_contributor
-        ):
-            self._stored.allow_external_contributor = self.config[
-                ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
-            ]
-            flush_runners = True
-
-        self._check_image_ready()
+        for config_key, stored_attr in _FLUSH_ON_CHANGE_CONFIG_TO_STORED:
+            new_value = self.config.get(config_key)
+            if new_value != getattr(self._stored, stored_attr):
+                setattr(self._stored, stored_attr, new_value)
+                flush_runners = True
 
         self._reconcile(state)
 
@@ -380,6 +387,14 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_secret_changed(self, _: SecretChangedEvent) -> None:
+        """Handle secret content rotation (e.g. GitHub App private key)."""
+        logger.info("Secret changed, reconciling")
+        state = self._setup_state()
+        self._reconcile(state)
+        self._manager_client.flush_runner()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -407,6 +422,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             state: The charm state.
         """
+        self._check_image_ready()
         self._setup_service(state)
         self._update_planner_flavor(state)
 
@@ -466,7 +482,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
         self._manager_client.flush_runner(busy=True)
-        manager_service.stop(self.unit.name)
+        manager_service.cleanup(self.unit.name)
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
@@ -493,8 +509,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 
@@ -516,8 +530,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         self.unit.status = MaintenanceStatus("Update image for runners")
-        self._check_image_ready()
-
         state = self._setup_state()
         self._reconcile(state)
 
@@ -539,24 +551,6 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._reconcile(state)
         self.unit.status = ActiveStatus()
-
-    @catch_charm_errors
-    def _on_database_created(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB database created event."""
-        state = self._setup_state()
-        self._reconcile(state)
-
-    @catch_charm_errors
-    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB endpoints changed event."""
-        state = self._setup_state()
-        self._reconcile(state)
-
-    @catch_charm_errors
-    def _on_mongodb_relation_broken(self, _: ops.RelationDepartedEvent) -> None:
-        """Handle the MongoDB relation broken event."""
-        state = self._setup_state()
-        self._reconcile(state)
 
     def _check_image_ready(self) -> None:
         """Check if image is ready raises error if not.

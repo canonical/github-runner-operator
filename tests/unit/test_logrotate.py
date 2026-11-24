@@ -72,7 +72,7 @@ def test_setup_writes_logrotate_config(logrotate_dir: Path):
     logrotate.setup()
     assert logrotate.LOGROTATE_CONFIG_DIR.is_dir()
     assert (logrotate_dir / logrotate.METRICS_LOGROTATE_CONFIG.name).exists()
-    assert (logrotate_dir / logrotate.REACTIVE_LOGROTATE_CONFIG.name).exists()
+    assert (logrotate_dir / logrotate.GITHUB_RUNNER_MANAGER_CONFIG.name).exists()
 
 
 @pytest.mark.parametrize("create", [True, False])
