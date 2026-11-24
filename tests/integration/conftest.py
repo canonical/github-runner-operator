@@ -43,6 +43,12 @@ from tests.integration.helpers.common import (
     wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.orphan_cleanup import cleanup_stale_openstack_resources
+from tests.integration.naming import (
+    app_name_from_suffix,
+    generate_app_suffix,
+    image_builder_app_name_from_suffix,
+)
 
 DEFAULT_RECONCILE_INTERVAL = 2
 
@@ -279,22 +285,19 @@ def existing_app_suffix(pytestconfig: pytest.Config) -> Optional[str]:
 def random_app_name_suffix(existing_app_suffix: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized suffix name to avoid collision when runner is connecting to GitHub.
-    return existing_app_suffix or (
-        random.choice(string.ascii_lowercase)
-        + "".join(random.choices(string.ascii_lowercase + string.digits, k=7))
-    )
+    return existing_app_suffix or generate_app_suffix()
 
 
 @pytest.fixture(scope="module")
 def app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
-    return f"test-{random_app_name_suffix}"
+    return app_name_from_suffix(random_app_name_suffix)
 
 
 @pytest.fixture(scope="module")
 def image_builder_app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
-    return f"github-runner-image-builder-{random_app_name_suffix}"
+    return image_builder_app_name_from_suffix(random_app_name_suffix)
 
 
 @pytest.fixture(scope="module")
@@ -444,9 +447,31 @@ def openstack_connection_fixture(
     clouds_yaml_path.write_text(data=openstack_config.clouds_yaml_contents, encoding="utf-8")
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
+        # Previous force-cancelled CI jobs can leave OpenStack servers/images/keypairs
+        # under our CI name prefixes. Delete ones older than the default min age so they
+        # cannot accumulate across runs. Skip when --use-existing-app-suffix reuses a
+        # long-lived local app whose resources may legitimately be older than min_age.
+        if not existing_app_suffix:
+            try:
+                cleanup_stale_openstack_resources(connection)
+            except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
+                logging.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
         yield connection
+        _teardown_charm_suite_openstack(connection, app_name, existing_app_suffix, request)
 
-    servers = connection.list_servers(filters={"name": app_name})
+
+def _teardown_charm_suite_openstack(
+    connection: Connection,
+    app_name: str,
+    existing_app_suffix: Optional[str],
+    request: pytest.FixtureRequest,
+) -> None:
+    """Log and delete OpenStack resources created during this suite run."""
+    servers = [
+        server
+        for server in (connection.list_servers() or [])
+        if str(getattr(server, "name", "") or "").startswith(app_name)
+    ]
 
     if request.session.testsfailed:
         logging.info("OpenStack servers: %s", servers)
@@ -456,9 +481,7 @@ def openstack_connection_fixture(
 
     if not existing_app_suffix:
         for server in servers:
-            server_name: str = server.name
-            if server_name.startswith(app_name):
-                connection.delete_server(server_name)
+            connection.delete_server(server.id, wait=True)
         for key in connection.list_keypairs():
             key_name: str = key.name
             if key_name.startswith(app_name):

@@ -639,10 +639,11 @@ def _get_platform_runners_to_cleanup(
 ) -> set[str]:
     """Determine platform runners to clean up.
 
-    1. Always clean up danging platform runners (platform runners that have no VM associated).
+    1. Always clean up dangling platform runners (platform runners that have no VM associated).
     2. Always clean up deletable platform runners (deletable decision made by platform provider).
-    3. Clean up runners that in offline-idle status that have timed out where the possible
-        scenarios is:
+    3. Always clean up runners whose VM is in an error state in the cloud, as such a VM will
+        never recover and would otherwise occupy a runner slot until it times out.
+    4. Clean up runners that are offline and idle and have timed out. The possible scenario is:
         - runner registered (during registration token generation) but VM has failed to spawn.
 
     Args:
@@ -670,6 +671,17 @@ def _get_platform_runners_to_cleanup(
     logger.debug("Deletable runner IDs: %s", deletable_runners)
 
     vm_instance_id_map = {vm.instance_id: vm for vm in vms}
+    # Kill runners whose cloud VM is in an error state. Such VMs never recover, so there is no
+    # point waiting for the creation timeout; deleting now frees the slot for a replacement.
+    errored_runners: set[str] = set(
+        runner.identity.metadata.runner_id
+        for runner in runners.requested_runners
+        if runner.identity.metadata.runner_id
+        and (vm := vm_instance_id_map.get(runner.identity.instance_id))
+        and vm.state == VMState.ERROR
+    )
+    logger.debug("Errored runner IDs: %s", errored_runners)
+
     # Kill old runners that are offline and idle as they could be in failed state.
     # We may also kill here runners that were online and not busy and went temporarily to
     # offline, but that should not be an issue, as those runners will be spawned again.
@@ -687,7 +699,7 @@ def _get_platform_runners_to_cleanup(
     reconcile_metrics.TIMED_OUT_RUNNERS_TOTAL.inc(len(timed_out_offline_idle_runners))
     logger.debug("Timed out offline idle runner IDs: %s", timed_out_offline_idle_runners)
 
-    return dangling_runners | deletable_runners | timed_out_offline_idle_runners
+    return dangling_runners | deletable_runners | errored_runners | timed_out_offline_idle_runners
 
 
 def _get_platform_runners_to_flush(
