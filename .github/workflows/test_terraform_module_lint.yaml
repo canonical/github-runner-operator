@@ -42,7 +42,7 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
 
             - name: Setup Tflint
-              uses: terraform-linters/setup-tflint@v6.2.1
+              uses: terraform-linters/setup-tflint@v6.2.2
               with:
                   tflint_wrapper_enabled: true
 
