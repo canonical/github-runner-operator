@@ -17,6 +17,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
+from .orphan_cleanup import cleanup_stale_openstack_resources
 from .planner_stub import PlannerStub, PlannerStubConfig
 
 logger = logging.getLogger(__name__)
@@ -182,6 +183,14 @@ def openstack_connection(
         project_domain_name=openstack_config.project_domain_name,
         region_name=openstack_config.region_name,
     )
+    # Previous force-cancelled github-runner-manager integration jobs can leave OpenStack
+    # servers/keypairs named test-runner-{id}…. Delete ones older than the default min age
+    # so they cannot accumulate across runs. Failures are logged and ignored so a flaky
+    # OpenStack API cannot block the suite.
+    try:
+        cleanup_stale_openstack_resources(conn)
+    except Exception as exc:  # noqa: BLE001 - best-effort hygiene must not block the suite
+        logger.warning("OpenStack orphan cleanup failed: %s", exc, exc_info=True)
     yield conn
     conn.close()
 
