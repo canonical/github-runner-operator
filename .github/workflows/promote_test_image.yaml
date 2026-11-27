@@ -1,0 +1,52 @@
+name: Promote CI-built runner image to the shared test image
+
+on:
+  push:
+    branches:
+      - ci/promote-test-image
+
+jobs:
+  promote:
+    runs-on: [self-hosted, pfe-ci]
+    steps:
+      - name: Setup Astral UV
+        uses: astral-sh/setup-uv@v7
+      - name: Rename newest image-builder image so orphan cleanup keeps it
+        env:
+          OS_AUTH_URL: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
+          OS_PROJECT_DOMAIN_NAME: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
+          OS_PROJECT_NAME: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
+          OS_USER_DOMAIN_NAME: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_6 }}
+          OS_USERNAME: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_7 }}
+          OS_PASSWORD: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
+          OS_REGION_NAME: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
+          OLD_IMAGE_ID: ${{ vars.INTEGRATION_TEST_IMAGE_ID }}
+        run: |
+          uv run --no-project --with openstacksdk python - <<'EOF'
+          import datetime, os
+          import openstack
+
+          conn = openstack.connect(
+              auth_url=os.environ["OS_AUTH_URL"],
+              project_domain_name=os.environ["OS_PROJECT_DOMAIN_NAME"],
+              project_name=os.environ["OS_PROJECT_NAME"],
+              user_domain_name=os.environ["OS_USER_DOMAIN_NAME"],
+              username=os.environ["OS_USERNAME"],
+              password=os.environ["OS_PASSWORD"],
+              region_name=os.environ["OS_REGION_NAME"],
+          )
+          old = conn.image.find_image(os.environ["OLD_IMAGE_ID"])
+          print("old:", old and (old.id, old.name, old.status, old.created_at))
+          images = [
+              i for i in conn.image.images()
+              if (i.name or "").startswith("github-runner-image-builder-") and i.status == "active"
+          ]
+          for i in images:
+              print("candidate:", i.id, i.name, i.created_at, i.size)
+          if not images:
+              raise SystemExit("no CI-built image-builder images found")
+          newest = max(images, key=lambda i: i.created_at)
+          name = f"github-runner-ci-test-image-{datetime.date.today():%Y%m%d}"
+          conn.image.update_image(newest, name=name)
+          print(f"PROMOTED {newest.id} as {name}")
+          EOF
