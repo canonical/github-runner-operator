@@ -63,7 +63,6 @@ jobs:
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
         --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
@@ -92,7 +91,6 @@ jobs:
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
         --github-app-client-id="${{ vars.INTEGRATION_TEST_GITHUB_APP_CLIENT_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}" \
         --base="${{ matrix.base }}"
